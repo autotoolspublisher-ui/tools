@@ -7,27 +7,38 @@
   <title>ツール一覧 | AIツールひろば</title>
   <link rel="stylesheet" href="./shared.css">
   <style>
-    main { width:min(820px,100% - 40px); margin:0 auto; padding:clamp(54px,11vh,112px) 0 36px; }
-    .hero { position:relative; padding:clamp(26px,6vw,58px); margin-bottom:46px; overflow:hidden; border-radius:30px; color:white; background:linear-gradient(125deg,#123e43 0%,#087e72 72%,#159b84 100%); box-shadow:0 24px 60px rgba(8,80,75,.20); }
-    .hero::after { content:""; position:absolute; width:310px; height:310px; right:-72px; top:-132px; border:1px solid rgba(255,255,255,.17); border-radius:50%; box-shadow:0 0 0 32px rgba(255,255,255,.045),0 0 0 70px rgba(255,255,255,.035); }
-    .eyebrow { position:relative; z-index:1; margin:0 0 13px; color:#b5f0d8; font-size:.76rem; font-weight:800; letter-spacing:.17em; }
-    h1 { position:relative; z-index:1; margin:0; font-size:clamp(2.15rem,7vw,3.65rem); line-height:1.2; letter-spacing:-.055em; }
-    .intro { position:relative; z-index:1; max-width:36em; margin:15px 0 25px; color:rgba(255,255,255,.83); font-size:1.03rem; }
-    .notice { position:relative; z-index:1; display:inline-flex; align-items:center; gap:8px; margin:0; padding:8px 13px; border:1px solid rgba(255,255,255,.22); border-radius:999px; background:rgba(255,255,255,.12); color:#fff; font-size:.87rem; font-weight:700; }
-    .notice::before { content:"✦"; color:var(--orange); }
-    h2 { margin:0 0 15px; font-size:1rem; color:#61747a; letter-spacing:.04em; }
-    .tool { position:relative; display:block; padding:25px 58px 25px 25px; border:1px solid var(--line); border-radius:var(--radius-card); background:var(--surface); text-decoration:none; box-shadow:var(--shadow-card); transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
-    .tool::before { content:"↗"; position:absolute; right:22px; top:50%; display:grid; place-items:center; width:36px; height:36px; transform:translateY(-50%); border-radius:50%; background:var(--mint); color:var(--green); font-size:1.1rem; font-weight:800; transition:transform .2s ease; }
-    .tool:hover { border-color:#a9d8c9; transform:translateY(-3px); box-shadow:0 22px 50px rgba(25,57,61,.13); }
-    .tool:hover::before { transform:translate(2px,-50%); }
-    .tool-title { display:block; color:var(--ink); font-size:1.3rem; font-weight:800; letter-spacing:-.02em; }
-    .tool-description { display:block; margin-top:6px; color:var(--muted); }
-    footer { margin-top:46px; padding:18px 2px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.86rem; }
-    @media(max-width:560px) { main { width:min(100% - 24px,820px); padding-top:30px; } .hero { border-radius:23px; margin-bottom:36px; } .tool { padding:20px 52px 20px 19px; border-radius:18px; } .tool::before { right:14px; } }
+    .topbar { height:64px; display:flex; align-items:center; border-bottom:1px solid #e8eaed; background:#fff; }
+    .topbar-inner { width:min(1120px,100% - 48px); margin:auto; display:flex; align-items:center; gap:12px; }
+    .brand-mark { position:relative; width:30px; height:30px; display:grid; grid-template-columns:repeat(2,9px); grid-template-rows:repeat(2,9px); align-content:center; justify-content:center; gap:3px; border-radius:9px; background:#e8f0fe; }
+    .brand-mark i { display:block; border-radius:3px; background:#4285f4; }
+    .brand-mark i:nth-child(2) { background:#34a853; } .brand-mark i:nth-child(3) { background:#fbbc04; } .brand-mark i:nth-child(4) { background:#ea4335; }
+    .brand-name { color:#5f6368; font-family:Arial,sans-serif; font-size:1.08rem; letter-spacing:-.035em; }
+    main { width:min(920px,100% - 48px); margin:0 auto; padding:72px 0 42px; }
+    .hero { max-width:720px; margin:0 auto 72px; }
+    .eyebrow { margin:0 0 15px; color:var(--green); font-family:Arial,sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.12em; }
+    h1 { margin:0; color:#202124; font-size:clamp(2.4rem,7vw,4rem); font-weight:500; line-height:1.12; letter-spacing:-.055em; }
+    .intro { max-width:39em; margin:20px 0 22px; color:var(--muted); font-size:1.12rem; line-height:1.8; }
+    .notice { display:inline-flex; align-items:center; gap:9px; margin:0; padding:8px 14px; border-radius:999px; background:#e8f0fe; color:#174ea6; font-size:.86rem; font-weight:600; }
+    .notice::before { content:"✦"; font-size:.95rem; color:#1a73e8; }
+    h2 { margin:0; font-size:1.35rem; font-weight:500; letter-spacing:-.025em; }
+    .section-head { display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:17px; }
+    .tool-count { color:var(--muted); font-size:.88rem; }
+    .tool { position:relative; display:flex; align-items:center; gap:18px; min-height:112px; padding:20px 22px; border:1px solid #e1e3e6; border-radius:18px; background:#fff; text-decoration:none; box-shadow:var(--shadow-card); transition:background .18s ease,box-shadow .18s ease,border-color .18s ease; }
+    .tool:hover { border-color:#d2e3fc; background:#fcfdff; box-shadow:0 2px 8px rgba(60,64,67,.16); }
+    .tool-icon { flex:0 0 54px; width:54px; height:54px; display:grid; place-items:center; border-radius:16px; background:#e8f0fe; color:#1a73e8; font-size:1.65rem; }
+    .tool-copy { flex:1; min-width:0; }
+    .tool-title { display:block; color:#202124; font-size:1.08rem; font-weight:600; }
+    .tool-description { display:block; margin-top:5px; color:var(--muted); font-size:.93rem; }
+    .tool::after { content:"›"; color:#5f6368; font-size:1.8rem; line-height:1; }
+    footer { margin-top:72px; padding:18px 0 0; border-top:1px solid #e8eaed; color:var(--muted); font-size:.84rem; }
+    @media(max-width:560px) { .topbar { height:58px; } .topbar-inner { width:calc(100% - 32px); } main { width:calc(100% - 32px); padding:52px 0 30px; } .hero { margin-bottom:54px; } .intro { font-size:1rem; } .tool { gap:13px; min-height:100px; padding:16px; border-radius:16px; } .tool-icon { flex-basis:46px; width:46px; height:46px; border-radius:14px; } .tool-description { font-size:.86rem; } footer { margin-top:54px; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
   </style>
 </head>
 <body>
+  <nav class="topbar" aria-label="サイト">
+    <div class="topbar-inner"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="brand-name">ツールひろば</span></div>
+  </nav>
   <main>
     <section class="hero" aria-labelledby="site-title">
     <p class="eyebrow">TOOLS</p>
@@ -36,10 +47,11 @@
     <p class="notice">このサイトのツールはAIが作っています</p>
     </section>
     <section aria-labelledby="tools-heading">
-      <h2 id="tools-heading">ツール一覧</h2>
+      <div class="section-head"><h2 id="tools-heading">ツール一覧</h2><span class="tool-count">1 件</span></div>
       <a class="tool" href="./kugiri-henkan/">
-        <span class="tool-title">区切り変換くん</span>
-        <span class="tool-description">カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span>
+        <span class="tool-icon" aria-hidden="true">≡</span>
+        <span class="tool-copy"><span class="tool-title">区切り変換くん</span>
+        <span class="tool-description">カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></span>
       </a>
     </section>
     <footer>AIが作った便利なツールを公開しています。</footer>
