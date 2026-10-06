@@ -1,1 +1,41 @@
-test pages
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ブラウザですぐ使える便利なツールを紹介します。">
+  <title>ツール一覧 | ツールひろば（仮）</title>
+  <style>
+    :root { color-scheme: light; --ink:#17251f; --muted:#65736c; --line:#dce5df; --paper:#f5f8f4; --green:#14734c; --mint:#e5f4eb; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.6; }
+    main { width:min(760px,100% - 32px); margin:0 auto; padding:64px 0 32px; }
+    .eyebrow { color:var(--green); font-size:.82rem; font-weight:750; letter-spacing:.08em; }
+    h1 { margin:.3rem 0; font-size:clamp(2rem,7vw,3rem); line-height:1.2; letter-spacing:-.04em; }
+    .intro { color:var(--muted); margin:0 0 30px; }
+    .notice { display:inline-block; margin:0 0 28px; padding:9px 13px; border-radius:999px; background:var(--mint); color:#28533c; font-weight:700; }
+    h2 { font-size:1.15rem; margin:0 0 12px; }
+    .tool { display:block; padding:22px; border:1px solid var(--line); border-radius:16px; background:#fff; color:inherit; text-decoration:none; box-shadow:0 8px 24px #17251f0a; }
+    .tool:hover { border-color:var(--green); transform:translateY(-1px); }
+    .tool-title { display:block; color:var(--green); font-size:1.2rem; font-weight:800; }
+    .tool-description { display:block; margin-top:5px; color:var(--muted); }
+    footer { margin-top:34px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:.88rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">TOOLS</p>
+    <h1>ツールひろば（仮）</h1>
+    <p class="intro">毎日のちょっとした作業に使えるツールを集めています。</p>
+    <p class="notice">このサイトのツールはAIが作っています</p>
+    <section aria-labelledby="tools-heading">
+      <h2 id="tools-heading">ツール一覧</h2>
+      <a class="tool" href="./kugiri-henkan/">
+        <span class="tool-title">区切り変換くん</span>
+        <span class="tool-description">カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span>
+      </a>
+    </section>
+    <footer>サイト名は仮称です。運営による選定後に更新します。</footer>
+  </main>
+</body>
+</html>
