@@ -1,0 +1,30 @@
+/* Shared visual language for every tool page. Keep new tools on these tokens. */
+:root {
+  color-scheme: light;
+  --ink: #172d35;
+  --muted: #61747a;
+  --line: #dce7e5;
+  --paper: #f4f8f6;
+  --green: #087e72;
+  --green-dark: #075c55;
+  --mint: #e1f4ed;
+  --orange: #ffc56e;
+  --surface: #fff;
+  --shadow-card: 0 16px 44px rgba(25, 57, 61, .09), 0 2px 8px rgba(25,57,61,.04);
+  --radius-card: 22px;
+}
+* { box-sizing: border-box; }
+html { min-height: 100%; }
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: radial-gradient(ellipse at 85% 0%, rgba(190, 235, 217, .48), transparent 36rem), var(--paper);
+  font-family: "Inter", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+button, input, textarea { font: inherit; }
+:focus-visible { outline: 3px solid #70c9b5; outline-offset: 3px; }
+::selection { color: var(--ink); background: #bdebdc; }

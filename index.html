@@ -5,29 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="ブラウザですぐ使える便利なツールを紹介します。">
   <title>ツール一覧 | AIツールひろば</title>
+  <link rel="stylesheet" href="./shared.css">
   <style>
-    :root { color-scheme: light; --ink:#17251f; --muted:#65736c; --line:#dce5df; --paper:#f5f8f4; --green:#14734c; --mint:#e5f4eb; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--paper); color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.6; }
-    main { width:min(760px,100% - 32px); margin:0 auto; padding:64px 0 32px; }
-    .eyebrow { color:var(--green); font-size:.82rem; font-weight:750; letter-spacing:.08em; }
-    h1 { margin:.3rem 0; font-size:clamp(2rem,7vw,3rem); line-height:1.2; letter-spacing:-.04em; }
-    .intro { color:var(--muted); margin:0 0 30px; }
-    .notice { display:inline-block; margin:0 0 28px; padding:9px 13px; border-radius:999px; background:var(--mint); color:#28533c; font-weight:700; }
-    h2 { font-size:1.15rem; margin:0 0 12px; }
-    .tool { display:block; padding:22px; border:1px solid var(--line); border-radius:16px; background:#fff; color:inherit; text-decoration:none; box-shadow:0 8px 24px #17251f0a; }
-    .tool:hover { border-color:var(--green); transform:translateY(-1px); }
-    .tool-title { display:block; color:var(--green); font-size:1.2rem; font-weight:800; }
-    .tool-description { display:block; margin-top:5px; color:var(--muted); }
-    footer { margin-top:34px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:.88rem; }
+    main { width:min(820px,100% - 40px); margin:0 auto; padding:clamp(54px,11vh,112px) 0 36px; }
+    .hero { position:relative; padding:clamp(26px,6vw,58px); margin-bottom:46px; overflow:hidden; border-radius:30px; color:white; background:linear-gradient(125deg,#123e43 0%,#087e72 72%,#159b84 100%); box-shadow:0 24px 60px rgba(8,80,75,.20); }
+    .hero::after { content:""; position:absolute; width:310px; height:310px; right:-72px; top:-132px; border:1px solid rgba(255,255,255,.17); border-radius:50%; box-shadow:0 0 0 32px rgba(255,255,255,.045),0 0 0 70px rgba(255,255,255,.035); }
+    .eyebrow { position:relative; z-index:1; margin:0 0 13px; color:#b5f0d8; font-size:.76rem; font-weight:800; letter-spacing:.17em; }
+    h1 { position:relative; z-index:1; margin:0; font-size:clamp(2.15rem,7vw,3.65rem); line-height:1.2; letter-spacing:-.055em; }
+    .intro { position:relative; z-index:1; max-width:36em; margin:15px 0 25px; color:rgba(255,255,255,.83); font-size:1.03rem; }
+    .notice { position:relative; z-index:1; display:inline-flex; align-items:center; gap:8px; margin:0; padding:8px 13px; border:1px solid rgba(255,255,255,.22); border-radius:999px; background:rgba(255,255,255,.12); color:#fff; font-size:.87rem; font-weight:700; }
+    .notice::before { content:"✦"; color:var(--orange); }
+    h2 { margin:0 0 15px; font-size:1rem; color:#61747a; letter-spacing:.04em; }
+    .tool { position:relative; display:block; padding:25px 58px 25px 25px; border:1px solid var(--line); border-radius:var(--radius-card); background:var(--surface); text-decoration:none; box-shadow:var(--shadow-card); transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
+    .tool::before { content:"↗"; position:absolute; right:22px; top:50%; display:grid; place-items:center; width:36px; height:36px; transform:translateY(-50%); border-radius:50%; background:var(--mint); color:var(--green); font-size:1.1rem; font-weight:800; transition:transform .2s ease; }
+    .tool:hover { border-color:#a9d8c9; transform:translateY(-3px); box-shadow:0 22px 50px rgba(25,57,61,.13); }
+    .tool:hover::before { transform:translate(2px,-50%); }
+    .tool-title { display:block; color:var(--ink); font-size:1.3rem; font-weight:800; letter-spacing:-.02em; }
+    .tool-description { display:block; margin-top:6px; color:var(--muted); }
+    footer { margin-top:46px; padding:18px 2px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.86rem; }
+    @media(max-width:560px) { main { width:min(100% - 24px,820px); padding-top:30px; } .hero { border-radius:23px; margin-bottom:36px; } .tool { padding:20px 52px 20px 19px; border-radius:18px; } .tool::before { right:14px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
   </style>
 </head>
 <body>
   <main>
+    <section class="hero" aria-labelledby="site-title">
     <p class="eyebrow">TOOLS</p>
-    <h1>AIツールひろば</h1>
+    <h1 id="site-title">AIツールひろば</h1>
     <p class="intro">毎日のちょっとした作業に使えるツールを集めています。</p>
     <p class="notice">このサイトのツールはAIが作っています</p>
+    </section>
     <section aria-labelledby="tools-heading">
       <h2 id="tools-heading">ツール一覧</h2>
       <a class="tool" href="./kugiri-henkan/">
