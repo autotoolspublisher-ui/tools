@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="カンマ、読点、空白、改行などで区切られたリストを、好きな形式に変換するブラウザ内ツールです。">
+  <title>区切り変換くん</title>
+  <style>
+    :root { color-scheme: light; --ink:#17251f; --muted:#65736c; --line:#dce5df; --paper:#f5f8f4; --green:#14734c; --green-dark:#0b5436; --mint:#e5f4eb; --orange:#fff2d9; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.55; }
+    main { width:min(900px,100% - 32px); margin:0 auto; padding:38px 0 24px; }
+    header { margin-bottom:24px; }
+    .eyebrow { display:inline-block; margin:0 0 10px; color:var(--green); font-size:.8rem; font-weight:750; letter-spacing:.08em; }
+    h1 { margin:0; font-size:clamp(1.8rem,6vw,2.6rem); line-height:1.2; letter-spacing:-.04em; }
+    header p { color:var(--muted); margin:10px 0 0; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:clamp(16px,4vw,26px); box-shadow:0 8px 24px #17251f0a; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:0 0 22px; padding:0; list-style:none; }
+    .steps li { border-radius:12px; padding:10px 12px; background:#f1f6f2; color:#405148; font-size:.9rem; }
+    .step-no { color:var(--green); font-weight:800; margin-right:5px; }
+    .controls { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+    fieldset { min-width:0; margin:0; padding:0; border:0; }
+    legend, label.heading { display:block; margin-bottom:8px; font-weight:750; }
+    .options { display:flex; flex-wrap:wrap; gap:8px; }
+    .choice { position:relative; }
+    .choice input { position:absolute; opacity:0; width:1px; height:1px; }
+    .choice span { display:inline-flex; align-items:center; min-height:42px; padding:8px 12px; border:1px solid var(--line); border-radius:10px; cursor:pointer; background:#fff; font-size:.92rem; }
+    .choice input:checked + span { border-color:var(--green); background:var(--mint); color:var(--green-dark); box-shadow:inset 0 0 0 1px var(--green); }
+    .choice input:focus-visible + span { outline:3px solid #7fc9a1; outline-offset:2px; }
+    .custom { display:flex; align-items:center; gap:8px; margin-top:9px; color:var(--muted); font-size:.9rem; }
+    .custom input { width:54px; min-height:40px; text-align:center; border:1px solid var(--line); border-radius:9px; font:inherit; color:var(--ink); }
+    textarea { display:block; width:100%; min-height:165px; resize:vertical; border:1px solid #cad7ce; border-radius:12px; padding:13px 14px; color:var(--ink); font: .98rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    textarea:focus, input[type="text"]:focus { outline:3px solid #b6e2c7; border-color:var(--green); }
+    .text-label { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .text-label label { font-weight:750; }
+    .count { font-size:.82rem; color:var(--muted); }
+    .result-wrap { margin-top:18px; }
+    .result-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+    .result-head label { font-weight:750; }
+    .result { min-height:130px; background:#f8fbf8; }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+    button { min-height:46px; padding:10px 17px; border:0; border-radius:11px; font:inherit; font-weight:750; cursor:pointer; }
+    button:focus-visible { outline:3px solid #7fc9a1; outline-offset:2px; }
+    .primary { background:var(--green); color:#fff; }
+    .primary:hover { background:var(--green-dark); }
+    .secondary { border:1px solid var(--line); background:#fff; color:var(--ink); }
+    .secondary:hover { background:#f3f7f3; }
+    button:disabled { opacity:.5; cursor:not-allowed; }
+    .notice { min-height:1.5em; margin:10px 0 0; color:var(--green-dark); font-size:.9rem; }
+    .privacy { display:flex; gap:9px; align-items:flex-start; margin-top:18px; padding:12px 14px; background:var(--mint); border-radius:11px; color:#28533c; font-size:.88rem; }
+    .privacy strong { white-space:nowrap; }
+    footer { margin-top:20px; padding:16px 4px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.83rem; }
+    footer ul { display:flex; flex-wrap:wrap; gap:8px 22px; margin:0; padding:0; list-style:none; }
+    @media (max-width:650px) { main { width:min(100% - 22px, 900px); padding-top:25px; } .steps { grid-template-columns:1fr; gap:6px; } .steps li { padding:7px 10px; } .controls { grid-template-columns:1fr; gap:14px; } .card { border-radius:14px; } .actions button { flex:1; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">TEXT FORMATTER</p>
+      <h1>区切り変換くん</h1>
+      <p>カンマや改行で並んだリストを、使いたい区切り方にまとめて変換します。</p>
+    </header>
+
+    <section class="card" aria-label="区切り文字変換">
+      <ol class="steps" aria-label="使い方">
+        <li><span class="step-no">1</span>元の区切り方を選ぶ</li>
+        <li><span class="step-no">2</span>変換先を選んでリストを貼り付ける</li>
+        <li><span class="step-no">3</span>結果をコピー</li>
+      </ol>
+
+      <div class="controls">
+        <fieldset>
+          <legend>元の区切り文字</legend>
+          <div class="options">
+            <label class="choice"><input type="checkbox" name="source" value="comma" checked><span>カンマ ,</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="、" checked><span>読点 、</span></label>
+            <label class="choice"><input type="checkbox" name="source" value=" " checked><span>スペース（半角・全角）</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="newline" checked><span>改行</span></label>
+            <label class="choice"><input type="checkbox" name="source" value=";"><span>セミコロン ;</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="；"><span>セミコロン ；</span></label>
+            <label class="choice"><input type="checkbox" name="source" value=":"><span>コロン :</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="："><span>コロン ：</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="/"><span>スラッシュ /</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="／"><span>スラッシュ ／</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="("><span>括弧 (</span></label>
+            <label class="choice"><input type="checkbox" name="source" value=")"><span>括弧 )</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="（"><span>括弧 （</span></label>
+            <label class="choice"><input type="checkbox" name="source" value="）"><span>括弧 ）</span></label>
+          </div>
+          <label class="custom">その他の区切り <input id="customSource" type="text" maxlength="4" aria-label="その他の区切り文字" placeholder="例：/"> <span>（複数指定はカンマ区切り）</span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>変換後の区切り文字</legend>
+          <div class="options">
+            <label class="choice"><input type="radio" name="target" value="、" checked><span>読点 、</span></label>
+            <label class="choice"><input type="radio" name="target" value="comma"><span>カンマ ,</span></label>
+            <label class="choice"><input type="radio" name="target" value="newline"><span>改行</span></label>
+          </div>
+          <label class="custom">その他の区切り <input id="customTarget" type="text" maxlength="12" aria-label="その他の変換先区切り文字" placeholder="例： / "></label>
+        </fieldset>
+      </div>
+
+      <div class="text-label"><label for="inputText">変換するリスト</label><span id="inputCount" class="count">0文字</span></div>
+      <textarea id="inputText" placeholder="例：りんご, みかん、ぶどう&#10;バナナ"></textarea>
+
+      <div class="result-wrap">
+        <div class="result-head"><label for="outputText">変換結果</label><span id="itemCount" class="count">0項目</span></div>
+        <textarea id="outputText" class="result" readonly aria-live="polite" placeholder="ここに変換結果が表示されます"></textarea>
+      </div>
+
+      <div class="actions">
+        <button id="copyButton" class="secondary" type="button" disabled>結果をコピー</button>
+        <button id="clearButton" class="secondary" type="button">クリア</button>
+      </div>
+      <p id="status" class="notice" role="status" aria-live="polite"></p>
+
+      <div class="privacy"><span aria-hidden="true">🔒</span><span><strong>ブラウザ内で処理します。</strong> 入力内容はこのページ内で変換され、保存・送信されません。</span></div>
+    </section>
+
+    <footer>
+      <ul><li>このツールはAIが作成しました</li><li>入力したデータは外部に送信されません</li><li>MITライセンス</li></ul>
+    </footer>
+  </main>
+  <script>
+    (() => {
+      const input = document.querySelector('#inputText');
+      const output = document.querySelector('#outputText');
+      const status = document.querySelector('#status');
+      const copyButton = document.querySelector('#copyButton');
+      const sourceChecks = [...document.querySelectorAll('input[name="source"]')];
+      const targetRadios = [...document.querySelectorAll('input[name="target"]')];
+
+      function getSeparators() {
+        const separators = sourceChecks.filter(el => el.checked).map(el => el.value);
+        const extra = document.querySelector('#customSource').value.split(',').map(s => s.trim()).filter(Boolean);
+        separators.push(...extra);
+        return separators;
+      }
+      function getTarget() {
+        const custom = document.querySelector('#customTarget').value;
+        if (custom.length) return custom;
+        const selected = targetRadios.find(el => el.checked)?.value || '、';
+        return selected === 'newline' ? String.fromCharCode(10) : selected === 'comma' ? ', ' : selected;
+      }
+      function splitItems(text, separators) {
+        const parts = [];
+        let itemStart = 0;
+        for (let i = 0; i < text.length;) {
+          let matched = 0;
+          for (const separator of separators) {
+            if (separator === 'newline' && (text.charCodeAt(i) === 10 || text.charCodeAt(i) === 13)) {
+              matched = text.charCodeAt(i) === 13 && text.charCodeAt(i + 1) === 10 ? 2 : 1;
+              break;
+            }
+            if (separator === 'comma' && text[i] === ',') {
+              matched = 1;
+              while (/\s/.test(text[i + matched] || '') && text.charCodeAt(i + matched) !== 10 && text.charCodeAt(i + matched) !== 13) matched++;
+              break;
+            }
+            if (separator === ' ' && (text[i] === ' ' || text.charCodeAt(i) === 9 || text.charCodeAt(i) === 0x3000)) {
+              matched = 1;
+              while (text.charCodeAt(i + matched) === 9 || text[i + matched] === ' ' || text.charCodeAt(i + matched) === 0x3000) matched++;
+              break;
+            }
+            if (separator !== 'newline' && separator !== 'comma' && text.startsWith(separator, i)) {
+              matched = separator.length;
+              break;
+            }
+          }
+          if (matched) {
+            const value = text.slice(itemStart, i).trim();
+            if (value) parts.push(value);
+            i += matched;
+            itemStart = i;
+          } else {
+            i++;
+          }
+        }
+        const value = text.slice(itemStart).trim();
+        if (value) parts.push(value);
+        return parts;
+      }
+      function convert() {
+        status.textContent = '';
+        const patterns = getSeparators();
+        if (!patterns.length) { output.value = ''; copyButton.disabled = true; document.querySelector('#itemCount').textContent = '0項目'; status.textContent = '元の区切り文字を1つ以上選んでください。'; return; }
+        const parts = splitItems(input.value, patterns);
+        output.value = parts.join(getTarget());
+        document.querySelector('#itemCount').textContent = `${parts.length}項目`;
+        copyButton.disabled = parts.length === 0;
+        status.textContent = parts.length ? `${parts.length}項目を変換しました。` : '変換する項目がありません。';
+      }
+      input.addEventListener('input', () => { document.querySelector('#inputCount').textContent = `${input.value.length}文字`; convert(); });
+      document.querySelectorAll('input[name="source"], input[name="target"]').forEach(el => el.addEventListener('change', convert));
+      document.querySelectorAll('input[name="target"]').forEach(el => el.addEventListener('change', () => { document.querySelector('#customTarget').value = ''; convert(); }));
+      document.querySelector('#customSource').addEventListener('input', convert);
+      document.querySelector('#customTarget').addEventListener('input', () => { targetRadios.forEach(el => { el.checked = false; }); convert(); });
+      copyButton.addEventListener('click', async () => {
+        if (!output.value) return;
+        try { await navigator.clipboard.writeText(output.value); status.textContent = '変換結果をコピーしました。'; }
+        catch { output.focus(); output.select(); status.textContent = '結果を選択しました。Ctrl+C（Macは⌘C）でコピーしてください。'; }
+      });
+      document.querySelector('#clearButton').addEventListener('click', () => {
+        input.value = ''; output.value = ''; document.querySelector('#inputCount').textContent = '0文字';
+        document.querySelector('#itemCount').textContent = '0項目'; copyButton.disabled = true; status.textContent = '入力と結果をクリアしました。'; input.focus();
+      });
+    })();
+  </script>
+</body>
+</html>
