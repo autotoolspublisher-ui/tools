@@ -29,3 +29,17 @@ a { color: inherit; }
 button, input, textarea { font: inherit; }
 :focus-visible { outline: 3px solid #8ab4f8; outline-offset: 3px; }
 ::selection { color: var(--ink); background: #d2e3fc; }
+
+/* Top bar with breadcrumb, shared by every tool page. */
+.topbar { height: 64px; border-bottom: 1px solid #e8eaed; background: #fff; }
+.topbar-inner { width: min(980px, 100% - 40px); height: 100%; margin: auto; display: flex; align-items: center; }
+.breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin: 0; padding: 0; list-style: none; font-size: .94rem; }
+.breadcrumb li { display: inline-flex; align-items: center; gap: 8px; color: #3c4043; }
+.breadcrumb li + li::before { content: "›"; color: #9aa0a6; }
+.breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; margin: 0 -8px; border-radius: 8px; color: var(--green); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb [aria-current="page"] { font-weight: 600; }
+@media (max-width: 650px) {
+  .topbar { height: 58px; }
+  .topbar-inner { width: calc(100% - 28px); }
+}
