@@ -57,11 +57,17 @@
     footer ul { display:flex; flex-wrap:wrap; gap:8px 22px; margin:0; padding:0; list-style:none; }
     @media (max-width:650px) { .topbar { height:58px; } .topbar-inner { width:calc(100% - 28px); } main { width:calc(100% - 28px); padding-top:32px; } .steps { grid-template-columns:1fr; gap:9px; margin-bottom:22px; padding-bottom:18px; } .controls { grid-template-columns:1fr; gap:22px; } .card { border-radius:16px; padding:19px 16px; } .actions button { flex:1; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; } }
+    .breadcrumb ol { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; margin:0; padding:0; list-style:none; font-size:.9rem; }
+    .breadcrumb li { display:inline-flex; align-items:center; gap:8px; color:#3c4043; }
+    .breadcrumb li + li::before { content:"›"; color:#9aa0a6; }
+    .breadcrumb a { color:#1a73e8; text-decoration:none; }
+    .breadcrumb a:hover { text-decoration:underline; }
+    .breadcrumb [aria-current="page"] { font-weight:600; }
   </style>
 </head>
 <body>
   <nav class="topbar" aria-label="パンくずリスト">
-    <div class="topbar-inner"><a class="back-link" href="../"><span aria-hidden="true">‹</span> ツール一覧</a><span class="bar-divider" aria-hidden="true"></span><span class="bar-title">区切り変換くん</span></div>
+    <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">区切り変換くん</li></ol></div>
   </nav>
   <main>
     <header>
