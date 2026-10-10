@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>全角半角そろえ - 英数字は半角・カナは全角に統一｜AIツールひろば</title>
+  <meta name="description" content="全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにまとめてそろえる無料ツールです。半角カナの濁点も1文字に直します。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/zenkaku-hankaku/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="全角半角そろえ - 英数字は半角・カナは全角に統一｜AIツールひろば">
+  <meta property="og:description" content="全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにまとめてそろえる無料ツールです。半角カナの濁点も1文字に直します。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/zenkaku-hankaku/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/zenkaku-hankaku.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "全角半角そろえ",
+    "description": "全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにまとめてそろえる無料ツールです。半角カナの濁点も1文字に直します。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/zenkaku-hankaku/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "全角半角そろえ",
+        "item": "https://autotoolspublisher-ui.github.io/tools/zenkaku-hankaku/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Excelの表のデータをまとめて変換できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。Excelのセル範囲をコピーして入力欄に貼り付け、「結果をコピー」で得た結果を元の場所に貼り付けてください。改行とタブ、改行を含むセルをExcelが囲む引用符は変えないため、行や列はずれません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "半角カナの濁点（ﾞ）や半濁点（ﾟ）はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "カタカナを「全角」にすると、「ｶﾞ」や「ﾊﾟ」のように2文字に分かれた半角カナを、「ガ」「パ」の1文字にまとめます。「半角」にすると、「ガ」は「ｶﾞ」の2文字になります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「！」や「（）」などの記号も変わりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "初期設定では記号は変えません。「記号」を「半角」または「全角」にすると、！？（）：－＠￥ などの記号を変換します。句読点（、。）とかぎかっこ（「」）は「記号」には含まれず、「カタカナ」の設定に従います。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "ひらがなや漢字も変わりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "変わりません。ひらがなと漢字には半角の文字がないため、そのまま残ります。絵文字や、①・㈱などの記号もそのままです。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したテキストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --mark: #fdf1b8; --ok: #137333; --warn-bg: #fef7e0; --warn-ink: #7a4f01; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .settings { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 26px; margin: 0 0 8px; }
+  .setting { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .setting legend { float: left; padding: 0; color: #3c4043; font-weight: 600; font-size: .94rem; white-space: nowrap; }
+  .setting legend small { display: block; color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .seg { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .seg label { position: relative; display: inline-flex; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 4.6em; min-height: 40px; padding: 0 12px; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .seg label + label span { border-left: 1px solid var(--line); }
+  .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  .seg input:checked + span::before { content: "✓"; margin-right: 4px; }
+  .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .seg span:hover { background: #f6fafe; }
+  .note { margin: 4px 0 18px; color: var(--muted); font-size: .875rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; min-height: 220px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .preview { min-height: 220px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; word-break: break-all; }
+  .preview .placeholder { color: var(--muted); font-family: inherit; }
+  .preview mark { background: var(--mark); color: inherit; border-radius: 3px; box-shadow: 0 0 0 1px #f2d25c; }
+  .summary { margin: 10px 0 0; font-size: .9rem; color: var(--ok); font-weight: 600; min-height: 1.5em; }
+  .summary.none { color: var(--warn-ink); font-weight: 400; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  .status { min-height: 1.5em; margin: 10px 0 0; font-size: .9rem; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 760px) {
+    .settings { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    textarea { min-height: 150px; }
+    .preview { min-height: 150px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .setting { flex-direction: column; align-items: stretch; gap: 6px; }
+    .setting legend { float: none; display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+    .setting legend small { display: inline; }
+    .seg { display: flex; }
+    .seg label { flex: 1 1 0; }
+    .seg span { width: 100%; min-width: 0; padding: 0 6px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">全角半角そろえ</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">TEXT WIDTH</p>
+    <h1>全角半角そろえ</h1>
+    <p>全角と半角が混ざったテキストを、「英数字は半角、カタカナは全角」のように、文字の種類ごとにまとめてそろえます。</p>
+  </header>
+
+  <section class="card" aria-label="全角半角そろえ">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>文字の種類ごとに、そろえ方（半角・全角・そのまま）を選びます。</li>
+        <li>「そろえたいテキスト」の欄にテキストを貼り付けます。Excelのセルをそのまま貼り付けても使えます。</li>
+        <li>結果は自動で表示されます。「結果をコピー」でコピーできます。</li>
+      </ol>
+    </div>
+
+    <div class="settings">
+      <fieldset class="setting">
+        <legend>英字・数字<small>ＡＢＣ１２３ ⇔ ABC123</small></legend>
+        <div class="seg">
+          <label><input type="radio" name="alnum" value="half" checked><span>半角</span></label>
+          <label><input type="radio" name="alnum" value="full"><span>全角</span></label>
+          <label><input type="radio" name="alnum" value="keep"><span>そのまま</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>カタカナ<small>ｶﾀｶﾅ ⇔ カタカナ</small></legend>
+        <div class="seg">
+          <label><input type="radio" name="kana" value="half"><span>半角</span></label>
+          <label><input type="radio" name="kana" value="full" checked><span>全角</span></label>
+          <label><input type="radio" name="kana" value="keep"><span>そのまま</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>スペース<small>全角の空白 ⇔ 半角の空白</small></legend>
+        <div class="seg">
+          <label><input type="radio" name="space" value="half"><span>半角</span></label>
+          <label><input type="radio" name="space" value="full"><span>全角</span></label>
+          <label><input type="radio" name="space" value="keep" checked><span>そのまま</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>記号<small>！（）：－ ⇔ !():-</small></legend>
+        <div class="seg">
+          <label><input type="radio" name="symbol" value="half"><span>半角</span></label>
+          <label><input type="radio" name="symbol" value="full"><span>全角</span></label>
+          <label><input type="radio" name="symbol" value="keep" checked><span>そのまま</span></label>
+        </div>
+      </fieldset>
+    </div>
+    <p class="note" id="settingNote">ひらがな・漢字・改行・タブは変わりません。半角カナの濁点（ｶﾞ など）は全角の1文字にまとめます。句読点「、。」・かぎかっこ「」・中点「・」・長音「ー」は「カタカナ」の設定に従います。</p>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText">そろえたいテキスト</label><span id="sourceCount" class="count">0文字</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="例：ﾔﾏﾀﾞ ﾀﾛｳ　会員番号１２３"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果（変えた文字に色が付きます）</span></div>
+        <div id="preview" class="preview" role="region" aria-labelledby="resultLabel" tabindex="0"><span class="placeholder">「そろえたいテキスト」の欄に入力すると、ここに結果が表示されます。</span></div>
+        <p id="summary" class="summary" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したテキストは、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>名簿のカナと番号の全角・半角をそろえる</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>ﾔﾏﾀﾞ ﾀﾛｳ　会員番号１２３
+ｻﾄｳ ﾊﾅｺ　会員番号45</pre></dd>
+        <dt>設定</dt><dd>初期設定のまま（英字・数字：半角／カタカナ：全角／スペース：そのまま／記号：そのまま）</dd>
+        <dt>結果</dt><dd><pre>ヤマダ タロウ　会員番号123
+サトウ ハナコ　会員番号45</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>型番の記号も半角にそろえる</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>型番：ＡＢ－１２３（ﾌﾞﾙｰ）</pre></dd>
+        <dt>設定</dt><dd>英字・数字：半角／カタカナ：全角／記号：半角</dd>
+        <dt>結果</dt><dd><pre>型番:AB-123(ブルー)</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>Excelの表のデータをまとめて変換できますか？</summary>
+      <p>できます。Excelのセル範囲をコピーして入力欄に貼り付け、「結果をコピー」で得た結果を元の場所に貼り付けてください。改行とタブ、改行を含むセルをExcelが囲む引用符は変えないため、行や列はずれません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>半角カナの濁点（ﾞ）や半濁点（ﾟ）はどうなりますか？</summary>
+      <p>カタカナを「全角」にすると、「ｶﾞ」や「ﾊﾟ」のように2文字に分かれた半角カナを、「ガ」「パ」の1文字にまとめます。「半角」にすると、「ガ」は「ｶﾞ」の2文字になります。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「！」や「（）」などの記号も変わりますか？</summary>
+      <p>初期設定では記号は変えません。「記号」を「半角」または「全角」にすると、！？（）：－＠￥ などの記号を変換します。句読点（、。）とかぎかっこ（「」）は「記号」には含まれず、「カタカナ」の設定に従います。</p>
+    </details>
+    <details class="faq-item">
+      <summary>ひらがなや漢字も変わりますか？</summary>
+      <p>変わりません。ひらがなと漢字には半角の文字がないため、そのまま残ります。絵文字や、①・㈱などの記号もそのままです。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力したテキストは、どこかに送信されますか？</summary>
+      <p>いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（バックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var QUOTE = String.fromCharCode(34);
+  var DAKUTEN_COMBINING = String.fromCharCode(0x3099);    // 結合用の濁点
+  var HANDAKUTEN_COMBINING = String.fromCharCode(0x309A); // 結合用の半濁点
+  var HALF_DAKUTEN = String.fromCharCode(0xFF9E);         // ﾞ
+  var HALF_HANDAKUTEN = String.fromCharCode(0xFF9F);      // ﾟ
+  var FULL_SPACE = String.fromCharCode(0x3000);
+  var HALF_SPACE = ' ';
+  var PREVIEW_LIMIT = 300000; // これを超える長さでは色付けを省略する
+
+  // 半角カナと全角カナの対応（同じ位置の文字どうしが対応する）
+  var HALF_KANA = '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ';
+  var FULL_KANA = '。「」、・ヲァィゥェォャュョッーアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン゛゜';
+  var halfToFullKana = {};
+  var fullToHalfKana = {};
+  for (var k = 0; k < HALF_KANA.length; k++) {
+    halfToFullKana[HALF_KANA.charAt(k)] = FULL_KANA.charAt(k);
+    fullToHalfKana[FULL_KANA.charAt(k)] = HALF_KANA.charAt(k);
+  }
+
+  // 円記号などの全角記号（FFE0〜FFE6）と、対応する半角の記号
+  var FULL_SIGNS = [0xFFE0, 0xFFE1, 0xFFE2, 0xFFE3, 0xFFE4, 0xFFE5, 0xFFE6];
+  var HALF_SIGNS = [0x00A2, 0x00A3, 0x00AC, 0x00AF, 0x00A6, 0x00A5, 0x20A9];
+  var fullToHalfSign = {};
+  var halfToFullSign = {};
+  for (var y = 0; y < FULL_SIGNS.length; y++) {
+    fullToHalfSign[String.fromCharCode(FULL_SIGNS[y])] = String.fromCharCode(HALF_SIGNS[y]);
+    halfToFullSign[String.fromCharCode(HALF_SIGNS[y])] = String.fromCharCode(FULL_SIGNS[y]);
+  }
+
+  var sourceText = document.getElementById('sourceText');
+  var sourceCount = document.getElementById('sourceCount');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+
+  var lastResult = '';
+  var copyTimer = null;
+
+  function isAsciiAlnum(code) {
+    return (code >= 0x30 && code <= 0x39) || (code >= 0x41 && code <= 0x5A) || (code >= 0x61 && code <= 0x7A);
+  }
+
+  // 文字の種類を判定する：'alnum'、'symbol'、'space'、'kana'、null（対象外）
+  function classify(ch) {
+    var code = ch.charCodeAt(0);
+    if (ch.length !== 1) return null;
+    if (code === 0x20 || code === 0x3000) return 'space';
+    if (code >= 0x21 && code <= 0x7E) return isAsciiAlnum(code) ? 'alnum' : 'symbol';
+    if (code >= 0xFF01 && code <= 0xFF5E) return isAsciiAlnum(code - 0xFEE0) ? 'alnum' : 'symbol';
+    if (Object.prototype.hasOwnProperty.call(halfToFullSign, ch) || Object.prototype.hasOwnProperty.call(fullToHalfSign, ch)) return 'symbol';
+    if (Object.prototype.hasOwnProperty.call(halfToFullKana, ch)) return 'kana';
+    if (Object.prototype.hasOwnProperty.call(fullToHalfKana, ch)) return 'kana';
+    // 濁点・半濁点付きの全角カナ（ガ、パ、ヴ など）
+    var decomposed = ch.normalize('NFD');
+    if (decomposed.length === 2 && Object.prototype.hasOwnProperty.call(fullToHalfKana, decomposed.charAt(0)) &&
+        (decomposed.charAt(1) === DAKUTEN_COMBINING || decomposed.charAt(1) === HANDAKUTEN_COMBINING)) {
+      return 'kana';
+    }
+    return null;
+  }
+
+  // 英数字・記号：半角⇔全角（コードの差は 0xFEE0）
+  function asciiWidth(ch, mode) {
+    var code = ch.charCodeAt(0);
+    if (mode === 'half' && Object.prototype.hasOwnProperty.call(fullToHalfSign, ch)) return fullToHalfSign[ch];
+    if (mode === 'full' && Object.prototype.hasOwnProperty.call(halfToFullSign, ch)) return halfToFullSign[ch];
+    if (mode === 'half' && code >= 0xFF01 && code <= 0xFF5E) return String.fromCharCode(code - 0xFEE0);
+    if (mode === 'full' && code >= 0x21 && code <= 0x7E) return String.fromCharCode(code + 0xFEE0);
+    return ch;
+  }
+
+  // 全角カナ1文字を半角にする（ガ → ｶﾞ）。半角がない文字（ヰ、ヵ など）はそのまま
+  function kanaToHalf(ch) {
+    if (Object.prototype.hasOwnProperty.call(fullToHalfKana, ch)) return fullToHalfKana[ch];
+    var decomposed = ch.normalize('NFD');
+    if (decomposed.length === 2 && Object.prototype.hasOwnProperty.call(fullToHalfKana, decomposed.charAt(0))) {
+      var mark = decomposed.charAt(1);
+      if (mark === DAKUTEN_COMBINING) return fullToHalfKana[decomposed.charAt(0)] + HALF_DAKUTEN;
+      if (mark === HANDAKUTEN_COMBINING) return fullToHalfKana[decomposed.charAt(0)] + HALF_HANDAKUTEN;
+    }
+    return ch;
+  }
+
+  function getSettings() {
+    function value(name) {
+      var checked = document.querySelector('input[name="' + name + '"]:checked');
+      return checked ? checked.value : 'keep';
+    }
+    return { alnum: value('alnum'), kana: value('kana'), space: value('space'), symbol: value('symbol') };
+  }
+
+  // 1文字ずつ（コードポイントの並び）変換する。半角カナの濁点・半濁点はここで結合する
+  function convertRun(chars, settings, counts, pieces) {
+    for (var i = 0; i < chars.length; i++) {
+      var ch = chars[i];
+      var type = classify(ch);
+      var mode = type ? settings[type] : 'keep';
+      var out = ch;
+      var used = 1;
+      if (mode !== 'keep') {
+        if (type === 'alnum' || type === 'symbol') {
+          out = asciiWidth(ch, mode);
+        } else if (type === 'space') {
+          out = mode === 'half' ? HALF_SPACE : FULL_SPACE;
+        } else if (type === 'kana') {
+          if (mode === 'full') {
+            if (Object.prototype.hasOwnProperty.call(halfToFullKana, ch)) {
+              var base = halfToFullKana[ch];
+              var next = chars[i + 1];
+              out = base;
+              // 後ろの半角の濁点・半濁点を結合できる場合は1文字にまとめる
+              if (next === HALF_DAKUTEN || next === HALF_HANDAKUTEN) {
+                var combined = (base + (next === HALF_DAKUTEN ? DAKUTEN_COMBINING : HANDAKUTEN_COMBINING)).normalize('NFC');
+                if (combined.length === 1) { out = combined; used = 2; }
+              }
+            }
+          } else {
+            out = kanaToHalf(ch);
+          }
+        }
+      }
+      var original = chars.slice(i, i + used).join('');
+      var changed = out !== original;
+      if (changed) counts[type]++;
+      pieces.push({ text: out, changed: changed });
+      i += used - 1;
+    }
+  }
+
+  // Excelからコピーした表で、改行やタブ、" を含むセルを囲む " と、セル内の "" の位置を探す。
+  // これらを全角にすると、貼り戻したときに行や列がずれるため、変換しない。
+  function findExcelQuotes(text) {
+    var keep = {};
+    var len = text.length;
+    var i = 0;
+    while (i < len) {
+      var atFieldStart = i === 0 || text.charAt(i - 1) === TAB || text.charAt(i - 1) === LF;
+      if (atFieldStart && text.charAt(i) === QUOTE) {
+        var j = i + 1;
+        var inner = [];
+        var special = false;
+        while (j < len) {
+          var c = text.charAt(j);
+          if (c === QUOTE) {
+            if (text.charAt(j + 1) === QUOTE) { inner.push(j, j + 1); special = true; j += 2; continue; }
+            break;
+          }
+          if (c === LF || c === TAB) special = true;
+          j++;
+        }
+        var after = text.charAt(j + 1);
+        if (j < len && special && (j + 1 === len || after === TAB || after === LF || after === CR)) {
+          keep[i] = true;
+          keep[j] = true;
+          for (var n = 0; n < inner.length; n++) keep[inner[n]] = true;
+          i = j + 1;
+          continue;
+        }
+      }
+      i++;
+    }
+    return keep;
+  }
+
+  // 見た目の1文字（書記素）ごとに分ける
+  function graphemes(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+      var list = [];
+      var it = new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text);
+      for (var s of it) list.push({ text: s.segment, index: s.index });
+      return list;
+    }
+    var out = [];
+    var pos = 0;
+    Array.from(text).forEach(function (c) { out.push({ text: c, index: pos }); pos += c.length; });
+    return out;
+  }
+
+  // すべての文字が変換の対象になる並び（ｶﾞ のような半角カナと半角の濁点など）か
+  function allClassified(chars) {
+    for (var i = 0; i < chars.length; i++) {
+      if (classify(chars[i]) === null) return false;
+    }
+    return true;
+  }
+
+  // テキストを変換し、[{text, changed}] の並びと種類ごとの件数を返す
+  function convert(text, settings) {
+    var pieces = [];
+    var counts = { alnum: 0, kana: 0, space: 0, symbol: 0 };
+    var excelQuotes = findExcelQuotes(text);
+    graphemes(text).forEach(function (g) {
+      var chars = Array.from(g.text);
+      if (chars.length === 1) {
+        if (excelQuotes[g.index]) { pieces.push({ text: g.text, changed: false }); return; }
+        convertRun(chars, settings, counts, pieces);
+        return;
+      }
+      // 半角カナと半角の濁点・半濁点の並び（ｶﾞ など）
+      if (allClassified(chars)) { convertRun(chars, settings, counts, pieces); return; }
+      // 結合用の濁点・半濁点が付いた全角カナ（カ＋゙ など）は、1文字のカナとして扱う
+      if (chars.length === 2 && (chars[1] === DAKUTEN_COMBINING || chars[1] === HANDAKUTEN_COMBINING)) {
+        var composed = g.text.normalize('NFC');
+        if (composed.length === 1 && classify(composed) === 'kana' && settings.kana !== 'keep') {
+          var out = settings.kana === 'half' ? kanaToHalf(composed) : composed;
+          counts.kana++;
+          pieces.push({ text: out, changed: true });
+          return;
+        }
+      }
+      // 対象外の文字の後ろに半角の濁点などが続く場合（漢ﾞ など）は、先頭だけそのままにして残りを変換する
+      if (classify(chars[0]) === null && allClassified(chars.slice(1))) {
+        pieces.push({ text: chars[0], changed: false });
+        convertRun(chars.slice(1), settings, counts, pieces);
+        return;
+      }
+      // それ以外の組み合わせ文字（1️⃣ などの絵文字）は変えない
+      pieces.push({ text: g.text, changed: false });
+    });
+    return { pieces: pieces, counts: counts };
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function countChars(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+      var n = 0;
+      var it = new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text);
+      for (var s of it) { if (s.segment !== LF) n++; }
+      return n;
+    }
+    return Array.from(text).filter(function (c) { return c !== LF; }).length;
+  }
+
+  function update() {
+    var text = sourceText.value;
+    sourceCount.textContent = countChars(text).toLocaleString('ja-JP') + '文字';
+    if (text === '') {
+      lastResult = '';
+      preview.innerHTML = '<span class="placeholder">「そろえたいテキスト」の欄に入力すると、ここに結果が表示されます。</span>';
+      summary.textContent = '';
+      summary.classList.remove('none');
+      copyButton.disabled = true;
+      return;
+    }
+    var settings = getSettings();
+    var result = convert(text, settings);
+    var plain = result.pieces.map(function (p) { return p.text; }).join('');
+    lastResult = plain;
+    if (plain.length > PREVIEW_LIMIT) {
+      preview.textContent = plain;
+    } else {
+      var html = '';
+      var buffer = '';
+      var inMark = false;
+      result.pieces.forEach(function (p) {
+        if (p.changed !== inMark) {
+          html += inMark ? '<mark>' + escapeHtml(buffer) + '</mark>' : escapeHtml(buffer);
+          buffer = '';
+          inMark = p.changed;
+        }
+        buffer += p.text;
+      });
+      html += inMark ? '<mark>' + escapeHtml(buffer) + '</mark>' : escapeHtml(buffer);
+      preview.innerHTML = html;
+    }
+    var c = result.counts;
+    var total = c.alnum + c.kana + c.space + c.symbol;
+    if (total === 0) {
+      summary.textContent = '変える文字はありませんでした。すでにそろっているか、そろえ方が「そのまま」になっています。';
+      summary.classList.add('none');
+    } else {
+      summary.textContent = total.toLocaleString('ja-JP') + 'か所を変えました（英字・数字 ' + c.alnum.toLocaleString('ja-JP') +
+        '、カタカナ ' + c.kana.toLocaleString('ja-JP') + '、スペース ' + c.space.toLocaleString('ja-JP') +
+        '、記号 ' + c.symbol.toLocaleString('ja-JP') + '）';
+      summary.classList.remove('none');
+    }
+    if (plain.length > PREVIEW_LIMIT) {
+      summary.textContent += ' ※文字数が多いため、変えた文字の色付けは省略しています。';
+    }
+    copyButton.disabled = false;
+  }
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle('error', !!isError);
+  }
+
+  function selectPreview() {
+    var range = document.createRange();
+    range.selectNodeContents(preview);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  // ボタンの文字で結果を知らせる（スマートフォンでは下のメッセージが画面外になることがあるため）
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectPreview();
+    setStatus('コピーできませんでした。結果の文字を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+    if (status.scrollIntoView) status.scrollIntoView({ block: 'nearest' });
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (text === '') return;
+    var done = function () {
+      setStatus('結果をコピーしました（' + countChars(text).toLocaleString('ja-JP') + '文字）。');
+      // スマートフォンでは下のメッセージが画面外になることがあるため、ボタンの文字でも知らせる
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  sampleButton.addEventListener('click', function () {
+    sourceText.value = 'ﾔﾏﾀﾞ ﾀﾛｳ　会員番号１２３' + LF + 'ｻﾄｳ ﾊﾅｺ　会員番号45' + LF + '型番：ＡＢ－１２３（ﾌﾞﾙｰ）';
+    update();
+    setStatus('例を入れました。そろえ方を切り替えると、結果がすぐに変わります。');
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    update();
+    setStatus('入力と結果を消しました。');
+    sourceText.focus();
+  });
+
+  sourceText.addEventListener('input', function () { update(); setStatus(''); });
+  Array.prototype.forEach.call(document.querySelectorAll('.seg input'), function (input) {
+    input.addEventListener('change', function () {
+      update();
+      var label = input.closest('fieldset').querySelector('legend').firstChild.textContent;
+      var choice = input.nextElementSibling.textContent;
+      setStatus('「' + label + '」を「' + choice + '」にしました。' + (sourceText.value === '' ? 'テキストを入力すると、この設定で結果が表示されます。' : '結果を更新しました。'));
+    });
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
