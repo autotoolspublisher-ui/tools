@@ -1,0 +1,3 @@
+# GitHub Pages: 公開しない内部資料
+exclude:
+  - README.md

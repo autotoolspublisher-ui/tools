@@ -3,8 +3,104 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="置換リスト（対応表）を使って、複数の語句をまとめて一度に置換するブラウザ内ツールです。入力したデータは外部に送信されません。">
-<title>まとめて置換 | AIツールひろば</title>
+  <title>まとめて置換 - 置換リストで複数の語句を一括置換｜AIツールひろば</title>
+  <meta name="description" content="「AをBに、CをDに」のような複数の置換を、置換リスト（対応表）を使って一度に行える無料ツールです。入れ替えや改行への置換にも対応。登録やインストールは不要で、入力した内容はブラウザの外に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/matomete-chikan/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="まとめて置換 - 置換リストで複数の語句を一括置換｜AIツールひろば">
+  <meta property="og:description" content="「AをBに、CをDに」のような複数の置換を、置換リスト（対応表）を使って一度に行える無料ツールです。入れ替えや改行への置換にも対応。登録やインストールは不要で、入力した内容はブラウザの外に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/matomete-chikan/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/matomete-chikan.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "まとめて置換",
+    "description": "「AをBに、CをDに」のような複数の置換を、置換リスト（対応表）を使って一度に行える無料ツールです。入れ替えや改行への置換にも対応。登録やインストールは不要で、入力した内容はブラウザの外に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/matomete-chikan/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "まとめて置換",
+        "item": "https://autotoolspublisher-ui.github.io/tools/matomete-chikan/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "AとBを入れ替えることはできますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。置換リストのすべてのルールを同時に適用するため、「山田→佐藤」と「佐藤→山田」を並べて書けば、2つの名前が入れ替わります。置換した結果が、もう一度置換されることはありません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "改行に置き換えるにはどうすればいいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "置換後の文字に「\\n」と書くと改行として扱います。たとえば「。→。\\n」で、句点のあとで改行します。タブは「\\t」、記号の「\\」そのものは「\\\\」と書きます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Excelで作った対応表を使えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "使えます。Excelの2列（置換前と置換後）をコピーして置換リストに貼り付けると、タブ区切りとして読み取ります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "同じ場所に複数のルールが当てはまるときは？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "長い検索語のルールを優先します。たとえば「東京」と「東京都」の両方がある場合、「東京都」の部分は「東京都」のルールで置換されます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したテキストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。置換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
 <link rel="stylesheet" href="../shared.css">
 <style>
   :root { --warn-bg: #fef7e0; --warn-ink: #7a4f01; --mark: #fdf1b8; --ok: #137333; }
@@ -137,6 +233,59 @@
 
     <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したテキストと置換リストは、このページの中だけで処理され、保存も外部への送信もされません。</div>
   </section>
+
+    <section class="guide" aria-labelledby="guide-examples">
+      <h2 id="guide-examples">使い方の例</h2>
+        <div class="guide-example">
+          <h3>担当者の名前を入れ替える</h3>
+          <dl>
+            <dt>入力</dt><dd><pre>担当は山田、副担当は佐藤です。</pre></dd>
+            <dt>設定</dt><dd>置換リスト：山田→佐藤／佐藤→山田</dd>
+            <dt>結果</dt><dd><pre>担当は佐藤、副担当は山田です。</pre></dd>
+          </dl>
+        </div>
+        <div class="guide-example">
+          <h3>文章を1文ずつ改行する</h3>
+          <dl>
+            <dt>入力</dt><dd><pre>こんにちは。よろしくお願いします。</pre></dd>
+            <dt>設定</dt><dd>置換リスト：。→。\n</dd>
+            <dt>結果</dt><dd><pre>こんにちは。
+よろしくお願いします。
+</pre></dd>
+          </dl>
+        </div>
+    </section>
+
+    <section class="guide" aria-labelledby="guide-faq">
+      <h2 id="guide-faq">よくある質問</h2>
+        <details class="faq-item">
+          <summary>AとBを入れ替えることはできますか？</summary>
+          <p>できます。置換リストのすべてのルールを同時に適用するため、「山田→佐藤」と「佐藤→山田」を並べて書けば、2つの名前が入れ替わります。置換した結果が、もう一度置換されることはありません。</p>
+        </details>
+        <details class="faq-item">
+          <summary>改行に置き換えるにはどうすればいいですか？</summary>
+          <p>置換後の文字に「\n」と書くと改行として扱います。たとえば「。→。\n」で、句点のあとで改行します。タブは「\t」、記号の「\」そのものは「\\」と書きます。</p>
+        </details>
+        <details class="faq-item">
+          <summary>Excelで作った対応表を使えますか？</summary>
+          <p>使えます。Excelの2列（置換前と置換後）をコピーして置換リストに貼り付けると、タブ区切りとして読み取ります。</p>
+        </details>
+        <details class="faq-item">
+          <summary>同じ場所に複数のルールが当てはまるときは？</summary>
+          <p>長い検索語のルールを優先します。たとえば「東京」と「東京都」の両方がある場合、「東京都」の部分は「東京都」のルールで置換されます。</p>
+        </details>
+        <details class="faq-item">
+          <summary>入力したテキストは、どこかに送信されますか？</summary>
+          <p>いいえ。置換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+        </details>
+    </section>
+
+    <section class="guide" aria-labelledby="guide-related">
+      <h2 id="guide-related">ほかのツール</h2>
+      <ul class="related-tools">
+        <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      </ul>
+    </section>
 
   <footer>
     <ul>
