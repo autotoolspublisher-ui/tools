@@ -7,12 +7,6 @@
   <title>区切り変換くん</title>
   <link rel="stylesheet" href="../shared.css">
   <style>
-    .topbar { height:64px; border-bottom:1px solid #e8eaed; background:#fff; }
-    .topbar-inner { width:min(980px,100% - 40px); height:100%; margin:auto; display:flex; align-items:center; gap:13px; }
-    .back-link { display:inline-flex; align-items:center; gap:8px; color:#5f6368; text-decoration:none; font-size:.9rem; }
-    .back-link:hover { color:var(--green); }
-    .bar-divider { width:1px; height:22px; background:#dadce0; }
-    .bar-title { color:#3c4043; font-size:.94rem; font-weight:600; }
     main { width:min(980px,100% - 40px); margin:0 auto; padding:42px 0 32px; }
     header { margin-bottom:27px; }
     .eyebrow { display:inline-block; margin:0 0 8px; color:var(--green); font-family:Arial,sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.11em; }
@@ -55,14 +49,8 @@
     .privacy strong { white-space:nowrap; }
     footer { margin-top:20px; padding:16px 4px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.83rem; }
     footer ul { display:flex; flex-wrap:wrap; gap:8px 22px; margin:0; padding:0; list-style:none; }
-    @media (max-width:650px) { .topbar { height:58px; } .topbar-inner { width:calc(100% - 28px); } main { width:calc(100% - 28px); padding-top:32px; } .steps { grid-template-columns:1fr; gap:9px; margin-bottom:22px; padding-bottom:18px; } .controls { grid-template-columns:1fr; gap:22px; } .card { border-radius:16px; padding:19px 16px; } .actions button { flex:1; } }
+    @media (max-width:650px) { main { width:calc(100% - 28px); padding-top:32px; } .steps { grid-template-columns:1fr; gap:9px; margin-bottom:22px; padding-bottom:18px; } .controls { grid-template-columns:1fr; gap:22px; } .card { border-radius:16px; padding:19px 16px; } .actions button { flex:1; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; } }
-    .breadcrumb ol { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; margin:0; padding:0; list-style:none; font-size:.9rem; }
-    .breadcrumb li { display:inline-flex; align-items:center; gap:8px; color:#3c4043; }
-    .breadcrumb li + li::before { content:"›"; color:#9aa0a6; }
-    .breadcrumb a { color:#1a73e8; text-decoration:none; }
-    .breadcrumb a:hover { text-decoration:underline; }
-    .breadcrumb [aria-current="page"] { font-weight:600; }
   </style>
 </head>
 <body>
