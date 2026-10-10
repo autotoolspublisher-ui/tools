@@ -66,12 +66,23 @@
     textarea { min-height: 150px; }
     .actions .btn { flex: 1 1 40%; }
   }
+  .topbar { border-bottom: 1px solid var(--line); background: #fff; }
+  .topbar-inner { width: min(980px, 100% - 32px); min-height: 56px; margin: auto; display: flex; align-items: center; }
+  .breadcrumb ol { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; margin:0; padding:0; list-style:none; font-size:.9rem; }
+  .breadcrumb li { display:inline-flex; align-items:center; gap:8px; color:#3c4043; }
+  .breadcrumb li + li::before { content:"›"; color:#9aa0a6; }
+  .breadcrumb a { color:#1a73e8; text-decoration:none; }
+  .breadcrumb a:hover { text-decoration:underline; }
+  .breadcrumb [aria-current="page"] { font-weight:600; }
+  @media (max-width: 720px) { .topbar-inner { width: min(100% - 24px, 980px); } }
 </style>
 </head>
 <body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">まとめて置換</li></ol></div>
+</nav>
 <main>
   <header>
-    <p class="site">AIツールひろば</p>
     <h1>まとめて置換</h1>
     <p>置換リスト（対応表）を使って、複数の語句を一度に置き換えます。入れ替え（AをBに、BをAに）も崩れません。</p>
   </header>
