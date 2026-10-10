@@ -3,8 +3,96 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="カンマ、読点、空白、改行などで区切られたリストを、好きな形式に変換するブラウザ内ツールです。">
-  <title>区切り変換くん</title>
+  <title>区切り変換くん - リストの区切りを一括変換｜AIツールひろば</title>
+  <meta name="description" content="カンマ、読点、スペース、改行などが混ざったリストを、読点・カンマ・改行など好きな区切りに一括で変換する無料ツールです。登録不要で、入力した内容はブラウザの外に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/kugiri-henkan/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="区切り変換くん - リストの区切りを一括変換｜AIツールひろば">
+  <meta property="og:description" content="カンマ、読点、スペース、改行などが混ざったリストを、読点・カンマ・改行など好きな区切りに一括で変換する無料ツールです。登録不要で、入力した内容はブラウザの外に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/kugiri-henkan/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/kugiri-henkan.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "区切り変換くん",
+    "description": "カンマ、読点、スペース、改行などが混ざったリストを、読点・カンマ・改行など好きな区切りに一括で変換する無料ツールです。登録不要で、入力した内容はブラウザの外に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/kugiri-henkan/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "区切り変換くん",
+        "item": "https://autotoolspublisher-ui.github.io/tools/kugiri-henkan/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "入力したリストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "全角スペースやタブも区切りとして扱えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。元の区切り文字で「スペース（半角・全角）」を選ぶと、半角スペース、全角スペース、タブのいずれも区切りとして扱います。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "区切りが続いてできた空の項目はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「りんご,,みかん」のように区切りが続いた場合や、先頭・末尾に区切りがある場合にできる空の項目は、取り除いて変換します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "選択肢にない記号で区切りたいときは？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「その他の区切り」の欄に記号を入力してください。複数の記号を指定するときは、カンマで区切って入力します。"
+        }
+      }
+    ]
+  }
+]
+  </script>
   <link rel="stylesheet" href="../shared.css">
   <style>
     main { width:min(980px,100% - 40px); margin:0 auto; padding:42px 0 32px; }
@@ -26,7 +114,7 @@
     .choice input:checked + span { border-color:#d2e3fc; background:#e8f0fe; color:#174ea6; box-shadow:inset 0 0 0 1px #d2e3fc; }
     .choice input:focus-visible + span { outline:3px solid #8ab4f8; outline-offset:2px; }
     .custom { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:12px; color:var(--muted); font-size:.86rem; }
-    .custom input { width:58px; min-height:38px; text-align:center; border:1px solid #dadce0; border-radius:8px; font:inherit; color:var(--ink); }
+    .custom input { width:8em; max-width:100%; min-height:38px; text-align:center; border:1px solid #dadce0; border-radius:8px; font:inherit; color:var(--ink); }
     textarea { display:block; width:100%; min-height:165px; resize:vertical; border:1px solid #dadce0; border-radius:12px; padding:14px 15px; color:var(--ink); background:#fff; font: .94rem/1.65 ui-monospace,SFMono-Regular,Consolas,monospace; transition:border-color .18s ease,box-shadow .18s ease; }
     textarea:focus, input[type="text"]:focus { outline:0; border-color:#1a73e8; box-shadow:0 0 0 1px #1a73e8; }
     .text-label { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
@@ -90,7 +178,7 @@
             <label class="choice"><input type="checkbox" name="source" value="（"><span>括弧 （</span></label>
             <label class="choice"><input type="checkbox" name="source" value="）"><span>括弧 ）</span></label>
           </div>
-          <label class="custom">その他の区切り <input id="customSource" type="text" maxlength="4" aria-label="その他の区切り文字" placeholder="例：/"> <span>（複数指定はカンマ区切り）</span></label>
+          <label class="custom">その他の区切り <input id="customSource" type="text" maxlength="40" aria-label="その他の区切り文字" placeholder="例：/"> <span>（複数指定はカンマ区切り）</span></label>
         </fieldset>
 
         <fieldset>
@@ -119,6 +207,58 @@
       <p id="status" class="notice" role="status" aria-live="polite"></p>
 
       <div class="privacy"><span aria-hidden="true">🔒</span><span><strong>ブラウザ内で処理します。</strong> 入力内容はこのページ内で変換され、保存・送信されません。</span></div>
+    </section>
+
+    <section class="guide" aria-labelledby="guide-examples">
+      <h2 id="guide-examples">使い方の例</h2>
+        <div class="guide-example">
+          <h3>ECサイトの商品タグを、1行に1つの形に直す</h3>
+          <dl>
+            <dt>入力</dt><dd><pre>りんご, みかん、ぶどう　バナナ</pre></dd>
+            <dt>設定</dt><dd>元の区切り：カンマ・読点・スペース（初期設定のまま）／変換後：改行</dd>
+            <dt>結果</dt><dd><pre>りんご
+みかん
+ぶどう
+バナナ</pre></dd>
+          </dl>
+        </div>
+        <div class="guide-example">
+          <h3>Excelの1列分を、読点区切りの文章用に並べる</h3>
+          <dl>
+            <dt>入力</dt><dd><pre>東京
+大阪
+名古屋</pre></dd>
+            <dt>設定</dt><dd>元の区切り：改行／変換後：読点</dd>
+            <dt>結果</dt><dd><pre>東京、大阪、名古屋</pre></dd>
+          </dl>
+        </div>
+    </section>
+
+    <section class="guide" aria-labelledby="guide-faq">
+      <h2 id="guide-faq">よくある質問</h2>
+        <details class="faq-item">
+          <summary>入力したリストは、どこかに送信されますか？</summary>
+          <p>いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+        </details>
+        <details class="faq-item">
+          <summary>全角スペースやタブも区切りとして扱えますか？</summary>
+          <p>はい。元の区切り文字で「スペース（半角・全角）」を選ぶと、半角スペース、全角スペース、タブのいずれも区切りとして扱います。</p>
+        </details>
+        <details class="faq-item">
+          <summary>区切りが続いてできた空の項目はどうなりますか？</summary>
+          <p>「りんご,,みかん」のように区切りが続いた場合や、先頭・末尾に区切りがある場合にできる空の項目は、取り除いて変換します。</p>
+        </details>
+        <details class="faq-item">
+          <summary>選択肢にない記号で区切りたいときは？</summary>
+          <p>「その他の区切り」の欄に記号を入力してください。複数の記号を指定するときは、カンマで区切って入力します。</p>
+        </details>
+    </section>
+
+    <section class="guide" aria-labelledby="guide-related">
+      <h2 id="guide-related">ほかのツール</h2>
+      <ul class="related-tools">
+        <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      </ul>
     </section>
 
     <footer>

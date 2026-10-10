@@ -43,3 +43,29 @@ button, input, textarea { font: inherit; }
   .topbar { height: 58px; }
   .topbar-inner { width: calc(100% - 28px); }
 }
+
+/* Guide sections below each tool: usage examples, FAQ, related tools. */
+.guide { margin-top: 40px; }
+.guide h2 { margin: 0 0 14px; color: #202124; font-size: 1.3rem; font-weight: 500; letter-spacing: -.02em; }
+.guide h3 { margin: 0 0 10px; color: #3c4043; font-size: 1rem; font-weight: 600; }
+.guide-example { margin-top: 12px; padding: 18px 20px; border: 1px solid #e1e3e6; border-radius: 16px; background: var(--surface); }
+.guide-example dl { display: grid; grid-template-columns: 4em 1fr; gap: 8px 12px; margin: 0; font-size: .92rem; }
+.guide-example dt { color: var(--muted); font-weight: 600; }
+.guide-example dd { margin: 0; min-width: 0; }
+.guide-example pre { margin: 0; padding: 8px 12px; border-radius: 8px; background: var(--surface-soft); font: .9rem/1.6 ui-monospace, Consolas, monospace; white-space: pre-wrap; word-break: break-all; }
+.faq-item { border-bottom: 1px solid #e8eaed; }
+.faq-item summary { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 0; color: #202124; font-weight: 600; cursor: pointer; list-style: none; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::before { content: "+"; flex: 0 0 24px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--mint); color: var(--green-dark); font-weight: 700; line-height: 1; }
+.faq-item[open] summary::before { content: "−"; }
+.faq-item p { margin: 0 0 14px; color: #3c4043; }
+.related-tools { margin: 0; padding: 0; list-style: none; }
+.related-tools li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid #e8eaed; }
+.related-tools a { display: inline-flex; align-items: center; min-height: 40px; color: var(--green-dark); font-weight: 600; text-decoration: none; }
+.related-tools a:hover { text-decoration: underline; }
+.related-tools span { color: var(--muted); font-size: .9rem; }
+@media (max-width: 650px) {
+  .guide-example { padding: 16px; }
+  .guide-example dl { grid-template-columns: 1fr; gap: 2px; }
+  .guide-example dt { margin-top: 6px; }
+}
