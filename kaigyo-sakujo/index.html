@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>改行削除 - PDFからコピーした文章の改行を消す｜AIツールひろば</title>
+  <meta name="description" content="PDFやWebページからコピーした文章の余計な改行を消して、1つの文章につなげる無料ツールです。段落や箇条書きの改行は残せます。英文は単語の間に空白を入れてつなぎます。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/kaigyo-sakujo/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="改行削除 - PDFからコピーした文章の改行を消す｜AIツールひろば">
+  <meta property="og:description" content="PDFやWebページからコピーした文章の余計な改行を消して、1つの文章につなげる無料ツールです。段落や箇条書きの改行は残せます。英文は単語の間に空白を入れてつなぎます。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/kaigyo-sakujo/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/kaigyo-sakujo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "改行削除",
+    "description": "PDFやWebページからコピーした文章の余計な改行を消して、1つの文章につなげる無料ツールです。段落や箇条書きの改行は残せます。英文は単語の間に空白を入れてつなぎます。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/kaigyo-sakujo/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "改行削除",
+        "item": "https://autotoolspublisher-ui.github.io/tools/kaigyo-sakujo/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "段落の区切りは残りますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「空行（段落の区切り）」がオンのとき（初期設定）は、空行で区切られた段落を残します。空行が2行以上続く場合は、1行の空行にまとめます。「行頭の字下げ」がオンのとき（初期設定）は、全角の空白で始まる行の前の改行も残します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "英語の文章でも使えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "使えます。英単語どうしの改行は、半角の空白1つに変えてつなぎます。行末がハイフン（-）やスラッシュ（/）の場合は、空白を入れずにつなぎます。「行末で切れた英単語をつなぐ」がオンのとき（初期設定）は、「exam-」と「ple」のように行末のハイフンで分かれた単語を「example」につなぎます。「well-」と「known」のように、もともとハイフンを含む語も「wellknown」になるため、その場合はこの設定をオフにしてください。オフにすると、ハイフンを残して「well-known」のようにつなぎます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "コピーすると文字の間に空白が入ってしまいます。消せますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「日本語の間の空白を消す」をオンにしてください。ひらがな・カタカナ・漢字・全角の記号にはさまれた空白（半角・全角）だけを消します。英単語の間の空白や、日本語と英数字の間の空白は残します。「山田 太郎」の空白も消えるため、初期設定はオフです。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "改行をすべて消して1行にできますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。「改行を残す場所」の4つの設定（空行、行頭の字下げ、箇条書き、文の終わり）をすべてオフにすると、すべての改行を消して1行にします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した文章は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。処理はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .options { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .options legend { padding: 0; margin-bottom: 8px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 6px; min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip small { color: var(--muted); font-weight: 400; font-size: .875rem; white-space: nowrap; }
+  .chip input:checked + span small { color: #174ea6; }
+  /* 設定を切り替えたときの知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .option-status { min-height: 1.5em; margin: 0 0 8px; color: var(--ok); font-size: .9rem; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; min-height: 260px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .preview { min-height: 260px; max-height: 460px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview.empty { color: var(--muted); font-family: inherit; }
+  .summary { margin: 10px 0 0; font-size: .9rem; color: var(--ok); font-weight: 600; min-height: 1.5em; }
+  .summary.none { color: var(--warn-ink); font-weight: 400; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンの知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 3em; margin: 10px 0 14px; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    textarea { min-height: 150px; }
+    .preview { min-height: 150px; max-height: 340px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .chip, .chip span { width: 100%; }
+    .chip span { display: grid; grid-template-columns: 16px 1fr; align-items: center; column-gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+    .chip small { grid-column: 2; white-space: normal; }
+    .option-status { min-height: 4.5em; }
+    .status { min-height: 6em; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">改行削除</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">LINE BREAK</p>
+    <h1>改行削除</h1>
+    <p>PDFやWebページからコピーした文章の、途中で入ってしまった改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。翻訳サイトやAIに貼り付ける前の整形に使えます。</p>
+  </header>
+
+  <section class="card" aria-label="改行削除">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>「改行を消したい文章」の欄に、コピーした文章を貼り付けます。</li>
+        <li>改行を消した結果が、自動で表示されます。残したい改行は、結果の下の設定で選べます。</li>
+        <li>「結果をコピー」でコピーして、使いたい場所に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText">改行を消したい文章</label><span id="sourceCount" class="count">0文字・0行</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="例：PDFからコピーした文章を&#10;ここに貼り付けると、途中の&#10;改行を消してつなげます。"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果</span><span id="resultCount" class="count">0文字・0行</span></div>
+        <div id="preview" class="preview empty" role="region" aria-labelledby="resultLabel" tabindex="0">「改行を消したい文章」の欄に入力すると、ここに結果が表示されます。</div>
+        <p id="summary" class="summary" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <fieldset class="options">
+      <legend>改行を残す場所</legend>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="optParagraph" checked><span>空行（段落の区切り）</span></label>
+        <label class="chip"><input type="checkbox" id="optIndent" checked><span>行頭の字下げ <small>全角の空白で始まる行</small></span></label>
+        <label class="chip"><input type="checkbox" id="optList" checked><span>箇条書き <small>・ ● 1. (1) ① で始まる行</small></span></label>
+        <label class="chip"><input type="checkbox" id="optSentence"><span>文の終わり <small>。！？」で終わる行</small></span></label>
+      </div>
+    </fieldset>
+    <fieldset class="options">
+      <legend>ほかの整え方</legend>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="optHyphen" checked><span>行末で切れた英単語をつなぐ <small>exam- ple → example</small></span></label>
+        <label class="chip"><input type="checkbox" id="optJaSpace"><span>日本語の間の空白を消す <small>こ れ は → これは</small></span></label>
+      </div>
+    </fieldset>
+    <p id="optionStatus" class="option-status" role="status" aria-live="polite"></p>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力した文章は、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>PDFからコピーした日本語の文章をつなげる</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>この資料では、新しい受付の流れ
+について説明します。申し込みは
+ウェブのフォームから行います。
+
+受付の時間は次のとおりです。
+・平日 9時から17時
+・土曜 9時から12時</pre></dd>
+        <dt>設定</dt><dd>初期設定のまま</dd>
+        <dt>結果</dt><dd><pre>この資料では、新しい受付の流れについて説明します。申し込みはウェブのフォームから行います。
+
+受付の時間は次のとおりです。
+・平日 9時から17時
+・土曜 9時から12時</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>英語の論文の文章を、翻訳する前に1つの段落にする</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>The results show that the pro-
+posed method reduces the
+processing time by half.</pre></dd>
+        <dt>設定</dt><dd>初期設定のまま</dd>
+        <dt>結果</dt><dd><pre>The results show that the proposed method reduces the processing time by half.</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>段落の区切りは残りますか？</summary>
+      <p>「空行（段落の区切り）」がオンのとき（初期設定）は、空行で区切られた段落を残します。空行が2行以上続く場合は、1行の空行にまとめます。「行頭の字下げ」がオンのとき（初期設定）は、全角の空白で始まる行の前の改行も残します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>英語の文章でも使えますか？</summary>
+      <p>使えます。英単語どうしの改行は、半角の空白1つに変えてつなぎます。行末がハイフン（-）やスラッシュ（/）の場合は、空白を入れずにつなぎます。「行末で切れた英単語をつなぐ」がオンのとき（初期設定）は、「exam-」と「ple」のように行末のハイフンで分かれた単語を「example」につなぎます。「well-」と「known」のように、もともとハイフンを含む語も「wellknown」になるため、その場合はこの設定をオフにしてください。オフにすると、ハイフンを残して「well-known」のようにつなぎます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>コピーすると文字の間に空白が入ってしまいます。消せますか？</summary>
+      <p>「日本語の間の空白を消す」をオンにしてください。ひらがな・カタカナ・漢字・全角の記号にはさまれた空白（半角・全角）だけを消します。英単語の間の空白や、日本語と英数字の間の空白は残します。「山田 太郎」の空白も消えるため、初期設定はオフです。</p>
+    </details>
+    <details class="faq-item">
+      <summary>改行をすべて消して1行にできますか？</summary>
+      <p>できます。「改行を残す場所」の4つの設定（空行、行頭の字下げ、箇条書き、文の終わり）をすべてオフにすると、すべての改行を消して1行にします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した文章は、どこかに送信されますか？</summary>
+      <p>いいえ。処理はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 改行は文字コードで指定する。正規表現の文字の範囲は文字そのもので書き、\u{…}（1つのバックスラッシュ）は4桁を超える漢字の範囲だけに使う
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+
+  // 日本語の文字（かな・漢字・全角の記号と英数字・CJKの記号）。英単語どうしかどうかの判定に使う
+  var JA_CHAR = /[⺀-⿟　-ヿ㆐-ㇿ㐀-䶿一-鿿豈-﫿︰-﹏＀-￯\u{20000}-\u{3FFFF}]/u;
+  // 日本語の文字（空白は除く）にはさまれた、半角・全角の空白
+  var JA_NOSPACE = '[⺀-⿟、-ヿ㆐-ㇿ㐀-䶿一-鿿豈-﫿︰-﹏！-￯\u{20000}-\u{3FFFF}]';
+  var JA_GAP = new RegExp('(' + JA_NOSPACE + ')[ \u00A0\u3000]+(?=' + JA_NOSPACE + ')', 'gu');
+  // 行の前後の空白（半角の空白・タブ・全角の空白）
+  var LEAD_SPACE = /^[ \t\u00A0\u3000]+/;
+  // 行頭の半角の空白・タブ・改行しない空白（U+00A0）。全角の空白（字下げ）は別に扱う
+  var LEAD_HALF_SPACE = /^[ \t\u00A0]+/;
+  var LEAD_FULL_SPACE = /^\u3000+/;
+  var TRAIL_SPACE = /[ \t\u00A0\u3000]+$/;
+  var BLANK_LINE = /^[ \t\u00A0\u3000]*$/;
+  // 箇条書きで始まる行（記号＋文字、番号＋「.」＋空白、番号＋「)」、(1)、①〜⑳）
+  var LIST_START = /^[ \t　]*(?:[・･●○■□◆◇▪•※★☆◎]|[-*＊－](?=[ \t　])|[0-9０-９]{1,3}[.．](?=[ \t　])|[０-９]{1,3}．|[0-9０-９]{1,3}[)）]|[(（][0-9０-９]{1,3}[)）]|[①-⑳])/;
+  // 文の終わりの文字
+  var SENTENCE_END = /[。．！？!?」』]/;
+  // 行末のハイフンで分かれた英単語（英字＋ハイフンで終わり、次の行が英小文字で始まる）
+  var LETTER = /[A-Za-z]/;
+  var LOWER_START = /^[a-z]/;
+
+  var sourceText = document.getElementById('sourceText');
+  var preview = document.getElementById('preview');
+  var sourceCount = document.getElementById('sourceCount');
+  var resultCount = document.getElementById('resultCount');
+  var summary = document.getElementById('summary');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+  var optionStatus = document.getElementById('optionStatus');
+  var options = {
+    paragraph: document.getElementById('optParagraph'),
+    indent: document.getElementById('optIndent'),
+    list: document.getElementById('optList'),
+    sentence: document.getElementById('optSentence'),
+    hyphen: document.getElementById('optHyphen'),
+    jaSpace: document.getElementById('optJaSpace')
+  };
+
+  var lastResult = '';
+  var copyTimer = null;
+  var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+
+  // 見た目の1文字ずつ数える（絵文字や結合文字も1文字）。改行は数えない
+  function countChars(text) {
+    var s = text.split(LF).join('').split(CR).join('');
+    if (segmenter) {
+      var n = 0;
+      var it = segmenter.segment(s)[Symbol.iterator]();
+      while (!it.next().done) n++;
+      return n;
+    }
+    return Array.from(s).length;
+  }
+
+  function countLines(text) {
+    if (text === '') return 0;
+    return text.split(LF).length;
+  }
+
+  // 最後の1文字（サロゲートペアは2つで1文字）。文字列全体を走査しない
+  function lastChar(s) {
+    if (s === '') return '';
+    var c = s.charCodeAt(s.length - 1);
+    if (c >= 0xDC00 && c <= 0xDFFF && s.length > 1) return s.slice(-2);
+    return s.slice(-1);
+  }
+
+  function firstChar(s) {
+    var arr = Array.from(s);
+    return arr.length ? arr[0] : '';
+  }
+
+  function isBlank(line) {
+    return BLANK_LINE.test(line);
+  }
+
+  function getOptions() {
+    return {
+      paragraph: options.paragraph.checked,
+      indent: options.indent.checked,
+      list: options.list.checked,
+      sentence: options.sentence.checked,
+      hyphen: options.hyphen.checked,
+      jaSpace: options.jaSpace.checked
+    };
+  }
+
+  // 前の行の最後の部分（prev）の後の改行を残すかどうか
+  function keepBreak(prev, next, opt) {
+    if (opt.indent && LEAD_FULL_SPACE.test(next)) return true;
+    if (opt.list && LIST_START.test(next)) return true;
+    if (opt.sentence && SENTENCE_END.test(lastChar(prev))) return true;
+    return false;
+  }
+
+  // つないでいる行。長い行でも速く処理できるよう、つないだ部分（parts）と最後の1行分（tail）に分けて持つ
+  function startLine(line) { return { parts: [], tail: line }; }
+  function finishLine(cur) { return cur.parts.join('') + cur.tail; }
+
+  // 行をつなぐ。英単語どうしは半角の空白1つ、日本語がからむ場合と、行末がハイフン・スラッシュの場合は空白なしでつなぐ
+  function appendLine(cur, next, opt, stat) {
+    var a = cur.tail;
+    var b = next.replace(LEAD_FULL_SPACE, '');
+    var sep = ' ';
+    var la = lastChar(a);
+    if (la === '-') {
+      if (opt.hyphen && LETTER.test(a.charAt(a.length - 2)) && LOWER_START.test(b)) {
+        stat.hyphen++;
+        a = a.slice(0, -1);
+      }
+      sep = '';
+    } else if (la === '/' || JA_CHAR.test(la) || JA_CHAR.test(firstChar(b.slice(0, 2)))) {
+      sep = '';
+    }
+    cur.parts.push(a + sep);
+    cur.tail = b;
+  }
+
+  function convert(text, opt) {
+    var stat = { removed: 0, kept: 0, hyphen: 0, spaces: 0 };
+    var lines = text.split(CR + LF).join(LF).split(CR).join(LF).split(LF);
+    var resultLines = [];
+    var cur = null;
+    var afterBlank = false;
+    for (var i = 0; i < lines.length; i++) {
+      // 行末の空白と、行頭の半角の空白を除く（行頭の全角の空白は字下げとして残す）
+      var line = lines[i].replace(TRAIL_SPACE, '').replace(LEAD_HALF_SPACE, '');
+      if (isBlank(line)) {
+        if (cur) afterBlank = true;
+        continue;
+      }
+      if (!cur) { cur = startLine(line); continue; }
+      if (afterBlank && opt.paragraph) {
+        // 空行で区切られた段落は、空行1行をはさんで残す（空行の連続は1つにまとめる）
+        resultLines.push(finishLine(cur), '');
+        stat.kept++;
+        cur = startLine(line);
+      } else if (keepBreak(cur.tail, line, opt)) {
+        resultLines.push(finishLine(cur));
+        stat.kept++;
+        cur = startLine(line);
+      } else {
+        appendLine(cur, line, opt, stat);
+        stat.removed++;
+      }
+      afterBlank = false;
+    }
+    if (cur) resultLines.push(finishLine(cur));
+
+    var result = resultLines.join(LF);
+    if (opt.jaSpace) {
+      result = result.split(LF).map(function (line) {
+        // 行頭の字下げは残し、行の中の日本語の文字の間の空白だけを消す
+        var lead = (line.match(LEAD_SPACE) || [''])[0];
+        var body = line.slice(lead.length);
+        // 後ろの文字は先読みで確かめるだけなので、「あ い う」のように1文字ずつ空いていても1回で消える
+        var replaced = body.replace(JA_GAP, function (m, ch) { stat.spaces++; return ch; });
+        return lead + replaced;
+      }).join(LF);
+    }
+    return { text: result, stat: stat };
+  }
+
+  function update() {
+    resetCopyButton();
+    var text = sourceText.value;
+    sourceCount.textContent = fmt(countChars(text)) + '文字・' + fmt(countLines(text)) + '行';
+    if (isBlank(text.split(CR).join('').split(LF).join(''))) {
+      lastResult = '';
+      preview.className = 'preview empty';
+      preview.textContent = text === '' ? '「改行を消したい文章」の欄に入力すると、ここに結果が表示されます。'
+        : '空白と改行だけが入力されています。文章を入力すると、ここに結果が表示されます。';
+      resultCount.textContent = '0文字・0行';
+      summary.textContent = '';
+      summary.className = 'summary';
+      copyButton.disabled = true;
+      return;
+    }
+    var r = convert(text, getOptions());
+    lastResult = r.text;
+    preview.className = 'preview';
+    preview.textContent = r.text;
+    resultCount.textContent = fmt(countChars(r.text)) + '文字・' + fmt(countLines(r.text)) + '行';
+    var s = r.stat;
+    if (s.removed === 0 && s.spaces === 0) {
+      summary.className = 'summary none';
+      summary.textContent = '消した改行はありません。' + (s.kept > 0 ? '「改行を残す場所」の設定で、' + fmt(s.kept) + 'か所の改行を残しています。' : '');
+    } else if (s.removed === 0) {
+      summary.className = 'summary';
+      summary.textContent = '消した改行はありません。日本語の文字の間の空白を' + fmt(s.spaces) + 'か所消しました。';
+    } else {
+      summary.className = 'summary';
+      var msg = '改行を' + fmt(s.removed) + 'か所消しました（残した改行 ' + fmt(s.kept) + 'か所）。';
+      if (s.hyphen > 0) msg += 'ハイフンで分かれた英単語を' + fmt(s.hyphen) + 'か所つなぎました。';
+      if (s.spaces > 0) msg += '日本語の文字の間の空白を' + fmt(s.spaces) + 'か所消しました。';
+      summary.textContent = msg;
+    }
+    copyButton.disabled = false;
+  }
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle('error', !!isError);
+  }
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+
+  function selectPreview() {
+    var range = document.createRange();
+    range.selectNodeContents(preview);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function showStatusInView() {
+    if (status.scrollIntoView) status.scrollIntoView({ block: 'nearest' });
+  }
+
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectPreview();
+    setStatus('コピーできませんでした。結果の文章を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+    showStatusInView();
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (text === '') return;
+    var done = function () {
+      setStatus('結果をコピーしました（' + fmt(countChars(text)) + '文字・' + fmt(countLines(text)) + '行）。');
+      flashButton('✓ コピーしました', 2500);
+      showStatusInView();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  sampleButton.addEventListener('click', function () {
+    sourceText.value = [
+      'この資料では、新しい受付の流れ',
+      'について説明します。申し込みは',
+      'ウェブのフォームから行います。',
+      '',
+      '受付の時間は次のとおりです。',
+      '・平日 9時から17時',
+      '・土曜 9時から12時',
+      '',
+      'The results show that the pro-',
+      'posed method reduces the',
+      'processing time by half.'
+    ].join(LF);
+    update();
+    optionStatus.textContent = '';
+    setStatus('例を入れました。「改行を残す場所」を切り替えると、結果がすぐに変わります。');
+    showStatusInView();
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    update();
+    optionStatus.textContent = '';
+    setStatus('入力と結果を消しました。「改行を消したい文章」の欄に、新しい文章を貼り付けてください。');
+    showStatusInView();
+  });
+
+  sourceText.addEventListener('input', function () {
+    update();
+    setStatus('');
+    optionStatus.textContent = '';
+  });
+
+  Object.keys(options).forEach(function (name) {
+    var input = options[name];
+    input.addEventListener('change', function () {
+      update();
+      setStatus('');
+      var label = input.nextElementSibling.firstChild.textContent.trim();
+      optionStatus.textContent = '「' + label + '」を' + (input.checked ? 'オン' : 'オフ') + 'にしました。' +
+        (lastResult === '' ? '文章を入力すると、この設定で結果が表示されます。' : '結果を更新しました。');
+      // 押した設定が画面の下端にあっても、知らせが見えるようにする
+      if (optionStatus.scrollIntoView) optionStatus.scrollIntoView({ block: 'nearest' });
+    });
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
