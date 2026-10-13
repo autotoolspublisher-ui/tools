@@ -126,7 +126,7 @@
   .chip small { color: var(--muted); font-weight: 400; font-size: .875rem; white-space: nowrap; }
   .chip input:checked + span small { color: #174ea6; }
   /* 設定を切り替えたときの知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
-  .option-status { min-height: 1.5em; margin: 0 0 8px; color: var(--ok); font-size: .9rem; line-height: 1.5; }
+  .option-status { min-height: 1.5em; margin: 6px 0 0; color: var(--ok); font-size: .9rem; line-height: 1.5; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
   .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
   .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
@@ -216,6 +216,7 @@
         <label class="chip"><input type="checkbox" id="optList" checked><span>箇条書き <small>・ ● 1. (1) ① で始まる行</small></span></label>
         <label class="chip"><input type="checkbox" id="optSentence"><span>文の終わり <small>。！？」で終わる行</small></span></label>
       </div>
+      <p id="optionStatus1" class="option-status" role="status" aria-live="polite"></p>
     </fieldset>
     <fieldset class="options">
       <legend>ほかの整え方</legend>
@@ -223,8 +224,8 @@
         <label class="chip"><input type="checkbox" id="optHyphen" checked><span>行末で切れた英単語をつなぐ <small>exam- ple → example</small></span></label>
         <label class="chip"><input type="checkbox" id="optJaSpace"><span>日本語の間の空白を消す <small>こ れ は → これは</small></span></label>
       </div>
+      <p id="optionStatus2" class="option-status" role="status" aria-live="polite"></p>
     </fieldset>
-    <p id="optionStatus" class="option-status" role="status" aria-live="polite"></p>
 
     <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力した文章は、このページの中だけで処理され、保存も外部への送信もされません。</div>
   </section>
@@ -325,7 +326,7 @@ processing time by half.</pre></dd>
   var TRAIL_SPACE = /[ \t\u00A0\u3000]+$/;
   var BLANK_LINE = /^[ \t\u00A0\u3000]*$/;
   // 箇条書きで始まる行（記号＋文字、番号＋「.」＋空白、番号＋「)」、(1)、①〜⑳）
-  var LIST_START = /^[ \t　]*(?:[・･●○■□◆◇▪•※★☆◎]|[-*＊－](?=[ \t　])|[0-9０-９]{1,3}[.．](?=[ \t　])|[０-９]{1,3}．|[0-9０-９]{1,3}[)）]|[(（][0-9０-９]{1,3}[)）]|[①-⑳])/;
+  var LIST_START = /^[ \t　]*(?:[・･●○■□◆◇▪•※★☆◎]|[-*＊－](?=[ \t　])|[0-9０-９]{1,3}[.．](?=[ \t　])|[０-９]{1,3}．(?![0-9０-９])|[0-9０-９]{1,3}[)）]|[(（][0-9０-９]{1,3}[)）]|[①-⑳])/;
   // 文の終わりの文字
   var SENTENCE_END = /[。．！？!?」』]/;
   // 行末のハイフンで分かれた英単語（英字＋ハイフンで終わり、次の行が英小文字で始まる）
@@ -341,7 +342,8 @@ processing time by half.</pre></dd>
   var sampleButton = document.getElementById('sampleButton');
   var clearButton = document.getElementById('clearButton');
   var status = document.getElementById('status');
-  var optionStatus = document.getElementById('optionStatus');
+  var optionStatuses = [document.getElementById('optionStatus1'), document.getElementById('optionStatus2')];
+  function clearOptionStatus() { optionStatuses.forEach(function (el) { el.textContent = ''; }); }
   var options = {
     paragraph: document.getElementById('optParagraph'),
     indent: document.getElementById('optIndent'),
@@ -420,7 +422,10 @@ processing time by half.</pre></dd>
     var b = next.replace(LEAD_FULL_SPACE, '');
     var sep = ' ';
     var la = lastChar(a);
-    if (la === '-') {
+    if (la === '-' && /[ \t\u00A0\u3000]/.test(a.charAt(a.length - 2))) {
+      // 「result -」のように前に空白があるハイフン（ダッシュの代わり）は、ふつうの語と同じく空白を入れてつなぐ
+      sep = ' ';
+    } else if (la === '-') {
       if (opt.hyphen && LETTER.test(a.charAt(a.length - 2)) && LOWER_START.test(b)) {
         stat.hyphen++;
         a = a.slice(0, -1);
@@ -440,8 +445,9 @@ processing time by half.</pre></dd>
     var cur = null;
     var afterBlank = false;
     for (var i = 0; i < lines.length; i++) {
-      // 行末の空白と、行頭の半角の空白を除く（行頭の全角の空白は字下げとして残す）
-      var line = lines[i].replace(TRAIL_SPACE, '').replace(LEAD_HALF_SPACE, '');
+      // 行末の空白を除く。行頭の半角の空白は、箇条書きなどで改行を残した行（字下げした子の項目など）だけに残す
+      var raw = lines[i].replace(TRAIL_SPACE, '');
+      var line = raw.replace(LEAD_HALF_SPACE, '');
       if (isBlank(line)) {
         if (cur) afterBlank = true;
         continue;
@@ -455,7 +461,7 @@ processing time by half.</pre></dd>
       } else if (keepBreak(cur.tail, line, opt)) {
         resultLines.push(finishLine(cur));
         stat.kept++;
-        cur = startLine(line);
+        cur = startLine(raw);
       } else {
         appendLine(cur, line, opt, stat);
         stat.removed++;
@@ -504,12 +510,12 @@ processing time by half.</pre></dd>
       summary.textContent = '消した改行はありません。' + (s.kept > 0 ? '「改行を残す場所」の設定で、' + fmt(s.kept) + 'か所の改行を残しています。' : '');
     } else if (s.removed === 0) {
       summary.className = 'summary';
-      summary.textContent = '消した改行はありません。日本語の文字の間の空白を' + fmt(s.spaces) + 'か所消しました。';
+      summary.textContent = '消した改行はありません。日本語の間の空白を' + fmt(s.spaces) + 'か所消しました。';
     } else {
       summary.className = 'summary';
       var msg = '改行を' + fmt(s.removed) + 'か所消しました（残した改行 ' + fmt(s.kept) + 'か所）。';
-      if (s.hyphen > 0) msg += 'ハイフンで分かれた英単語を' + fmt(s.hyphen) + 'か所つなぎました。';
-      if (s.spaces > 0) msg += '日本語の文字の間の空白を' + fmt(s.spaces) + 'か所消しました。';
+      if (s.hyphen > 0) msg += '行末で切れた英単語を' + fmt(s.hyphen) + 'か所つなぎました。';
+      if (s.spaces > 0) msg += '日本語の間の空白を' + fmt(s.spaces) + 'か所消しました。';
       summary.textContent = msg;
     }
     copyButton.disabled = false;
@@ -600,7 +606,7 @@ processing time by half.</pre></dd>
       'processing time by half.'
     ].join(LF);
     update();
-    optionStatus.textContent = '';
+    clearOptionStatus();
     setStatus('例を入れました。「改行を残す場所」を切り替えると、結果がすぐに変わります。');
     showStatusInView();
   });
@@ -608,7 +614,7 @@ processing time by half.</pre></dd>
   clearButton.addEventListener('click', function () {
     sourceText.value = '';
     update();
-    optionStatus.textContent = '';
+    clearOptionStatus();
     setStatus('入力と結果を消しました。「改行を消したい文章」の欄に、新しい文章を貼り付けてください。');
     showStatusInView();
   });
@@ -616,7 +622,7 @@ processing time by half.</pre></dd>
   sourceText.addEventListener('input', function () {
     update();
     setStatus('');
-    optionStatus.textContent = '';
+    clearOptionStatus();
   });
 
   Object.keys(options).forEach(function (name) {
@@ -625,6 +631,9 @@ processing time by half.</pre></dd>
       update();
       setStatus('');
       var label = input.nextElementSibling.firstChild.textContent.trim();
+      clearOptionStatus();
+      // 知らせは、押した設定のまとまりのすぐ下に出す
+      var optionStatus = input.closest('fieldset').querySelector('.option-status');
       optionStatus.textContent = '「' + label + '」を' + (input.checked ? 'オン' : 'オフ') + 'にしました。' +
         (lastResult === '' ? '文章を入力すると、この設定で結果が表示されます。' : '結果を更新しました。');
       // 押した設定が画面の下端にあっても、知らせが見えるようにする
