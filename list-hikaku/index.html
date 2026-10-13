@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>リスト比較 - 2つのリストの共通・差分を抽出｜AIツールひろば</title>
+  <meta name="description" content="2つのリストを貼り付けるだけで、両方にある項目と、片方にしかない項目を抜き出す無料ツールです。全角・半角や空白の違いを無視して比べられます。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/list-hikaku/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="リスト比較 - 2つのリストの共通・差分を抽出｜AIツールひろば">
+  <meta property="og:description" content="2つのリストを貼り付けるだけで、両方にある項目と、片方にしかない項目を抜き出す無料ツールです。全角・半角や空白の違いを無視して比べられます。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/list-hikaku/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/list-hikaku.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "リスト比較",
+    "description": "2つのリストを貼り付けるだけで、両方にある項目と、片方にしかない項目を抜き出す無料ツールです。全角・半角や空白の違いを無視して比べられます。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/list-hikaku/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "リスト比較",
+        "item": "https://autotoolspublisher-ui.github.io/tools/list-hikaku/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Excelの列をそのまま貼り付けられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。1つのセルが1つの項目になります。セル内で改行しているセルも、1つの項目として比べます。複数の列をまとめて貼り付けた場合は、1行全体を1つの項目として比べ、コピーした結果は元の列に分かれたまま貼り戻せます。列の区切りは、「項目の途中の空白」をオンにしても無視しません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「山田 太郎」と「山田太郎」を同じ項目として比べられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。「無視する違い」の「項目の途中の空白」をオンにしてください。「山田　太郎」と「山田 太郎」のように、空白の全角・半角だけが違う場合は、初期設定のままでも同じ項目として扱います。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "同じリストの中に、同じ項目が何回も出てきたらどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1つにまとめて比べます。結果には、最初に出てきた表記で1回だけ表示します。いくつまとめたかは、入力欄の上の件数に表示します。空の行は数えません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「両方にある」の結果には、AとBのどちらの表記が表示されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "リストAの表記で、リストAの順番に表示します。「Aだけにある」はリストAの順番、「Bだけにある」はリストBの順番です。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したリストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。比較はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .options { margin: 0 0 18px; padding: 0; border: 0; min-width: 0; }
+  .options legend { padding: 0; margin-bottom: 8px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip span { flex-wrap: wrap; row-gap: 0; }
+  .chip small { color: var(--muted); font-weight: 400; font-size: .875rem; white-space: nowrap; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; }
+  textarea { display: block; width: 100%; min-height: 200px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .inline-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .result { margin-top: 26px; padding-top: 22px; border-top: 1px solid #e8eaed; }
+  .result-head { margin: 0 0 10px; color: #3c4043; font-weight: 600; font-size: 1rem; }
+  .tabs { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; margin: 0; padding: 0; min-width: 0; }
+  .tabs label { position: relative; display: flex; flex: 1 1 0; min-width: 0; }
+  .tabs input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .tabs span { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 48px; padding: 4px 8px; color: #3c4043; font-size: .9rem; line-height: 1.3; text-align: center; cursor: pointer; transition: background .16s ease; }
+  .tabs label + label span { border-left: 1px solid var(--line); }
+  .tabs b { font-weight: inherit; }
+  .tabs small { color: var(--muted); font-size: .875rem; }
+  .tabs input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  .tabs input:checked + span small { color: #174ea6; }
+  .tabs input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .tabs span:hover { background: #f6fafe; }
+  .summary { margin: 10px 0 8px; font-size: .9rem; color: #3c4043; min-height: 1.5em; }
+  .items { min-height: 120px; max-height: 420px; overflow: auto; margin: 0; padding: 12px 15px 12px 3.4em; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; }
+  .items li { white-space: pre-wrap; word-break: break-all; padding: 1px 0; }
+  .items li::marker { color: var(--muted); font-size: .875rem; }
+  .items.empty { padding-left: 15px; list-style: none; color: var(--muted); font-family: inherit; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  #copyButton { min-width: 15em; }
+  /* 操作の知らせ：画面の上に重ねて出す（ページの部品を動かさず、スクロール位置に関係なく見える） */
+  .toast { position: fixed; left: 50%; top: 12px; z-index: 10; width: max-content; max-width: min(560px, calc(100% - 32px)); margin: 0; padding: 12px 18px; border-radius: 12px; background: #202124; color: #fff; font-size: .9rem; line-height: 1.55; box-shadow: 0 2px 8px rgba(60,64,67,.35); transform: translateX(-50%); pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .18s ease, visibility .18s ease; }
+  .toast.show { opacity: 1; visibility: visible; }
+  .toast.error { background: #7a2e0e; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .howto { margin-bottom: 18px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    textarea { min-height: 140px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .chip, .chip span { width: 100%; }
+    .inline-actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex: 1 1 100%; min-width: 0; }
+    .items { max-height: 320px; }
+    .chip span { padding-top: 6px; padding-bottom: 6px; }
+  }
+  @media (max-width: 380px) {
+    .tabs { flex-direction: column; border-radius: 16px; }
+    .tabs label + label span { border-left: 0; border-top: 1px solid var(--line); }
+    .tabs span { flex-direction: row; justify-content: space-between; gap: 8px; padding: 4px 16px; min-height: 44px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">リスト比較</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">LIST COMPARE</p>
+    <h1>リスト比較</h1>
+    <p>2つのリストを貼り付けるだけで、「両方にある項目」「片方にしかない項目」を抜き出します。名簿の突き合わせや、未提出の人・追加された商品の確認に使えます。</p>
+  </header>
+
+  <section class="card" aria-label="リスト比較">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>「リストA」と「リストB」に、1行に1項目ずつ貼り付けます。Excelの列をそのまま貼り付けても使えます。</li>
+        <li>結果は自動で表示されます。「両方にある」「Aだけにある」「Bだけにある」を切り替えて確認します。</li>
+        <li>「結果をコピー」で、表示している結果をコピーできます。</li>
+      </ol>
+    </div>
+
+    <fieldset class="options">
+      <legend>比べるときに無視する違い</legend>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="optTrim" checked><span>前後の空白</span></label>
+        <label class="chip"><input type="checkbox" id="optWidth" checked><span>全角・半角 <small>ＡＢ１／AB1</small></span></label>
+        <label class="chip"><input type="checkbox" id="optCase"><span>大文字・小文字 <small>ABC／abc</small></span></label>
+        <label class="chip"><input type="checkbox" id="optSpace"><span>項目の途中の空白 <small>山田 太郎／山田太郎</small></span></label>
+      </div>
+    </fieldset>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="listA">リストA</label><span id="countA" class="count">0項目</span></div>
+        <textarea id="listA" spellcheck="false" placeholder="例：名簿（1行に1人）&#10;山田 太郎&#10;佐藤 花子"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><label for="listB">リストB</label><span id="countB" class="count">0項目</span></div>
+        <textarea id="listB" spellcheck="false" placeholder="例：申込者（1行に1人）&#10;佐藤 花子"></textarea>
+      </div>
+    </div>
+    <div class="inline-actions">
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="swapButton" class="btn">AとBを入れ替え</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+
+    <div class="result">
+      <p class="result-head" id="resultHead">結果</p>
+      <fieldset class="tabs" aria-labelledby="resultHead">
+        <label><input type="radio" name="view" value="both" checked><span><b>両方にある</b><small id="numBoth">0項目</small></span></label>
+        <label><input type="radio" name="view" value="onlyA"><span><b>Aだけにある</b><small id="numA">0項目</small></span></label>
+        <label><input type="radio" name="view" value="onlyB"><span><b>Bだけにある</b><small id="numB">0項目</small></span></label>
+      </fieldset>
+      <p id="summary" class="summary" aria-live="polite"></p>
+      <ol id="items" class="items empty" tabindex="0" aria-label="結果の一覧"><li>リストAとリストBに入力すると、ここに結果が表示されます。</li></ol>
+      <div class="actions">
+        <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      </div>
+    </div>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したリストは、このページの中だけで比較され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>名簿と申込者を比べて、まだ申し込んでいない人を出す</h3>
+      <dl>
+        <dt>入力</dt><dd>リストA（名簿）<pre>山田 太郎
+佐藤 花子
+鈴木 一郎
+高橋 美咲</pre>リストB（申込者）<pre>佐藤　花子
+山田太郎
+高橋 美咲</pre></dd>
+        <dt>設定</dt><dd>「項目の途中の空白」をオン（ほかは初期設定のまま）</dd>
+        <dt>結果</dt><dd>「Aだけにある」1項目<pre>鈴木 一郎</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>商品コードの一覧を、表記の違いを無視して比べる</h3>
+      <dl>
+        <dt>入力</dt><dd>リストA（先月）<pre>ABC-001
+ABC-002
+ＡＢＣ－００３</pre>リストB（今月）<pre>abc-001
+ABC-003
+ABC-004</pre></dd>
+        <dt>設定</dt><dd>「大文字・小文字」をオン（ほかは初期設定のまま）</dd>
+        <dt>結果</dt><dd>「両方にある」2項目<pre>ABC-001
+ＡＢＣ－００３</pre>「Aだけにある」1項目<pre>ABC-002</pre>「Bだけにある」1項目<pre>ABC-004</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>Excelの列をそのまま貼り付けられますか？</summary>
+      <p>できます。1つのセルが1つの項目になります。セル内で改行しているセルも、1つの項目として比べます。複数の列をまとめて貼り付けた場合は、1行全体を1つの項目として比べ、コピーした結果は元の列に分かれたまま貼り戻せます。列の区切りは、「項目の途中の空白」をオンにしても無視しません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「山田 太郎」と「山田太郎」を同じ項目として比べられますか？</summary>
+      <p>できます。「無視する違い」の「項目の途中の空白」をオンにしてください。「山田　太郎」と「山田 太郎」のように、空白の全角・半角だけが違う場合は、初期設定のままでも同じ項目として扱います。</p>
+    </details>
+    <details class="faq-item">
+      <summary>同じリストの中に、同じ項目が何回も出てきたらどうなりますか？</summary>
+      <p>1つにまとめて比べます。結果には、最初に出てきた表記で1回だけ表示します。いくつまとめたかは、入力欄の上の件数に表示します。空の行は数えません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「両方にある」の結果には、AとBのどちらの表記が表示されますか？</summary>
+      <p>リストAの表記で、リストAの順番に表示します。「Aだけにある」はリストAの順番、「Bだけにある」はリストBの順番です。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力したリストは、どこかに送信されますか？</summary>
+      <p>いいえ。比較はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></li>
+    </ul>
+  </section>
+
+  <p id="status" class="toast" role="status" aria-live="polite"></p>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（バックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var QUOTE = String.fromCharCode(34);
+
+  var VIEW_NAMES = { both: '両方にある', onlyA: 'Aだけにある', onlyB: 'Bだけにある' };
+
+  var listA = document.getElementById('listA');
+  var listB = document.getElementById('listB');
+  var countA = document.getElementById('countA');
+  var countB = document.getElementById('countB');
+  var numBoth = document.getElementById('numBoth');
+  var numA = document.getElementById('numA');
+  var numB = document.getElementById('numB');
+  var summary = document.getElementById('summary');
+  var itemsEl = document.getElementById('items');
+  var copyButton = document.getElementById('copyButton');
+  var status = document.getElementById('status');
+  var options = {
+    trim: document.getElementById('optTrim'),
+    width: document.getElementById('optWidth'),
+    caseless: document.getElementById('optCase'),
+    space: document.getElementById('optSpace')
+  };
+
+  var last = { both: [], onlyA: [], onlyB: [] };
+  var copyTimer = null;
+  var toastTimer = null;
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+
+  // 改行を LF にそろえる（CRLF と CR を LF にする）
+  function normalizeNewlines(text) {
+    return text.split(CR + LF).join(LF).split(CR).join(LF);
+  }
+
+  // 1行を1項目として分ける。Excelからコピーした形（タブで区切られた列、" で囲まれたセル内改行）を扱う。
+  // 各項目は、比べる値（value：囲みの " を外し、列はタブでつなぐ）と、元の文字列（raw：コピー用）を持つ
+  function parseList(text) {
+    var s = normalizeNewlines(text);
+    var items = [];
+    var len = s.length;
+    var i = 0;
+    while (i < len) {
+      var rowStart = i;
+      var fields = [];
+      while (true) {
+        var field = null;
+        if (s.charAt(i) === QUOTE) {
+          // " で囲まれたセル：閉じる " の後がタブ・改行・末尾で、中に改行・タブ・"" がある場合だけ1つのセルとして扱う
+          var j = i + 1;
+          var buf = '';
+          var special = false;
+          var closed = false;
+          while (j < len) {
+            var c = s.charAt(j);
+            if (c === QUOTE) {
+              if (s.charAt(j + 1) === QUOTE) { buf += QUOTE; special = true; j += 2; continue; }
+              closed = true;
+              break;
+            }
+            if (c === LF || c === TAB) special = true;
+            buf += c;
+            j++;
+          }
+          var after = s.charAt(j + 1);
+          if (closed && special && (j + 1 === len || after === TAB || after === LF)) {
+            field = buf;
+            i = j + 1;
+          }
+        }
+        if (field === null) {
+          var k = i;
+          while (k < len && s.charAt(k) !== TAB && s.charAt(k) !== LF) k++;
+          field = s.slice(i, k);
+          i = k;
+        }
+        fields.push(field);
+        if (i < len && s.charAt(i) === TAB) { i++; continue; }
+        break;
+      }
+      items.push({ value: fields.join(TAB), raw: s.slice(rowStart, i) });
+      i++; // 行末の改行を飛ばす
+    }
+    return items;
+  }
+
+  function getOptions() {
+    return {
+      trim: options.trim.checked,
+      width: options.width.checked,
+      caseless: options.caseless.checked,
+      space: options.space.checked
+    };
+  }
+
+  // 比べるためのキーを作る（表示には元の表記を使う）
+  function makeKey(item, opt, isTable) {
+    var s = item.normalize('NFC');
+    if (opt.width) {
+      // 全角の英数字・記号・空白、半角カナだけを NFKC で変換する（①や㈱などは変えない）
+      s = s.replace(/[　！-￯]+/g, function (m) { return m.normalize('NFKC'); });
+    }
+    if (opt.trim) s = trimItem(s, isTable);
+    // 列の区切り（タブ）とセル内改行は残す
+    if (opt.space) s = s.replace(/[^\S\t\n]+/g, '');
+    if (opt.caseless) s = s.toLowerCase();
+    return s;
+  }
+
+  // リストを項目に分け、空の行を除き、同じ項目を1つにまとめる
+  // 前後の空白を除く。表の形（行の途中にタブがある行を含む）のリストでは、空のセルを表すタブは残す
+  function trimItem(s, isTable) {
+    return isTable ? s.replace(/^[^\S\t\n]+|[^\S\t\n]+$/g, '') : s.trim();
+  }
+
+  function collect(text, opt) {
+    var raw = parseList(text);
+    var isTable = raw.some(function (r) { return r.value.trim().indexOf(TAB) !== -1; });
+    var map = new Map();
+    var order = [];
+    var dup = 0;
+    for (var i = 0; i < raw.length; i++) {
+      var item = raw[i].value;
+      if (item.trim() === '') continue;
+      var shown = opt.trim ? trimItem(item, isTable) : item;
+      var copy = opt.trim ? trimItem(raw[i].raw, isTable) : raw[i].raw;
+      var key = makeKey(item, opt, isTable);
+      if (map.has(key)) { dup++; continue; }
+      map.set(key, { shown: shown, copy: copy });
+      order.push(key);
+    }
+    return { map: map, order: order, dup: dup };
+  }
+
+  function countLabel(c) {
+    var n = fmt(c.order.length) + '項目';
+    if (c.dup > 0) n += '（重複' + fmt(c.dup) + '件をまとめました）';
+    return n;
+  }
+
+  function currentView() {
+    var checked = document.querySelector('input[name="view"]:checked');
+    return checked ? checked.value : 'both';
+  }
+
+  function render() {
+    var view = currentView();
+    var list = last[view];
+    var hasA = listA.value.trim() !== '';
+    var hasB = listB.value.trim() !== '';
+    itemsEl.textContent = '';
+    if (!hasA && !hasB) {
+      itemsEl.className = 'items empty';
+      var li0 = document.createElement('li');
+      li0.textContent = 'リストAとリストBに入力すると、ここに結果が表示されます。';
+      itemsEl.appendChild(li0);
+      summary.textContent = '';
+      copyButton.disabled = true;
+      return;
+    }
+    if (list.length === 0) {
+      itemsEl.className = 'items empty';
+      var li1 = document.createElement('li');
+      li1.textContent = '「' + VIEW_NAMES[view] + '」項目はありません。';
+      itemsEl.appendChild(li1);
+    } else {
+      itemsEl.className = 'items';
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < list.length; i++) {
+        var li = document.createElement('li');
+        li.textContent = list[i].shown;
+        frag.appendChild(li);
+      }
+      itemsEl.appendChild(frag);
+    }
+    var note = '';
+    if (!hasA) note = 'リストAが空です。リストAにも入力してください。';
+    else if (!hasB) note = 'リストBが空です。リストBにも入力してください。';
+    else note = '「' + VIEW_NAMES[view] + '」は' + fmt(list.length) + '項目です。';
+    summary.textContent = note;
+    copyButton.disabled = list.length === 0;
+  }
+
+  function update() {
+    resetCopyButton();
+    var opt = getOptions();
+    var a = collect(listA.value, opt);
+    var b = collect(listB.value, opt);
+    countA.textContent = countLabel(a);
+    countB.textContent = countLabel(b);
+    var both = [], onlyA = [], onlyB = [];
+    a.order.forEach(function (key) {
+      if (b.map.has(key)) both.push(a.map.get(key)); else onlyA.push(a.map.get(key));
+    });
+    b.order.forEach(function (key) {
+      if (!a.map.has(key)) onlyB.push(b.map.get(key));
+    });
+    last = { both: both, onlyA: onlyA, onlyB: onlyB };
+    numBoth.textContent = fmt(both.length) + '項目';
+    numA.textContent = fmt(onlyA.length) + '項目';
+    numB.textContent = fmt(onlyB.length) + '項目';
+    render();
+  }
+
+  // コピー用の文字列。貼り付けた元の行（Excelの " の囲みやタブの列を含む）をそのまま使うので、表計算ソフトに貼り戻しても列やセルが崩れない
+  function toCopyText(list) {
+    return list.map(function (item) { return item.copy; }).join(LF);
+  }
+
+  // 知らせは画面の上に重ねて出し、しばらくしたら消す（エラーは長めに出す）
+  function setStatus(message, isError) {
+    clearTimeout(toastTimer);
+    status.classList.toggle('error', !!isError);
+    if (!message) {
+      status.classList.remove('show');
+      return;
+    }
+    status.textContent = message;
+    status.classList.add('show');
+    toastTimer = setTimeout(function () { status.classList.remove('show'); }, isError ? 10000 : 4000);
+  }
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+
+  function selectItems() {
+    var range = document.createRange();
+    range.selectNodeContents(itemsEl);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  // ボタンの文字でも結果を知らせる（スマートフォンでは下のメッセージが画面外になることがあるため）。
+  // ボタンの幅は CSS の min-width で固定しているので、文字が変わっても周りは動かない
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectItems();
+    setStatus('コピーできませんでした。結果の一覧を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+  }
+
+  copyButton.addEventListener('click', function () {
+    var view = currentView();
+    var list = last[view];
+    if (list.length === 0) return;
+    var text = toCopyText(list);
+    var done = function () {
+      setStatus('「' + VIEW_NAMES[view] + '」の' + fmt(list.length) + '項目をコピーしました。');
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  document.getElementById('sampleButton').addEventListener('click', function () {
+    listA.value = ['山田 太郎', '佐藤 花子', '鈴木 一郎', '高橋 美咲'].join(LF);
+    listB.value = ['佐藤　花子', '山田太郎', '高橋 美咲', '田中 健'].join(LF);
+    update();
+    setStatus('例を入れました。「無視する違い」や結果の種類を切り替えると、結果がすぐに変わります。');
+  });
+
+  document.getElementById('swapButton').addEventListener('click', function () {
+    var tmp = listA.value;
+    listA.value = listB.value;
+    listB.value = tmp;
+    update();
+    setStatus('リストAとリストBを入れ替えました。');
+  });
+
+  document.getElementById('clearButton').addEventListener('click', function () {
+    listA.value = '';
+    listB.value = '';
+    update();
+    setStatus('リストAとリストBを消しました。');
+    listA.focus();
+  });
+
+  listA.addEventListener('input', function () { update(); setStatus(''); });
+  listB.addEventListener('input', function () { update(); setStatus(''); });
+
+  Object.keys(options).forEach(function (name) {
+    var input = options[name];
+    input.addEventListener('change', function () {
+      update();
+      var label = input.nextElementSibling.firstChild.textContent.trim();
+      setStatus('「' + label + '」の違いを' + (input.checked ? '無視して比べます。' : '区別して比べます。') +
+        (listA.value.trim() === '' && listB.value.trim() === '' ? 'リストを入力すると、この設定で比べます。' : '結果を更新しました。'));
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="view"]'), function (input) {
+    input.addEventListener('change', function () {
+      resetCopyButton();
+      render();
+      setStatus('');
+    });
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
