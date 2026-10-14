@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ひらがなカタカナ変換 - 一括でカタカナ・ひらがなに｜AIツールひろば</title>
+  <meta name="description" content="ひらがなをカタカナに、カタカナをひらがなにまとめて変換する無料ツールです。名簿のふりがなやExcelの列を貼り付けるだけで使え、半角カナにも対応。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/hiragana-katakana/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="ひらがなカタカナ変換 - 一括でカタカナ・ひらがなに｜AIツールひろば">
+  <meta property="og:description" content="ひらがなをカタカナに、カタカナをひらがなにまとめて変換する無料ツールです。名簿のふりがなやExcelの列を貼り付けるだけで使え、半角カナにも対応。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/hiragana-katakana/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/hiragana-katakana.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ひらがなカタカナ変換",
+    "description": "ひらがなをカタカナに、カタカナをひらがなにまとめて変換する無料ツールです。名簿のふりがなやExcelの列を貼り付けるだけで使え、半角カナにも対応。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/hiragana-katakana/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "ひらがなカタカナ変換",
+        "item": "https://autotoolspublisher-ui.github.io/tools/hiragana-katakana/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Excelの表のふりがなの列を、まとめて変換できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。Excelのセル範囲をコピーして入力欄に貼り付け、「結果をコピー」で得た結果を元の場所に貼り付けてください。改行とタブは変えないため、行や列はずれません。漢字・英数字・記号もそのまま残ります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「ー」（長音）や「ヶ」はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「ひらがなにする」では、「ー」はそのまま残します（ラーメン → らーめん）。「1ヶ月」「霞ヶ関」のように使われる小さい「ヶ」「ヵ」も変えません。「ヴ」は「ゔ」にします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "半角カタカナ（ｶﾀｶﾅ）も変換できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「半角カタカナも変換する」がオン（初期設定）のとき、「カタカナにする」では全角のカタカナに、「ひらがなにする」ではひらがなにします。「ｶﾞ」のように濁点が分かれた文字は「ガ」「が」の1文字にまとめます。半角の「ｰ」「･」「｡」「､」「｢」「｣」も全角にします。オフにすると、半角カタカナはそのまま残ります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "漢字をひらがなやカタカナにできますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できません。このツールは、ひらがなとカタカナで書かれた文字の種類を入れ替えるだけで、漢字の読みは調べません。漢字はそのまま残ります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したテキストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --mark: #fdf1b8; --ok: #137333; --warn-ink: #7a4f01; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .settings { margin: 0 0 16px; }
+  .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+  .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .setting legend { float: left; padding: 0; color: #3c4043; font-weight: 600; font-size: .94rem; white-space: nowrap; }
+  .seg { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .seg label { position: relative; display: inline-flex; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 7.5em; min-height: 44px; padding: 0 14px; color: #3c4043; font-size: .94rem; cursor: pointer; transition: background .16s ease; }
+  .seg label + label span { border-left: 1px solid var(--line); }
+  .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  .seg input:checked + span::before { content: "✓"; margin-right: 4px; }
+  .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .seg span:hover { background: #f6fafe; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip small { color: var(--muted); font-weight: 400; font-size: .875rem; white-space: nowrap; }
+  .chip input:checked + span small { color: #174ea6; }
+  .note { margin: 10px 0 0; color: var(--muted); font-size: .875rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; min-height: 220px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .preview { min-height: 220px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview.empty { color: var(--muted); font-family: inherit; }
+  .preview mark { background: var(--mark); color: inherit; border-radius: 3px; box-shadow: 0 0 0 1px #f2d25c; }
+  .summary { margin: 10px 0 0; font-size: .9rem; color: var(--ok); font-weight: 600; min-height: 1.5em; }
+  .summary.none { color: var(--warn-ink); font-weight: 400; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンと設定の知らせ。設定のすぐ上に置き、設定を押したときも見えるようにする。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 3em; margin: 10px 0 14px; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    textarea { min-height: 150px; }
+    .preview { min-height: 150px; max-height: 340px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .settings-row { flex-direction: column; align-items: stretch; }
+    .setting { flex-direction: column; align-items: stretch; gap: 6px; }
+    .setting legend { float: none; margin-bottom: 6px; }
+    .seg { display: flex; }
+    .seg label { flex: 1 1 0; }
+    .seg span { width: 100%; min-width: 0; padding: 0 6px; }
+    .chip, .chip span { width: 100%; }
+    .chip span { display: grid; grid-template-columns: 16px 1fr; align-items: center; column-gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+    .chip small { grid-column: 2; white-space: normal; }
+    .status { min-height: 6em; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">ひらがなカタカナ変換</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">KANA CONVERT</p>
+    <h1>ひらがなカタカナ変換</h1>
+    <p>ひらがなをカタカナに、カタカナをひらがなに、まとめて変換します。名簿のふりがなの表記をそろえるときや、申し込みの「カタカナで入力」に合わせるときに使えます。</p>
+  </header>
+
+  <section class="card" aria-label="ひらがなカタカナ変換">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>「変換したいテキスト」の欄にテキストを貼り付けます。Excelのセルをそのまま貼り付けても使えます。</li>
+        <li>カタカナにした結果が、自動で表示されます。ひらがなにしたいときは、下の「変換の向き」で「ひらがなにする」を選びます。</li>
+        <li>「結果をコピー」でコピーして、使いたい場所に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText">変換したいテキスト</label><span id="sourceCount" class="count">0文字</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="例：やまだ　たろう"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果（変えた文字に色が付きます）</span></div>
+        <div id="preview" class="preview empty" role="region" aria-labelledby="resultLabel" tabindex="0">「変換したいテキスト」の欄に入力すると、ここに結果が表示されます。</div>
+        <p id="summary" class="summary" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="settings">
+      <div class="settings-row">
+        <fieldset class="setting">
+          <legend>変換の向き</legend>
+          <div class="seg">
+            <label><input type="radio" name="direction" value="kata" checked><span>カタカナにする</span></label>
+            <label><input type="radio" name="direction" value="hira"><span>ひらがなにする</span></label>
+          </div>
+        </fieldset>
+        <label class="chip"><input type="checkbox" id="optHalf" checked><span>半角カタカナも変換する <small>ｶﾀｶﾅ → カタカナ・かたかな</small></span></label>
+      </div>
+      <p class="note">漢字・英数字・記号・改行・タブは変わりません。「ひらがなにする」でも、長音「ー」と、「1ヶ月」などの「ヶ」「ヵ」はそのまま残します。</p>
+    </div>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したテキストは、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>名簿のふりがなをカタカナにそろえる</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>やまだ　たろう
+さとう　はなこ
+ｽｽﾞｷ ｲﾁﾛｳ</pre></dd>
+        <dt>設定</dt><dd>カタカナにする／半角カタカナも変換する：オン（初期設定のまま）</dd>
+        <dt>結果</dt><dd><pre>ヤマダ　タロウ
+サトウ　ハナコ
+スズキ イチロウ</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>カタカナの文章をひらがなにする</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>メニュー：ラーメン、ギョーザ（1ヶ月限定）</pre></dd>
+        <dt>設定</dt><dd>ひらがなにする</dd>
+        <dt>結果</dt><dd><pre>めにゅー：らーめん、ぎょーざ（1ヶ月限定）</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>Excelの表のふりがなの列を、まとめて変換できますか？</summary>
+      <p>できます。Excelのセル範囲をコピーして入力欄に貼り付け、「結果をコピー」で得た結果を元の場所に貼り付けてください。改行とタブは変えないため、行や列はずれません。漢字・英数字・記号もそのまま残ります。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「ー」（長音）や「ヶ」はどうなりますか？</summary>
+      <p>「ひらがなにする」では、「ー」はそのまま残します（ラーメン → らーめん）。「1ヶ月」「霞ヶ関」のように使われる小さい「ヶ」「ヵ」も変えません。「ヴ」は「ゔ」にします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>半角カタカナ（ｶﾀｶﾅ）も変換できますか？</summary>
+      <p>「半角カタカナも変換する」がオン（初期設定）のとき、「カタカナにする」では全角のカタカナに、「ひらがなにする」ではひらがなにします。「ｶﾞ」のように濁点が分かれた文字は「ガ」「が」の1文字にまとめます。半角の「ｰ」「･」「｡」「､」「｢」「｣」も全角にします。オフにすると、半角カタカナはそのまま残ります。</p>
+    </details>
+    <details class="faq-item">
+      <summary>漢字をひらがなやカタカナにできますか？</summary>
+      <p>できません。このツールは、ひらがなとカタカナで書かれた文字の種類を入れ替えるだけで、漢字の読みは調べません。漢字はそのまま残ります。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力したテキストは、どこかに送信されますか？</summary>
+      <p>いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（バックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var DAKUTEN_COMBINING = String.fromCharCode(0x3099);    // 結合用の濁点
+  var HANDAKUTEN_COMBINING = String.fromCharCode(0x309A); // 結合用の半濁点
+  var HALF_DAKUTEN = String.fromCharCode(0xFF9E);         // ﾞ
+  var HALF_HANDAKUTEN = String.fromCharCode(0xFF9F);      // ﾟ
+  var PREVIEW_LIMIT = 300000; // これを超える長さでは色付けを省略する
+
+  // 文字コードの範囲（ひらがなとカタカナは 0x60 ずつ離れて同じ順に並んでいる）
+  var HIRA_FIRST = 0x3041;      // ぁ
+  var HIRA_LAST = 0x3096;       // ゖ
+  var KATA_TO_HIRA_LAST = 0x30F4; // ヴ（ヵ 0x30F5・ヶ 0x30F6 はひらがなにしない）
+  var KANA_OFFSET = 0x60;
+  var HIRA_ITER = 0x309D, HIRA_ITER_V = 0x309E; // ゝ ゞ
+  var KATA_ITER = 0x30FD, KATA_ITER_V = 0x30FE; // ヽ ヾ
+  // ヷ ヸ ヹ ヺ（ひらがなには1文字の形がないため、わ・ゐ・ゑ・を ＋ 結合用の濁点にする）
+  var KATA_VA = { 0x30F7: 0x308F, 0x30F8: 0x3090, 0x30F9: 0x3091, 0x30FA: 0x3092 };
+
+  // 半角カナと全角カナの対応（同じ位置の文字どうしが対応する）
+  var HALF_KANA = '｡｢｣､･ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝﾞﾟ';
+  var FULL_KANA = '。「」、・ヲァィゥェォャュョッーアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン゛゜';
+  var halfToFull = {};
+  for (var k = 0; k < HALF_KANA.length; k++) halfToFull[HALF_KANA.charAt(k)] = FULL_KANA.charAt(k);
+
+  var sourceText = document.getElementById('sourceText');
+  var sourceCount = document.getElementById('sourceCount');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+  var optHalf = document.getElementById('optHalf');
+
+  var lastResult = '';
+  var copyTimer = null;
+
+  function has(obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); }
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+
+  function getDirection() {
+    var checked = document.querySelector('input[name="direction"]:checked');
+    return checked ? checked.value : 'kata';
+  }
+
+  // 全角カタカナ1文字をひらがなにする。ひらがなにしない文字（ー、ヶ、ヵ、・ など）はそのまま返す
+  function kataToHira(ch) {
+    var code = ch.charCodeAt(0);
+    if (code >= HIRA_FIRST + KANA_OFFSET && code <= KATA_TO_HIRA_LAST) return String.fromCharCode(code - KANA_OFFSET);
+    if (code === KATA_ITER) return String.fromCharCode(HIRA_ITER);
+    if (code === KATA_ITER_V) return String.fromCharCode(HIRA_ITER_V);
+    if (has(KATA_VA, code)) return String.fromCharCode(KATA_VA[code]) + DAKUTEN_COMBINING;
+    return ch;
+  }
+
+  // ひらがな1文字をカタカナにする。対象外の文字はそのまま返す
+  function hiraToKata(ch) {
+    var code = ch.charCodeAt(0);
+    if (code >= HIRA_FIRST && code <= HIRA_LAST) return String.fromCharCode(code + KANA_OFFSET);
+    if (code === HIRA_ITER) return String.fromCharCode(KATA_ITER);
+    if (code === HIRA_ITER_V) return String.fromCharCode(KATA_ITER_V);
+    return ch;
+  }
+
+  // テキストを変換し、[{text, changed}] の並びと、変えた文字の数を返す
+  function convert(text, direction, includeHalf) {
+    var pieces = [];
+    var changedCount = 0;
+    var plain = '';
+    var len = text.length;
+    for (var i = 0; i < len; i++) {
+      var ch = text.charAt(i);
+      var used = 1;
+      var out = ch;
+      if (includeHalf && has(halfToFull, ch)) {
+        // 半角カナ：後ろの半角の濁点・半濁点と1文字にまとめられる場合はまとめる（ｶﾞ → ガ）
+        var full = halfToFull[ch];
+        var next = text.charAt(i + 1);
+        if ((next === HALF_DAKUTEN || next === HALF_HANDAKUTEN) && ch !== HALF_DAKUTEN && ch !== HALF_HANDAKUTEN) {
+          var combined = (full + (next === HALF_DAKUTEN ? DAKUTEN_COMBINING : HANDAKUTEN_COMBINING)).normalize('NFC');
+          if (combined.length === 1) { full = combined; used = 2; }
+        }
+        out = direction === 'hira' ? kataToHira(full) : full;
+      } else if (direction === 'kata') {
+        out = hiraToKata(ch);
+      } else {
+        out = kataToHira(ch);
+      }
+      var original = used === 1 ? ch : text.substr(i, used);
+      var changed = out !== original;
+      if (changed) changedCount++;
+      pieces.push({ text: out, changed: changed });
+      plain += out;
+      i += used - 1;
+    }
+    return { pieces: pieces, plain: plain, changed: changedCount };
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // 見た目の1文字（書記素）で数える。改行は数えない
+  function countChars(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+      var n = 0;
+      var it = new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text);
+      for (var s of it) { if (s.segment !== LF) n++; }
+      return n;
+    }
+    return Array.from(text).filter(function (c) { return c !== LF; }).length;
+  }
+
+  function update() {
+    var text = sourceText.value;
+    sourceCount.textContent = fmt(countChars(text)) + '文字';
+    if (text === '') {
+      lastResult = '';
+      preview.textContent = '「変換したいテキスト」の欄に入力すると、ここに結果が表示されます。';
+      preview.classList.add('empty');
+      summary.textContent = '';
+      summary.classList.remove('none');
+      copyButton.disabled = true;
+      return;
+    }
+    var direction = getDirection();
+    var result = convert(text, direction, optHalf.checked);
+    lastResult = result.plain;
+    preview.classList.remove('empty');
+    if (result.plain.length > PREVIEW_LIMIT) {
+      preview.textContent = result.plain;
+    } else {
+      var html = '';
+      var buffer = '';
+      var inMark = false;
+      result.pieces.forEach(function (p) {
+        if (p.changed !== inMark) {
+          html += inMark ? '<mark>' + escapeHtml(buffer) + '</mark>' : escapeHtml(buffer);
+          buffer = '';
+          inMark = p.changed;
+        }
+        buffer += p.text;
+      });
+      html += inMark ? '<mark>' + escapeHtml(buffer) + '</mark>' : escapeHtml(buffer);
+      preview.innerHTML = html;
+    }
+    var target = direction === 'hira' ? 'ひらがな' : 'カタカナ';
+    if (result.changed === 0) {
+      var from = direction === 'hira' ? 'カタカナ' : 'ひらがな';
+      summary.textContent = '変える文字はありませんでした。入力に' + from + 'がないか、すでに' + target + 'になっています。変換の向きを確かめてください。';
+      summary.classList.add('none');
+    } else {
+      summary.textContent = fmt(result.changed) + '文字を' + target + 'にしました。';
+      summary.classList.remove('none');
+    }
+    if (result.plain.length > PREVIEW_LIMIT) {
+      summary.textContent += ' ※文字数が多いため、変えた文字の色付けは省略しています。';
+    }
+    copyButton.disabled = false;
+  }
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle('error', !!isError);
+  }
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+
+  function selectPreview() {
+    var range = document.createRange();
+    range.selectNodeContents(preview);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function showStatusInView() {
+    if (status.scrollIntoView) status.scrollIntoView({ block: 'nearest' });
+  }
+
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectPreview();
+    setStatus('コピーできませんでした。結果の文字を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+    showStatusInView();
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (text === '') return;
+    var done = function () {
+      setStatus('結果をコピーしました（' + fmt(countChars(text)) + '文字）。');
+      flashButton('✓ コピーしました', 2500);
+      showStatusInView();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  sampleButton.addEventListener('click', function () {
+    sourceText.value = ['やまだ　たろう', 'さとう　はなこ', 'ｽｽﾞｷ ｲﾁﾛｳ'].join(LF);
+    update();
+    resetCopyButton();
+    setStatus('例を入れました。下の「変換の向き」で「ひらがなにする」を選ぶと、結果がすぐに変わります。');
+    showStatusInView();
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    update();
+    resetCopyButton();
+    setStatus('入力と結果を消しました。「変換したいテキスト」の欄に、新しいテキストを貼り付けてください。');
+    showStatusInView();
+  });
+
+  sourceText.addEventListener('input', function () {
+    update();
+    resetCopyButton();
+    setStatus('');
+  });
+
+  function onSettingChange(message) {
+    update();
+    resetCopyButton();
+    // 知らせは設定のすぐ上の欄に出す。押した設定が画面の上端にあるときは、知らせが見えるところまでスクロールする
+    setStatus(message + (lastResult === '' ? 'テキストを入力すると、この設定で結果が表示されます。' : '結果を更新しました。'));
+    showStatusInView();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="direction"]'), function (input) {
+    input.addEventListener('change', function () {
+      onSettingChange('「' + input.nextElementSibling.textContent + '」にしました。');
+    });
+  });
+
+  optHalf.addEventListener('change', function () {
+    onSettingChange('「半角カタカナも変換する」を' + (optHalf.checked ? 'オン' : 'オフ') + 'にしました。');
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
