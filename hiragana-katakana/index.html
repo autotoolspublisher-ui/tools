@@ -421,10 +421,11 @@
     return { pieces: pieces, plain: plain, changed: changedCount };
   }
 
-  // 半角カタカナ（濁点・長音などを含む）があるか
+  // 半角カタカナの文字（ｦ〜ﾝ）があるか。半角の記号（｢｣､｡･）・長音（ｰ）・濁点（ﾞﾟ）だけの場合は含めない
   function hasHalfKana(text) {
     for (var i = 0; i < text.length; i++) {
-      if (has(halfToFull, text.charAt(i))) return true;
+      var code = text.charCodeAt(i);
+      if (code >= 0xFF66 && code <= 0xFF9D && code !== 0xFF70) return true;
     }
     return false;
   }
@@ -494,8 +495,7 @@
       summary.textContent = '変える文字はありませんでした。入力に' + from + 'がないか、すでに' + target + 'になっています。変換の向きを確かめてください。';
       summary.classList.add('none');
     } else {
-      summary.textContent = fmt(result.changed) + '文字を' + target + 'にしました。' +
-        (halfLeft ? '半角カタカナは、「半角カタカナも変換する」がオフのため残しています。' : '');
+      summary.textContent = fmt(result.changed) + '文字を' + target + 'にしました。';
       summary.classList.remove('none');
     }
     if (result.plain.length > PREVIEW_LIMIT) {
