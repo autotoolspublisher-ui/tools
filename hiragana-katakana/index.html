@@ -122,7 +122,9 @@
   .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 7.5em; min-height: 44px; padding: 0 14px; color: #3c4043; font-size: .94rem; cursor: pointer; transition: background .16s ease; }
   .seg label + label span { border-left: 1px solid var(--line); }
   .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
-  .seg input:checked + span::before { content: "✓"; margin-right: 4px; }
+  /* ✓ の幅をいつも確保して、選んだときに選択肢の幅と位置が変わらないようにする */
+  .seg span::before { content: "✓"; margin-right: 4px; color: transparent; }
+  .seg input:checked + span::before { color: inherit; }
   .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
   .seg span:hover { background: #f6fafe; }
   .chip { position: relative; display: inline-flex; }
@@ -140,14 +142,15 @@
   .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
   .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
   .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
-  textarea { display: block; width: 100%; min-height: 220px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
   textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
-  .preview { min-height: 220px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview { min-height: 150px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
   .preview.empty { color: var(--muted); font-family: inherit; }
   .preview mark { background: var(--mark); color: inherit; border-radius: 3px; box-shadow: 0 0 0 1px #f2d25c; }
-  .summary { margin: 10px 0 0; font-size: .9rem; color: var(--ok); font-weight: 600; min-height: 1.5em; }
+  /* まとめ。最も長い文（2行）の高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .summary { margin: 10px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 44px; } /* 2行分（14.4px × 1.5 × 2 = 43.2px）に、文字の種類による行の高さの差を少し足す */
   .summary.none { color: var(--warn-ink); font-weight: 400; }
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 18px; }
   button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
   button.btn:hover { background: #f6fafe; }
   button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
@@ -155,8 +158,8 @@
   button.btn:disabled { opacity: .5; cursor: not-allowed; }
   /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
   #copyButton { min-width: 14.5em; }
-  /* ボタンと設定の知らせ。設定のすぐ上に置き、設定を押したときも見えるようにする。高さを先に確保して、出ても消えても下の部品が動かないようにする */
-  .status { min-height: 3em; margin: 10px 0 14px; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  /* ボタンと設定の知らせ。ボタンと設定の上に置き、画面の下端で押しても、スクロールせずに見えるようにする。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 44px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
   .status.error { color: var(--warn-ink); }
   .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
   footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
@@ -176,7 +179,8 @@
     .chip, .chip span { width: 100%; }
     .chip span { display: grid; grid-template-columns: 16px 1fr; align-items: center; column-gap: 6px; padding-top: 6px; padding-bottom: 6px; }
     .chip small { grid-column: 2; white-space: normal; }
-    .status { min-height: 6em; }
+    .summary { min-height: 66px; }
+    .status { min-height: 88px; }
     .actions .btn { flex: 1 1 40%; }
     .actions #copyButton { flex-basis: 100%; min-width: 0; }
   }
@@ -216,12 +220,13 @@
       </div>
     </div>
 
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
     <div class="actions">
       <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
       <button type="button" id="sampleButton" class="btn">例を入れる</button>
       <button type="button" id="clearButton" class="btn">クリア</button>
     </div>
-    <p id="status" class="status" role="status" aria-live="polite"></p>
 
     <div class="settings">
       <div class="settings-row">
@@ -234,7 +239,7 @@
         </fieldset>
         <label class="chip"><input type="checkbox" id="optHalf" checked><span>半角カタカナも変換する <small>ｶﾀｶﾅ → カタカナ・かたかな</small></span></label>
       </div>
-      <p class="note">漢字・英数字・記号・改行・タブは変わりません。「ひらがなにする」でも、長音「ー」と、「1ヶ月」などの「ヶ」「ヵ」はそのまま残します。</p>
+      <p class="note">漢字・英数字・記号・改行・タブは変わりません（ただし「半角カタカナも変換する」がオンのときは、半角の「｢」「｣」「､」「｡」「･」「ｰ」を全角にします）。「ひらがなにする」でも、長音「ー」と、「1ヶ月」などの「ヶ」「ヵ」はそのまま残します。</p>
     </div>
 
     <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したテキストは、このページの中だけで処理され、保存も外部への送信もされません。</div>
@@ -400,6 +405,12 @@
       } else {
         out = kataToHira(ch);
       }
+      // 後ろの結合用の濁点・半濁点（U+3099・U+309A）は、1文字にまとめられる場合はまとめる（か＋゙ → ガ）
+      var mark = text.charAt(i + used);
+      if ((mark === DAKUTEN_COMBINING || mark === HANDAKUTEN_COMBINING) && out.length === 1) {
+        var composedMark = (out + mark).normalize('NFC');
+        if (composedMark.length === 1) { out = composedMark; used++; }
+      }
       var original = used === 1 ? ch : text.substr(i, used);
       var changed = out !== original;
       if (changed) changedCount++;
@@ -408,6 +419,14 @@
       i += used - 1;
     }
     return { pieces: pieces, plain: plain, changed: changedCount };
+  }
+
+  // 半角カタカナ（濁点・長音などを含む）があるか
+  function hasHalfKana(text) {
+    for (var i = 0; i < text.length; i++) {
+      if (has(halfToFull, text.charAt(i))) return true;
+    }
+    return false;
   }
 
   function escapeHtml(s) {
@@ -419,7 +438,14 @@
     if (typeof Intl !== 'undefined' && Intl.Segmenter) {
       var n = 0;
       var it = new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text);
-      for (var s of it) { if (s.segment !== LF) n++; }
+      for (var s of it) {
+        if (s.segment === LF) continue;
+        n++;
+        // 半角の濁点・半濁点（ﾞ ﾟ）は、前の文字とまとめずに1文字と数える（ｽﾞ は2文字。Excel の LEN と同じ）
+        for (var j = 1; j < s.segment.length; j++) {
+          if (s.segment.charAt(j) === HALF_DAKUTEN || s.segment.charAt(j) === HALF_HANDAKUTEN) n++;
+        }
+      }
       return n;
     }
     return Array.from(text).filter(function (c) { return c !== LF; }).length;
@@ -459,12 +485,17 @@
       preview.innerHTML = html;
     }
     var target = direction === 'hira' ? 'ひらがな' : 'カタカナ';
-    if (result.changed === 0) {
+    var halfLeft = !optHalf.checked && hasHalfKana(text);
+    if (result.changed === 0 && halfLeft) {
+      summary.textContent = '「半角カタカナも変換する」がオフのため、半角カタカナを変えていません。オンにすると変換します。';
+      summary.classList.add('none');
+    } else if (result.changed === 0) {
       var from = direction === 'hira' ? 'カタカナ' : 'ひらがな';
       summary.textContent = '変える文字はありませんでした。入力に' + from + 'がないか、すでに' + target + 'になっています。変換の向きを確かめてください。';
       summary.classList.add('none');
     } else {
-      summary.textContent = fmt(result.changed) + '文字を' + target + 'にしました。';
+      summary.textContent = fmt(result.changed) + '文字を' + target + 'にしました。' +
+        (halfLeft ? '半角カタカナは、「半角カタカナも変換する」がオフのため残しています。' : '');
       summary.classList.remove('none');
     }
     if (result.plain.length > PREVIEW_LIMIT) {
@@ -513,15 +544,10 @@
     return ok;
   }
 
-  function showStatusInView() {
-    if (status.scrollIntoView) status.scrollIntoView({ block: 'nearest' });
-  }
-
   function copyFailed() {
     flashButton('コピーできませんでした', 4000);
     selectPreview();
     setStatus('コピーできませんでした。結果の文字を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
-    showStatusInView();
   }
 
   copyButton.addEventListener('click', function () {
@@ -530,8 +556,7 @@
     var done = function () {
       setStatus('結果をコピーしました（' + fmt(countChars(text)) + '文字）。');
       flashButton('✓ コピーしました', 2500);
-      showStatusInView();
-    };
+      };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(done, function () {
         if (fallbackCopy(text)) done(); else copyFailed();
@@ -547,8 +572,8 @@
     sourceText.value = ['やまだ　たろう', 'さとう　はなこ', 'ｽｽﾞｷ ｲﾁﾛｳ'].join(LF);
     update();
     resetCopyButton();
-    setStatus('例を入れました。下の「変換の向き」で「ひらがなにする」を選ぶと、結果がすぐに変わります。');
-    showStatusInView();
+    var other = getDirection() === 'hira' ? 'カタカナにする' : 'ひらがなにする';
+    setStatus('例を入れました。下の「変換の向き」で「' + other + '」を選ぶと、結果がすぐに変わります。');
   });
 
   clearButton.addEventListener('click', function () {
@@ -556,7 +581,6 @@
     update();
     resetCopyButton();
     setStatus('入力と結果を消しました。「変換したいテキスト」の欄に、新しいテキストを貼り付けてください。');
-    showStatusInView();
   });
 
   sourceText.addEventListener('input', function () {
@@ -568,9 +592,8 @@
   function onSettingChange(message) {
     update();
     resetCopyButton();
-    // 知らせは設定のすぐ上の欄に出す。押した設定が画面の上端にあるときは、知らせが見えるところまでスクロールする
+    // 知らせはボタンの上の欄に出す（設定より上にあるため、設定を画面の下端で押しても見える。スクロールはしない）
     setStatus(message + (lastResult === '' ? 'テキストを入力すると、この設定で結果が表示されます。' : '結果を更新しました。'));
-    showStatusInView();
   }
 
   Array.prototype.forEach.call(document.querySelectorAll('input[name="direction"]'), function (input) {
