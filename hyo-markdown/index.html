@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>表マークダウン変換 - Excel⇔Markdown表｜AIツールひろば</title>
+  <meta name="description" content="Excelやスプレッドシートからコピーした表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換する無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/hyo-markdown/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="表マークダウン変換 - Excel⇔Markdown表｜AIツールひろば">
+  <meta property="og:description" content="Excelやスプレッドシートからコピーした表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換する無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/hyo-markdown/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/hyo-markdown.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "表マークダウン変換",
+    "description": "Excelやスプレッドシートからコピーした表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換する無料ツールです。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/hyo-markdown/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "表マークダウン変換",
+        "item": "https://autotoolspublisher-ui.github.io/tools/hyo-markdown/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Googleスプレッドシートでも使えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。スプレッドシートでセル範囲を選んでコピーし、入力欄に貼り付けるとMarkdownの表になります。「Markdown → Excel」の結果も、スプレッドシートのセルを1つ選んで貼り付けると列に分かれます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "セルの中の改行や「|」はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「Excel → Markdown」では、セル内の改行を「<br>」に、「|」を「\\|」にして、表が崩れないようにします。「Markdown → Excel」では逆に、「<br>」をセル内の改行に、「\\|」を「|」に戻します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "ChatGPTなどのAIの答えを、そのまま貼り付けてもいいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。「Markdown → Excel」では、前後の文章は除いて表の部分だけを取り出します。表が2つ以上あるときは、表と表の間に空の行を1行入れて並べます。「太字などの記号を外す」がオン（初期設定）のときは、**太字** などの記号を外して中の文字だけにします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「列の幅をそろえる」とは何ですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "テキストのままでも表に見えるよう、各列の幅を空白でそろえます。全角の文字は半角2文字分として数えます。フォントによっては少しずれることがありますが、Markdownとして表示したときの表の中身は変わりません。オフにすると空白を足さず、短く出力します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した表は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .setting.direction { margin: 0 0 18px; }
+  .settings { margin: 0 0 16px; }
+  .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+  .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .setting legend { float: left; padding: 0; color: #3c4043; font-weight: 600; font-size: .94rem; white-space: nowrap; }
+  .seg { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .seg label { position: relative; display: inline-flex; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 4.5em; min-height: 44px; padding: 0 14px; color: #3c4043; font-size: .94rem; cursor: pointer; transition: background .16s ease; white-space: nowrap; }
+  .direction .seg span { min-width: 11em; }
+  .seg label + label span { border-left: 1px solid var(--line); }
+  .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  /* ✓ の幅をいつも確保して、選んだときに選択肢の幅と位置が変わらないようにする */
+  .seg span::before { content: "✓"; margin-right: 4px; color: transparent; }
+  .seg input:checked + span::before { color: inherit; }
+  .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .seg span:hover { background: #f6fafe; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip small { color: var(--muted); font-weight: 400; font-size: .875rem; white-space: nowrap; }
+  .chip input:checked + span small { color: #174ea6; }
+  .note { margin: 10px 0 0; color: var(--muted); font-size: .875rem; }
+  [hidden] { display: none !important; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; min-height: 190px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 8; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .preview { min-height: 190px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre; }
+  .preview.empty { color: var(--muted); font-family: inherit; white-space: normal; }
+  .preview.sheet { padding: 0; font-family: inherit; white-space: normal; }
+  .preview table { border-collapse: collapse; font-size: .9rem; line-height: 1.5; background: #fff; }
+  .preview th, .preview td { min-width: 3em; max-width: 18em; padding: 6px 10px; border: 1px solid #dadce0; text-align: left; vertical-align: top; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview th { background: #f1f3f4; font-weight: 600; }
+  .preview .gap td { height: 1.5em; border-left-color: transparent; border-right-color: transparent; background: var(--paper); }
+  /* まとめ。最も長い文（3行）の高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .summary { margin: 10px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; }
+  .summary.none { color: var(--warn-ink); font-weight: 400; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンと設定の知らせ。ボタンと設定の上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 44px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    textarea { min-height: 150px; }
+    .preview { min-height: 150px; max-height: 340px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .settings-row { flex-direction: column; align-items: stretch; }
+    .setting { flex-direction: column; align-items: stretch; gap: 6px; }
+    .setting legend { float: none; margin-bottom: 6px; }
+    .seg { display: flex; }
+    .seg label { flex: 1 1 0; min-width: 0; }
+    .seg span, .direction .seg span { width: 100%; min-width: 0; padding: 0 6px; }
+    /* 狭い幅では向きの名前を折り返して、はみ出さないようにする */
+    .direction .seg span { white-space: normal; line-height: 1.3; text-align: center; padding: 4px 6px; }
+    .chip, .chip span { width: 100%; }
+    .chip span { display: grid; grid-template-columns: 16px 1fr; align-items: center; column-gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+    .chip small { grid-column: 2; white-space: normal; }
+    .summary { min-height: 110px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">表マークダウン変換</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">MARKDOWN TABLE</p>
+    <h1>表マークダウン変換</h1>
+    <p>ExcelやGoogleスプレッドシートの表をMarkdownの表に、ChatGPTなどのAIが出したMarkdownの表をExcelに貼れる形に変換します。README・ブログ・AIへの指示に表を載せるときや、AIの表をExcelで使うときに便利です。</p>
+  </header>
+
+  <section class="card" aria-label="表マークダウン変換">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>下の「変換の向き」を選びます（初めは「Excel → Markdown」）。</li>
+        <li>入力欄に表を貼り付けます。結果が自動で表示されます。</li>
+        <li>「結果をコピー」でコピーして、使いたい場所に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <fieldset class="setting direction">
+      <legend>変換の向き</legend>
+      <div class="seg">
+        <label><input type="radio" name="direction" value="toMd" checked><span>Excel → Markdown</span></label>
+        <label><input type="radio" name="direction" value="toSheet"><span>Markdown → Excel</span></label>
+      </div>
+    </fieldset>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText" id="sourceLabel">Excelからコピーした表</label><span id="sourceCount" class="count">0行</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="ExcelやGoogleスプレッドシートでセル範囲を選んでコピーし、ここに貼り付けます"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果（Markdownの表）</span></div>
+        <div id="preview" class="preview empty" role="region" aria-labelledby="resultLabel" tabindex="0">入力欄に表を貼り付けると、ここに結果が表示されます。</div>
+        <p id="summary" class="summary" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+
+    <div class="settings" id="settingsToMd">
+      <div class="settings-row">
+        <fieldset class="setting">
+          <legend>列の揃え</legend>
+          <div class="seg">
+            <label><input type="radio" name="align" value="none" checked><span>指定なし</span></label>
+            <label><input type="radio" name="align" value="left"><span>左</span></label>
+            <label><input type="radio" name="align" value="center"><span>中央</span></label>
+            <label><input type="radio" name="align" value="right"><span>右</span></label>
+          </div>
+        </fieldset>
+        <label class="chip"><input type="checkbox" id="optPad" checked><span>列の幅をそろえる <small>テキストのままでも表に見えるよう、空白で幅をそろえます</small></span></label>
+      </div>
+      <p class="note">1行目を見出しにします。セルの中の「|」は「\|」に、セル内の改行は「&lt;br&gt;」にします。列の数がそろわない行は、空のセルを足して、最も多い列の数にそろえます。</p>
+    </div>
+
+    <div class="settings" id="settingsToSheet" hidden>
+      <div class="settings-row">
+        <label class="chip"><input type="checkbox" id="optStrip" checked><span>太字などの記号を外す <small>**太字**・~~取り消し線~~・`コード` → 中の文字だけにします</small></span></label>
+      </div>
+      <p class="note">文章の中に表がまじっていても、表の部分だけを取り出します。「\|」は「|」に、「&lt;br&gt;」はセル内の改行に戻します。全角の「｜」は区切りとして扱いません。表が2つ以上あるときは、表と表の間に空の行を1行入れます。</p>
+    </div>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力した表は、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>Excelの表をMarkdownの表にする</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>商品	価格	在庫
+りんご	120	あり
+バナナ	98	なし</pre><p class="note">Excelで3行×3列のセル範囲を選んでコピーしたもの（列の間はタブ）</p></dd>
+        <dt>設定</dt><dd>Excel → Markdown／列の揃え：指定なし／列の幅をそろえる：オン（初期設定のまま）</dd>
+        <dt>結果</dt><dd><pre>| 商品   | 価格 | 在庫 |
+| ------ | ---- | ---- |
+| りんご | 120  | あり |
+| バナナ | 98   | なし |</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>AIの答えにある表をExcelに貼れる形にする</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>候補を比べました。
+
+| 案 | 費用 | おすすめ度 |
+|---|---|---|
+| A案 | 3万円 | **高** |
+| B案 | 5万円 | 中 |
+
+ほかにも質問があればどうぞ。</pre></dd>
+        <dt>設定</dt><dd>Markdown → Excel／太字などの記号を外す：オン（初期設定のまま）</dd>
+        <dt>結果</dt><dd><pre>案	費用	おすすめ度
+A案	3万円	高
+B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセルを1つ選んで貼り付けると、3行×3列の表になります。前後の文章と「**」は除かれます。</p></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>Googleスプレッドシートでも使えますか？</summary>
+      <p>はい。スプレッドシートでセル範囲を選んでコピーし、入力欄に貼り付けるとMarkdownの表になります。「Markdown → Excel」の結果も、スプレッドシートのセルを1つ選んで貼り付けると列に分かれます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>セルの中の改行や「|」はどうなりますか？</summary>
+      <p>「Excel → Markdown」では、セル内の改行を「&lt;br&gt;」に、「|」を「\|」にして、表が崩れないようにします。「Markdown → Excel」では逆に、「&lt;br&gt;」をセル内の改行に、「\|」を「|」に戻します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>ChatGPTなどのAIの答えを、そのまま貼り付けてもいいですか？</summary>
+      <p>はい。「Markdown → Excel」では、前後の文章は除いて表の部分だけを取り出します。表が2つ以上あるときは、表と表の間に空の行を1行入れて並べます。「太字などの記号を外す」がオン（初期設定）のときは、**太字** などの記号を外して中の文字だけにします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「列の幅をそろえる」とは何ですか？</summary>
+      <p>テキストのままでも表に見えるよう、各列の幅を空白でそろえます。全角の文字は半角2文字分として数えます。フォントによっては少しずれることがありますが、Markdownとして表示したときの表の中身は変わりません。オフにすると空白を足さず、短く出力します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した表は、どこかに送信されますか？</summary>
+      <p>いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなをカタカナに、カタカナをひらがなにまとめて変換します。名簿のふりがなの表記をそろえるときに使えます。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var QUOTE = String.fromCharCode(34);     // "
+  var BACKSLASH = String.fromCharCode(92); // バックスラッシュ（Markdownで「|」を文字として書くときに前に付ける）
+  var PIPE = '|';
+  var HALF_DAKUTEN = 0xFF9E;      // ﾞ
+  var HALF_HANDAKUTEN = 0xFF9F;   // ﾟ
+  var BR_PATTERN = new RegExp('<br[ ' + TAB + ']*/?>', 'gi'); // <br> <br/> <br /> <BR>
+  // Markdownの「\」で文字として書ける記号（ASCIIの記号）
+  var ASCII_PUNCT = '!"#$%&()*+,-./:;<=>?@[]^_`{|}~' + String.fromCharCode(39) + BACKSLASH;
+  var STRIP_RULES = [
+    new RegExp('[*][*](.+?)[*][*]', 'g'),   // **太字**
+    new RegExp('__(.+?)__', 'g'),           // __太字__
+    new RegExp('~~(.+?)~~', 'g'),           // ~~取り消し線~~
+    new RegExp('`([^`]+)`', 'g')            // `コード`
+  ];
+
+  var sourceText = document.getElementById('sourceText');
+  var sourceLabel = document.getElementById('sourceLabel');
+  var sourceCount = document.getElementById('sourceCount');
+  var resultLabel = document.getElementById('resultLabel');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+  var optPad = document.getElementById('optPad');
+  var optStrip = document.getElementById('optStrip');
+  var settingsToMd = document.getElementById('settingsToMd');
+  var settingsToSheet = document.getElementById('settingsToSheet');
+
+  var lastResult = '';
+  var lastCopyNote = '';
+  var copyTimer = null;
+  var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+  function getRadio(name, fallback) {
+    var checked = document.querySelector('input[name="' + name + '"]:checked');
+    return checked ? checked.value : fallback;
+  }
+  function getDirection() { return getRadio('direction', 'toMd'); }
+  function normalizeNewlines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF); }
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function repeat(ch, n) { return n > 0 ? new Array(n + 1).join(ch) : ''; }
+
+  // ---------- 表示の幅（全角は2、半角は1）----------
+  function baseWidth(cp) {
+    if ((cp >= 0x1100 && cp <= 0x115F) || (cp >= 0x2E80 && cp <= 0x303E) || (cp >= 0x3041 && cp <= 0x33FF) ||
+        (cp >= 0x3400 && cp <= 0x4DBF) || (cp >= 0x4E00 && cp <= 0x9FFF) || (cp >= 0xA000 && cp <= 0xA4CF) ||
+        (cp >= 0xAC00 && cp <= 0xD7A3) || (cp >= 0xF900 && cp <= 0xFAFF) || (cp >= 0xFE30 && cp <= 0xFE4F) ||
+        (cp >= 0xFF00 && cp <= 0xFF60) || (cp >= 0xFFE0 && cp <= 0xFFE6) || (cp >= 0x1F000 && cp <= 0x1FAFF) ||
+        (cp >= 0x20000 && cp <= 0x3FFFD)) return 2;
+    return 1;
+  }
+  // 前の文字にくっついて幅を持たない文字（結合文字、異体字セレクタ、ゼロ幅の文字）
+  function isZeroWidth(cp) {
+    return (cp >= 0x0300 && cp <= 0x036F) || (cp >= 0x1AB0 && cp <= 0x1AFF) || (cp >= 0x1DC0 && cp <= 0x1DFF) ||
+      (cp >= 0x200B && cp <= 0x200F) || (cp >= 0x20D0 && cp <= 0x20FF) || cp === 0x3099 || cp === 0x309A ||
+      (cp >= 0xFE00 && cp <= 0xFE0F) || (cp >= 0xFE20 && cp <= 0xFE2F) || (cp >= 0xE0000 && cp <= 0xE01EF);
+  }
+  // 見た目の1文字（書記素）の幅。絵文字は2。半角の濁点（ﾞ ﾟ）は前の文字とまとまっても1文字分の幅を持つ
+  function graphemeWidth(g) {
+    var cps = Array.from(g);
+    var first = cps[0].codePointAt(0);
+    var w = baseWidth(first);
+    for (var i = 1; i < cps.length; i++) {
+      var cp = cps[i].codePointAt(0);
+      if (cp === 0xFE0F) w = 2;                         // 絵文字として表示する印
+      else if (cp === HALF_DAKUTEN || cp === HALF_HANDAKUTEN) w += 1;
+    }
+    return w;
+  }
+  function textWidth(s) {
+    var ascii = true;
+    for (var i = 0; i < s.length; i++) { if (s.charCodeAt(i) > 0x7E) { ascii = false; break; } }
+    if (ascii) return s.length;
+    var w = 0;
+    if (segmenter) {
+      for (var seg of segmenter.segment(s)) w += graphemeWidth(seg.segment);
+      return w;
+    }
+    Array.from(s).forEach(function (c) {
+      var cp = c.codePointAt(0);
+      if (!isZeroWidth(cp)) w += baseWidth(cp);
+    });
+    return w;
+  }
+
+  // ---------- Excel → Markdown ----------
+  // Excelからコピーしたタブ区切りの表を読む。セル内改行のあるセルは " で囲まれ、中の " は "" になっている
+  function parseSheet(text) {
+    var rows = [];
+    var row = [];
+    var len = text.length;
+    var i = 0;
+    var quotedCells = 0;
+    while (i <= len) {
+      var cell = '';
+      if (text.charAt(i) === QUOTE) {
+        // 閉じる " の直後がタブ・改行・終わりなら、" で囲まれたセルとして読む
+        var j = i + 1;
+        var buf = '';
+        var closed = -1;
+        while (j < len) {
+          var c = text.charAt(j);
+          if (c === QUOTE) {
+            if (text.charAt(j + 1) === QUOTE) { buf += QUOTE; j += 2; continue; }
+            closed = j;
+            break;
+          }
+          buf += c;
+          j++;
+        }
+        var after = closed >= 0 ? text.charAt(closed + 1) : null;
+        if (closed >= 0 && (after === TAB || after === LF || after === '')) {
+          cell = buf;
+          i = closed + 1;
+          quotedCells++;
+        } else {
+          // 囲みではない（"abc"def のように、たまたま " で始まるセル）。次のタブか改行までをそのまま読む
+          var endPlain = findCellEnd(text, i);
+          cell = text.slice(i, endPlain);
+          i = endPlain;
+        }
+      } else {
+        var end = findCellEnd(text, i);
+        cell = text.slice(i, end);
+        i = end;
+      }
+      row.push(cell);
+      var sep = text.charAt(i);
+      if (sep === TAB) { i++; continue; }
+      rows.push(row);
+      row = [];
+      if (sep === LF) { i++; if (i === len) break; continue; }
+      break; // 終わり
+    }
+    return { rows: rows, quotedCells: quotedCells };
+  }
+  function findCellEnd(text, from) {
+    var t = text.indexOf(TAB, from);
+    var n = text.indexOf(LF, from);
+    if (t < 0) t = text.length;
+    if (n < 0) n = text.length;
+    return Math.min(t, n);
+  }
+  function isEmptyRow(row) {
+    for (var i = 0; i < row.length; i++) if (row[i].trim() !== '') return false;
+    return true;
+  }
+
+  function toMarkdownCell(cell) {
+    var s = cell.split(LF).map(function (part) { return part.trim(); }).join('<br>');
+    s = s.trim().split(PIPE).join(BACKSLASH + PIPE);
+    return s;
+  }
+
+  function sheetToMarkdown(text, align, pad) {
+    var parsed = parseSheet(normalizeNewlines(text));
+    var rows = parsed.rows;
+    // 最後の空の行（Excelのコピーの最後の改行や、選んだ範囲の下の空の行）は除く
+    while (rows.length && isEmptyRow(rows[rows.length - 1])) rows.pop();
+    if (!rows.length) return null;
+    var cols = 0;
+    rows.forEach(function (r) { if (r.length > cols) cols = r.length; });
+    var padded = 0;
+    var cells = rows.map(function (r) {
+      if (r.length < cols) padded++;
+      var out = [];
+      for (var c = 0; c < cols; c++) out.push(c < r.length ? toMarkdownCell(r[c]) : '');
+      return out;
+    });
+    // 区切りの行に「-」を3つ以上置けるよう、最小の幅を揃えの記号（:）の分だけ広げる（:--- ---: :---:）
+    var minWidth = align === 'center' ? 5 : (align === 'left' || align === 'right') ? 4 : 3;
+    var widths = [];
+    for (var c = 0; c < cols; c++) widths.push(minWidth);
+    if (pad) {
+      cells.forEach(function (r) {
+        for (var c2 = 0; c2 < cols; c2++) {
+          var w = textWidth(r[c2]);
+          if (w > widths[c2]) widths[c2] = w;
+        }
+      });
+    }
+    function padCell(s, c) {
+      if (!pad) return s;
+      var space = widths[c] - textWidth(s);
+      if (align === 'right') return repeat(' ', space) + s;
+      if (align === 'center') {
+        var leftSpace = Math.floor(space / 2);
+        return repeat(' ', leftSpace) + s + repeat(' ', space - leftSpace);
+      }
+      return s + repeat(' ', space);
+    }
+    function line(r) {
+      var parts = [];
+      for (var c = 0; c < cols; c++) parts.push(padCell(r[c], c));
+      return '| ' + parts.join(' | ') + ' |';
+    }
+    var sepParts = [];
+    for (var c3 = 0; c3 < cols; c3++) {
+      var n = pad ? widths[c3] : minWidth;
+      var dash;
+      if (align === 'left') dash = ':' + repeat('-', n - 1);
+      else if (align === 'right') dash = repeat('-', n - 1) + ':';
+      else if (align === 'center') dash = ':' + repeat('-', n - 2) + ':';
+      else dash = repeat('-', n);
+      sepParts.push(dash);
+    }
+    var lines = [line(cells[0]), '| ' + sepParts.join(' | ') + ' |'];
+    for (var r2 = 1; r2 < cells.length; r2++) lines.push(line(cells[r2]));
+    return { text: lines.join(LF), rows: cells.length, cols: cols, padded: padded };
+  }
+
+  // ---------- Markdown → Excel ----------
+  // 「|」で列に分ける。「\|」は区切りではなく文字の「|」
+  function splitRow(line) {
+    var s = line.trim();
+    var cells = [];
+    var cur = '';
+    var endedWithPipe = false;
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      endedWithPipe = false;
+      if (c === BACKSLASH && s.charAt(i + 1) === PIPE) { cur += PIPE; i++; continue; }
+      if (c === PIPE) { cells.push(cur); cur = ''; endedWithPipe = true; continue; }
+      cur += c;
+    }
+    cells.push(cur);
+    if (s.charAt(0) === PIPE) cells.shift();
+    if (endedWithPipe && cells.length) cells.pop();
+    return cells;
+  }
+  function hasPipe(line) {
+    for (var i = 0; i < line.length; i++) {
+      if (line.charAt(i) === BACKSLASH) { i++; continue; }
+      if (line.charAt(i) === PIPE) return true;
+    }
+    return false;
+  }
+  // 2行目の区切りの行（| --- | :---: | ---: |）か
+  function isSeparatorLine(line) {
+    var t = line.trim();
+    if (t === '' || t.indexOf('-') < 0) return false;
+    var parts = splitRow(t);
+    if (!parts.length) return false;
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i].trim();
+      if (p.charAt(0) === ':') p = p.slice(1);
+      if (p.charAt(p.length - 1) === ':') p = p.slice(0, -1);
+      if (p === '') return false;
+      for (var j = 0; j < p.length; j++) if (p.charAt(j) !== '-') return false;
+    }
+    return hasPipe(t);
+  }
+  function unescapePunct(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      var next = s.charAt(i + 1);
+      if (c === BACKSLASH && next !== '' && ASCII_PUNCT.indexOf(next) >= 0) { out += next; i++; continue; }
+      out += c;
+    }
+    return out;
+  }
+  function fromMarkdownCell(cell, strip) {
+    var s = cell.trim();
+    if (strip) {
+      STRIP_RULES.forEach(function (re) { s = s.replace(re, '$1'); });
+      s = unescapePunct(s);
+    }
+    s = s.replace(BR_PATTERN, LF);
+    s = s.split(TAB).join(' ');
+    return s;
+  }
+  function findTables(text) {
+    var lines = normalizeNewlines(text).split(LF);
+    var tables = [];
+    var used = 0;
+    var nonBlank = 0;
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].trim() !== '') nonBlank++;
+      if (i + 1 < lines.length && hasPipe(lines[i]) && isSeparatorLine(lines[i + 1])) {
+        var rows = [splitRow(lines[i])];
+        var j = i + 2;
+        while (j < lines.length && lines[j].trim() !== '' && hasPipe(lines[j])) {
+          rows.push(splitRow(lines[j]));
+          j++;
+        }
+        tables.push(rows);
+        used += j - i;
+        nonBlank += j - i - 1;
+        i = j - 1;
+      }
+    }
+    return { tables: tables, otherLines: nonBlank - used };
+  }
+  function toSheetCell(s) {
+    if (s.indexOf(LF) >= 0 || s.indexOf(QUOTE) >= 0) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  function markdownToSheet(text, strip) {
+    var found = findTables(text);
+    if (!found.tables.length) return { tables: [], otherLines: found.otherLines };
+    var padded = 0;
+    var totalRows = 0;
+    var blocks = [];
+    var tables = found.tables.map(function (rows) {
+      var cols = 0;
+      rows.forEach(function (r) { if (r.length > cols) cols = r.length; });
+      var data = rows.map(function (r) {
+        if (r.length < cols) padded++;
+        var out = [];
+        for (var c = 0; c < cols; c++) out.push(c < r.length ? fromMarkdownCell(r[c], strip) : '');
+        return out;
+      });
+      totalRows += data.length;
+      blocks.push(data.map(function (r) { return r.map(toSheetCell).join(TAB); }).join(LF));
+      return { rows: data, cols: cols };
+    });
+    return { tables: tables, text: blocks.join(LF + LF), totalRows: totalRows, padded: padded, otherLines: found.otherLines };
+  }
+
+  // ---------- 画面 ----------
+  function countLines(text) {
+    if (text === '') return 0;
+    var t = normalizeNewlines(text);
+    if (t.charAt(t.length - 1) === LF) t = t.slice(0, -1);
+    return t.split(LF).length;
+  }
+
+  function setSummary(text, warn) {
+    summary.textContent = text;
+    summary.classList.toggle('none', !!warn);
+  }
+
+  function showEmptyPreview(message) {
+    preview.className = 'preview empty';
+    preview.textContent = message;
+  }
+
+  function renderSheetPreview(tables) {
+    var html = '<table>';
+    tables.forEach(function (t, ti) {
+      if (ti > 0) html += '<tr class="gap"><td colspan="' + t.cols + '"></td></tr>';
+      t.rows.forEach(function (r, ri) {
+        var tag = ri === 0 ? 'th' : 'td';
+        html += '<tr>' + r.map(function (c) { return '<' + tag + '>' + escapeHtml(c) + '</' + tag + '>'; }).join('') + '</tr>';
+      });
+    });
+    preview.className = 'preview sheet';
+    preview.innerHTML = html + '</table>';
+  }
+
+  function looksLikeMarkdownTable(text) { return findTables(text).tables.length > 0; }
+
+  function update() {
+    var text = sourceText.value;
+    var direction = getDirection();
+    sourceCount.textContent = fmt(countLines(text)) + '行';
+    lastResult = '';
+    lastCopyNote = '';
+    copyButton.disabled = true;
+    if (text.trim() === '') {
+      showEmptyPreview(text === '' ? '入力欄に表を貼り付けると、ここに結果が表示されます。' : '入力が空白だけです。表を貼り付けてください。');
+      setSummary('', false);
+      return;
+    }
+    if (direction === 'toMd') {
+      var md = sheetToMarkdown(text, getRadio('align', 'none'), optPad.checked);
+      if (!md) {
+        showEmptyPreview('入力が空白だけです。表を貼り付けてください。');
+        setSummary('', false);
+        return;
+      }
+      lastResult = md.text;
+      lastCopyNote = fmt(md.rows) + '行×' + fmt(md.cols) + '列';
+      preview.className = 'preview';
+      preview.textContent = md.text;
+      copyButton.disabled = false;
+      if (text.indexOf(TAB) < 0 && looksLikeMarkdownTable(text)) {
+        setSummary('入力はMarkdownの表のようです。Excelに貼れる形にしたいときは、上の「変換の向き」で「Markdown → Excel」を選んでください。', true);
+        return;
+      }
+      var msg = fmt(md.rows) + '行×' + fmt(md.cols) + '列のMarkdownの表にしました（1行目は見出し）。';
+      if (md.padded) msg += '列の数が足りない' + fmt(md.padded) + '行は、空のセルで埋めました。';
+      if (md.cols === 1 && md.rows > 1) msg += '1列だけの表です。複数の列の表にするには、Excelで複数の列を選んでコピーしてください。';
+      setSummary(msg, md.cols === 1 && md.rows > 1);
+      return;
+    }
+    var res = markdownToSheet(text, optStrip.checked);
+    if (!res.tables.length) {
+      if (text.indexOf(TAB) >= 0) {
+        showEmptyPreview('Markdownの表が見つかりませんでした。');
+        setSummary('入力はExcelの表（タブ区切り）のようです。Markdownの表にしたいときは、上の「変換の向き」で「Excel → Markdown」を選んでください。', true);
+      } else {
+        showEmptyPreview('Markdownの表が見つかりませんでした。');
+        setSummary('表は、1行目が見出し、2行目が「| --- | --- |」のような区切りの行になっている必要があります。表の部分がそろっているか確かめて貼り付けてください。', true);
+      }
+      return;
+    }
+    lastResult = res.text;
+    renderSheetPreview(res.tables);
+    copyButton.disabled = false;
+    var msg2;
+    if (res.tables.length === 1) {
+      msg2 = 'Markdownの表を見つけ、' + fmt(res.totalRows) + '行×' + fmt(res.tables[0].cols) + '列にしました。';
+      lastCopyNote = fmt(res.totalRows) + '行×' + fmt(res.tables[0].cols) + '列';
+    } else {
+      msg2 = 'Markdownの表を' + fmt(res.tables.length) + '個見つけ、合わせて' + fmt(res.totalRows) + '行にしました。';
+      lastCopyNote = '表' + fmt(res.tables.length) + '個・' + fmt(res.totalRows) + '行';
+    }
+    if (res.padded) msg2 += '列の数が足りない' + fmt(res.padded) + '行は、空のセルで埋めました。';
+    if (res.otherLines) msg2 += '表ではない' + fmt(res.otherLines) + '行は除きました。';
+    setSummary(msg2, false);
+  }
+
+  function applyDirectionLabels() {
+    var toMd = getDirection() === 'toMd';
+    sourceLabel.textContent = toMd ? 'Excelからコピーした表' : 'Markdownの表';
+    sourceText.placeholder = toMd
+      ? 'ExcelやGoogleスプレッドシートでセル範囲を選んでコピーし、ここに貼り付けます'
+      : 'ChatGPTなどが出した「| 見出し | 見出し |」の形の表を貼り付けます（前後の文章がまじっていてもかまいません）';
+    resultLabel.textContent = toMd ? '結果（Markdownの表）' : '結果（Excelに貼り付けたときの見え方）';
+    settingsToMd.hidden = !toMd;
+    settingsToSheet.hidden = toMd;
+  }
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle('error', !!isError);
+  }
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+  function selectPreview() {
+    var range = document.createRange();
+    range.selectNodeContents(preview);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectPreview();
+    setStatus('コピーできませんでした。結果を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (text === '') return;
+    var note = lastCopyNote;
+    var done = function () {
+      setStatus('結果をコピーしました（' + note + '）。' + (getDirection() === 'toMd' ? '使いたい場所に貼り付けてください。' : 'Excelやスプレッドシートのセルを1つ選んで貼り付けてください。'));
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  var SAMPLE_SHEET = ['商品' + TAB + '価格' + TAB + 'メモ', 'りんご' + TAB + '120' + TAB + '青森産', 'バナナ' + TAB + '98' + TAB + QUOTE + '2本で' + LF + '180円' + QUOTE].join(LF);
+  var SAMPLE_MD = ['比べた結果は次のとおりです。', '', '| 商品 | 価格 | メモ |', '| --- | ---: | --- |', '| りんご | 120 | **青森産** |', '| バナナ | 98 | 2本で<br>180円 |'].join(LF);
+
+  sampleButton.addEventListener('click', function () {
+    var toMd = getDirection() === 'toMd';
+    sourceText.value = toMd ? SAMPLE_SHEET : SAMPLE_MD;
+    update();
+    resetCopyButton();
+    setStatus(toMd
+      ? '例を入れました（Excelからコピーした3行×3列の表）。下の「列の揃え」を変えると、結果がすぐに変わります。'
+      : '例を入れました（AIの答えにまじったMarkdownの表）。表の部分だけを取り出しています。');
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    update();
+    resetCopyButton();
+    setStatus('入力と結果を消しました。入力欄に、新しい表を貼り付けてください。');
+  });
+
+  sourceText.addEventListener('input', function () {
+    update();
+    resetCopyButton();
+    setStatus('');
+  });
+
+  function onSettingChange(message) {
+    update();
+    resetCopyButton();
+    setStatus(message + (lastResult === '' ? (sourceText.value.trim() === '' ? '表を貼り付けると、この設定で結果が表示されます。' : '') : '結果を更新しました。'));
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="direction"]'), function (input) {
+    input.addEventListener('change', function () {
+      applyDirectionLabels();
+      onSettingChange('「' + input.nextElementSibling.textContent + '」にしました。');
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="align"]'), function (input) {
+    input.addEventListener('change', function () {
+      onSettingChange('列の揃えを「' + input.nextElementSibling.textContent + '」にしました。');
+    });
+  });
+  optPad.addEventListener('change', function () {
+    onSettingChange('「列の幅をそろえる」を' + (optPad.checked ? 'オン' : 'オフ') + 'にしました。');
+  });
+  optStrip.addEventListener('change', function () {
+    onSettingChange('「太字などの記号を外す」を' + (optStrip.checked ? 'オン' : 'オフ') + 'にしました。');
+  });
+
+  applyDirectionLabels();
+  update();
+})();
+</script>
+</body>
+</html>
