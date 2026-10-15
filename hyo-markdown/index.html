@@ -104,6 +104,8 @@
 <link rel="stylesheet" href="../shared.css">
 <style>
   :root { --ok: #137333; --warn-ink: #7a4f01; }
+  /* 結果の欄の中身が変わっても、ブラウザがスクロール位置を自動で動かさないようにする */
+  body { overflow-anchor: none; }
   main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
   header { margin-bottom: 27px; }
   .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
@@ -112,7 +114,9 @@
   .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
   .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
   .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
-  .setting.direction { margin: 0 0 18px; }
+  .setting.direction { margin: 0; }
+  /* 変換の向きの知らせ。向きは入力欄の上にあり、ボタンの上の知らせの欄から離れているため、向きのすぐ下に出す。1行分の高さを先に確保する */
+  .status.dir-status { min-height: 22px; margin: 4px 0 6px; }
   .settings { margin: 0 0 16px; }
   .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
   .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
@@ -145,9 +149,11 @@
   .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
   .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
   .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
-  textarea { display: block; width: 100%; min-height: 190px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 8; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 8; transition: border-color .18s ease, box-shadow .18s ease; }
+  /* 例（placeholder）は折り返して全文を見せる。入力した表は折り返さない */
+  textarea:placeholder-shown { white-space: pre-wrap; overflow-x: hidden; }
   textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
-  .preview { min-height: 190px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre; }
+  .preview { min-height: 150px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre; }
   .preview.empty { color: var(--muted); font-family: inherit; white-space: normal; }
   .preview.sheet { padding: 0; font-family: inherit; white-space: normal; }
   .preview table { border-collapse: collapse; font-size: .9rem; line-height: 1.5; background: #fff; }
@@ -190,6 +196,7 @@
     .chip small { grid-column: 2; white-space: normal; }
     .summary { min-height: 110px; }
     .status { min-height: 88px; }
+    .status.dir-status { min-height: 44px; }
     .actions .btn { flex: 1 1 40%; }
     .actions #copyButton { flex-basis: 100%; min-width: 0; }
   }
@@ -204,7 +211,7 @@
   <header>
     <p class="eyebrow">MARKDOWN TABLE</p>
     <h1>表マークダウン変換</h1>
-    <p>ExcelやGoogleスプレッドシートの表をMarkdownの表に、ChatGPTなどのAIが出したMarkdownの表をExcelに貼れる形に変換します。README・ブログ・AIへの指示に表を載せるときや、AIの表をExcelで使うときに便利です。</p>
+    <p>ExcelやGoogleスプレッドシートの表をMarkdownの表に、ChatGPTなどのAIが出したMarkdownの表をExcelに貼れる形に変換します。</p>
   </header>
 
   <section class="card" aria-label="表マークダウン変換">
@@ -224,6 +231,7 @@
         <label><input type="radio" name="direction" value="toSheet"><span>Markdown → Excel</span></label>
       </div>
     </fieldset>
+    <p id="dirStatus" class="status dir-status" role="status" aria-live="polite"></p>
 
     <div class="grid">
       <div>
@@ -364,14 +372,28 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
   var HALF_DAKUTEN = 0xFF9E;      // ﾞ
   var HALF_HANDAKUTEN = 0xFF9F;   // ﾟ
   var BR_PATTERN = new RegExp('<br[ ' + TAB + ']*/?>', 'gi'); // <br> <br/> <br /> <BR>
-  // Markdownの「\」で文字として書ける記号（ASCIIの記号）
-  var ASCII_PUNCT = '!"#$%&()*+,-./:;<=>?@[]^_`{|}~' + String.fromCharCode(39) + BACKSLASH;
+  // 強調の記号を外す決まり。記号のすぐ内側に空白がある場合（5 * 3 * 4 など）は強調ではないので外さない。
+  // 「_」は Markdown と同じく、英数字にはさまれた語の途中（user_name、snake__case）では強調にしない
+  var WS = ' ' + TAB + String.fromCharCode(0x3000) + String.fromCharCode(0xA0);
+  function inner(mark) { return '([^' + mark + WS + '](?:[^' + mark + ']*?[^' + mark + WS + '])?)'; }
+  var WORD = 'A-Za-z0-9_';
   var STRIP_RULES = [
-    new RegExp('[*][*](.+?)[*][*]', 'g'),   // **太字**
-    new RegExp('__(.+?)__', 'g'),           // __太字__
-    new RegExp('~~(.+?)~~', 'g'),           // ~~取り消し線~~
-    new RegExp('`([^`]+)`', 'g')            // `コード`
+    [new RegExp('[*]{3}' + inner('*') + '[*]{3}', 'g'), '$1'],                                  // ***太字の斜体***
+    [new RegExp('[*]{2}' + inner('*') + '[*]{2}', 'g'), '$1'],                                  // **太字**
+    [new RegExp('[*]' + inner('*') + '[*]', 'g'), '$1'],                                        // *斜体*
+    [new RegExp('(^|[^' + WORD + '])_{3}' + inner('_') + '_{3}(?=[^' + WORD + ']|$)', 'g'), '$1$2'], // ___太字の斜体___
+    [new RegExp('(^|[^' + WORD + '])_{2}' + inner('_') + '_{2}(?=[^' + WORD + ']|$)', 'g'), '$1$2'], // __太字__
+    [new RegExp('(^|[^' + WORD + '])_' + inner('_') + '_(?=[^' + WORD + ']|$)', 'g'), '$1$2'],       // _斜体_
+    [new RegExp('~~' + inner('~') + '~~', 'g'), '$1'],                                          // ~~取り消し線~~
+    [new RegExp('`([^`]+)`', 'g'), '$1']                                                        // `コード`
   ];
+  // セルの前後の半角スペースとタブだけを除く（全角スペースはMarkdownでも表示される中身なので残す）
+  function trimSpaces(s) {
+    var a = 0, b = s.length;
+    while (a < b && (s.charAt(a) === ' ' || s.charAt(a) === TAB)) a++;
+    while (b > a && (s.charAt(b - 1) === ' ' || s.charAt(b - 1) === TAB)) b--;
+    return s.slice(a, b);
+  }
 
   var sourceText = document.getElementById('sourceText');
   var sourceLabel = document.getElementById('sourceLabel');
@@ -383,6 +405,7 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
   var sampleButton = document.getElementById('sampleButton');
   var clearButton = document.getElementById('clearButton');
   var status = document.getElementById('status');
+  var dirStatus = document.getElementById('dirStatus');
   var optPad = document.getElementById('optPad');
   var optStrip = document.getElementById('optStrip');
   var settingsToMd = document.getElementById('settingsToMd');
@@ -507,13 +530,13 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
     return Math.min(t, n);
   }
   function isEmptyRow(row) {
-    for (var i = 0; i < row.length; i++) if (row[i].trim() !== '') return false;
+    for (var i = 0; i < row.length; i++) if (trimSpaces(row[i]) !== '') return false;
     return true;
   }
 
   function toMarkdownCell(cell) {
-    var s = cell.split(LF).map(function (part) { return part.trim(); }).join('<br>');
-    s = s.trim().split(PIPE).join(BACKSLASH + PIPE);
+    var s = cell.split(LF).map(trimSpaces).join('<br>');
+    s = trimSpaces(s).split(PIPE).join(BACKSLASH + PIPE);
     return s;
   }
 
@@ -522,6 +545,8 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
     var rows = parsed.rows;
     // 最後の空の行（Excelのコピーの最後の改行や、選んだ範囲の下の空の行）は除く
     while (rows.length && isEmptyRow(rows[rows.length - 1])) rows.pop();
+    // 最初の空の行（表の前に一緒にコピーした空の行）も除き、利用者の1行目を見出しにする
+    while (rows.length && isEmptyRow(rows[0])) rows.shift();
     if (!rows.length) return null;
     var cols = 0;
     rows.forEach(function (r) { if (r.length > cols) cols = r.length; });
@@ -577,7 +602,7 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
   // ---------- Markdown → Excel ----------
   // 「|」で列に分ける。「\|」は区切りではなく文字の「|」
   function splitRow(line) {
-    var s = line.trim();
+    var s = trimSpaces(line);
     var cells = [];
     var cur = '';
     var endedWithPipe = false;
@@ -615,21 +640,10 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
     }
     return hasPipe(t);
   }
-  function unescapePunct(s) {
-    var out = '';
-    for (var i = 0; i < s.length; i++) {
-      var c = s.charAt(i);
-      var next = s.charAt(i + 1);
-      if (c === BACKSLASH && next !== '' && ASCII_PUNCT.indexOf(next) >= 0) { out += next; i++; continue; }
-      out += c;
-    }
-    return out;
-  }
   function fromMarkdownCell(cell, strip) {
-    var s = cell.trim();
+    var s = trimSpaces(cell);
     if (strip) {
-      STRIP_RULES.forEach(function (re) { s = s.replace(re, '$1'); });
-      s = unescapePunct(s);
+      STRIP_RULES.forEach(function (rule) { s = s.replace(rule[0], rule[1]); });
     }
     s = s.replace(BR_PATTERN, LF);
     s = s.split(TAB).join(' ');
@@ -746,8 +760,8 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
       }
       var msg = fmt(md.rows) + '行×' + fmt(md.cols) + '列のMarkdownの表にしました（1行目は見出し）。';
       if (md.padded) msg += '列の数が足りない' + fmt(md.padded) + '行は、空のセルで埋めました。';
-      if (md.cols === 1 && md.rows > 1) msg += '1列だけの表です。複数の列の表にするには、Excelで複数の列を選んでコピーしてください。';
-      setSummary(msg, md.cols === 1 && md.rows > 1);
+      if (md.cols === 1) msg += '1列だけの表です。複数の列の表にするには、Excelで複数の列を選んでコピーしてください。';
+      setSummary(msg, md.cols === 1);
       return;
     }
     var res = markdownToSheet(text, optStrip.checked);
@@ -788,9 +802,16 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
     settingsToSheet.hidden = toMd;
   }
 
+  // 知らせを出す。向きの知らせと、ボタン・設定の知らせは別の欄に出し、古いほうは消す
   function setStatus(message, isError) {
     status.textContent = message;
     status.classList.toggle('error', !!isError);
+    dirStatus.textContent = '';
+  }
+  function setDirStatus(message) {
+    status.textContent = '';
+    status.classList.remove('error');
+    dirStatus.textContent = message;
   }
 
   // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
@@ -878,13 +899,15 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
   function onSettingChange(message) {
     update();
     resetCopyButton();
-    setStatus(message + (lastResult === '' ? (sourceText.value.trim() === '' ? '表を貼り付けると、この設定で結果が表示されます。' : '') : '結果を更新しました。'));
+    setStatus(message + (sourceText.value.trim() === '' ? '表を貼り付けると、この設定で結果が表示されます。' : '結果を更新しました。'));
   }
 
   Array.prototype.forEach.call(document.querySelectorAll('input[name="direction"]'), function (input) {
     input.addEventListener('change', function () {
       applyDirectionLabels();
-      onSettingChange('「' + input.nextElementSibling.textContent + '」にしました。');
+      update();
+      resetCopyButton();
+      setDirStatus('「' + input.nextElementSibling.textContent + '」にしました。' + (sourceText.value.trim() === '' ? '表を貼り付けてください。' : '結果を更新しました。'));
     });
   });
   Array.prototype.forEach.call(document.querySelectorAll('input[name="align"]'), function (input) {
