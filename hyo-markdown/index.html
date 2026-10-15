@@ -114,9 +114,9 @@
   .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
   .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
   .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
-  .setting.direction { margin: 0; }
-  /* 変換の向きの知らせ。向きは入力欄の上にあり、ボタンの上の知らせの欄から離れているため、向きのすぐ下に出す。1行分の高さを先に確保する */
-  .status.dir-status { min-height: 22px; margin: 4px 0 6px; }
+  .setting.direction { margin: 0 0 12px; }
+  /* 変換の向きの知らせ。向きは入力欄の上にあり、ボタンの上の知らせの欄から離れているため、向きのすぐ上に出す（向きが画面の下端に見えている状態で押しても見える）。1行分の高さを先に確保する */
+  .status.dir-status { min-height: 22px; margin: -8px 0 6px; }
   .settings { margin: 0 0 16px; }
   .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
   .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
@@ -224,6 +224,7 @@
       </ol>
     </div>
 
+    <p id="dirStatus" class="status dir-status" role="status" aria-live="polite"></p>
     <fieldset class="setting direction">
       <legend>変換の向き</legend>
       <div class="seg">
@@ -231,7 +232,6 @@
         <label><input type="radio" name="direction" value="toSheet"><span>Markdown → Excel</span></label>
       </div>
     </fieldset>
-    <p id="dirStatus" class="status dir-status" role="status" aria-live="polite"></p>
 
     <div class="grid">
       <div>
@@ -376,14 +376,18 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
   // 「_」は Markdown と同じく、英数字にはさまれた語の途中（user_name、snake__case）では強調にしない
   var WS = ' ' + TAB + String.fromCharCode(0x3000) + String.fromCharCode(0xA0);
   function inner(mark) { return '([^' + mark + WS + '](?:[^' + mark + ']*?[^' + mark + WS + '])?)'; }
-  var WORD = 'A-Za-z0-9_';
+  // 「_」の強調の前後に来てよい文字（行の端・空白・記号）。それ以外（英数字・日本語など）にはさまれた「_」は語の一部として残す
+  var EDGE = '[' + WS + '!"#$%&()*+,./:;<=>?@{|}~' + String.fromCharCode(39) + '、。，．・：；！？「」『』（）【】〈〉《》' + '-]';
+  // 「\」を付けた記号（\* \_ \~ \`）は、強調ではなく文字として書かれた記号
+  var ESCAPABLE = '*_~`';
+  var ESC_BASE = 0xE000; // 退避用の文字（私用領域）
   var STRIP_RULES = [
     [new RegExp('[*]{3}' + inner('*') + '[*]{3}', 'g'), '$1'],                                  // ***太字の斜体***
     [new RegExp('[*]{2}' + inner('*') + '[*]{2}', 'g'), '$1'],                                  // **太字**
     [new RegExp('[*]' + inner('*') + '[*]', 'g'), '$1'],                                        // *斜体*
-    [new RegExp('(^|[^' + WORD + '])_{3}' + inner('_') + '_{3}(?=[^' + WORD + ']|$)', 'g'), '$1$2'], // ___太字の斜体___
-    [new RegExp('(^|[^' + WORD + '])_{2}' + inner('_') + '_{2}(?=[^' + WORD + ']|$)', 'g'), '$1$2'], // __太字__
-    [new RegExp('(^|[^' + WORD + '])_' + inner('_') + '_(?=[^' + WORD + ']|$)', 'g'), '$1$2'],       // _斜体_
+    [new RegExp('(^|' + EDGE + ')_{3}' + inner('_') + '_{3}(?=' + EDGE + '|$)', 'g'), '$1$2'], // ___太字の斜体___
+    [new RegExp('(^|' + EDGE + ')_{2}' + inner('_') + '_{2}(?=' + EDGE + '|$)', 'g'), '$1$2'], // __太字__
+    [new RegExp('(^|' + EDGE + ')_' + inner('_') + '_(?=' + EDGE + '|$)', 'g'), '$1$2'],       // _斜体_
     [new RegExp('~~' + inner('~') + '~~', 'g'), '$1'],                                          // ~~取り消し線~~
     [new RegExp('`([^`]+)`', 'g'), '$1']                                                        // `コード`
   ];
@@ -536,7 +540,15 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
 
   function toMarkdownCell(cell) {
     var s = cell.split(LF).map(trimSpaces).join('<br>');
-    s = trimSpaces(s).split(PIPE).join(BACKSLASH + PIPE);
+    s = trimSpaces(s);
+    // 「\」のすぐ後ろが記号（* _ ~ `）のときは「\\」にする。そのままだと「\」が記号を文字にする印として読まれ、表示や逆の変換で「\」が消えるため
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      out += c;
+      if (c === BACKSLASH && ESCAPABLE.indexOf(s.charAt(i + 1)) >= 0) out += BACKSLASH;
+    }
+    s = out.split(PIPE).join(BACKSLASH + PIPE);
     return s;
   }
 
@@ -643,7 +655,17 @@ B案	5万円	中</pre><p class="note">列の間はタブです。Excelのセル�
   function fromMarkdownCell(cell, strip) {
     var s = trimSpaces(cell);
     if (strip) {
+      // 「\*」などは記号の文字として残す（「\」は外す）。強調の判定に使われないよう、いったん退避する
+      var held = '';
+      for (var i = 0; i < s.length; i++) {
+        var c = s.charAt(i);
+        var k = ESCAPABLE.indexOf(s.charAt(i + 1));
+        if (c === BACKSLASH && k >= 0) { held += String.fromCharCode(ESC_BASE + k); i++; continue; }
+        held += c;
+      }
+      s = held;
       STRIP_RULES.forEach(function (rule) { s = s.replace(rule[0], rule[1]); });
+      for (var m = 0; m < ESCAPABLE.length; m++) s = s.split(String.fromCharCode(ESC_BASE + m)).join(ESCAPABLE.charAt(m));
     }
     s = s.replace(BR_PATTERN, LF);
     s = s.split(TAB).join(' ');
