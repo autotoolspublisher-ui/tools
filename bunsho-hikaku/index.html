@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文章比較 - 2つの文章の違いを色分けで表示｜AIツールひろば</title>
+  <meta name="description" content="修正前と修正後の2つの文章を貼るだけで、変わったところを文字単位で色分けし、「何行目の何をどう直したか」の一覧にする無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/bunsho-hikaku/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="文章比較 - 2つの文章の違いを色分けで表示｜AIツールひろば">
+  <meta property="og:description" content="修正前と修正後の2つの文章を貼るだけで、変わったところを文字単位で色分けし、「何行目の何をどう直したか」の一覧にする無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/bunsho-hikaku/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/bunsho-hikaku.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "文章比較",
+    "description": "修正前と修正後の2つの文章を貼るだけで、変わったところを文字単位で色分けし、「何行目の何をどう直したか」の一覧にする無料ツールです。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/bunsho-hikaku/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "文章比較",
+        "item": "https://autotoolspublisher-ui.github.io/tools/bunsho-hikaku/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "どんな文章を比べられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "メールや資料の文章、AIや人に直してもらった文章、契約書・規約の新旧、リストや設定ファイルなど、テキストならどれでも比べられます。WordやPDFのファイルは読み込めないため、中の文章をコピーして、それぞれの欄に貼り付けてください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「文字ごと」と「行ごと」はどう違いますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「文字ごと」（初期設定）は、行の中で変わった文字だけを色分けします。数字や英単語は途中で区切らず、「20」→「21」のように、まとまりで示します。「行ごと」は、少しでも変わった行を、行全体で色分けします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "空白や改行の違いも分かりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "分かります。変わったところにある空白や改行は、␣（半角スペース）、□（全角スペース）、⇥（タブ）、↵（改行）の印で表示します。ただし、改行コードの違い（WindowsのCRLFと、MacなどのLF）は、同じ改行として扱います。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "変更点の一覧の行番号は、どちらの文章の行ですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "修正後の文章の行です。行を丸ごと消した場合だけ、修正後にはその行がないため、「修正前の3行目」のように修正前の行番号で示します。「変更点をコピー」でコピーした一覧は、メールなどにそのまま貼り付けられます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した文章は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。比べる処理はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --del-bg: #fce8e6; --del-ink: #a50e0e; --del-line: #e8a9a3; --ins-bg: #e6f4ea; --ins-ink: #0d652d; --ins-line: #8fcaa1; --ok: #137333; --warn-ink: #7a4f01; --bad-ink: #a50e0e; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  /* まとめ。最も長い文（2行）の高さ（14.4px × 1.5 × 2 = 43.2px）を先に確保して、出ても消えても下の部品が動かないようにする。狭い幅では4行分 */
+  .summary { margin: 12px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 44px; }
+  .summary.found { color: var(--warn-ink); }
+  .summary.error { color: var(--bad-ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンと設定の知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 44px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  .settings { margin: 0 0 6px; }
+  .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .setting legend { float: left; padding: 0; color: #3c4043; font-weight: 600; font-size: .94rem; white-space: nowrap; }
+  .seg { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .seg label { position: relative; display: inline-flex; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 6em; min-height: 44px; padding: 0 14px; color: #3c4043; font-size: .94rem; cursor: pointer; transition: background .16s ease; }
+  .seg label + label span { border-left: 1px solid var(--line); }
+  .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  /* ✓ の幅をいつも確保して、選んだときに選択肢の幅と位置が変わらないようにする */
+  .seg span::before { content: "✓"; margin-right: 4px; color: transparent; }
+  .seg input:checked + span::before { color: inherit; }
+  .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .seg span:hover { background: #f6fafe; }
+  .note { margin: 10px 0 0; color: var(--muted); font-size: .875rem; }
+  /* 設定の知らせ。押した選択肢のすぐ横（狭い幅では下）に出し、高さを先に確保して部品が動かないようにする */
+  .unit-status { flex: 1 1 auto; min-height: 44px; margin: 0; display: flex; align-items: center; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .result { margin-top: 22px; }
+  .result h2, .changes h2 { margin: 0; color: #3c4043; font-size: 1rem; font-weight: 600; }
+  .legend-line { display: flex; flex-wrap: wrap; gap: 2px 14px; color: var(--muted); font-size: .875rem; }
+  .legend-line i { display: inline-block; width: 1em; height: 1em; margin-right: 4px; vertical-align: -2px; border-radius: 3px; }
+  .legend-line .sw-del { background: var(--del-bg); box-shadow: 0 0 0 1px var(--del-line); }
+  .legend-line .sw-ins { background: var(--ins-bg); box-shadow: 0 0 0 1px var(--ins-line); }
+  .preview { min-height: 120px; max-height: 480px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.9 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview.empty { color: var(--muted); font-family: inherit; line-height: 1.65; }
+  .preview del, .preview ins { border-radius: 3px; padding: 1px 0; }
+  .preview del { background: var(--del-bg); color: var(--del-ink); text-decoration: line-through; text-decoration-thickness: 1px; box-shadow: 0 0 0 1px var(--del-line); }
+  .preview ins { background: var(--ins-bg); color: var(--ins-ink); text-decoration: underline; text-underline-offset: 3px; box-shadow: 0 0 0 1px var(--ins-line); }
+  /* 変更点の番号。文字としては入れず（選んでコピーしても混ざらない）、表示だけする */
+  .preview .num::before { content: attr(data-n); display: inline-block; min-width: 1.5em; margin: 0 3px 0 2px; padding: 0 4px; border-radius: 999px; background: #5f6368; color: #fff; font: 600 .875rem/1.4 Arial, sans-serif; text-align: center; vertical-align: 2px; }
+  .ws { color: #5f6368; font-weight: 400; }
+  /* 入力にもともとある「␣」などの文字と区別できるよう、印には点線の枠を付ける */
+  .preview .ws, .change-items .ws { outline: 1px dotted #9aa0a6; outline-offset: -1px; border-radius: 2px; }
+  .changes { margin: 22px 0 16px; }
+  .changes .empty-note { margin: 6px 0 0; color: var(--muted); font-size: .9rem; }
+  .change-items { margin: 8px 0 0; padding: 0; list-style: none; border-top: 1px solid #e8eaed; }
+  .change-items li { display: grid; grid-template-columns: 2.2em minmax(10.5em, max-content) 1fr; align-items: baseline; gap: 4px 12px; padding: 10px 2px; border-bottom: 1px solid #e8eaed; font-size: .94rem; }
+  .change-items li.more { display: block; color: var(--muted); font-size: .9rem; }
+  .change-items .n { color: var(--muted); font-weight: 600; text-align: right; }
+  .change-items .where { color: #3c4043; font-size: .875rem; white-space: nowrap; }
+  .change-items .kind { display: inline-block; margin-right: 6px; padding: 0 8px; border-radius: 999px; font-size: .875rem; font-weight: 600; white-space: nowrap; }
+  .kind.k-mod { background: #fef7e0; color: var(--warn-ink); }
+  .kind.k-add { background: var(--ins-bg); color: var(--ins-ink); }
+  .kind.k-del { background: var(--del-bg); color: var(--del-ink); }
+  .change-items .what { min-width: 0; overflow-wrap: anywhere; }
+  .change-items q { quotes: "「" "」"; }
+  .change-items .old { color: var(--del-ink); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .change-items .new { color: var(--ins-ink); font-weight: 600; }
+  .change-items .arrow { color: var(--muted); margin: 0 4px; }
+  .change-items .cut { color: var(--muted); font-size: .875rem; }
+  .copy-fallback { width: 100%; min-height: 120px; margin: 0 0 14px; }
+  .copy-fallback[hidden] { display: none; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: 1fr; gap: 14px; }
+    textarea { min-height: 130px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .summary { min-height: 88px; }
+    .status { min-height: 88px; }
+    .unit-status { min-height: 66px; align-items: flex-start; }
+    .setting { flex-direction: column; align-items: stretch; gap: 6px; }
+    .setting legend { float: none; margin-bottom: 6px; }
+    .seg { display: flex; }
+    .seg label { flex: 1 1 0; }
+    .seg span { width: 100%; min-width: 0; padding: 4px 6px; text-align: center; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+    .preview { max-height: 360px; }
+    .change-items li { grid-template-columns: 2.2em 1fr; }
+    .change-items .what { grid-column: 2; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">文章比較</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">TEXT COMPARE</p>
+    <h1>文章比較</h1>
+    <p>修正前と修正後の2つの文章を比べて、変わったところを文字単位で色分けします。AIや人に直してもらった文章の確認、契約書や規約の新旧の比較、修正の反映漏れのチェックに。</p>
+  </header>
+
+  <section class="card" aria-label="文章比較">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>「修正前」の欄に元の文章を、「修正後」の欄に直した文章を貼り付けます。</li>
+        <li>違いが自動で見つかり、下の「比べた結果」に色分けで、「変更点の一覧」に行ごとに表示されます。</li>
+        <li>「変更点をコピー」で一覧をコピーして、修正の報告などに貼り付けられます。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="beforeText">修正前（元の文章）</label><span id="beforeCount" class="count">0文字</span></div>
+        <textarea id="beforeText" spellcheck="false" placeholder="例：資料は当日お配りします。"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><label for="afterText">修正後（直した文章）</label><span id="afterCount" class="count">0文字</span></div>
+        <textarea id="afterText" spellcheck="false" placeholder="例：資料は前日までにメールでお送りします。"></textarea>
+      </div>
+    </div>
+
+    <p id="summary" class="summary" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>変更点をコピー</button>
+      <button type="button" id="swapButton" class="btn">修正前と修正後を入れ替え</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <textarea id="copyFallback" class="copy-fallback" readonly hidden aria-label="コピー用の欄（変更点の一覧）"></textarea>
+
+    <div class="settings">
+      <fieldset class="setting">
+        <legend>比べる単位</legend>
+        <div class="seg">
+          <label><input type="radio" name="unit" value="char" checked><span>文字ごと</span></label>
+          <label><input type="radio" name="unit" value="line"><span>行ごと</span></label>
+        </div>
+        <p id="unitStatus" class="unit-status" role="status" aria-live="polite"></p>
+      </fieldset>
+      <p class="note">「文字ごと」（初期設定）は、行の中のどの文字が変わったかまで色分けします。文章の比較向けです。「行ごと」は、変わった行を丸ごと色分けします。リストや設定ファイルなど、1行ずつ見たいとき向けです。</p>
+    </div>
+
+    <section class="result" aria-labelledby="resultTitle">
+      <div class="field-head"><h2 id="resultTitle">比べた結果</h2><span class="legend-line"><span><i class="sw-del"></i>消えたところ</span><span><i class="sw-ins"></i>加わったところ</span></span></div>
+      <div id="preview" class="preview empty" role="region" aria-labelledby="resultTitle" tabindex="0">「修正前」と「修正後」の欄に文章を入れると、ここに違いが色分けで表示されます。</div>
+      <p class="note" id="wsNote">空白や改行の違いは、␣（半角スペース）・□（全角スペース）・⇥（タブ）・↵（改行）・⍽（改行しない空白などの特別な空白）・◌（幅のない空白などの見えない文字）の印で表示します。</p>
+    </section>
+
+    <section class="changes" aria-labelledby="changesTitle">
+      <h2 id="changesTitle">変更点の一覧</h2>
+      <p id="changesEmpty" class="empty-note">文章を入れると、ここに変わったところの一覧が表示されます。行番号は修正後の文章の行です（消えた行だけは修正前の行）。</p>
+      <ol id="changeItems" class="change-items" hidden></ol>
+    </section>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力した文章は、このページの中だけで比べられ、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>AIに直してもらった文章の、直したところを確かめる</h3>
+      <dl>
+        <dt>修正前</dt><dd><pre>本日わ晴天なので、外で会議をおこないます。
+参加者わ、10時までにお集まりください。</pre></dd>
+        <dt>修正後</dt><dd><pre>本日は晴天なので、屋外で会議を行います。
+参加者は、10時までにお集まりください。</pre></dd>
+        <dt>設定</dt><dd>文字ごと（初期設定のまま）</dd>
+        <dt>結果</dt><dd>「違いが4か所あります（書き換え 3・追加 1）。文字数は 41 → 40文字（−1）です。」と表示され、「変更点をコピー」で次の一覧をコピーできます。<pre>変更点：4か所（行番号は修正後の文章の行。消えた行は修正前の行）
+1. 1行目：「わ」→「は」
+2. 1行目：「屋」を追加
+3. 1行目：「おこな」→「行」
+4. 2行目：「わ」→「は」</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>リストの変わった行を、行ごとに確かめる</h3>
+      <dl>
+        <dt>修正前</dt><dd><pre>筆記用具
+名札
+資料（印刷）
+ノートパソコン</pre></dd>
+        <dt>修正後</dt><dd><pre>筆記用具
+資料（データで配布）
+ノートパソコン
+充電器</pre></dd>
+        <dt>設定</dt><dd>行ごと</dd>
+        <dt>結果</dt><dd>「違いが3か所あります（書き換え 1・追加 1・削除 1）。文字数は 19 → 24文字（+5）です。」と表示され、次の一覧をコピーできます。<pre>変更点：3か所（行番号は修正後の文章の行。消えた行は修正前の行）
+1. 修正前の2行目：「名札」の行を削除
+2. 2行目：「資料（印刷）」→「資料（データで配布）」
+3. 4行目：「充電器」の行を追加</pre></dd>
+      </dl>
+    </div>
+
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>どんな文章を比べられますか？</summary>
+      <p>メールや資料の文章、AIや人に直してもらった文章、契約書・規約の新旧、リストや設定ファイルなど、テキストならどれでも比べられます。WordやPDFのファイルは読み込めないため、中の文章をコピーして、それぞれの欄に貼り付けてください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「文字ごと」と「行ごと」はどう違いますか？</summary>
+      <p>「文字ごと」（初期設定）は、行の中で変わった文字だけを色分けします。数字や英単語は途中で区切らず、「20」→「21」のように、まとまりで示します。「行ごと」は、少しでも変わった行を、行全体で色分けします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>空白や改行の違いも分かりますか？</summary>
+      <p>分かります。変わったところにある空白や改行は、␣（半角スペース）、□（全角スペース）、⇥（タブ）、↵（改行）の印で表示します。ただし、改行コードの違い（WindowsのCRLFと、MacなどのLF）は、同じ改行として扱います。</p>
+    </details>
+    <details class="faq-item">
+      <summary>変更点の一覧の行番号は、どちらの文章の行ですか？</summary>
+      <p>修正後の文章の行です。行を丸ごと消した場合だけ、修正後にはその行がないため、「修正前の3行目」のように修正前の行番号で示します。「変更点をコピー」でコピーした一覧は、メールなどにそのまま貼り付けられます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した文章は、どこかに送信されますか？</summary>
+      <p>いいえ。比べる処理はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+      <li><a href="../kishu-izon/">機種依存文字チェック</a><span>①・㈱・髙などの機種依存文字や、Shift_JISのCSVで「?」になる文字を探して置き換えます。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（バックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var IDEO_SPACE = String.fromCharCode(0x3000);      // 全角スペース
+  var HALF_DAKUTEN = String.fromCharCode(0xFF9E);    // ﾞ
+  var HALF_HANDAKUTEN = String.fromCharCode(0xFF9F); // ﾟ
+  var MAX_D_LINES = 3000;   // 行の比較で、違いがこれより多いときはまとめて「書き換え」にする（画面が固まらないように）
+  var MAX_D_CHARS = 3000;   // 文字の比較で同じ
+  var LIST_LIMIT = 300;     // 一覧に表示する変更点の上限（コピーにはすべて含める）
+  var SHOW_LIMIT = 200;     // 一覧の1項目に表示する文字数の上限（コピーにはすべて含める）
+
+  // ---- 文字（見た目の1文字）に分ける ----
+  var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
+  function isHalfKana(ch) { var c = ch.charCodeAt(0); return c >= 0xFF66 && c <= 0xFF9D; }
+  function graphemes(text) {
+    var out = [];
+    if (segmenter) {
+      for (var s of segmenter.segment(text)) {
+        var g = s.segment;
+        // 半角の濁点・半濁点（ﾞ ﾟ）は、半角カタカナの後ろ（ｶﾞ）だけ前の文字とまとめ、ほかの文字（漢字など）の後ろでは1文字として扱う
+        var start = 0;
+        for (var j = 1; j < g.length; j++) {
+          var ch = g.charAt(j);
+          if ((ch === HALF_DAKUTEN || ch === HALF_HANDAKUTEN) && !isHalfKana(g.charAt(j - 1))) {
+            out.push(g.slice(start, j));
+            start = j;
+          }
+        }
+        out.push(g.slice(start));
+      }
+      return out;
+    }
+    return Array.from(text);
+  }
+
+  // ---- Myers の差分（a, b は比べる単位の配列。違いが maxD を超えたら null） ----
+  function myers(a, b, maxD) {
+    var n = a.length, m = b.length, max = n + m;
+    if (max === 0) return [];
+    var offset = max + 1;
+    var v = new Int32Array(2 * max + 3);
+    var trace = [];
+    var limit = Math.min(max, maxD);
+    for (var d = 0; d <= limit; d++) {
+      // この段の v を保存する（-d..d の範囲だけ）
+      var snap = new Int32Array(2 * d + 1);
+      for (var t = -d; t <= d; t++) snap[t + d] = v[offset + t];
+      trace.push(snap);
+      for (var k = -d; k <= d; k += 2) {
+        var x;
+        if (k === -d || (k !== d && v[offset + k - 1] < v[offset + k + 1])) x = v[offset + k + 1];
+        else x = v[offset + k - 1] + 1;
+        var y = x - k;
+        while (x < n && y < m && a[x] === b[y]) { x++; y++; }
+        v[offset + k] = x;
+        if (x >= n && y >= m) return backtrack(trace, a, b, d);
+      }
+    }
+    return null;
+  }
+  function backtrack(trace, a, b, dEnd) {
+    var ops = [];
+    var x = a.length, y = b.length;
+    for (var d = dEnd; d > 0; d--) {
+      var vPrev = trace[d];   // trace[d] は d 段目を始める前の値 = d-1 段目の結果（-d..d の範囲を、添字 k + d で保存）
+      var k = x - y;
+      var prevK;
+      var left = (k - 1 >= -d) ? vPrev[k - 1 + d] : -1;
+      var right = (k + 1 <= d) ? vPrev[k + 1 + d] : -1;
+      if (k === -d || (k !== d && left < right)) prevK = k + 1; else prevK = k - 1;
+      var prevX = vPrev[prevK + d];
+      var prevY = prevX - prevK;
+      while (x > prevX && y > prevY) { ops.push({ t: '=', a: x - 1, b: y - 1 }); x--; y--; }
+      if (x === prevX) { ops.push({ t: '+', b: y - 1 }); y--; }
+      else { ops.push({ t: '-', a: x - 1 }); x--; }
+    }
+    while (x > 0 && y > 0) { ops.push({ t: '=', a: x - 1, b: y - 1 }); x--; y--; }
+    return ops.reverse();
+  }
+
+  // 単位の配列 a, b を比べて、{t, s} の並び（s は文字列）にする。先頭と末尾の共通部分は先に除く。
+  // 違いが maxD を超えたら、真ん中を「消えた → 加わった」の1つのかたまりにし、info.overflow を true にする
+  function diffUnits(a, b, maxD, info) {
+    var pre = 0;
+    while (pre < a.length && pre < b.length && a[pre] === b[pre]) pre++;
+    var suf = 0;
+    while (suf < a.length - pre && suf < b.length - pre && a[a.length - 1 - suf] === b[b.length - 1 - suf]) suf++;
+    var ma = a.slice(pre, a.length - suf), mb = b.slice(pre, b.length - suf);
+    var out = [];
+    if (pre > 0) out.push({ t: '=', s: a.slice(0, pre).join('') });
+    // 比べやすいよう、単位を数に置き換える
+    var ids = new Map(), ia = new Array(ma.length), ib = new Array(mb.length), i;
+    for (i = 0; i < ma.length; i++) { if (!ids.has(ma[i])) ids.set(ma[i], ids.size); ia[i] = ids.get(ma[i]); }
+    for (i = 0; i < mb.length; i++) { if (!ids.has(mb[i])) ids.set(mb[i], ids.size); ib[i] = ids.get(mb[i]); }
+    var ops = (ma.length === 0 || mb.length === 0) ? null : myers(ia, ib, maxD);
+    if (ma.length === 0 || mb.length === 0) {
+      if (ma.length) out.push({ t: '-', s: ma.join('') });
+      if (mb.length) out.push({ t: '+', s: mb.join('') });
+    } else if (ops === null) {
+      info.overflow = true;
+      out.push({ t: '-', s: ma.join('') });
+      out.push({ t: '+', s: mb.join('') });
+    } else {
+      ops.forEach(function (op) {
+        if (op.t === '=') out.push({ t: '=', s: ma[op.a] });
+        else if (op.t === '-') out.push({ t: '-', s: ma[op.a] });
+        else out.push({ t: '+', s: mb[op.b] });
+      });
+    }
+    if (suf > 0) out.push({ t: '=', s: a.slice(a.length - suf).join('') });
+    return normalize(out);
+  }
+
+  // 変更の並びの終わり（次の「=」か、別の組の変更の手前）
+  function runEnd(ops, i) {
+    var j = i;
+    while (j < ops.length && ops[j].t !== '=' && ops[j].g === ops[i].g) j++;
+    return j;
+  }
+
+  // 同じ種類の並びをまとめ、変更の並びは「消えた → 加わった」の順に1つずつにする。空のものは除く
+  function normalize(ops) {
+    var out = [];
+    var i = 0;
+    while (i < ops.length) {
+      if (ops[i].t === '=') {
+        var s = '';
+        while (i < ops.length && ops[i].t === '=') { s += ops[i].s; i++; }
+        if (s) out.push({ t: '=', s: s });
+      } else {
+        var del = '', ins = '', g = ops[i].g;
+        var e = runEnd(ops, i);
+        for (; i < e; i++) { if (ops[i].t === '-') del += ops[i].s; else ins += ops[i].s; }
+        if (del) out.push({ t: '-', s: del, g: g });
+        if (ins) out.push({ t: '+', s: ins, g: g });
+      }
+    }
+    var merged = [];
+    out.forEach(function (op) {
+      var last = merged[merged.length - 1];
+      if (last && last.t === '=' && op.t === '=') last.s += op.s; else merged.push(op);
+    });
+    return merged;
+  }
+
+  function glen(s) { return graphemes(s).length; }
+
+  // 数字・英字（数の中のカンマ・小数点を含む）
+  var WORDCH = /^[0-9A-Za-z０-９Ａ-Ｚａ-ｚ]$/;
+  var DIGIT = /^[0-9０-９]$/;
+  var NUMSEP = /^[,.，．]$/;
+  function isWord(g) { return WORDCH.test(g); }
+  function allWord(s) {
+    var v = wordCache.get(s);
+    if (v === undefined) { var g = graphemes(s); v = g.length > 0 && g.every(isWord); wordCache.set(s, v); }
+    return v;
+  }
+
+  // 長さの計算は何度も行うため、結果を覚えておく（比べるたびに消す）
+  var tlenCache = new Map(), wordCache = new Map();
+  function tlen(s) { var v = tlenCache.get(s); if (v === undefined) { v = tokens(s).length; tlenCache.set(s, v); } return v; }
+  // 変更のあいだにはさまった短い一致（細切れの色分けのもと）を、変更にまとめる。長さは比べる単位（数・語は1つ）で数える。
+  // 改行を含む一致と、隣の変更が数字・英字だけの一致（「10月17日」の「月」、「14時」の前の「）」など）はまとめない
+  function cleanupSemantic(ops) {
+    for (var pass = 0; pass < 20; pass++) {
+      var runs = [];
+      for (var i = 0; i < ops.length; i++) {
+        if (ops[i].t !== '=' || i === 0 || i === ops.length - 1) continue;
+        if (ops[i].s.indexOf(LF) >= 0) continue;
+        var bd = 0, bi = 0, ad = 0, ai = 0, bw = true, aw = true, j;
+        for (j = i - 1; j >= 0 && ops[j].t !== '='; j--) { if (ops[j].t === '-') bd += tlen(ops[j].s); else bi += tlen(ops[j].s); if (!allWord(ops[j].s)) bw = false; }
+        for (j = i + 1; j < ops.length && ops[j].t !== '='; j++) { if (ops[j].t === '-') ad += tlen(ops[j].s); else ai += tlen(ops[j].s); if (!allWord(ops[j].s)) aw = false; }
+        if (bd + bi === 0 || ad + ai === 0) continue;
+        if (bw || aw) continue;
+        var L = tlen(ops[i].s);
+        if (L <= Math.max(bd, bi) && L <= Math.max(ad, ai)) runs.push(i);
+      }
+      if (runs.length === 0) break;
+      // 1回の繰り返しでは、隣り合わない一致だけをまとめる（まとめた後の長さで次を判定するため）
+      var next = [], skip = -3;
+      for (var r = 0; r < ops.length; r++) {
+        if (runs.indexOf(r) >= 0 && r > skip + 2) {
+          next.push({ t: '-', s: ops[r].s }, { t: '+', s: ops[r].s });
+          skip = r;
+        } else {
+          next.push(ops[r]);
+        }
+      }
+      ops = normalize(next);
+    }
+    return ops;
+  }
+
+  // 比べる単位（文字ごと）。数字・英字のつながり（数の中のカンマ・小数点を含む）は1つの単位にして、
+  // 「20」→「21」、「1,000」→「1,200」、「brown」→「red」のように、数や語の途中で変更を区切らない
+  function tokens(text) {
+    var g = graphemes(text), out = [];
+    for (var i = 0; i < g.length; i++) {
+      var c = g[i];
+      var last = out.length ? out[out.length - 1] : '';
+      var lastCh = last ? last.charAt(last.length - 1) : '';
+      var joinable = out.length && i > 0 && isWord(g[i - 1]) && WORDCH.test(lastCh);
+      if (joinable && isWord(c)) { out[out.length - 1] += c; continue; }
+      // 数字にはさまれたカンマ・小数点（「1,000」「3.14」）
+      if (joinable && NUMSEP.test(c) && DIGIT.test(g[i - 1]) && DIGIT.test(g[i + 1] || '')) { out[out.length - 1] += c + g[i + 1]; i++; continue; }
+      out.push(c);
+    }
+    return out;
+  }
+
+  // 2つの文字列を文字ごとに比べる
+  function diffChars(del, ins, info) {
+    var sub = cleanupSemantic(diffUnits(tokens(del), tokens(ins), MAX_D_CHARS, info));
+    // 語の中に見えない文字・特別な空白が入っただけの違い（「ab」と「a＋幅のない空白＋b」）は、文字ごとに比べ直して、その文字だけを示す
+    var out = [], i = 0;
+    while (i < sub.length) {
+      if (sub[i].t === '=') { out.push(sub[i]); i++; continue; }
+      var d = '', n = '';
+      while (i < sub.length && sub[i].t !== '=') { if (sub[i].t === '-') d += sub[i].s; else n += sub[i].s; i++; }
+      if (d && n && stripMarks(d) === stripMarks(n)) {
+        out = out.concat(diffUnits(graphemes(d), graphemes(n), MAX_D_CHARS, info));
+      } else {
+        if (d) out.push({ t: '-', s: d });
+        if (n) out.push({ t: '+', s: n });
+      }
+    }
+    return normalize(out);
+  }
+  function stripMarks(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) { var ch = s.charAt(i); var mk = markOf(ch); if (mk !== '◌' && mk !== '⍽') out += ch; }
+    return out;
+  }
+  function changedLength(ops) {
+    var n = 0;
+    ops.forEach(function (o) { if (o.t !== '=') n += o.s.length; });
+    return n;
+  }
+
+  // 行の似ている度合い（2文字ずつの組の重なり。0〜1）
+  function bigrams(s) {
+    var g = graphemes(s.charAt(s.length - 1) === LF ? s.slice(0, -1) : s);
+    var m = new Map();
+    if (g.length === 1) { m.set(g[0], 1); return { map: m, size: 1 }; }
+    for (var i = 0; i + 1 < g.length; i++) { var k = g[i] + g[i + 1]; m.set(k, (m.get(k) || 0) + 1); }
+    return { map: m, size: Math.max(g.length - 1, 0) };
+  }
+  function similarity(x, y) {
+    if (x.size === 0 || y.size === 0) return 0;
+    var common = 0;
+    x.map.forEach(function (cnt, k) { var o = y.map.get(k); if (o) common += Math.min(cnt, o); });
+    return 2 * common / (x.size + y.size);
+  }
+  var PAIR_MIN = 0.2;
+
+  // 行が多いかたまりは、前から順に、似ている行を近く（WINDOW 行以内）で探して組にする（行数に比例する時間で済む）
+  var WINDOW = 8;
+  function pairGreedy(dl, il, db, ib) {
+    var seq = [], i = 0, j = 0, m = dl.length, n = il.length;
+    var cache = new Map();
+    var sim = function (x, y) { var key = x * (n + 1) + y; if (!cache.has(key)) cache.set(key, similarity(db[x], ib[y])); return cache.get(key); };
+    while (i < m && j < n) {
+      if (sim(i, j) >= PAIR_MIN) { seq.push({ t: 'pair', a: dl[i], b: il[j] }); i++; j++; continue; }
+      // 近くに、よく似た行（0.5以上）があれば、そこまでの行を「加わった」「消えた」とする
+      var found = false;
+      for (var k = 1; k <= WINDOW && !found; k++) {
+        if (j + k < n && sim(i, j + k) >= 0.5) { for (var x = 0; x < k; x++) seq.push({ t: '+', s: il[j + x] }); j += k; found = true; }
+        else if (i + k < m && sim(i + k, j) >= 0.5) { for (var y = 0; y < k; y++) seq.push({ t: '-', s: dl[i + y] }); i += k; found = true; }
+      }
+      if (!found) { seq.push({ t: 'pair', a: dl[i], b: il[j], weak: true }); i++; j++; }
+    }
+    for (; i < m; i++) seq.push({ t: '-', s: dl[i] });
+    for (; j < n; j++) seq.push({ t: '+', s: il[j] });
+    return seq;
+  }
+
+  // 書き換えられた行のかたまり（消えた行と加わった行）の中で、似ている行どうしを組にして比べる。
+  // 組にならない行は、行ごと消えた・加わったものとする（加わった行に、別の行の文字が混ざって見えないように）
+  var groupSeq = 0;
+  function diffBlock(del, ins, info, unit) {
+    var dl = del.split(LF), il = ins.split(LF);
+    dl.pop(); il.pop();
+    dl = dl.map(function (s) { return s + LF; });
+    il = il.map(function (s) { return s + LF; });
+    var m = dl.length, n = il.length;
+    var db = dl.map(bigrams), ib = il.map(bigrams);
+    var seq, i, j;
+    if (m * n > 40000) {
+      seq = pairGreedy(dl, il, db, ib);
+    } else {
+      var score = [], sim = [];
+      for (i = 0; i <= m; i++) score.push(new Float64Array(n + 1));
+      for (i = 0; i < m; i++) { sim.push(new Float64Array(n)); for (j = 0; j < n; j++) sim[i][j] = similarity(db[i], ib[j]); }
+      for (i = 1; i <= m; i++) {
+        for (j = 1; j <= n; j++) {
+          var best = Math.max(score[i - 1][j], score[i][j - 1]);
+          var s = sim[i - 1][j - 1];
+          if (s >= PAIR_MIN && score[i - 1][j - 1] + s > best) best = score[i - 1][j - 1] + s;
+          score[i][j] = best;
+        }
+      }
+      seq = [];
+      i = m; j = n;
+      while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && sim[i - 1][j - 1] >= PAIR_MIN && score[i][j] === score[i - 1][j - 1] + sim[i - 1][j - 1]) { seq.push({ t: 'pair', a: dl[i - 1], b: il[j - 1] }); i--; j--; }
+        else if (i > 0 && (j === 0 || score[i][j] === score[i - 1][j])) { seq.push({ t: '-', s: dl[i - 1] }); i--; }
+        else { seq.push({ t: '+', s: il[j - 1] }); j--; }
+      }
+      seq.reverse();
+    }
+    // 組ごとに別の変更として数えるよう、組の番号（g）を付ける。続けて消えた行・加わった行は1つの組にまとめる
+    var out = [];
+    var prevSingle = null;
+    seq.forEach(function (x) {
+      if (x.t === 'pair') {
+        prevSingle = null;
+        var g = ++groupSeq;
+        // 似ていない行どうし（weak）は、行全体を書き換えたものとする
+        var sub = (unit === 'line' || x.weak) ? [{ t: '-', s: x.a }, { t: '+', s: x.b }] : diffChars(x.a, x.b, info);
+        sub.forEach(function (o) { if (o.t !== '=') o.g = g; });
+        out = out.concat(sub);
+      } else {
+        if (prevSingle === null) prevSingle = ++groupSeq;
+        out.push({ t: x.t, s: x.s, g: prevSingle });
+      }
+    });
+    // 文字ごとの比較で、かたまりが小さいときは、かたまり全体を文字ごとに比べた結果とも比べ、
+    // 変わった文字が少ないほうを使う（行をつないだ・分けた場合に「改行の削除・追加」だけで示せるように）
+    if (unit !== 'line' && del.length + ins.length <= 4000) {
+      var whole = diffChars(del, ins, info);
+      if (changedLength(whole) < changedLength(out)) {
+        var g0 = ++groupSeq;
+        // 全体を比べた結果は、変更ごとに別の組にする
+        whole.forEach(function (o, idx) { if (o.t !== '=') { if (idx > 0 && whole[idx - 1].t === '=') g0 = ++groupSeq; o.g = g0; } });
+        return whole;
+      }
+    }
+    return out;
+  }
+
+  // 比べる。before, after は改行を LF にそろえた文字列
+  function compare(before, after, unit) {
+    var info = { overflow: false };
+    tlenCache = new Map(); wordCache = new Map();
+    // どちらにも最後に改行を1つ足して比べ（最後の行に改行がないことによる見かけの違いを防ぐ）、最後に取り除く
+    var a = (before + LF).split(LF); a.pop();
+    var b = (after + LF).split(LF); b.pop();
+    a = a.map(function (s) { return s + LF; });
+    b = b.map(function (s) { return s + LF; });
+    var lineInfo = { overflow: false };
+    var lineOps = diffUnits(a, b, MAX_D_LINES, lineInfo);
+    var ops = [];
+    var i = 0;
+    while (i < lineOps.length) {
+      if (lineOps[i].t === '=') { ops.push(lineOps[i]); i++; continue; }
+      var del = '', ins = '';
+      while (i < lineOps.length && lineOps[i].t !== '=') { if (lineOps[i].t === '-') del += lineOps[i].s; else ins += lineOps[i].s; i++; }
+      if (del && ins) {
+        ops = ops.concat(diffBlock(del, ins, info, unit));
+      } else {
+        if (del) ops.push({ t: '-', s: del });
+        if (ins) ops.push({ t: '+', s: ins });
+      }
+    }
+    ops = normalize(ops);
+    ops = stripTail(ops);
+    ops = splitWholeLines(ops);
+    return { ops: ops, tooMany: info.overflow };
+  }
+
+  // 比べるときに足した最後の改行を、修正前と修正後のそれぞれから1つずつ取り除く
+  function stripTail(ops) {
+    ops = ops.map(function (o) { return { t: o.t, s: o.s, g: o.g }; });
+    var ib = -1, ia = -1, i;
+    for (i = ops.length - 1; i >= 0; i--) { if (ops[i].t !== '+') { ib = i; break; } }
+    for (i = ops.length - 1; i >= 0; i--) { if (ops[i].t !== '-') { ia = i; break; } }
+    if (ib < 0 || ia < 0) return ops;
+    if (ib === ia) {
+      ops[ib].s = ops[ib].s.slice(0, -1);
+    } else if (ops[ib].t === '=') {
+      // 片方だけが「=」の場合は、その最後の改行を、もう片方だけのものとして分ける
+      ops[ib].s = ops[ib].s.slice(0, -1);
+      ops.splice(ib + 1, 0, { t: '+', s: LF, g: ops[ia].g });
+      ia++;
+      ops[ia].s = ops[ia].s.slice(0, -1);
+    } else if (ops[ia].t === '=') {
+      ops[ia].s = ops[ia].s.slice(0, -1);
+      ops.splice(ia + 1, 0, { t: '-', s: LF, g: ops[ib].g });
+      if (ib > ia) ib++;
+      ops[ib].s = ops[ib].s.slice(0, -1);
+    } else {
+      ops[ib].s = ops[ib].s.slice(0, -1);
+      ops[ia].s = ops[ia].s.slice(0, -1);
+      // 最後に書き換えた行の後ろに、別の組の行が加わった（消えた）場合：書き換えた行の改行を、後ろの組の先頭に移す
+      // （「4行目：A → A'↵」と「B を追加」ではなく、「4行目：A → A'」と「5行目：B の行を追加」にする）
+      if (ib < ia && ops[ib + 1] && ops[ib + 1].t === '+' && ops[ib + 1].g === ops[ib].g && ops[ib + 1].g !== ops[ia].g && ops[ib + 1].s.slice(-1) === LF) {
+        ops[ib + 1].s = ops[ib + 1].s.slice(0, -1);
+        ops[ib + 2].s = LF + ops[ib + 2].s;
+      } else if (ia < ib && ops[ia - 1] && ops[ia - 1].t === '-' && ops[ia - 1].g === ops[ia].g && ops[ia].g !== ops[ib].g && ops[ia - 1].s.slice(-1) === LF) {
+        ops[ia - 1].s = ops[ia - 1].s.slice(0, -1);
+        ops[ia + 1].s = LF + ops[ia + 1].s;
+      }
+    }
+    return normalize(ops);
+  }
+
+  // 行を丸ごと加えた（消えた）変更が続く場合は、1行ずつ別の変更にする（続いた空の行はまとめる）
+  function splitWholeLines(ops) {
+    var out = [];
+    var i = 0;
+    while (i < ops.length) {
+      if (ops[i].t === '=') { out.push(ops[i]); i++; continue; }
+      var e = runEnd(ops, i);
+      if (e - i !== 1) { for (; i < e; i++) out.push(ops[i]); continue; }
+      var op = ops[i];
+      var atLineStart = out.length === 0 || out[out.length - 1].s.slice(-1) === LF;
+      var atLineEnd = e >= ops.length || ops[e].s.charAt(0) === LF;
+      var lines = null, lead = false;
+      if (atLineStart && op.s.slice(-1) === LF && countLF(op.s) > 1) { lines = op.s.slice(0, -1).split(LF); }
+      else if (atLineEnd && op.s.charAt(0) === LF && countLF(op.s) > 1) { lines = op.s.slice(1).split(LF); lead = true; }
+      if (!lines) { out.push(op); i++; continue; }
+      // 続いた空の行は1つにまとめる
+      var pieces = [];
+      lines.forEach(function (ln) {
+        var last = pieces[pieces.length - 1];
+        if (ln === '' && last && last.every(function (x) { return x === ''; })) last.push(ln); else pieces.push([ln]);
+      });
+      pieces.forEach(function (p) {
+        var text = p.join(LF);
+        out.push({ t: op.t, s: lead ? LF + text : text + LF, g: ++groupSeq });
+      });
+      i++;
+    }
+    return out;
+  }
+
+  // ---- 変更点の一覧を作る ----
+  function countLF(s) { var c = 0; for (var i = 0; i < s.length; i++) if (s.charCodeAt(i) === 10) c++; return c; }
+  function onlyLF(s) { for (var i = 0; i < s.length; i++) if (s.charCodeAt(i) !== 10) return false; return s.length > 0; }
+
+  function buildChanges(ops) {
+    var items = [];
+    var lineA = 1, lineB = 1;  // lineA：修正前の行、lineB：修正後の行
+    var i = 0;
+    while (i < ops.length) {
+      if (ops[i].t === '=') { lineA += countLF(ops[i].s); lineB += countLF(ops[i].s); i++; continue; }
+      var del = '', ins = '';
+      var startA = lineA, startB = lineB, runStart = i;
+      var e = runEnd(ops, i);
+      for (; i < e; i++) {
+        if (ops[i].t === '-') { del += ops[i].s; lineA += countLF(ops[i].s); }
+        else { ins += ops[i].s; lineB += countLF(ops[i].s); }
+      }
+      var item = { del: del, ins: ins, wholeLine: false };
+      if (del && ins) {
+        item.kind = 'mod';
+        // 両方の先頭（または末尾）が改行なら、その改行は変わっていないので表示から除く
+        if (del.charAt(0) === LF && ins.charAt(0) === LF && del.length > 1 && ins.length > 1) { item.del = del.slice(1); item.ins = ins.slice(1); startB++; }
+        else if (del.slice(-1) === LF && ins.slice(-1) === LF && del.length > 1 && ins.length > 1) { item.del = del.slice(0, -1); item.ins = ins.slice(0, -1); }
+        item.from = startB;
+        item.to = startB + countLF(item.ins);
+        item.side = 'after';
+        items.push(item);
+        continue;
+      }
+      var text = del || ins;
+      item.kind = del ? 'del' : 'add';
+      // 変更の前が行の始まりか、後ろが行の終わりか
+      var atLineStart = runStart === 0 || ops[runStart - 1].s.slice(-1) === LF;
+      var atLineEnd = i >= ops.length || ops[i].s.charAt(0) === LF;
+      var startLine = del ? startA : startB;
+      if (onlyLF(text) && (atLineStart || (atLineEnd && text.length > 1))) {
+        // 空の行を加えた（消した）
+        item.emptyLines = true;
+        var k = atLineStart ? text.length : text.length - 1;
+        if (!atLineStart) startLine++;
+        item.from = startLine; item.to = startLine + k - 1;
+        item.side = del ? 'before' : 'after';
+      } else if (text === LF) {
+        // 行の途中・行末の改行だけを加えた（消した）＝行を分けた（つないだ）
+        item.lineBreak = true;
+        item.from = startB; item.to = startB;
+        item.side = 'after';
+      } else {
+        if (text.length > 1 && text.charAt(0) === LF && atLineEnd) { text = text.slice(1); startLine++; item.wholeLine = true; }
+        else if (text.length > 1 && text.slice(-1) === LF && atLineStart) { text = text.slice(0, -1); item.wholeLine = true; }
+        // 行を丸ごと消した場合は修正後にその行がないため、修正前の行番号で示す。それ以外は修正後の行番号
+        var start = item.wholeLine ? startLine : startB;
+        if (del) item.del = text; else item.ins = text;
+        item.from = start;
+        item.to = start + countLF(text);
+        item.side = (del && item.wholeLine) ? 'before' : 'after';
+      }
+      items.push(item);
+    }
+    return items;
+  }
+
+  // ---- 表示用 ----
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+
+  // 空白・改行・見えない文字の印
+  var MARK_ORDER = ['␣', '□', '⇥', '↵', '⍽', '◌'];
+  var WS_NAME = { '␣': '半角スペース', '□': '全角スペース', '⇥': 'タブ', '↵': '改行', '⍽': '特別な空白', '◌': '見えない文字' };
+  function markOf(ch) {
+    var c = ch.charCodeAt(0);
+    if (ch === ' ') return '␣';
+    if (ch === IDEO_SPACE) return '□';
+    if (ch === TAB) return '⇥';
+    if (ch === LF) return '↵';
+    // 改行しない空白（U+00A0）など、半角スペースと見分けにくい空白
+    if (c === 0x00A0 || (c >= 0x2000 && c <= 0x200A) || c === 0x202F || c === 0x205F) return '⍽';
+    // 幅のない空白（U+200B）など、見えない文字
+    if ((c >= 0x200B && c <= 0x200F) || (c >= 0x202A && c <= 0x202E) || (c >= 0x2060 && c <= 0x2064) || (c >= 0x2066 && c <= 0x2069) || c === 0xFEFF || c === 0x00AD || c === 0x2028 || c === 0x2029) return '◌';
+    return null;
+  }
+
+  // 文字列を、印にする文字（mark あり）とそのままの文字に分ける。絵文字の中の ZWJ・異体字セレクタは絵文字の一部なので印にしない
+  var PICTO = /\p{Extended_Pictographic}/u;
+  function markPieces(s) {
+    var out = [];
+    graphemes(s).forEach(function (g) {
+      if (g.length === 1 || !PICTO.test(g)) {
+        for (var i = 0; i < g.length; i++) {
+          var ch = g.charAt(i);
+          var mk = markOf(ch);
+          // 文字の後ろに付く異体字セレクタなどは印にしない（markOf の対象外）
+          out.push({ ch: ch, mark: mk });
+        }
+      } else {
+        out.push({ ch: g, mark: null });
+      }
+    });
+    return out;
+  }
+  // 変更した部分の空白・改行を、見える印にする（HTML）。改行は印の後で実際にも改行する
+  function markWsHtml(s) {
+    return markPieces(s).map(function (p) {
+      if (p.mark) return '<span class="ws" title="' + WS_NAME[p.mark] + '">' + p.mark + '</span>' + (p.ch === LF ? LF : '');
+      return escapeHtml(p.ch);
+    }).join('');
+  }
+  // 同じく、コピー用の文字列。使った印を used に記録する
+  function markWsText(s, used) {
+    return markPieces(s).map(function (p) {
+      if (p.mark) { used[p.mark] = true; return p.mark; }
+      return p.ch;
+    }).join('');
+  }
+
+  function whereLabel(item) {
+    var range = item.to > item.from ? fmt(item.from) + '〜' + fmt(item.to) + '行目' : fmt(item.from) + '行目';
+    return (item.side === 'before' ? '修正前の' : '') + range;
+  }
+  var KIND_LABEL = { mod: '書き換え', add: '追加', del: '削除' };
+  function verbOf(item) { return item.kind === 'add' ? 'を追加' : 'を削除'; }
+
+  function itemText(item, used) {
+    var line = whereLabel(item) + '：';
+    if (item.kind === 'mod') return line + '「' + markWsText(item.del, used) + '」→「' + markWsText(item.ins, used) + '」';
+    if (item.emptyLines) return line + '空の行' + verbOf(item);
+    if (item.lineBreak) { used['↵'] = true; return line + '改行（↵）' + verbOf(item); }
+    var text = item.kind === 'add' ? item.ins : item.del;
+    return line + '「' + markWsText(text, used) + '」' + (item.wholeLine ? 'の行' : '') + verbOf(item);
+  }
+
+  function cut(s) {
+    var g = graphemes(s);
+    if (g.length <= SHOW_LIMIT) return { s: s, rest: 0 };
+    return { s: g.slice(0, SHOW_LIMIT).join(''), rest: g.length - SHOW_LIMIT };
+  }
+  function quoteHtml(s, cls) {
+    var c = cut(s);
+    return '<q class="' + cls + '">' + markWsHtml(c.s).split(LF).join('') + '</q>' + (c.rest ? '<span class="cut">…（ほか' + fmt(c.rest) + '文字）</span>' : '');
+  }
+  function itemHtml(item, n) {
+    var what;
+    if (item.kind === 'mod') what = quoteHtml(item.del, 'old') + '<span class="arrow">→</span>' + quoteHtml(item.ins, 'new');
+    else if (item.emptyLines) what = '空の行' + verbOf(item);
+    else if (item.lineBreak) what = '改行（<span class="ws" title="改行">↵</span>）' + verbOf(item);
+    else what = quoteHtml(item.kind === 'add' ? item.ins : item.del, item.kind === 'add' ? 'new' : 'old') + (item.wholeLine ? 'の行' : '') + verbOf(item);
+    return '<li><span class="n">' + n + '.</span><span class="where"><span class="kind k-' + item.kind + '">' + KIND_LABEL[item.kind] + '</span>' + whereLabel(item) + '</span><span class="what">' + what + '</span></li>';
+  }
+
+  function previewHtml(ops) {
+    var html = '';
+    var n = 0;
+    var i = 0;
+    while (i < ops.length) {
+      var op = ops[i];
+      if (op.t === '=') { html += escapeHtml(op.s); i++; continue; }
+      n++;
+      var first = true;
+      var e = runEnd(ops, i);
+      while (i < e) {
+        var tag = ops[i].t === '-' ? 'del' : 'ins';
+        html += '<' + tag + (first ? ' class="num" data-n="' + n + '"' : '') + '>' + markWsHtml(ops[i].s) + '</' + tag + '>';
+        first = false;
+        i++;
+      }
+    }
+    return html;
+  }
+
+  // 見た目の1文字（書記素）で数える。改行は数えない
+  function countChars(text) {
+    if (segmenter) {
+      var count = 0;
+      for (var s of segmenter.segment(text)) {
+        if (s.segment === LF || s.segment === CR + LF || s.segment === CR) continue;
+        count++;
+        // 半角の濁点・半濁点（ﾞ ﾟ）は、前の文字とまとめずに1文字と数える（ｽﾞ は2文字。Excel の LEN と同じ）
+        for (var j = 1; j < s.segment.length; j++) {
+          if (s.segment.charAt(j) === HALF_DAKUTEN || s.segment.charAt(j) === HALF_HANDAKUTEN) count++;
+        }
+      }
+      return count;
+    }
+    return Array.from(text).filter(function (ch) { return ch !== LF && ch !== CR; }).length;
+  }
+
+  // 改行コード（CRLF・CR）を LF にそろえる
+  function normNewlines(s) { return s.split(CR + LF).join(LF).split(CR).join(LF); }
+  // 結合用の濁点・半濁点（U+3099・U+309A）で分かれたかなを、1文字にまとめる（Mac などでコピーした「か＋゛」を「が」と同じに扱う）
+  var KANA_MARK = /[\u3041-\u30FF][\u3099\u309A]/g;
+  function composeKana(s) { return s.replace(KANA_MARK, function (m) { return m.normalize('NFC'); }); }
+
+  // ---- 画面 ----
+  var beforeText = document.getElementById('beforeText');
+  var afterText = document.getElementById('afterText');
+  var beforeCount = document.getElementById('beforeCount');
+  var afterCount = document.getElementById('afterCount');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var copyButton = document.getElementById('copyButton');
+  var swapButton = document.getElementById('swapButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+  var changesEmpty = document.getElementById('changesEmpty');
+  var changeItems = document.getElementById('changeItems');
+  var copyFallback = document.getElementById('copyFallback');
+
+  var EMPTY_LIST = '文章を入れると、ここに変わったところの一覧が表示されます。行番号は修正後の文章の行です（消えた行だけは修正前の行）。';
+  var lastCopy = '';
+  var lastCount = 0;
+  var copyTimer = null;
+
+  function getUnit() {
+    var checked = document.querySelector('input[name="unit"]:checked');
+    return checked ? checked.value : 'char';
+  }
+
+  function showEmpty(previewMessage, listMessage) {
+    preview.textContent = previewMessage;
+    preview.classList.add('empty');
+    changeItems.hidden = true;
+    changeItems.innerHTML = '';
+    changesEmpty.hidden = false;
+    changesEmpty.textContent = listMessage;
+    lastCopy = '';
+    lastCount = 0;
+    copyButton.disabled = true;
+  }
+
+  function update() {
+    var rawB = beforeText.value, rawA = afterText.value;
+    var cb = countChars(rawB), ca = countChars(rawA);
+    beforeCount.textContent = fmt(cb) + '文字';
+    afterCount.textContent = fmt(ca) + '文字';
+    copyFallback.hidden = true;
+    summary.className = 'summary';
+    if (rawB === '' && rawA === '') {
+      summary.textContent = '';
+      showEmpty('「修正前」と「修正後」の欄に文章を入れると、ここに違いが色分けで表示されます。', EMPTY_LIST);
+      return;
+    }
+    if (rawB === '' || rawA === '') {
+      var missing = rawB === '' ? '修正前' : '修正後';
+      summary.textContent = '「' + missing + '」の欄が空です。比べるもう1つの文章を「' + missing + '」の欄に貼り付けてください。';
+      summary.className = 'summary found';
+      showEmpty('2つの欄の両方に文章を入れると、ここに違いが色分けで表示されます。', EMPTY_LIST);
+      return;
+    }
+    var before = composeKana(normNewlines(rawB)), after = composeKana(normNewlines(rawA));
+    if (before === after) {
+      summary.textContent = '2つの文章は同じです。違いはありません（' + fmt(cb) + '文字）。';
+      preview.classList.remove('empty');
+      preview.textContent = after;
+      changeItems.hidden = true;
+      changeItems.innerHTML = '';
+      changesEmpty.hidden = false;
+      changesEmpty.textContent = '変わったところはありません。';
+      lastCopy = '';
+      lastCount = 0;
+      copyButton.disabled = true;
+      return;
+    }
+    var r = compare(before, after, getUnit());
+    var items = buildChanges(r.ops);
+    preview.classList.remove('empty');
+    preview.innerHTML = previewHtml(r.ops);
+
+    var counts = { mod: 0, add: 0, del: 0 };
+    items.forEach(function (it) { counts[it.kind]++; });
+    var parts = [];
+    if (counts.mod) parts.push('書き換え ' + fmt(counts.mod));
+    if (counts.add) parts.push('追加 ' + fmt(counts.add));
+    if (counts.del) parts.push('削除 ' + fmt(counts.del));
+    var diffChars = ca - cb;
+    var msg = '違いが' + fmt(items.length) + 'か所あります（' + parts.join('・') + '）。文字数は ' + fmt(cb) + ' → ' + fmt(ca) + '文字' +
+      (diffChars === 0 ? '（同じ）' : '（' + (diffChars > 0 ? '+' : '−') + fmt(Math.abs(diffChars)) + '）') + 'です。';
+    if (r.tooMany) msg += '違いが多いため、一部はまとめて「書き換え」として表示しています。細かく見るには、文章を段落ごとなどに分けて比べてください。';
+    summary.textContent = msg;
+
+    changesEmpty.hidden = true;
+    changeItems.hidden = false;
+    changeItems.innerHTML = items.slice(0, LIST_LIMIT).map(function (it, idx) { return itemHtml(it, idx + 1); }).join('') +
+      (items.length > LIST_LIMIT ? '<li class="more">ほかに' + fmt(items.length - LIST_LIMIT) + 'か所あります（一覧には最初の' + fmt(LIST_LIMIT) + 'か所までを表示します。「変更点をコピー」ではすべてコピーします）。</li>' : '');
+
+    var used = {};
+    var lines = items.map(function (it, idx) { return (idx + 1) + '. ' + itemText(it, used); });
+    var head = '変更点：' + items.length + 'か所（行番号は修正後の文章の行。消えた行は修正前の行）';
+    var legend = MARK_ORDER.filter(function (k) { return used[k]; }).map(function (k) { return k + '＝' + WS_NAME[k]; });
+    lastCopy = [head].concat(lines).join(LF) + (legend.length ? LF + '（' + legend.join('、') + '）' : '');
+    lastCount = items.length;
+    copyButton.disabled = false;
+  }
+
+  var unitStatus = document.getElementById('unitStatus');
+  // ボタンの知らせはボタンの下に、設定の知らせは設定の横に出す（前の知らせは消す）
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle('error', !!isError);
+    unitStatus.textContent = '';
+  }
+  function setUnitStatus(message) {
+    status.textContent = '';
+    status.classList.remove('error');
+    unitStatus.textContent = message;
+  }
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '変更点をコピー';
+  }
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '変更点をコピー'; }, ms);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function copyFailed(text) {
+    flashButton('コピーできませんでした', 4000);
+    copyFallback.value = text;
+    copyFallback.hidden = false;
+    try { copyFallback.focus({ preventScroll: true }); } catch (e) { /* 古いブラウザ */ }
+    copyFallback.select();
+    setStatus('コピーできませんでした。すぐ下の欄の、選んだ状態の文字を Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastCopy, n = lastCount;
+    if (!text) return;
+    var done = function () {
+      setStatus('変更点の一覧をコピーしました（' + fmt(n) + 'か所）。');
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed(text);
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed(text);
+    }
+  });
+
+  var SAMPLE_BEFORE = [
+    '来週の打ち合わせについてご連絡します。',
+    '日時：10月20日（月）14時から',
+    '場所：本社3階 会議室A',
+    '資料は当日お配りします。'
+  ].join(LF);
+  var SAMPLE_AFTER = [
+    '来週の打ち合わせについてご連絡します。',
+    '日時：10月21日（火）15時から',
+    '場所：本社3階' + IDEO_SPACE + '会議室B',
+    '資料は前日までにメールでお送りします。',
+    'よろしくお願いいたします。'
+  ].join(LF);
+
+  sampleButton.addEventListener('click', function () {
+    beforeText.value = SAMPLE_BEFORE;
+    afterText.value = SAMPLE_AFTER;
+    update();
+    resetCopyButton();
+    setStatus('例を入れました。下の「比べた結果」と「変更点の一覧」に、違いが表示されます。');
+  });
+
+  swapButton.addEventListener('click', function () {
+    var t = beforeText.value;
+    beforeText.value = afterText.value;
+    afterText.value = t;
+    update();
+    resetCopyButton();
+    var bothFilled = beforeText.value !== '' && afterText.value !== '';
+    setStatus(beforeText.value === '' && afterText.value === ''
+      ? '入れ替えるものがありません。「修正前」と「修正後」の欄に文章を入れてください。'
+      : '「修正前」と「修正後」を入れ替えました。' + (bothFilled ? '結果を更新しました。' : ''));
+  });
+
+  clearButton.addEventListener('click', function () {
+    beforeText.value = '';
+    afterText.value = '';
+    update();
+    resetCopyButton();
+    setStatus('入力と結果を消しました。「修正前」の欄に元の文章を貼り付けてください。');
+  });
+
+  [beforeText, afterText].forEach(function (ta) {
+    ta.addEventListener('input', function () {
+      update();
+      resetCopyButton();
+      setStatus('');
+    });
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="unit"]'), function (input) {
+    input.addEventListener('change', function () {
+      update();
+      resetCopyButton();
+      var both = beforeText.value !== '' && afterText.value !== '';
+      setUnitStatus('「比べる単位」を「' + input.nextElementSibling.textContent + '」にしました。' + (both ? '結果を更新しました。' : '2つの欄に文章を入れると、この設定で比べます。'));
+    });
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
