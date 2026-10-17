@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>機種依存文字チェック - 環境依存文字を探して置き換え｜AIツールひろば</title>
+  <meta name="description" content="①や㈱、髙などの機種依存文字（環境依存文字）や、Shift_JISのCSVで「?」になる文字を探して、使える文字にまとめて置き換える無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/kishu-izon/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="機種依存文字チェック - 環境依存文字を探して置き換え｜AIツールひろば">
+  <meta property="og:description" content="①や㈱、髙などの機種依存文字（環境依存文字）や、Shift_JISのCSVで「?」になる文字を探して、使える文字にまとめて置き換える無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/kishu-izon/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/kishu-izon.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "機種依存文字チェック",
+    "description": "①や㈱、髙などの機種依存文字（環境依存文字）や、Shift_JISのCSVで「?」になる文字を探して、使える文字にまとめて置き換える無料ツールです。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/kishu-izon/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "機種依存文字チェック",
+        "item": "https://autotoolspublisher-ui.github.io/tools/kishu-izon/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "どんな文字が見つかりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2種類の文字を見つけます。1つは、Shift_JISにない文字です（絵文字、「𠮷」、Macで入力した波ダッシュ「〜」やマイナス「−」など）。Shift_JISで保存したCSVでは「?」になったり消えたりします。もう1つは機種依存文字です（①、Ⅰ、㈱、㍻、㎝、髙、﨑 など）。WindowsのShift_JISにはありますが、Windows以外のパソコンや古いシステム、メールでは化けることがあります。「調べる文字」で「Shift_JISにない文字だけ」を選ぶと、機種依存文字は調べません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "どんな文字に置き換わりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "①は(1)、㈱は(株)、㍻は平成、㎝はcm、№はNo.、髙は高、﨑は崎、波ダッシュ「〜」は全角のチルダ「～」のように、意味が同じでどの環境でも使える文字にします。見つかった文字と置き換え先は「見つかった文字」の一覧で確かめられます。置き換え先がない文字（多くの絵文字など）は、「置き換え先がない文字」の設定で、そのまま残すか、消すか、「〓」にするかを選べます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "人の名前や地名の「髙」「﨑」も置き換わりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "置き換わります（髙→高、﨑→崎、濵→浜 など）。システムに登録できる形にはなりますが、正式な表記とは違う文字になります。名前などで正式な表記が必要な場合は、結果を使う前に確かめてください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "CSVファイルをそのまま調べられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "ファイルは読み込めません。CSVファイルをメモ帳などで開いて中身をすべてコピーし、入力欄に貼り付けてください。Excelのセル範囲をコピーして貼り付けても使えます。改行とタブは変えないため、結果をExcelに貼り戻しても行や列はずれません。ただし、①を置き換えた「(1)」だけのセルは、Excelでは「-1」という数値として読み込まれます。番号の列は、貼り付ける前に書式を「文字列」にしてください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したテキストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。調べるのも置き換えるのも、すべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --mark: #fdf1b8; --left: #fce8e6; --left-line: #e8a9a3; --ok: #137333; --warn-ink: #7a4f01; --bad-ink: #a50e0e; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .settings { margin: 0 0 16px; }
+  .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .setting legend { float: left; padding: 0; color: #3c4043; font-weight: 600; font-size: .94rem; white-space: nowrap; }
+  .seg { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .seg label { position: relative; display: inline-flex; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 6em; min-height: 44px; padding: 0 14px; color: #3c4043; font-size: .94rem; cursor: pointer; transition: background .16s ease; }
+  .seg label + label span { border-left: 1px solid var(--line); }
+  .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  /* ✓ の幅をいつも確保して、選んだときに選択肢の幅と位置が変わらないようにする */
+  .seg span::before { content: "✓"; margin-right: 4px; color: transparent; }
+  .seg input:checked + span::before { color: inherit; }
+  .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .seg span:hover { background: #f6fafe; }
+  .note { margin: 10px 0 0; color: var(--muted); font-size: .875rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; min-height: 150px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .preview { min-height: 150px; max-height: 420px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview.empty { color: var(--muted); font-family: inherit; }
+  .preview mark { background: var(--mark); color: inherit; border-radius: 3px; box-shadow: 0 0 0 1px #f2d25c; }
+  .preview mark.left { background: var(--left); box-shadow: 0 0 0 1px var(--left-line); }
+  .legend-line { display: flex; flex-wrap: wrap; gap: 2px 12px; color: var(--muted); font-size: .875rem; }
+  .legend-line i { display: inline-block; width: 1em; height: 1em; margin-right: 4px; vertical-align: -2px; border-radius: 3px; }
+  .legend-line .sw-done { background: var(--mark); box-shadow: 0 0 0 1px #f2d25c; }
+  .legend-line .sw-left { background: var(--left); box-shadow: 0 0 0 1px var(--left-line); }
+  /* まとめ。最も長い文の高さ（1行 = 14.4px × 1.5 = 21.6px）を先に確保して、出ても消えても下の部品が動かないようにする。本文の幅が最大（980px）のときは3行、それより狭いときは5行 */
+  .summary { margin: 10px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; }
+  @media (max-width: 1019px) { .summary { min-height: 110px; } }
+  .summary.found { color: var(--warn-ink); }
+  .summary.error { color: var(--bad-ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンと設定の知らせ。ボタンと設定の上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 44px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  .found-list { margin: 22px 0 16px; }
+  .found-list h2 { margin: 0 0 4px; color: #3c4043; font-size: 1rem; font-weight: 600; }
+  .found-list .empty-note { margin: 0; color: var(--muted); font-size: .9rem; }
+  .found-items { margin: 8px 0 0; padding: 0; list-style: none; border-top: 1px solid #e8eaed; }
+  .found-items li.more { display: block; color: var(--muted); font-size: .9rem; }
+  .found-items li { display: grid; grid-template-columns: 4.2em 1fr minmax(6.5em, auto); align-items: center; gap: 4px 14px; padding: 10px 2px; border-bottom: 1px solid #e8eaed; }
+  .glyph { display: grid; place-items: center; min-height: 2.6em; padding: 2px; border-radius: 10px; background: var(--surface-soft); font-size: 1.3rem; line-height: 1.2; overflow-wrap: anywhere; text-align: center; }
+  .glyph small { font-size: .875rem; color: var(--muted); line-height: 1.25; }
+  .info { min-width: 0; font-size: .9rem; line-height: 1.5; }
+  .info .kind { display: inline-block; margin-right: 6px; padding: 0 8px; border-radius: 999px; font-size: .875rem; font-weight: 600; }
+  .kind.k-nosjis { background: #fce8e6; color: var(--bad-ink); }
+  .kind.k-izon { background: #fef7e0; color: var(--warn-ink); }
+  .kind.k-gaiji { background: #f3e8fd; color: #681da8; }
+  .info .code { color: var(--muted); font-size: .875rem; font-family: ui-monospace, Consolas, monospace; overflow-wrap: anywhere; }
+  .info .where { display: block; color: #3c4043; }
+  .to { font-size: .9rem; text-align: right; overflow-wrap: anywhere; }
+  .to b { font-size: 1.1rem; font-weight: 600; }
+  .to .none { color: var(--bad-ink); font-weight: 600; }
+  .to .arrow { color: var(--muted); margin-right: 4px; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    /* 結果の行数が変わっても下の部品が動かないよう、高さを決める（長い結果は欄の中でスクロール） */
+    .preview { height: 200px; min-height: 0; max-height: none; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .settings-row { flex-direction: column; align-items: stretch; }
+    .setting { flex-direction: column; align-items: stretch; gap: 6px; }
+    .setting legend { float: none; margin-bottom: 6px; }
+    .seg { display: flex; }
+    .seg label { flex: 1 1 0; }
+    .seg span { width: 100%; min-width: 0; padding: 4px 6px; text-align: center; line-height: 1.3; word-break: keep-all; overflow-wrap: normal; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+    .found-items li { grid-template-columns: 4.2em 1fr; }
+    .to { grid-column: 2; text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">機種依存文字チェック</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">CHARACTER CHECK</p>
+    <h1>機種依存文字チェック</h1>
+    <p>①・㈱・髙などの機種依存文字（環境依存文字）や、Shift_JISのCSVで「?」になる文字を探して、使える文字にまとめて置き換えます。メールを送る前や、CSVを取り込む前の確認に。</p>
+  </header>
+
+  <section class="card" aria-label="機種依存文字チェック">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>「調べたいテキスト」の欄に、メールの本文やCSVの中身を貼り付けます。Excelのセルをそのまま貼り付けても使えます。</li>
+        <li>置き換えた結果が自動で表示されます。見つかった文字は、下の「見つかった文字」の一覧で確かめられます。</li>
+        <li>「結果をコピー」でコピーして、使いたい場所に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText">調べたいテキスト</label><span id="sourceCount" class="count">0文字</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="例：①会議は㈱サンプルで行います〜"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果</span><span class="legend-line"><span><i class="sw-done"></i>置き換えた文字</span><span><i class="sw-left"></i>残っている文字</span></span></div>
+        <div id="preview" class="preview empty" role="region" aria-labelledby="resultLabel" tabindex="0">「調べたいテキスト」の欄に入力すると、ここに結果が表示されます。</div>
+        <p id="summary" class="summary" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+
+    <div class="settings">
+      <div class="settings-row">
+        <fieldset class="setting">
+          <legend>調べる文字</legend>
+          <div class="seg">
+            <label><input type="radio" name="level" value="izon" checked><span>機種依存<wbr>文字も</span></label>
+            <label><input type="radio" name="level" value="sjis"><span>Shift_JISに<wbr>ない文字だけ</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>置き換え先がない文字</legend>
+          <div class="seg">
+            <label><input type="radio" name="leftover" value="keep" checked><span>残す</span></label>
+            <label><input type="radio" name="leftover" value="delete"><span>消す</span></label>
+            <label><input type="radio" name="leftover" value="geta"><span>〓に<wbr>する</span></label>
+          </div>
+        </fieldset>
+      </div>
+      <p class="note">「機種依存文字も」（初期設定）は、メールや、Windows以外・古いシステムに送る文章向けです。「Shift_JISにない文字だけ」は、Shift_JIS（Windowsの日本語のCSV）で保存できない文字だけを調べます。人名・地名の「髙」「﨑」なども置き換えるため、正式な表記が必要な場合は確かめてください。改行・タブ・英数字はそのままです。</p>
+    </div>
+
+    <section class="found-list" aria-labelledby="foundTitle">
+      <h2 id="foundTitle">見つかった文字</h2>
+      <p id="foundEmpty" class="empty-note">テキストを入力すると、ここに見つかった文字と置き換え先の一覧が表示されます。</p>
+      <ul id="foundItems" class="found-items" hidden></ul>
+    </section>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したテキストは、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>メールの本文の機種依存文字を置き換える</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>①日時：10月20日（月）〜21日（火）
+②会場：㈱サンプル 3階会議室
+③持ち物：資料一式</pre></dd>
+        <dt>設定</dt><dd>機種依存文字も／置き換え先がない文字：残す（初期設定のまま）</dd>
+        <dt>結果</dt><dd><pre>(1)日時：10月20日（月）～21日（火）
+(2)会場：(株)サンプル 3階会議室
+(3)持ち物：資料一式</pre>
+        「問題のある文字が5種類・5個見つかりました。5個をすべて置き換えました。」と表示されます。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>Shift_JISのCSVで「?」になる文字だけを探す</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>商品名	サイズ	メモ
+Ⅰ型ケース	10㎝	新商品✨
+Ⅱ型ケース	12㎝	価格−100円</pre></dd>
+        <dt>設定</dt><dd>Shift_JISにない文字だけ／置き換え先がない文字：消す</dd>
+        <dt>結果</dt><dd><pre>商品名	サイズ	メモ
+Ⅰ型ケース	10㎝	新商品
+Ⅱ型ケース	12㎝	価格－100円</pre>
+        「Ⅰ」「㎝」はWindowsのShift_JISにあるため、そのまま残ります。「✨」は置き換え先がないため消え、マイナス「−」は全角の「－」になります。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>どんな文字が見つかりますか？</summary>
+      <p>2種類の文字を見つけます。1つは、Shift_JISにない文字です（絵文字、「𠮷」、Macで入力した波ダッシュ「〜」やマイナス「−」など）。Shift_JISで保存したCSVでは「?」になったり消えたりします。もう1つは機種依存文字です（①、Ⅰ、㈱、㍻、㎝、髙、﨑 など）。WindowsのShift_JISにはありますが、Windows以外のパソコンや古いシステム、メールでは化けることがあります。「調べる文字」で「Shift_JISにない文字だけ」を選ぶと、機種依存文字は調べません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>どんな文字に置き換わりますか？</summary>
+      <p>①は(1)、㈱は(株)、㍻は平成、㎝はcm、№はNo.、髙は高、﨑は崎、波ダッシュ「〜」は全角のチルダ「～」のように、意味が同じでどの環境でも使える文字にします。見つかった文字と置き換え先は「見つかった文字」の一覧で確かめられます。置き換え先がない文字（多くの絵文字など）は、「置き換え先がない文字」の設定で、そのまま残すか、消すか、「〓」にするかを選べます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>人の名前や地名の「髙」「﨑」も置き換わりますか？</summary>
+      <p>置き換わります（髙→高、﨑→崎、濵→浜 など）。システムに登録できる形にはなりますが、正式な表記とは違う文字になります。名前などで正式な表記が必要な場合は、結果を使う前に確かめてください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>CSVファイルをそのまま調べられますか？</summary>
+      <p>ファイルは読み込めません。CSVファイルをメモ帳などで開いて中身をすべてコピーし、入力欄に貼り付けてください。Excelのセル範囲をコピーして貼り付けても使えます。改行とタブは変えないため、結果をExcelに貼り戻しても行や列はずれません。ただし、①を置き換えた「(1)」だけのセルは、Excelでは「-1」という数値として読み込まれます。番号の列は、貼り付ける前に書式を「文字列」にしてください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力したテキストは、どこかに送信されますか？</summary>
+      <p>いいえ。調べるのも置き換えるのも、すべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（バックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var HALF_DAKUTEN = String.fromCharCode(0xFF9E);    // ﾞ
+  var HALF_HANDAKUTEN = String.fromCharCode(0xFF9F); // ﾟ
+  var GETA = String.fromCharCode(0x3013);            // 〓
+  var PREVIEW_LIMIT = 300000; // これを超える長さでは色付けを省略する
+  var LIST_LIMIT = 300;       // 「見つかった文字」の一覧に表示する種類の上限（多すぎると画面が固まるため）
+
+  // ---- Shift_JIS で使える文字の一覧を、ブラウザの Shift_JIS の読み込み（TextDecoder）から作る ----
+  // cpSet：Windows の Shift_JIS（CP932）にある文字。jisSet：そのうち JIS X 0208（1〜8区・16〜84区）の文字
+  var cpSet = null, jisSet = null;
+  function buildSets() {
+    var dec = new TextDecoder('shift_jis');
+    var cp = new Set(), jis = new Set();
+    var b, t, s, c;
+    for (b = 0; b < 0x80; b++) cp.add(b);
+    for (b = 0xA1; b <= 0xDF; b++) cp.add(dec.decode(new Uint8Array([b])).codePointAt(0));
+    var buf = new Uint8Array(2);
+    for (b = 0x81; b <= 0xFC; b++) {
+      if (b > 0x9F && b < 0xE0) continue;
+      for (t = 0x40; t <= 0xFC; t++) {
+        if (t === 0x7F) continue;
+        buf[0] = b; buf[1] = t;
+        s = dec.decode(buf);
+        if (s.length === 0 || s.length > 2) continue;
+        c = s.codePointAt(0);
+        if (c === 0xFFFD || String.fromCodePoint(c) !== s) continue;
+        // 外字（私用領域）は Shift_JIS にあっても、ほかのパソコンでは意味のない文字なので含めない
+        if (c >= 0xE000 && c <= 0xF8FF) continue;
+        cp.add(c);
+        var row = (b <= 0x9F ? b - 0x81 : b - 0xC1) * 2 + 1 + (t >= 0x9F ? 1 : 0);
+        if ((row >= 1 && row <= 8) || (row >= 16 && row <= 84)) jis.add(c);
+      }
+    }
+    cpSet = cp; jisSet = jis;
+  }
+
+  function isPua(c) { return (c >= 0xE000 && c <= 0xF8FF) || (c >= 0xF0000 && c <= 0x10FFFF); }
+  function isHalfKana(c) { return c >= 0xFF61 && c <= 0xFF9F; }
+
+  // 文字（コードポイント）が、選んだ「調べる文字」の範囲で問題ないか
+  function okCode(c, level) {
+    if (c < 0x80) return true;
+    if (level === 'sjis') return cpSet.has(c);
+    return isHalfKana(c) || jisSet.has(c);
+  }
+  function okText(s, level) {
+    for (var i = 0; i < s.length; i++) {
+      var c = s.codePointAt(i);
+      if (c > 0xFFFF) i++;
+      if (!okCode(c, level)) return false;
+    }
+    return true;
+  }
+
+  // 問題の種類：nosjis（Shift_JISにない）、gaiji（外字）、izon（機種依存文字）
+  function kindOf(unit) {
+    var kind = 'izon';
+    for (var i = 0; i < unit.length; i++) {
+      var c = unit.codePointAt(i);
+      if (c > 0xFFFF) i++;
+      if (c < 0x80) continue;
+      if (isPua(c)) { if (kind !== 'nosjis') kind = 'gaiji'; }
+      else if (!cpSet.has(c)) return 'nosjis';
+    }
+    return kind;
+  }
+  var KIND_LABEL = { nosjis: 'Shift_JISにない', gaiji: '外字', izon: '機種依存文字' };
+
+  // ---- 置き換え先の対応表 ----
+  var MAP = {};
+  function add(from, to) { MAP[from] = to; }
+  function addPairs(list) { for (var i = 0; i < list.length; i += 2) add(list[i], list[i + 1]); }
+  var n;
+  // 丸数字・括弧数字（①〜⑳、㉑〜㉟、㊱〜㊿、⓪、❶〜❿、⑴〜⒇）
+  for (n = 1; n <= 20; n++) add(String.fromCodePoint(0x245F + n), '(' + n + ')');
+  for (n = 21; n <= 35; n++) add(String.fromCodePoint(0x3251 + n - 21), '(' + n + ')');
+  for (n = 36; n <= 50; n++) add(String.fromCodePoint(0x32B1 + n - 36), '(' + n + ')');
+  add(String.fromCodePoint(0x24EA), '(0)');
+  for (n = 1; n <= 10; n++) add(String.fromCodePoint(0x2775 + n), '(' + n + ')');
+  for (n = 1; n <= 20; n++) add(String.fromCodePoint(0x2473 + n), '(' + n + ')');
+  addPairs([
+    '№', 'No.', '㏍', 'K.K.', '℡', 'TEL',
+    '㊤', '(上)', '㊥', '(中)', '㊦', '(下)', '㊧', '(左)', '㊨', '(右)',
+    '〝', '“', '〟', '”', '￤', '|', '•', '・',
+    // WindowsのShift_JISにない、見た目の似た文字（Macなどで入力されやすい）
+    '〜', '～', '−', '－', '‖', '∥', '—', '―', '–', '-', '¢', '￠', '£', '￡', '¬', '￢', '¥', '￥', '‾', '￣',
+    '©', '(C)', '®', '(R)', '½', '1/2', '¼', '1/4', '¾', '3/4',
+    'ゔ', 'ヴ', 'ゕ', 'ヵ', 'ゖ', 'ヶ', '𠮷', '吉',
+    // 2010年の常用漢字表で加わった字体（WindowsのShift_JISにない）は、従来の字体にする
+    '𠮟', '叱', '剝', '剥', '頰', '頬', '塡', '填',
+    // 異体字（よく使われる標準の字にする）
+    '髙', '高', '﨑', '崎', '德', '徳', '濵', '浜', '瀨', '瀬', '栁', '柳', '黑', '黒', '增', '増', '寬', '寛',
+    '敎', '教', '淸', '清', '綠', '緑', '緖', '緒', '靑', '青', '郞', '郎', '鄕', '郷', '賴', '頼', '橫', '横',
+    '悅', '悦', '薰', '薫', '羡', '羨', '甁', '瓶', '凞', '熙', '冝', '宜', '曻', '昇', '桒', '桑', '昻', '昂'
+    // 互換用の漢字（﨑以外の U+F900〜FAFF など）は、NFC の正規化で標準の字にする
+  ]);
+  // 見えない文字は消す。特別な空白は半角スペースにする。行・段落の区切りは改行にする
+  [0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0x2060, 0xFEFF, 0x00AD].forEach(function (c) { add(String.fromCharCode(c), ''); });
+  [0x00A0, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F].forEach(function (c) { add(String.fromCharCode(c), ' '); });
+  add(String.fromCharCode(0x2028), LF); add(String.fromCharCode(0x2029), LF);
+
+  var MARKS = /\p{M}/gu;
+  // 置き換え先を決める。なければ null
+  function suggest(unit, level) {
+    // キーキャップの絵文字（1️⃣ など）は、数字だけにすると意味が変わるため置き換え先なしとする
+    if (unit.indexOf(String.fromCharCode(0x20E3)) >= 0) return null;
+    var cand = [];
+    if (Object.prototype.hasOwnProperty.call(MAP, unit)) cand.push(MAP[unit]);
+    var nfc = unit.normalize('NFC');
+    cand.push(nfc);
+    // 1文字にまとまった場合は、その文字の対応表も使う（例：結合文字で書かれた文字）
+    if (Object.prototype.hasOwnProperty.call(MAP, nfc)) cand.push(MAP[nfc]);
+    var nfkc = unit.normalize('NFKC');
+    cand.push(nfkc);
+    if (Object.prototype.hasOwnProperty.call(MAP, nfkc)) cand.push(MAP[nfkc]);
+    cand.push(unit.normalize('NFD').replace(MARKS, '').normalize('NFC'));
+    for (var i = 0; i < cand.length; i++) {
+      var c = cand[i];
+      if (c === unit) continue;
+      if (c === '' && i > 0 && !Object.prototype.hasOwnProperty.call(MAP, unit)) continue; // 記号だけの文字を、対応表なしで消さない
+      if (okText(c, level)) return c;
+    }
+    return null;
+  }
+
+  var PICTO = /\p{Extended_Pictographic}/u;
+  function isPictographic(c) { return PICTO.test(String.fromCodePoint(c)); }
+  function isRegional(c) { return c >= 0x1F1E6 && c <= 0x1F1FF; }
+
+  // 前の文字とまとめて1文字として扱う文字（結合文字、異体字セレクタ、絵文字の肌の色・タグ、ZWJでつないだ次の文字）
+  function isJoiner(c) {
+    return (c >= 0xFE00 && c <= 0xFE0F) || (c >= 0xE0100 && c <= 0xE01EF) || (c >= 0x1F3FB && c <= 0x1F3FF) ||
+      (c >= 0xE0020 && c <= 0xE007F) || c === 0x20E3 || /\p{M}/u.test(String.fromCodePoint(c));
+  }
+
+  // テキストを1文字ずつ調べて、置き換える
+  function analyze(text, level, leftover) {
+    var pieces = [];   // {text, state: ''|'done'|'left'}
+    var found = {};    // 文字 → {unit, kind, count, lines, to}
+    var order = [];
+    var line = 1, i = 0, len = text.length;
+    var plain = '';
+    var stats = { total: 0, replaced: 0, left: 0, deleted: 0, geta: 0 };
+    while (i < len) {
+      var start = i;
+      var c = text.codePointAt(i);
+      i += c > 0xFFFF ? 2 : 1;
+      // 後ろにつながる文字をまとめる
+      while (i < len) {
+        var d = text.codePointAt(i);
+        if (d === 0x200D) {
+          // ZWJ：前後がどちらも絵文字のときだけ、次の絵文字までつなぐ（それ以外の ZWJ は、見えない文字として別に扱う）
+          var e = i + 1 < len ? text.codePointAt(i + 1) : -1;
+          if (!isPictographic(c) || e < 0 || !isPictographic(e)) break;
+          i += 1 + (e > 0xFFFF ? 2 : 1);
+          c = e;
+          continue;
+        }
+        if (!isJoiner(d)) break;
+        i += d > 0xFFFF ? 2 : 1;
+      }
+      // 国旗（地域を表す文字 2つ）は1文字として扱う
+      if (isRegional(c) && i < len && isRegional(text.codePointAt(i))) {
+        i += 2;
+        while (i < len && isJoiner(text.codePointAt(i))) i += text.codePointAt(i) > 0xFFFF ? 2 : 1;
+      }
+      var unit = text.slice(start, i);
+      var unitLine = line;
+      if (c === 10) line++;
+      if (okText(unit, level)) {
+        pieces.push({ text: unit, state: '' });
+        plain += unit;
+        // まとめた文字の中に改行がある場合（改行の後ろの結合文字）は、行を数える
+        for (var k = 1; k < unit.length; k++) if (unit.charCodeAt(k) === 10) line++;
+        continue;
+      }
+      for (var m = 1; m < unit.length; m++) if (unit.charCodeAt(m) === 10) line++;
+      var item = found[unit];
+      if (!item) {
+        item = found[unit] = { unit: unit, kind: kindOf(unit), count: 0, lines: [], to: suggest(unit, level) };
+        order.push(item);
+      }
+      item.count++;
+      if (item.lines[item.lines.length - 1] !== unitLine) item.lines.push(unitLine);
+      stats.total++;
+      var out;
+      if (item.to !== null) {
+        out = item.to; stats.replaced++;
+        pieces.push({ text: out, state: 'done' });
+      } else if (leftover === 'delete') {
+        out = ''; stats.deleted++;
+      } else if (leftover === 'geta') {
+        out = GETA; stats.geta++;
+        pieces.push({ text: out, state: 'done' });
+      } else {
+        out = unit; stats.left++;
+        pieces.push({ text: out, state: 'left' });
+      }
+      plain += out;
+    }
+    return { pieces: pieces, plain: plain, items: order, stats: stats };
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+
+  // 見た目の1文字（書記素）で数える。改行は数えない
+  function countChars(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+      var count = 0;
+      var it = new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text);
+      for (var s of it) {
+        if (s.segment === LF) continue;
+        count++;
+        // 半角の濁点・半濁点（ﾞ ﾟ）は、前の文字とまとめずに1文字と数える（ｽﾞ は2文字。Excel の LEN と同じ）
+        for (var j = 1; j < s.segment.length; j++) {
+          if (s.segment.charAt(j) === HALF_DAKUTEN || s.segment.charAt(j) === HALF_HANDAKUTEN) count++;
+        }
+      }
+      return count;
+    }
+    return Array.from(text).filter(function (ch) { return ch !== LF; }).length;
+  }
+
+  function codeLabel(unit) {
+    var out = [];
+    for (var i = 0; i < unit.length; i++) {
+      var c = unit.codePointAt(i);
+      if (c > 0xFFFF) i++;
+      var h = c.toString(16).toUpperCase();
+      while (h.length < 4) h = '0' + h;
+      out.push('U+' + h);
+    }
+    return out.join(' ');
+  }
+
+  // 見えない文字・空白は、一覧では名前で表示する
+  function glyphLabel(unit) {
+    var c = unit.codePointAt(0);
+    if (unit.length === 1 && MAP[unit] === '') return '<small>見えない文字</small>';
+    if (unit.length === 1 && MAP[unit] === ' ') return '<small>特別な空白</small>';
+    if (unit.length === 1 && MAP[unit] === LF) return '<small>区切り</small>';
+    if (c === 10 || c === 9 || c === 32) return '<small>結合文字</small>';
+    return escapeHtml(unit);
+  }
+
+  function toLabel(item, leftover) {
+    if (item.to === null) {
+      if (leftover === 'delete') return '<span class="none">置き換え先なし（消す）</span>';
+      if (leftover === 'geta') return '<span class="none">置き換え先なし</span> <span class="arrow">→</span><b>' + GETA + '</b>';
+      return '<span class="none">置き換え先なし（残す）</span>';
+    }
+    if (item.to === '') return '<span class="arrow">→</span>消す';
+    if (item.to === ' ') return '<span class="arrow">→</span>半角スペース';
+    if (item.to === LF) return '<span class="arrow">→</span>改行';
+    return '<span class="arrow">→</span><b>' + escapeHtml(item.to) + '</b>';
+  }
+
+  function linesLabel(item) {
+    var shown = item.lines.slice(0, 3).map(fmt).join('・') + '行目';
+    if (item.lines.length > 3) shown += ' ほか' + fmt(item.lines.length - 3) + '行';
+    return shown;
+  }
+
+  var sourceText = document.getElementById('sourceText');
+  var sourceCount = document.getElementById('sourceCount');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+  var foundEmpty = document.getElementById('foundEmpty');
+  var foundItems = document.getElementById('foundItems');
+
+  var lastResult = '';
+  var copyTimer = null;
+  var available = true;
+
+  function getRadio(name, fallback) {
+    var checked = document.querySelector('input[name="' + name + '"]:checked');
+    return checked ? checked.value : fallback;
+  }
+
+  function showEmptyList(message) {
+    foundItems.hidden = true;
+    foundItems.innerHTML = '';
+    foundEmpty.hidden = false;
+    foundEmpty.textContent = message;
+  }
+
+  function update() {
+    var text = sourceText.value;
+    sourceCount.textContent = fmt(countChars(text)) + '文字';
+    if (!available) return;
+    if (text === '') {
+      lastResult = '';
+      preview.textContent = '「調べたいテキスト」の欄に入力すると、ここに結果が表示されます。';
+      preview.classList.add('empty');
+      summary.textContent = '';
+      summary.className = 'summary';
+      copyButton.disabled = true;
+      showEmptyList('テキストを入力すると、ここに見つかった文字と置き換え先の一覧が表示されます。');
+      return;
+    }
+    var level = getRadio('level', 'izon');
+    var leftover = getRadio('leftover', 'keep');
+    var r = analyze(text, level, leftover);
+    lastResult = r.plain;
+    preview.classList.remove('empty');
+    if (r.plain.length > PREVIEW_LIMIT) {
+      preview.textContent = r.plain;
+    } else {
+      var html = '';
+      r.pieces.forEach(function (p) {
+        if (p.state === '') html += escapeHtml(p.text);
+        else if (p.state === 'left') html += '<mark class="left">' + escapeHtml(p.text) + '</mark>';
+        else html += '<mark>' + escapeHtml(p.text) + '</mark>';
+      });
+      preview.innerHTML = html;
+      if (r.plain === '') {
+        // 空になった原因に合わせて案内する（「消す」で消えたか、見えない文字だけだったか）
+        preview.textContent = r.stats.deleted > 0
+          ? '（結果は空です。入力した文字がすべて消えたため、コピーできません。「置き換え先がない文字」で「残す」か「〓にする」を選ぶと、文字が残ります）'
+          : '（結果は空です。入力にあったのは見えない文字だけで、すべて消しました。コピーするものはありません）';
+        preview.classList.add('empty');
+      }
+    }
+
+    var st = r.stats;
+    var target = level === 'sjis' ? 'Shift_JISにない文字' : '機種依存文字やShift_JISにない文字';
+    if (st.total === 0) {
+      summary.textContent = target + 'は見つかりませんでした。このまま使えます。';
+      summary.className = 'summary';
+      showEmptyList(target + 'は見つかりませんでした。');
+    } else {
+      var msg = '問題のある文字が' + fmt(r.items.length) + '種類・' + fmt(st.total) + '個見つかりました。';
+      if (st.replaced === st.total) {
+        msg += st.total === 1 ? '1個を置き換えました。' : fmt(st.replaced) + '個をすべて置き換えました。';
+        summary.className = 'summary';
+      } else {
+        var parts = [];
+        if (st.replaced > 0) parts.push(fmt(st.replaced) + '個を置き換え');
+        if (st.deleted > 0) parts.push(fmt(st.deleted) + '個は置き換え先がないため消し');
+        if (st.geta > 0) parts.push(fmt(st.geta) + '個は置き換え先がないため「〓」にし');
+        if (st.left > 0) parts.push(fmt(st.left) + '個は置き換え先がないため残し');
+        msg += parts.join('、') + 'ました。';
+        if (st.left > 0) msg += '残った文字は下の一覧で確かめてください。';
+        summary.className = st.left > 0 ? 'summary found' : 'summary';
+      }
+      summary.textContent = msg;
+      foundEmpty.hidden = true;
+      foundItems.hidden = false;
+      foundItems.innerHTML = r.items.slice(0, LIST_LIMIT).map(function (item) {
+        return '<li><span class="glyph">' + glyphLabel(item.unit) + '</span>' +
+          '<span class="info"><span class="kind k-' + item.kind + '">' + KIND_LABEL[item.kind] + '</span>' +
+          '<span class="code">' + codeLabel(item.unit) + '</span>' +
+          '<span class="where">' + fmt(item.count) + '個（' + linesLabel(item) + '）</span></span>' +
+          '<span class="to">' + toLabel(item, leftover) + '</span></li>';
+      }).join('') + (r.items.length > LIST_LIMIT ? '<li class="more">ほかに' + fmt(r.items.length - LIST_LIMIT) + '種類あります（一覧には、最初に見つかった' + fmt(LIST_LIMIT) + '種類までを表示します。結果にはすべて反映しています）。</li>' : '');
+    }
+    if (r.plain.length > PREVIEW_LIMIT) {
+      summary.textContent += ' ※文字数が多いため、結果の色付けは省略しています。';
+    }
+    // 結果が空（すべて消えた）のときは、コピーするものがないので押せないようにする
+    copyButton.disabled = r.plain === '';
+  }
+
+  function setStatus(message, isError) {
+    status.textContent = message;
+    status.classList.toggle('error', !!isError);
+  }
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+
+  function selectPreview() {
+    var range = document.createRange();
+    range.selectNodeContents(preview);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectPreview();
+    setStatus('コピーできませんでした。結果の文字を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (sourceText.value === '') return;
+    var done = function () {
+      setStatus('結果をコピーしました（' + fmt(countChars(text)) + '文字）。');
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  var SAMPLE = [
+    '①日時：10月20日（月）〜21日（火）',
+    '②会場：㈱サンプル 3階会議室',
+    '③持ち物：資料一式 ✨'
+  ];
+
+  sampleButton.addEventListener('click', function () {
+    sourceText.value = SAMPLE.join(LF);
+    update();
+    resetCopyButton();
+    setStatus('例を入れました。結果と「見つかった文字」の一覧に、置き換えた文字が表示されます。');
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    update();
+    resetCopyButton();
+    setStatus('入力と結果を消しました。「調べたいテキスト」の欄に、新しいテキストを貼り付けてください。');
+  });
+
+  sourceText.addEventListener('input', function () {
+    update();
+    resetCopyButton();
+    setStatus('');
+  });
+
+  function onSettingChange(message) {
+    update();
+    resetCopyButton();
+    setStatus(message + (sourceText.value === '' ? 'テキストを入力すると、この設定で結果が表示されます。' : '結果を更新しました。'));
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="level"], input[name="leftover"]'), function (input) {
+    input.addEventListener('change', function () {
+      var legend = input.closest('fieldset').querySelector('legend').textContent;
+      onSettingChange('「' + legend + '」を「' + input.nextElementSibling.textContent + '」にしました。');
+    });
+  });
+
+  try {
+    buildSets();
+  } catch (e) {
+    available = false;
+    summary.textContent = 'このブラウザは Shift_JIS の文字の一覧を作れないため、このツールを使えません。新しい Chrome・Edge・Safari・Firefox で開き直してください。';
+    summary.className = 'summary error';
+    copyButton.disabled = true;
+    sampleButton.disabled = true;
+  }
+  update();
+})();
+</script>
+</body>
+</html>
