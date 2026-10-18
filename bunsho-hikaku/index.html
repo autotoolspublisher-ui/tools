@@ -382,7 +382,7 @@
   var MAX_D_CHARS = 3000;   // 文字の比較で同じ
   var LIST_LIMIT = 300;     // 一覧に表示する変更点の上限（コピーにはすべて含める）
   var SHOW_LIMIT = 200;
-  var COLOR_LIMIT = 1000;   // 比べた結果の欄で色分けする変更の上限（多すぎると画面が固まるため。それより後ろは色なしで表示）     // 一覧の1項目に表示する文字数の上限（コピーにはすべて含める）
+  var COLOR_LIMIT = 500;   // 比べた結果の欄で色分けする変更の上限（多すぎると画面が固まるため。それより後ろは色なしで表示）     // 一覧の1項目に表示する文字数の上限（コピーにはすべて含める）
 
   // ---- 文字（見た目の1文字）に分ける ----
   var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
@@ -684,7 +684,20 @@
   // alignLines と同じ並べ方を、対角線から BAND 行以内のマスだけで計算する（大きなかたまり用）
   var BAND = 200;
   function alignBanded(m, n, simAt) {
-    var band = Math.max(BAND, Math.ceil(n / Math.max(m, 1)) + Math.ceil(m / Math.max(n, 1)) + 50);
+    // 行数の差の分だけ、並べ方は対角線から離れうるので、その分も帯に含める
+    var band = Math.max(BAND, Math.abs(n - m) + BAND, Math.ceil(n / Math.max(m, 1)) + Math.ceil(m / Math.max(n, 1)) + 50);
+    var r = alignBandOnce(m, n, simAt, band);
+    // 並べ方が帯の端を通った場合は、帯の外によりよい並べ方があるかもしれないので、帯を2倍にして計算し直す。
+    // 得点が上がらなくなったら、または計算するマスが多くなりすぎたら（画面が固まらないように）やめる
+    while (r.hitEdge && 2 * band + 1 < m + n + 1 && (m + 1) * (4 * band + 1) <= 12000000) {
+      var r2 = alignBandOnce(m, n, simAt, band * 2);
+      if (!(r2.score > r.score + 1e-9)) break;
+      r = r2;
+      band *= 2;
+    }
+    return r.out;
+  }
+  function alignBandOnce(m, n, simAt, band) {
     var W = 2 * band + 1;
     var lo = function (i) { return Math.round(i * n / m) - band; };   // 行 i で計算する列の始まり（j = lo .. lo + W - 1）
     var dir = new Uint8Array((m + 1) * W);   // 1：組、2：消えた行、3：加わった行
@@ -715,15 +728,20 @@
       }
       var t = prev; prev = cur; cur = t;
     }
+    var finalScore = prev[n - lo(m)];   // 最後の行の計算結果（prev に入っている）
     var out = [];
+    var hitEdge = false;
     i = m; j = n;
     while (i > 0 || j > 0) {
-      var dd = (i === 0) ? 3 : (j === 0 ? 2 : dir[i * W + (j - lo(i))]);
+      var kk = j - lo(i);
+      // 並べ方が帯の端を通ったか
+      if ((kk === 0 && lo(i) > 0) || (kk === W - 1 && lo(i) + W - 1 < n)) hitEdge = true;
+      var dd = (i === 0) ? 3 : (j === 0 ? 2 : dir[i * W + kk]);
       if (dd === 1) { out.push({ t: 'pair', i: i - 1, j: j - 1 }); i--; j--; }
       else if (dd === 2) { out.push({ t: '-', i: i - 1 }); i--; }
       else { out.push({ t: '+', j: j - 1 }); j--; }
     }
-    return out.reverse();
+    return { out: out.reverse(), hitEdge: hitEdge, score: finalScore };
   }
   function toSeq(e, dl, il) {
     if (e.t === 'pair') return { t: 'pair', a: dl[e.i], b: il[e.j] };
