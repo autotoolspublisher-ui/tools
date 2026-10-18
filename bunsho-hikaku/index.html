@@ -157,6 +157,7 @@
   .legend-line .sw-del { background: var(--del-bg); box-shadow: 0 0 0 1px var(--del-line); }
   .legend-line .sw-ins { background: var(--ins-bg); box-shadow: 0 0 0 1px var(--ins-line); }
   .preview { min-height: 120px; max-height: 480px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.9 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .overflow-note { margin: 0 0 8px; color: var(--warn-ink); font-size: .9rem; font-weight: 600; }
   .preview.empty { color: var(--muted); font-family: inherit; line-height: 1.65; }
   .preview del, .preview ins { border-radius: 3px; padding: 1px 0; }
   .preview del { background: var(--del-bg); color: var(--del-ink); text-decoration: line-through; text-decoration-thickness: 1px; box-shadow: 0 0 0 1px var(--del-line); }
@@ -267,6 +268,7 @@
 
     <section class="result" aria-labelledby="resultTitle">
       <div class="field-head"><h2 id="resultTitle">比べた結果</h2><span class="legend-line"><span><i class="sw-del"></i>消えたところ</span><span><i class="sw-ins"></i>加わったところ</span></span></div>
+      <p id="overflowNote" class="overflow-note" hidden></p>
       <div id="preview" class="preview empty" role="region" aria-labelledby="resultTitle" tabindex="0">「修正前」と「修正後」の欄に文章を入れると、ここに違いが色分けで表示されます。</div>
       <p class="note" id="wsNote">空白や改行の違いは、␣（半角スペース）・□（全角スペース）・⇥（タブ）・↵（改行）・⍽（改行しない空白などの特別な空白）・◌（幅のない空白などの見えない文字）の印で表示します。</p>
     </section>
@@ -379,12 +381,16 @@
   var MAX_D_LINES = 3000;   // 行の比較で、違いがこれより多いときはまとめて「書き換え」にする（画面が固まらないように）
   var MAX_D_CHARS = 3000;   // 文字の比較で同じ
   var LIST_LIMIT = 300;     // 一覧に表示する変更点の上限（コピーにはすべて含める）
-  var SHOW_LIMIT = 200;     // 一覧の1項目に表示する文字数の上限（コピーにはすべて含める）
+  var SHOW_LIMIT = 200;
+  var COLOR_LIMIT = 1000;   // 比べた結果の欄で色分けする変更の上限（多すぎると画面が固まるため。それより後ろは色なしで表示）     // 一覧の1項目に表示する文字数の上限（コピーにはすべて含める）
 
   // ---- 文字（見た目の1文字）に分ける ----
   var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
   function isHalfKana(ch) { var c = ch.charCodeAt(0); return c >= 0xFF66 && c <= 0xFF9D; }
+  // 結合文字・異体字セレクタ・絵文字・サロゲートなど、前後の文字とまとまる文字を含まない、よく使う文字だけの文字列（速く分けられる）
+  var SIMPLE_TEXT = /^[\t\n\x20-\x7E\xA0-\xFF\u2010-\u2027\u2030-\u205E\u2190-\u21FF\u2460-\u24FF\u2500-\u25FF\u3000-\u3029\u3030-\u3096\u309B-\u30FF\u4E00-\u9FFF\uFF01-\uFF9D]*$/;
   function graphemes(text) {
+    if (SIMPLE_TEXT.test(text)) return text.split('');
     var out = [];
     if (segmenter) {
       for (var s of segmenter.segment(text)) {
@@ -590,7 +596,7 @@
       var d = '', n = '';
       while (i < sub.length && sub[i].t !== '=') { if (sub[i].t === '-') d += sub[i].s; else n += sub[i].s; i++; }
       if (d && n && stripMarks(d) === stripMarks(n)) {
-        out = out.concat(diffUnits(graphemes(d), graphemes(n), MAX_D_CHARS, info));
+        Array.prototype.push.apply(out, diffUnits(graphemes(d), graphemes(n), MAX_D_CHARS, info));
       } else {
         if (d) out.push({ t: '-', s: d });
         if (n) out.push({ t: '+', s: n });
@@ -690,7 +696,7 @@
         // 似ていない行どうし（weak）は、行全体を書き換えたものとする
         var sub = (unit === 'line' || x.weak) ? [{ t: '-', s: x.a }, { t: '+', s: x.b }] : diffChars(x.a, x.b, info);
         sub.forEach(function (o) { if (o.t !== '=') o.g = g; });
-        out = out.concat(sub);
+        for (var q = 0; q < sub.length; q++) out.push(sub[q]);
       } else {
         if (prevSingle === null) prevSingle = ++groupSeq;
         out.push({ t: x.t, s: x.s, g: prevSingle });
@@ -728,7 +734,8 @@
       var del = '', ins = '';
       while (i < lineOps.length && lineOps[i].t !== '=') { if (lineOps[i].t === '-') del += lineOps[i].s; else ins += lineOps[i].s; i++; }
       if (del && ins) {
-        ops = ops.concat(diffBlock(del, ins, info, unit));
+        var blk = diffBlock(del, ins, info, unit);
+        for (var q = 0; q < blk.length; q++) ops.push(blk[q]);
       } else {
         if (del) ops.push({ t: '-', s: del });
         if (ins) ops.push({ t: '+', s: ins });
@@ -787,9 +794,10 @@
       var op = ops[i];
       var atLineStart = out.length === 0 || out[out.length - 1].s.slice(-1) === LF;
       var atLineEnd = e >= ops.length || ops[e].s.charAt(0) === LF;
-      var lines = null, lead = false;
+      var lines = null, lead = false, noTrail = false;   // noTrail：最後の行に改行がない（文章の終わりまで）
       if (atLineStart && op.s.slice(-1) === LF && countLF(op.s) > 1) { lines = op.s.slice(0, -1).split(LF); }
       else if (atLineEnd && op.s.charAt(0) === LF && countLF(op.s) > 1) { lines = op.s.slice(1).split(LF); lead = true; }
+      else if (atLineStart && atLineEnd && op.s.slice(-1) !== LF && countLF(op.s) > 0) { lines = op.s.split(LF); noTrail = true; }
       if (!lines) { out.push(op); i++; continue; }
       // 続いた空の行は1つにまとめる
       var pieces = [];
@@ -797,9 +805,10 @@
         var last = pieces[pieces.length - 1];
         if (ln === '' && last && last.every(function (x) { return x === ''; })) last.push(ln); else pieces.push([ln]);
       });
-      pieces.forEach(function (p) {
+      pieces.forEach(function (p, idx) {
         var text = p.join(LF);
-        out.push({ t: op.t, s: lead ? LF + text : text + LF, g: ++groupSeq });
+        var noLF = noTrail && idx === pieces.length - 1;
+        out.push({ t: op.t, s: lead ? LF + text : (noLF ? text : text + LF), g: ++groupSeq });
       });
       i++;
     }
@@ -856,11 +865,13 @@
       } else {
         if (text.length > 1 && text.charAt(0) === LF && atLineEnd) { text = text.slice(1); startLine++; item.wholeLine = true; }
         else if (text.length > 1 && text.slice(-1) === LF && atLineStart) { text = text.slice(0, -1); item.wholeLine = true; }
+        else if (atLineStart && atLineEnd) { item.wholeLine = true; }   // 行の始まりから行（文章）の終わりまで
         // 行を丸ごと消した場合は修正後にその行がないため、修正前の行番号で示す。それ以外は修正後の行番号
         var start = item.wholeLine ? startLine : startB;
         if (del) item.del = text; else item.ins = text;
         item.from = start;
-        item.to = start + countLF(text);
+        // 範囲の終わりは、示す側の文章の行で数える（行の途中を消した場合は、修正後では1行の中）
+        item.to = start + ((del && !item.wholeLine) ? 0 : countLF(text));
         item.side = (del && item.wholeLine) ? 'before' : 'after';
       }
       items.push(item);
@@ -957,7 +968,7 @@
     return '<li><span class="n">' + n + '.</span><span class="where"><span class="kind k-' + item.kind + '">' + KIND_LABEL[item.kind] + '</span>' + whereLabel(item) + '</span><span class="what">' + what + '</span></li>';
   }
 
-  function previewHtml(ops) {
+  function previewHtml(ops, unit) {
     var html = '';
     var n = 0;
     var i = 0;
@@ -965,11 +976,19 @@
       var op = ops[i];
       if (op.t === '=') { html += escapeHtml(op.s); i++; continue; }
       n++;
+      if (n > COLOR_LIMIT) {
+        // 上限より後ろの変更は、修正後の文字だけを色なしで表示する
+        var e2 = runEnd(ops, i);
+        for (; i < e2; i++) if (ops[i].t === '+') html += escapeHtml(ops[i].s);
+        continue;
+      }
       var first = true;
       var e = runEnd(ops, i);
       while (i < e) {
         var tag = ops[i].t === '-' ? 'del' : 'ins';
         html += '<' + tag + (first ? ' class="num" data-n="' + n + '"' : '') + '>' + markWsHtml(ops[i].s) + '</' + tag + '>';
+        // 行ごとの比較で、改行のない最後の行を書き換えた場合も、消えた行と加わった行を別の行に表示する（見た目だけの改行）
+        if (unit === 'line' && ops[i].t === '-' && i + 1 < e && ops[i + 1].t === '+' && ops[i].s.slice(-1) !== LF) html += LF;
         first = false;
         i++;
       }
@@ -1015,6 +1034,7 @@
   var changesEmpty = document.getElementById('changesEmpty');
   var changeItems = document.getElementById('changeItems');
   var copyFallback = document.getElementById('copyFallback');
+  var overflowNote = document.getElementById('overflowNote');
 
   var EMPTY_LIST = '文章を入れると、ここに変わったところの一覧が表示されます。行番号は修正後の文章の行です（消えた行だけは修正前の行）。';
   var lastCopy = '';
@@ -1027,6 +1047,7 @@
   }
 
   function showEmpty(previewMessage, listMessage) {
+    overflowNote.hidden = true;
     preview.textContent = previewMessage;
     preview.classList.add('empty');
     changeItems.hidden = true;
@@ -1074,7 +1095,7 @@
     var r = compare(before, after, getUnit());
     var items = buildChanges(r.ops);
     preview.classList.remove('empty');
-    preview.innerHTML = previewHtml(r.ops);
+    preview.innerHTML = previewHtml(r.ops, getUnit());
 
     var counts = { mod: 0, add: 0, del: 0 };
     items.forEach(function (it) { counts[it.kind]++; });
@@ -1085,7 +1106,11 @@
     var diffChars = ca - cb;
     var msg = '違いが' + fmt(items.length) + 'か所あります（' + parts.join('・') + '）。文字数は ' + fmt(cb) + ' → ' + fmt(ca) + '文字' +
       (diffChars === 0 ? '（同じ）' : '（' + (diffChars > 0 ? '+' : '−') + fmt(Math.abs(diffChars)) + '）') + 'です。';
-    if (r.tooMany) msg += '違いが多いため、一部はまとめて「書き換え」として表示しています。細かく見るには、文章を段落ごとなどに分けて比べてください。';
+    var notes = [];
+    if (r.tooMany) notes.push('違いが多いため、一部はまとめて「書き換え」として表示しています。細かく見るには、文章を段落ごとなどに分けて比べてください。');
+    if (items.length > COLOR_LIMIT) notes.push('違いが多いため、この欄の色分けは最初の' + fmt(COLOR_LIMIT) + 'か所までです（それより後ろは修正後の文章を色なしで表示します）。「変更点をコピー」では、すべての変更点をコピーします。');
+    overflowNote.textContent = notes.join('');
+    overflowNote.hidden = notes.length === 0;
     summary.textContent = msg;
 
     changesEmpty.hidden = true;
@@ -1146,6 +1171,11 @@
     try { copyFallback.focus({ preventScroll: true }); } catch (e) { /* 古いブラウザ */ }
     copyFallback.select();
     setStatus('コピーできませんでした。すぐ下の欄の、選んだ状態の文字を Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+    // 案内とコピー用の欄が画面の外にあるとき（スマートフォンで、ボタンを画面の下端で押した場合など）は、欄が見える位置まで動かす
+    var rect = copyFallback.getBoundingClientRect();
+    if (rect.top < 0 || rect.top + 60 > window.innerHeight) {
+      try { copyFallback.scrollIntoView({ block: 'center' }); } catch (e) { /* 古いブラウザ */ }
+    }
   }
 
   copyButton.addEventListener('click', function () {
