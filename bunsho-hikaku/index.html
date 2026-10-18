@@ -389,8 +389,19 @@
   function isHalfKana(ch) { var c = ch.charCodeAt(0); return c >= 0xFF66 && c <= 0xFF9D; }
   // 結合文字・異体字セレクタ・絵文字・サロゲートなど、前後の文字とまとまる文字を含まない、よく使う文字だけの文字列（速く分けられる）
   var SIMPLE_TEXT = /^[\t\n\x20-\x7E\xA0-\xFF\u2010-\u2027\u2030-\u205E\u2190-\u21FF\u2460-\u24FF\u2500-\u25FF\u3000-\u3029\u3030-\u3096\u309B-\u30FF\u4E00-\u9FFF\uFF01-\uFF9D]*$/;
+  var gCache = new Map();   // 比べるたびに消す
   function graphemes(text) {
     if (SIMPLE_TEXT.test(text)) return text.split('');
+    if (text.length <= 400) {
+      var hit = gCache.get(text);
+      if (hit) return hit.slice();
+      var res = graphemesSlow(text);
+      gCache.set(text, res);
+      return res.slice();
+    }
+    return graphemesSlow(text);
+  }
+  function graphemesSlow(text) {
     var out = [];
     if (segmenter) {
       for (var s of segmenter.segment(text)) {
@@ -615,41 +626,64 @@
     return n;
   }
 
-  // 行の似ている度合い（2文字ずつの組の重なり。0〜1）
+  // 行の似ている度合い（2文字ずつの組の重なり。0〜1）。組は番号にして並べておき、速く比べる
+  var bigramIds = new Map();   // 比べるたびに消す
   function bigrams(s) {
     var g = graphemes(s.charAt(s.length - 1) === LF ? s.slice(0, -1) : s);
-    var m = new Map();
-    if (g.length === 1) { m.set(g[0], 1); return { map: m, size: 1 }; }
-    for (var i = 0; i + 1 < g.length; i++) { var k = g[i] + g[i + 1]; m.set(k, (m.get(k) || 0) + 1); }
-    return { map: m, size: Math.max(g.length - 1, 0) };
+    var keys = [];
+    if (g.length === 1) keys.push(g[0]);
+    for (var i = 0; i + 1 < g.length; i++) keys.push(g[i] + g[i + 1]);
+    var arr = new Int32Array(keys.length);
+    for (var k = 0; k < keys.length; k++) {
+      var id = bigramIds.get(keys[k]);
+      if (id === undefined) { id = bigramIds.size; bigramIds.set(keys[k], id); }
+      arr[k] = id;
+    }
+    arr.sort();
+    return arr;
   }
   function similarity(x, y) {
-    if (x.size === 0 || y.size === 0) return 0;
-    var common = 0;
-    x.map.forEach(function (cnt, k) { var o = y.map.get(k); if (o) common += Math.min(cnt, o); });
-    return 2 * common / (x.size + y.size);
+    if (x.length === 0 || y.length === 0) return 0;
+    var i = 0, j = 0, common = 0;
+    while (i < x.length && j < y.length) {
+      if (x[i] === y[j]) { common++; i++; j++; }
+      else if (x[i] < y[j]) i++;
+      else j++;
+    }
+    return 2 * common / (x.length + y.length);
   }
   var PAIR_MIN = 0.2;
 
-  // 行が多いかたまりは、前から順に、似ている行を近く（WINDOW 行以内）で探して組にする（行数に比例する時間で済む）
-  var WINDOW = 8;
-  function pairGreedy(dl, il, db, ib) {
-    var seq = [], i = 0, j = 0, m = dl.length, n = il.length;
-    var cache = new Map();
-    var sim = function (x, y) { var key = x * (n + 1) + y; if (!cache.has(key)) cache.set(key, similarity(db[x], ib[y])); return cache.get(key); };
-    while (i < m && j < n) {
-      if (sim(i, j) >= PAIR_MIN) { seq.push({ t: 'pair', a: dl[i], b: il[j] }); i++; j++; continue; }
-      // 近くに、よく似た行（0.5以上）があれば、そこまでの行を「加わった」「消えた」とする
-      var found = false;
-      for (var k = 1; k <= WINDOW && !found; k++) {
-        if (j + k < n && sim(i, j + k) >= 0.5) { for (var x = 0; x < k; x++) seq.push({ t: '+', s: il[j + x] }); j += k; found = true; }
-        else if (i + k < m && sim(i + k, j) >= 0.5) { for (var y = 0; y < k; y++) seq.push({ t: '-', s: dl[i + y] }); i += k; found = true; }
+  // 行の並べ方を決める（順番を保ったまま、似ている行どうしの組の似ている度合いの合計が最大になるように）。
+  // 返す並び：{t:'pair', i, j} / {t:'-', i} / {t:'+', j}
+  var CHUNK = 80;
+  function ci0(start, end) { return start + Math.ceil((end - start) / 2); }
+  function alignLines(i0, i1, j0, j1, simAt) {
+    var m = i1 - i0, n = j1 - j0, i, j;
+    var score = [];
+    for (i = 0; i <= m; i++) score.push(new Float64Array(n + 1));
+    for (i = 1; i <= m; i++) {
+      for (j = 1; j <= n; j++) {
+        var best = Math.max(score[i - 1][j], score[i][j - 1]);
+        var s = simAt(i0 + i - 1, j0 + j - 1);
+        if (s >= PAIR_MIN && score[i - 1][j - 1] + s > best) best = score[i - 1][j - 1] + s;
+        score[i][j] = best;
       }
-      if (!found) { seq.push({ t: 'pair', a: dl[i], b: il[j], weak: true }); i++; j++; }
     }
-    for (; i < m; i++) seq.push({ t: '-', s: dl[i] });
-    for (; j < n; j++) seq.push({ t: '+', s: il[j] });
-    return seq;
+    var out = [];
+    i = m; j = n;
+    while (i > 0 || j > 0) {
+      var sv = (i > 0 && j > 0) ? simAt(i0 + i - 1, j0 + j - 1) : 0;
+      if (i > 0 && j > 0 && sv >= PAIR_MIN && score[i][j] === score[i - 1][j - 1] + sv) { out.push({ t: 'pair', i: i0 + i - 1, j: j0 + j - 1 }); i--; j--; }
+      else if (i > 0 && (j === 0 || score[i][j] === score[i - 1][j])) { out.push({ t: '-', i: i0 + i - 1 }); i--; }
+      else { out.push({ t: '+', j: j0 + j - 1 }); j--; }
+    }
+    return out.reverse();
+  }
+  function toSeq(e, dl, il) {
+    if (e.t === 'pair') return { t: 'pair', a: dl[e.i], b: il[e.j] };
+    if (e.t === '-') return { t: '-', s: dl[e.i] };
+    return { t: '+', s: il[e.j] };
   }
 
   // 書き換えられた行のかたまり（消えた行と加わった行）の中で、似ている行どうしを組にして比べる。
@@ -663,28 +697,28 @@
     var m = dl.length, n = il.length;
     var db = dl.map(bigrams), ib = il.map(bigrams);
     var seq, i, j;
-    if (m * n > 40000) {
-      seq = pairGreedy(dl, il, db, ib);
+    var simAt = function (x, y) { return similarity(db[x], ib[y]); };
+    if (m * n <= 40000) {
+      seq = alignLines(0, m, 0, n, simAt).map(function (e) { return toSeq(e, dl, il); });
     } else {
-      var score = [], sim = [];
-      for (i = 0; i <= m; i++) score.push(new Float64Array(n + 1));
-      for (i = 0; i < m; i++) { sim.push(new Float64Array(n)); for (j = 0; j < n; j++) sim[i][j] = similarity(db[i], ib[j]); }
-      for (i = 1; i <= m; i++) {
-        for (j = 1; j <= n; j++) {
-          var best = Math.max(score[i - 1][j], score[i][j - 1]);
-          var s = sim[i - 1][j - 1];
-          if (s >= PAIR_MIN && score[i - 1][j - 1] + s > best) best = score[i - 1][j - 1] + s;
-          score[i][j] = best;
-        }
-      }
+      // 大きなかたまりは、CHUNK 行ずつの窓で並べ方を決め、窓の前半だけを確定して次の窓に進む（行数に比例する時間で、前から順に組にするよりずれにくい）
       seq = [];
-      i = m; j = n;
-      while (i > 0 || j > 0) {
-        if (i > 0 && j > 0 && sim[i - 1][j - 1] >= PAIR_MIN && score[i][j] === score[i - 1][j - 1] + sim[i - 1][j - 1]) { seq.push({ t: 'pair', a: dl[i - 1], b: il[j - 1] }); i--; j--; }
-        else if (i > 0 && (j === 0 || score[i][j] === score[i - 1][j])) { seq.push({ t: '-', s: dl[i - 1] }); i--; }
-        else { seq.push({ t: '+', s: il[j - 1] }); j--; }
+      var ci = 0, cj = 0;
+      while (ci < m || cj < n) {
+        var ei = Math.min(m, ci + CHUNK), ej = Math.min(n, cj + CHUNK);
+        var part = alignLines(ci, ei, cj, ej, simAt);
+        var last = ei === m && ej === n;
+        // 窓の前半（どちらかの側が窓の真ん中に達するまで）だけを確定する
+        var midI = ci0(ci, ei), midJ = ci0(cj, ej), hasI = ei > ci, hasJ = ej > cj;
+        for (var q = 0; q < part.length; q++) {
+          var e = part[q];
+          if (!last && ((hasI && ci >= midI) || (hasJ && cj >= midJ))) break;
+          seq.push(toSeq(e, dl, il));
+          if (e.t !== '+') ci++;
+          if (e.t !== '-') cj++;
+        }
+        if (last) break;
       }
-      seq.reverse();
     }
     // 組ごとに別の変更として数えるよう、組の番号（g）を付ける。続けて消えた行・加わった行は1つの組にまとめる
     var out = [];
@@ -693,8 +727,7 @@
       if (x.t === 'pair') {
         prevSingle = null;
         var g = ++groupSeq;
-        // 似ていない行どうし（weak）は、行全体を書き換えたものとする
-        var sub = (unit === 'line' || x.weak) ? [{ t: '-', s: x.a }, { t: '+', s: x.b }] : diffChars(x.a, x.b, info);
+        var sub = unit === 'line' ? [{ t: '-', s: x.a }, { t: '+', s: x.b }] : diffChars(x.a, x.b, info);
         sub.forEach(function (o) { if (o.t !== '=') o.g = g; });
         for (var q = 0; q < sub.length; q++) out.push(sub[q]);
       } else {
@@ -719,7 +752,7 @@
   // 比べる。before, after は改行を LF にそろえた文字列
   function compare(before, after, unit) {
     var info = { overflow: false };
-    tlenCache = new Map(); wordCache = new Map();
+    tlenCache = new Map(); wordCache = new Map(); gCache = new Map(); bigramIds = new Map();
     // どちらにも最後に改行を1つ足して比べ（最後の行に改行がないことによる見かけの違いを防ぐ）、最後に取り除く
     var a = (before + LF).split(LF); a.pop();
     var b = (after + LF).split(LF); b.pop();
@@ -797,7 +830,7 @@
       var lines = null, lead = false, noTrail = false;   // noTrail：最後の行に改行がない（文章の終わりまで）
       if (atLineStart && op.s.slice(-1) === LF && countLF(op.s) > 1) { lines = op.s.slice(0, -1).split(LF); }
       else if (atLineEnd && op.s.charAt(0) === LF && countLF(op.s) > 1) { lines = op.s.slice(1).split(LF); lead = true; }
-      else if (atLineStart && atLineEnd && op.s.slice(-1) !== LF && countLF(op.s) > 0) { lines = op.s.split(LF); noTrail = true; }
+      else if (atLineStart && e >= ops.length && op.s.slice(-1) !== LF && countLF(op.s) > 0) { lines = op.s.split(LF); noTrail = true; }
       if (!lines) { out.push(op); i++; continue; }
       // 続いた空の行は1つにまとめる
       var pieces = [];
@@ -836,8 +869,8 @@
       if (del && ins) {
         item.kind = 'mod';
         // 両方の先頭（または末尾）が改行なら、その改行は変わっていないので表示から除く
-        if (del.charAt(0) === LF && ins.charAt(0) === LF && del.length > 1 && ins.length > 1) { item.del = del.slice(1); item.ins = ins.slice(1); startB++; }
-        else if (del.slice(-1) === LF && ins.slice(-1) === LF && del.length > 1 && ins.length > 1) { item.del = del.slice(0, -1); item.ins = ins.slice(0, -1); }
+        if (del.charAt(0) === LF && ins.charAt(0) === LF) { item.del = del.slice(1); item.ins = ins.slice(1); startB++; }
+        else if (del.slice(-1) === LF && ins.slice(-1) === LF) { item.del = del.slice(0, -1); item.ins = ins.slice(0, -1); }
         item.from = startB;
         item.to = startB + countLF(item.ins);
         item.side = 'after';
@@ -865,7 +898,7 @@
       } else {
         if (text.length > 1 && text.charAt(0) === LF && atLineEnd) { text = text.slice(1); startLine++; item.wholeLine = true; }
         else if (text.length > 1 && text.slice(-1) === LF && atLineStart) { text = text.slice(0, -1); item.wholeLine = true; }
-        else if (atLineStart && atLineEnd) { item.wholeLine = true; }   // 行の始まりから行（文章）の終わりまで
+        else if (atLineStart && i >= ops.length) { item.wholeLine = true; }   // 行の始まりから文章の終わりまで（行の中身だけを消して空の行が残る場合は含めない）
         // 行を丸ごと消した場合は修正後にその行がないため、修正前の行番号で示す。それ以外は修正後の行番号
         var start = item.wholeLine ? startLine : startB;
         if (del) item.del = text; else item.ins = text;
