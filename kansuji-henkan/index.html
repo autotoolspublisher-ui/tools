@@ -1,0 +1,1038 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漢数字変換 - 数字と漢数字をまとめて変換｜AIツールひろば</title>
+  <meta name="description" content="文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換する無料ツールです。縦書きの原稿や書類づくりに。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/kansuji-henkan/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="漢数字変換 - 数字と漢数字をまとめて変換｜AIツールひろば">
+  <meta property="og:description" content="文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換する無料ツールです。縦書きの原稿や書類づくりに。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/kansuji-henkan/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/kansuji-henkan.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "漢数字変換",
+    "description": "文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換する無料ツールです。縦書きの原稿や書類づくりに。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/kansuji-henkan/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "漢数字変換",
+        "item": "https://autotoolspublisher-ui.github.io/tools/kansuji-henkan/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "「一字ずつ」と「位取り」は何が違いますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「一字ずつ」は数字を1文字ずつ漢数字にします（2026→二〇二六、125→一二五）。「位取り」は十・百・千・万を使って書きます（2026→二千二十六、125→百二十五）。位取りでは、十・百・千の前の「一」は書かず（1200→千二百）、万・億・兆・京の前の「一」は書きます（10000→一万）。先頭が0の数（007）、21桁以上の数、電話番号や番地のように「-」「ー」や括弧で3つ以上つながった数字（03-1234-5678、03(1234)5678）、郵便番号（〒100-0001、100-0001）は、位取りを選んでいても一字ずつにします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "変換されない数字はありますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "英字のすぐ前やすぐ後ろにある数字（A4、iPhone15、5kg など）、英字と「-」「.」でつながった型番や番号の数字（A-100、SH-01、No.5、Ver.2.0）、http:// か https:// で始まるURLの中の数字、キーキャップの絵文字（5️⃣）の数字は、型番や住所として残すため変えません。カンマ（半角・全角）で3桁ごとに区切った数（1,500,000）は1つの数とみなしてカンマを外します。数字にはさまれた小数点（3.5）は「・」にします（三・五）。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "文章の中の漢数字を数字に戻せますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できません。「漢数字 → 数字」は、セル（行）の中身全体が1つの数のときだけ変換します。「一般」「四国」「十分」のような言葉の中の漢数字と、数を見分けられないためです。Excelの列をコピーして貼り付けると、セルごとに変換し、数として読めないセルはそのまま残して、何行目かを表示します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "どんな書き方の漢数字を数字に戻せますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "一字ずつの書き方（二〇二六）、位取りの書き方（二千二十六、一億二千万）、算用数字が混ざった書き方（1万2千、2万5000）、一字ずつの数字や小数に万・億が付いた書き方（一〇〇万、1.5万、一・五億）、小数（三・一四）を、京の位まで読めます。大字（壱・弐・拾）、「零」、位取りの中に〇を入れた書き方（二千〇六）は読めないため、そのまま残します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したテキストは、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --mark: #fdf1b8; --ok: #137333; --warn-ink: #7a4f01; --bad-ink: #a50e0e; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 22px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  .settings { margin: 0; }
+  .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .setting { display: flex; align-items: center; gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+  .setting legend { float: left; padding: 0; color: #3c4043; font-weight: 600; font-size: .94rem; white-space: nowrap; }
+  .seg { display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+  .seg label { position: relative; display: inline-flex; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg span { display: inline-flex; align-items: center; justify-content: center; min-width: 6em; min-height: 44px; padding: 0 14px; color: #3c4043; font-size: .94rem; cursor: pointer; transition: background .16s ease; }
+  .seg label + label span { border-left: 1px solid var(--line); }
+  .seg input:checked + span { background: var(--mint); color: #174ea6; font-weight: 600; }
+  /* ✓ の幅をいつも確保して、選んだときに選択肢の幅と位置が変わらないようにする */
+  .seg span::before { content: "✓"; margin-right: 4px; color: transparent; }
+  .seg input:checked + span::before { color: inherit; }
+  .seg input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .seg span:hover { background: #f6fafe; }
+  /* 「漢数字 → 数字」のときは「書き方」を使わないため、押せない見た目にする */
+  .setting:disabled legend, .setting:disabled .seg span { color: #80868b; cursor: not-allowed; }
+  .setting:disabled .seg { background: var(--surface-soft); }
+  .setting:disabled .seg input:checked + span { background: #e8eaed; color: #5f6368; }
+  .setting:disabled .seg span:hover { background: transparent; }
+  /* 設定の説明。「数字 → 漢数字」と「漢数字 → 数字」で文が入れ替わっても下の部品が動かないよう、長いほうの文の高さ（1行 = 14px × 1.65 = 23.1px）を確保する。
+     幅ごとに測った行数：901px以上は2行、651〜900pxは3行、381〜650pxは4行、380px以下は5行 */
+  .note { margin: 0 0 18px; color: var(--muted); font-size: .875rem; line-height: 1.65; min-height: 47px; }
+  @media (max-width: 900px) { .note { min-height: 70px; } }
+  @media (max-width: 650px) { .note { min-height: 93px; } }
+  @media (max-width: 380px) { .note { min-height: 116px; } }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; height: 150px; min-height: 120px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .preview { height: 150px; overflow: auto; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; }
+  .preview.empty { color: var(--muted); font-family: inherit; }
+  .preview mark { background: var(--mark); color: inherit; border-radius: 3px; box-shadow: 0 0 0 1px #f2d25c; }
+  .legend-line { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  .legend-line i { display: inline-block; width: 1em; height: 1em; margin-right: 4px; vertical-align: -2px; border-radius: 3px; background: var(--mark); box-shadow: 0 0 0 1px #f2d25c; }
+  /* まとめ。最も長い文の高さ（1行 = 14.4px × 1.5 = 21.6px）を先に確保して、出ても消えても下の部品が動かないようにする。
+     最も長い文は、数として読めなかったセルの行番号が5桁のとき。幅ごとに測った行数：901px以上は2行、651〜900pxは3行、381〜650pxは4行、380px以下は5行 */
+  .summary { margin: 10px 0 12px; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 44px; }
+  @media (max-width: 900px) { .summary { min-height: 66px; } }
+  @media (max-width: 650px) { .summary { min-height: 87px; } }
+  @media (max-width: 380px) { .summary { min-height: 109px; } }
+  .summary.found { color: var(--warn-ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 18px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンと設定の知らせ。ボタンと設定の上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 44px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  /* 知らせは、本来の場所（設定の下・ボタンの上）が画面の外にあるときも、画面の上端か下端に留めて見えるようにする（場所は確保したままなので、ほかの部品は動かない）。
+     重なった部品は押せるよう、知らせは押せないものにする */
+  .status { position: sticky; top: 8px; bottom: 8px; z-index: 2; pointer-events: none; }
+  .status span { padding: 2px 8px; border-radius: 6px; background: var(--surface); box-shadow: 0 1px 3px rgba(60,64,67,.28); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .status.error { color: var(--warn-ink); }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: 1fr; gap: 18px; }
+    /* 結果の行数が変わっても下の部品が動かないよう、高さを決める（長い結果は欄の中でスクロール） */
+    .preview { height: 200px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .settings-row { flex-direction: column; align-items: stretch; }
+    .setting { flex-direction: column; align-items: stretch; gap: 6px; }
+    .setting legend { float: none; margin-bottom: 6px; }
+    .seg { display: flex; }
+    .seg label { flex: 1 1 0; }
+    .seg span { width: 100%; min-width: 0; padding: 4px 6px; text-align: center; line-height: 1.3; word-break: keep-all; overflow-wrap: normal; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">漢数字変換</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">KANJI NUMERALS</p>
+    <h1>漢数字変換</h1>
+    <p>文章の中の数字を、漢数字（二〇二六・二千二十六）にまとめて変換します。Excelの列の漢数字を、数字に戻すこともできます。縦書きの原稿や書類づくりに。</p>
+  </header>
+
+  <section class="card" aria-label="漢数字変換">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>「変換したいテキスト」の欄に、文章やExcelのセルを貼り付けます。</li>
+        <li>結果が自動で表示されます。変えた部分には色が付きます。「変換の向き」と「書き方」は、結果の下で選べます。</li>
+        <li>「結果をコピー」でコピーして、使いたい場所に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText">変換したいテキスト</label><span id="sourceCount" class="count">0文字</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="例：2026年10月18日、参加者は125人です。"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果</span><span class="legend-line" id="legend"><i></i>変えた部分</span></div>
+        <div id="preview" class="preview empty" role="region" aria-labelledby="resultLabel" tabindex="0">「変換したいテキスト」の欄に入力すると、ここに結果が表示されます。</div>
+      </div>
+    </div>
+    <p id="summary" class="summary" aria-live="polite"></p>
+
+    <div class="settings">
+      <div class="settings-row">
+        <fieldset class="setting">
+          <legend>変換の向き</legend>
+          <div class="seg">
+            <label><input type="radio" name="direction" value="toKanji" checked><span>数字 → 漢数字</span></label>
+            <label><input type="radio" name="direction" value="toNumber"><span>漢数字 → 数字</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting" id="styleSetting">
+          <legend>書き方</legend>
+          <div class="seg">
+            <label><input type="radio" name="style" value="digit" checked><span>一字ずつ<wbr>（二〇二六）</span></label>
+            <label><input type="radio" name="style" value="place"><span>位取り<wbr>（二千二十六）</span></label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <p class="note" id="settingNote"></p>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力したテキストは、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>縦書きの原稿の数字を漢数字にする</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>2026年10月18日に、125人が集まった。
+費用は1,500,000円、A4用紙で3.5枚分の資料を配った。</pre></dd>
+        <dt>設定</dt><dd>数字 → 漢数字／位取り（二千二十六）</dd>
+        <dt>結果</dt><dd><pre>二千二十六年十月十八日に、百二十五人が集まった。
+費用は百五十万円、A4用紙で三・五枚分の資料を配った。</pre>
+        「A4」の「4」は英字とくっついているため、そのまま残ります。「一字ずつ（二〇二六）」を選ぶと、「二〇二六年一〇月一八日」「一二五人」「一五〇〇〇〇〇円」になります。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>Excelの列の漢数字を数字に戻す</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>数量
+百二十五
+一万五千
+二〇二六
+三・五</pre></dd>
+        <dt>設定</dt><dd>漢数字 → 数字</dd>
+        <dt>結果</dt><dd><pre>数量
+125
+15000
+2026
+3.5</pre>
+        「漢数字を4個、数字にしました。数として読めなかった1個のセルはそのままです（1行目）。」と表示されます。1行目の「数量」は数ではないため、そのまま残ります。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>「一字ずつ」と「位取り」は何が違いますか？</summary>
+      <p>「一字ずつ」は数字を1文字ずつ漢数字にします（2026→二〇二六、125→一二五）。「位取り」は十・百・千・万を使って書きます（2026→二千二十六、125→百二十五）。位取りでは、十・百・千の前の「一」は書かず（1200→千二百）、万・億・兆・京の前の「一」は書きます（10000→一万）。先頭が0の数（007）、21桁以上の数、電話番号や番地のように「-」「ー」や括弧で3つ以上つながった数字（03-1234-5678、03(1234)5678）、郵便番号（〒100-0001、100-0001）は、位取りを選んでいても一字ずつにします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>変換されない数字はありますか？</summary>
+      <p>英字のすぐ前やすぐ後ろにある数字（A4、iPhone15、5kg など）、英字と「-」「.」でつながった型番や番号の数字（A-100、SH-01、No.5、Ver.2.0）、http:// か https:// で始まるURLの中の数字、キーキャップの絵文字（5️⃣）の数字は、型番や住所として残すため変えません。カンマ（半角・全角）で3桁ごとに区切った数（1,500,000）は1つの数とみなしてカンマを外します。数字にはさまれた小数点（3.5）は「・」にします（三・五）。</p>
+    </details>
+    <details class="faq-item">
+      <summary>文章の中の漢数字を数字に戻せますか？</summary>
+      <p>できません。「漢数字 → 数字」は、セル（行）の中身全体が1つの数のときだけ変換します。「一般」「四国」「十分」のような言葉の中の漢数字と、数を見分けられないためです。Excelの列をコピーして貼り付けると、セルごとに変換し、数として読めないセルはそのまま残して、何行目かを表示します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>どんな書き方の漢数字を数字に戻せますか？</summary>
+      <p>一字ずつの書き方（二〇二六）、位取りの書き方（二千二十六、一億二千万）、算用数字が混ざった書き方（1万2千、2万5000）、一字ずつの数字や小数に万・億が付いた書き方（一〇〇万、1.5万、一・五億）、小数（三・一四）を、京の位まで読めます。大字（壱・弐・拾）、「零」、位取りの中に〇を入れた書き方（二千〇六）は読めないため、そのまま残します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力したテキストは、どこかに送信されますか？</summary>
+      <p>いいえ。変換はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+      <li><a href="../kishu-izon/">機種依存文字チェック</a><span>①・㈱・髙などの機種依存文字や、CSVで「?」になる文字を探して、使える文字に置き換えます。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（バックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var TAB = String.fromCharCode(9);
+  var HALF_DAKUTEN = String.fromCharCode(0xFF9E);    // ﾞ
+  var HALF_HANDAKUTEN = String.fromCharCode(0xFF9F); // ﾟ
+  var PREVIEW_LIMIT = 300000; // これを超える長さでは色付けを省略する
+  var LINE_LIST_LIMIT = 5;    // 「数として読めなかったセル」の行番号を表示する上限
+
+  var KANJI_DIGITS = '〇一二三四五六七八九';
+  var SMALL_UNITS = { '十': 1, '百': 2, '千': 3 };       // 10 の何乗か
+  var BIG_UNITS = { '万': 1, '億': 2, '兆': 3, '京': 4 }; // 10000 の何乗か
+  var BIG_NAMES = ['', '万', '億', '兆', '京'];
+  var MAX_PLACE_DIGITS = 20; // 京の位（10の16乗）の千の位まで = 20桁
+
+  // セルの前後の空白：半角スペース、全角スペース、改行しない空白、CR（Windows の改行の前半）
+  var EDGE_SPACES = ' ' + String.fromCharCode(0x3000) + String.fromCharCode(0x00A0) + String.fromCharCode(13);
+
+  // 数字の並び：半角・全角の数字。間に入るカンマ（半角・全角）・小数点（半角・全角）は、両側が数字のときだけ含める
+  var RUN_SOURCE = '[0-9０-９]+(?:[,，.．][0-9０-９]+)*';
+  // URL：http:// か https:// のあとに、半角の英数字・記号（! から ~ まで）が続く部分
+  var SCAN_RE = new RegExp('https?://[!-~]+|' + RUN_SOURCE, 'g');
+  var RUN_ONLY_RE = new RegExp('^' + RUN_SOURCE + '$');
+  // 3桁ごとのカンマで区切った数（1,500,000、１，５００）。小数が続いてもよい
+  var COMMA_NUMBER_RE = new RegExp('^([0-9]{1,3}(?:[,，][0-9]{3})+)(?:[.．]([0-9]+))?$');
+  var DECIMAL_RE = new RegExp('^([0-9]+)[.．]([0-9]+)$');
+  var INTEGER_RE = new RegExp('^[0-9]+$');
+  var COMMA_CHARS = ',，';
+  var DOT_CHARS = '.．';
+  // 番号をつなぐ文字：半角・全角のハイフン、ハイフン（U+2010・U+2011）、ダッシュ（U+2013〜U+2015）、マイナス（U+2212）、長音（ー・ｰ）
+  var HYPHENS = '-' + String.fromCharCode(0xFF0D, 0x2010, 0x2011, 0x2013, 0x2014, 0x2015, 0x2212, 0x30FC, 0xFF70);
+  // 電話番号の市外局番などを囲む括弧（03(1234)5678、(03)1234-5678）
+  var NUMBER_BRACKETS = '()（）';
+  var POSTAL_MARK = '〒';
+  var VS16 = String.fromCharCode(0xFE0F);    // 絵文字の異体字セレクタ
+  var KEYCAP = String.fromCharCode(0x20E3);  // キーキャップの囲み
+
+  function digitValue(ch) {
+    if (!ch) return -1;
+    var c = ch.charCodeAt(0);
+    if (c >= 48 && c <= 57) return c - 48;             // 0〜9
+    if (c >= 0xFF10 && c <= 0xFF19) return c - 0xFF10; // ０〜９
+    return -1;
+  }
+  // 全角の数字を半角にする（カンマ・小数点はそのまま）
+  function halfDigits(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var v = digitValue(s.charAt(i));
+      out += v >= 0 ? String(v) : s.charAt(i);
+    }
+    return out;
+  }
+  function isLatin(ch) {
+    if (!ch) return false;
+    var c = ch.charCodeAt(0);
+    return (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 0xFF21 && c <= 0xFF3A) || (c >= 0xFF41 && c <= 0xFF5A);
+  }
+  function isHyphen(ch) { return ch !== '' && HYPHENS.indexOf(ch) >= 0; }
+  function isJoiner(ch) { return isHyphen(ch) || (ch !== '' && NUMBER_BRACKETS.indexOf(ch) >= 0); }
+
+  // ---- 数字 → 漢数字 ----
+
+  // 一字ずつ：2026 → 二〇二六（ds は半角の数字だけ）
+  function digitsToKanji(ds) {
+    var out = '';
+    for (var i = 0; i < ds.length; i++) out += KANJI_DIGITS.charAt(ds.charCodeAt(i) - 48);
+    return out;
+  }
+  // 0〜9999 の4桁の位取り。十・百・千の前の「一」は書かない
+  function smallPlace(four) {
+    var names = ['千', '百', '十', ''];
+    var out = '';
+    for (var i = 0; i < 4; i++) {
+      var d = four.charCodeAt(i) - 48;
+      if (d === 0) continue;
+      if (i < 3) out += (d === 1 ? '' : KANJI_DIGITS.charAt(d)) + names[i];
+      else out += KANJI_DIGITS.charAt(d);
+    }
+    return out;
+  }
+  // 位取り：2026 → 二千二十六。先頭が0でない、20桁以下の数だけ。万・億・兆・京の前の「一」は書く（一万）
+  function placeToKanji(ds) {
+    if (ds === '0') return '〇';
+    var groups = [];
+    for (var end = ds.length; end > 0; end -= 4) {
+      var g = ds.slice(Math.max(0, end - 4), end);
+      while (g.length < 4) g = '0' + g;
+      groups.unshift(g);
+    }
+    var out = '';
+    for (var k = 0; k < groups.length; k++) {
+      var s = smallPlace(groups[k]);
+      if (s !== '') out += s + BIG_NAMES[groups.length - 1 - k];
+    }
+    return out;
+  }
+  // 整数の部分。位取りにできない数（先頭が0で2桁以上、21桁以上）は一字ずつにする
+  function integerToKanji(ds, style) {
+    if (style === 'place' && !(ds.length > 1 && ds.charAt(0) === '0') && ds.length <= MAX_PLACE_DIGITS) return placeToKanji(ds);
+    return digitsToKanji(ds);
+  }
+
+  // 数字の並び（カンマ・小数点を含むことがある）を、数ごとの部分に分けて漢数字にする
+  // 返り値：[{ text, mark }]（mark が true の部分が、漢数字にした1つの数）
+  function runToKanji(run, style) {
+    var s = halfDigits(run);
+    var m = COMMA_NUMBER_RE.exec(s);
+    if (m) {
+      // 3桁ごとのカンマで区切った数（1,500,000）は1つの数。カンマは外す
+      var whole = m[1].split(',').join('').split('，').join('');
+      var t = integerToKanji(whole, style) + (m[2] !== undefined ? '・' + digitsToKanji(m[2]) : '');
+      return [{ text: t, mark: true }];
+    }
+    // それ以外のカンマは、数と数の区切りとして残す（1,2,3）
+    var pieces = [];
+    var parts = [], seps = [], cur = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s.charAt(i);
+      if (COMMA_CHARS.indexOf(ch) >= 0) { parts.push(cur); seps.push(ch); cur = ''; }
+      else cur += ch;
+    }
+    parts.push(cur);
+    parts.forEach(function (part, idx) {
+      if (idx > 0) pieces.push({ text: seps[idx - 1], mark: false });
+      var d = DECIMAL_RE.exec(part);
+      if (d) {
+        pieces.push({ text: integerToKanji(d[1], style) + '・' + digitsToKanji(d[2]), mark: true });
+      } else if (INTEGER_RE.test(part)) {
+        pieces.push({ text: integerToKanji(part, style), mark: true });
+      } else {
+        // 点が2つ以上（1.2.3）：点はそのまま残し、それぞれの数を変える
+        var num = '';
+        for (var j = 0; j <= part.length; j++) {
+          var c = part.charAt(j);
+          if (c !== '' && DOT_CHARS.indexOf(c) < 0) { num += c; continue; }
+          pieces.push({ text: integerToKanji(num, style), mark: true });
+          num = '';
+          if (c !== '') pieces.push({ text: c, mark: false });
+        }
+      }
+    });
+    return pieces;
+  }
+
+  function convertToKanji(text, style) {
+    // 1. URL と数字の並びを探す
+    var tokens = [];
+    var m;
+    SCAN_RE.lastIndex = 0;
+    while ((m = SCAN_RE.exec(text)) !== null) {
+      tokens.push({ text: m[0], start: m.index, end: m.index + m[0].length, url: digitValue(m[0].charAt(0)) < 0 });
+    }
+    // 2. ハイフン・長音・括弧の1文字でつながった数字の並びを、ひとまとまり（電話番号・番地・郵便番号・型番など）にする
+    var chains = [];
+    tokens.forEach(function (t, i) {
+      var prev = tokens[i - 1];
+      if (!t.url && prev && !prev.url && t.start === prev.end + 1 && isJoiner(text.charAt(prev.end))) {
+        chains[chains.length - 1].push(t);
+      } else if (!t.url) {
+        chains.push([t]);
+      }
+      t.chainIndex = t.url ? -1 : chains.length - 1;
+    });
+    chains.forEach(function (chain) {
+      var first = chain[0], last = chain[chain.length - 1];
+      var before = text.charAt(first.start - 1);
+      var before2 = text.charAt(first.start - 2);
+      var after = text.charAt(last.end);
+      var after2 = text.charAt(last.end + 1);
+      // 英字とくっついている（A4、5kg）か、英字とハイフンでつながっている（A-100、SH-01）か、英字とピリオドの後ろにある（No.5、Ver.2.0）まとまりは変えない
+      chain.keep = isLatin(before) || isLatin(after) || (isHyphen(before) && isLatin(before2)) || (isHyphen(after) && isLatin(after2)) ||
+        (before !== '' && DOT_CHARS.indexOf(before) >= 0 && isLatin(before2));
+      // 電話番号・番地（3つ以上つながった数字）と、郵便番号（〒の後ろ、または「3桁-4桁」）は、位取りでも一字ずつ
+      var postalShape = chain.length === 2 && chain[0].text.length === 3 && chain[1].text.length === 4 && isHyphen(text.charAt(chain[0].end));
+      chain.digitOnly = chain.length >= 3 || postalShape || before === POSTAL_MARK || (before === ' ' && before2 === POSTAL_MARK) || (before === String.fromCharCode(0x3000) && before2 === POSTAL_MARK);
+    });
+
+    var pieces = [];
+    var changed = 0, keptLatin = 0, keptUrl = 0;
+    var last = 0;
+    tokens.forEach(function (t) {
+      if (t.start > last) pieces.push({ text: text.slice(last, t.start), mark: false });
+      last = t.end;
+      if (t.url) {
+        if (hasDigit(t.text)) keptUrl++;
+        pieces.push({ text: t.text, mark: false });
+        return;
+      }
+      var chain = chains[t.chainIndex];
+      var next = text.charAt(t.end);
+      // キーキャップ絵文字（5️⃣）の数字は、絵文字の一部なので変えない
+      if (next === VS16 || next === KEYCAP) {
+        pieces.push({ text: t.text, mark: false });
+        return;
+      }
+      if (chain.keep) {
+        keptLatin++;
+        pieces.push({ text: t.text, mark: false });
+        return;
+      }
+      runToKanji(t.text, chain.digitOnly ? 'digit' : style).forEach(function (p) {
+        if (p.mark) changed++;
+        pieces.push(p);
+      });
+    });
+    if (last < text.length) pieces.push({ text: text.slice(last), mark: false });
+    return { pieces: pieces, changed: changed, keptLatin: keptLatin, keptUrl: keptUrl };
+  }
+
+  // ---- 漢数字 → 数字 ----
+
+  // 位取りの漢数字（算用数字との混在を含む）を読む。読めなければ null
+  function parsePlace(s) {
+    var tokens = [];
+    var i = 0, j;
+    while (i < s.length) {
+      var ch = s.charAt(i);
+      if (digitValue(ch) >= 0) {
+        j = i;
+        while (j < s.length && digitValue(s.charAt(j)) >= 0) j++;
+        tokens.push({ t: 'num', v: halfDigits(s.slice(i, j)) });
+        i = j;
+        continue;
+      }
+      if (KANJI_DIGITS.indexOf(ch) >= 0) {
+        // 一字ずつの漢数字の並び（一〇〇万 の 一〇〇）
+        j = i;
+        while (j < s.length && KANJI_DIGITS.indexOf(s.charAt(j)) >= 0) j++;
+        tokens.push({ t: 'num', v: kanjiDigitsToNumber(s.slice(i, j)) });
+        i = j;
+        continue;
+      }
+      if (SMALL_UNITS[ch]) tokens.push({ t: 'small', p: SMALL_UNITS[ch] });
+      else if (BIG_UNITS[ch]) tokens.push({ t: 'big', p: BIG_UNITS[ch] });
+      else return null; // ほかの文字（大字・零・記号など）
+      i++;
+    }
+
+    var groups = [0, 0, 0, 0, 0]; // 一・万・億・兆・京 の各4桁
+    var pos = 0, lastBig = 5, first = true;
+    while (pos < tokens.length) {
+      // 4桁ぶん（千・百・十・一）を読む
+      var val = 0, any = false, lastSmall = 4;
+      while (pos < tokens.length) {
+        var tok = tokens[pos];
+        var next = tokens[pos + 1];
+        if (tok.t === 'num') {
+          if (next && next.t === 'small') {
+            // 位の前の数は1桁（1〜9）だけ
+            if (tok.v.length !== 1 || tok.v === '0' || next.p >= lastSmall) return null;
+            val += Number(tok.v) * Math.pow(10, next.p);
+            lastSmall = next.p;
+            any = true;
+            pos += 2;
+            continue;
+          }
+          if (any) {
+            // 位の後ろの一の位は、1〜9の1桁だけ（二千〇六、二十三四 は読まない）
+            if (tok.v.length !== 1 || tok.v === '0') return null;
+          } else if (tok.v.length > 4) {
+            // 位がなければ4桁まで（2万5000 の 5000、一〇〇万 の 一〇〇）
+            return null;
+          }
+          val += Number(tok.v);
+          any = true;
+          pos++;
+          break;
+        }
+        if (tok.t === 'small') {
+          if (tok.p >= lastSmall) return null;
+          val += Math.pow(10, tok.p);
+          lastSmall = tok.p;
+          any = true;
+          pos++;
+          continue;
+        }
+        break; // big
+      }
+      var cur = tokens[pos];
+      if (cur && cur.t === 'big') {
+        if (cur.p >= lastBig) return null;
+        if (!any) {
+          if (!first) return null; // 「一億万」のように、位の前の数がない
+          val = 1;                 // 先頭の「万」は一万
+        }
+        if (val === 0) return null;
+        groups[cur.p] = val;
+        lastBig = cur.p;
+        first = false;
+        pos++;
+        continue;
+      }
+      if (cur) return null; // 一の位のあとに、さらに数が続く
+      if (any) {
+        if (val === 0 && !first) return null;
+        groups[0] = val;
+      }
+      break;
+    }
+    // 数字の文字列にする（大きい数でも正しくなるよう、4桁ずつつなぐ）
+    var out = '';
+    for (var k = 4; k >= 0; k--) {
+      if (out === '') {
+        if (groups[k] > 0) out = String(groups[k]);
+      } else {
+        var g = String(groups[k]);
+        while (g.length < 4) g = '0' + g;
+        out += g;
+      }
+    }
+    return out === '' ? null : out;
+  }
+
+  function hasUnit(s) {
+    for (var i = 0; i < s.length; i++) {
+      var ch = s.charAt(i);
+      if (SMALL_UNITS[ch] || BIG_UNITS[ch]) return true;
+    }
+    return false;
+  }
+  function allKanjiDigits(s) {
+    if (s === '') return false;
+    for (var i = 0; i < s.length; i++) if (KANJI_DIGITS.indexOf(s.charAt(i)) < 0) return false;
+    return true;
+  }
+  function allArabicDigits(s) {
+    if (s === '') return false;
+    for (var i = 0; i < s.length; i++) if (digitValue(s.charAt(i)) < 0) return false;
+    return true;
+  }
+  function kanjiDigitsToNumber(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) out += String(KANJI_DIGITS.indexOf(s.charAt(i)));
+    return out;
+  }
+  // 一字ずつの数字の並び（漢数字か算用数字）を、半角の数字にする。読めなければ null
+  function plainDigits(s) {
+    if (allKanjiDigits(s)) return kanjiDigitsToNumber(s);
+    if (allArabicDigits(s)) return halfDigits(s);
+    return null;
+  }
+  // 整数の部分を読む：一字ずつ（二〇二六）か、位取り（二千二十六、1万2千）
+  function parseInteger(s) {
+    if (allKanjiDigits(s)) return kanjiDigitsToNumber(s);
+    if (hasUnit(s)) return parsePlace(s);
+    return null;
+  }
+  // 小数に万・億・兆・京が1つ付いた数（1.5万、一・五億）を読む。読めなければ null
+  function parseDecimalWithUnit(core) {
+    var unit = BIG_UNITS[core.charAt(core.length - 1)];
+    if (!unit) return null;
+    var body = core.slice(0, -1);
+    var sepAt = -1;
+    for (var i = 0; i < body.length; i++) {
+      if (body.charAt(i) === '・' || DOT_CHARS.indexOf(body.charAt(i)) >= 0) {
+        if (sepAt >= 0) return null;
+        sepAt = i;
+      }
+    }
+    if (sepAt < 0) return null;
+    var ip = plainDigits(body.slice(0, sepAt));
+    var fp = plainDigits(body.slice(sepAt + 1));
+    if (ip === null || fp === null) return null;
+    // 小数点を 4×(位の数) 桁だけ右にずらす
+    var shift = unit * 4;
+    var digits = ip + fp;
+    var point = ip.length + shift;
+    while (digits.length < point) digits += '0';
+    var intPart = digits.slice(0, point).replace(new RegExp('^0+(?=[0-9])'), '');
+    var fracPart = digits.slice(point).replace(new RegExp('0+$'), '');
+    return fracPart === '' ? intPart : intPart + '.' + fracPart;
+  }
+  // セルの中身全体を1つの数として読む。読めなければ null
+  function parseKanjiNumber(core) {
+    var withUnit = parseDecimalWithUnit(core);
+    if (withUnit !== null) return withUnit;
+    var dot = core.indexOf('・');
+    if (dot >= 0) {
+      if (core.indexOf('・', dot + 1) >= 0) return null;
+      var ip = parseInteger(core.slice(0, dot));
+      var fp = core.slice(dot + 1);
+      if (ip === null) return null;
+      if (allKanjiDigits(fp)) return ip + '.' + kanjiDigitsToNumber(fp);
+      return null;
+    }
+    return parseInteger(core);
+  }
+
+  function isEdgeSpace(ch) { return ch !== '' && EDGE_SPACES.indexOf(ch) >= 0; }
+
+  // Excel からコピーした形のテキストを、セルに分ける。
+  // セル内改行のあるセルは " で囲まれている（閉じる " の後ろはタブ・改行・終わり）。
+  // 返り値：[{ text, line, sep }]（line はセルが始まる行、sep はセルの後ろの区切り（タブ・改行・空））
+  function splitCells(text) {
+    var cells = [];
+    var i = 0, line = 1, n = text.length;
+    while (i <= n) {
+      var start = i, startLine = line, end = -1;
+      if (text.charAt(i) === '"') {
+        // 閉じる " を探す（"" は " の文字）
+        var j = i + 1, l = line;
+        while (j < n) {
+          var c = text.charAt(j);
+          if (c === '"') {
+            if (text.charAt(j + 1) === '"') { j += 2; continue; }
+            var after = text.charAt(j + 1);
+            if (after === '' || after === TAB || after === LF) { end = j + 1; line = l; }
+            break;
+          }
+          if (c === LF) l++;
+          j++;
+        }
+      }
+      if (end < 0) {
+        end = i;
+        while (end < n && text.charAt(end) !== TAB && text.charAt(end) !== LF) end++;
+        line = startLine;
+      }
+      var sep = text.charAt(end);
+      cells.push({ text: text.slice(start, end), line: startLine, sep: sep });
+      if (sep === LF) line++;
+      i = end + 1;
+      if (sep === '') break;
+    }
+    return cells;
+  }
+
+  function convertToNumber(text) {
+    var pieces = [];
+    var changed = 0, unreadLines = [], unreadCount = 0;
+    splitCells(text).forEach(function (cell) {
+      var a = 0, b = cell.text.length;
+      while (a < b && isEdgeSpace(cell.text.charAt(a))) a++;
+      while (b > a && isEdgeSpace(cell.text.charAt(b - 1))) b--;
+      var core = cell.text.slice(a, b);
+      var num = (core === '' || RUN_ONLY_RE.test(core)) ? undefined : parseKanjiNumber(core);
+      if (num === undefined) {
+        // 空のセルと、もともと数字だけのセルはそのまま
+        pieces.push({ text: cell.text, mark: false });
+      } else if (num === null) {
+        unreadCount++;
+        if (unreadLines[unreadLines.length - 1] !== cell.line) unreadLines.push(cell.line);
+        pieces.push({ text: cell.text, mark: false });
+      } else {
+        changed++;
+        if (a > 0) pieces.push({ text: cell.text.slice(0, a), mark: false });
+        pieces.push({ text: num, mark: true });
+        if (b < cell.text.length) pieces.push({ text: cell.text.slice(b), mark: false });
+      }
+      if (cell.sep !== '') pieces.push({ text: cell.sep, mark: false });
+    });
+    return { pieces: pieces, changed: changed, unreadCount: unreadCount, unreadLines: unreadLines };
+  }
+
+  // ---- 画面 ----
+
+  var sourceText = document.getElementById('sourceText');
+  var sourceCount = document.getElementById('sourceCount');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var status = document.getElementById('status');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var styleSetting = document.getElementById('styleSetting');
+  var settingNote = document.getElementById('settingNote');
+  var legend = document.getElementById('legend');
+  var lastResult = '';
+  var copyTimer = null;
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+
+  // 見た目の1文字（書記素）で数える。改行は数えない
+  function countChars(text) {
+    if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+      var count = 0;
+      var it = new Intl.Segmenter('ja', { granularity: 'grapheme' }).segment(text);
+      for (var s of it) {
+        if (s.segment === LF || s.segment === String.fromCharCode(13) + LF) continue;
+        count++;
+        // 半角の濁点・半濁点（ﾞ ﾟ）は、前の文字とまとめずに1文字と数える（ｽﾞ は2文字。Excel の LEN と同じ）
+        for (var j = 1; j < s.segment.length; j++) {
+          if (s.segment.charAt(j) === HALF_DAKUTEN || s.segment.charAt(j) === HALF_HANDAKUTEN) count++;
+        }
+      }
+      return count;
+    }
+    return Array.from(text).filter(function (ch) { return ch !== LF; }).length;
+  }
+
+  function getRadio(name, fallback) {
+    var checked = document.querySelector('input[name="' + name + '"]:checked');
+    return checked ? checked.value : fallback;
+  }
+
+  function hasKanjiNumeral(text) {
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      if (KANJI_DIGITS.indexOf(ch) >= 0 || SMALL_UNITS[ch] || BIG_UNITS[ch]) return true;
+    }
+    return false;
+  }
+  function hasDigit(text) {
+    for (var i = 0; i < text.length; i++) if (digitValue(text.charAt(i)) >= 0) return true;
+    return false;
+  }
+
+  function linesLabel(lines) {
+    var shown = lines.slice(0, LINE_LIST_LIMIT).map(function (n) { return fmt(n) + '行目'; }).join('、');
+    if (lines.length > LINE_LIST_LIMIT) shown += 'ほか' + fmt(lines.length - LINE_LIST_LIMIT) + '行';
+    return shown;
+  }
+
+  function updateSettingNote() {
+    var toNumber = getRadio('direction', 'toKanji') === 'toNumber';
+    styleSetting.disabled = toNumber;
+    settingNote.textContent = toNumber
+      ? '「漢数字 → 数字」は、セル（行）の中身全体が1つの数のときだけ変換します（文章の中の漢数字は変えません）。どちらの書き方の漢数字も読めるため、「書き方」は使いません。'
+      : '文章の中の数字（0〜9）をすべて漢数字にします。英字とくっついた数字（A4など）とURLの中の数字は変えません。3桁ごとのカンマ（1,500）は外し、小数点（3.5）は「・」にします。';
+  }
+
+  function update() {
+    // 改行は LF にそろえる（Windows の CRLF が結果やコピーに残らないように）
+    var text = sourceText.value.split(String.fromCharCode(13) + LF).join(LF);
+    sourceCount.textContent = fmt(countChars(text)) + '文字';
+    if (text === '') {
+      lastResult = '';
+      preview.textContent = '「変換したいテキスト」の欄に入力すると、ここに結果が表示されます。';
+      preview.classList.add('empty');
+      summary.textContent = '';
+      summary.className = 'summary';
+      legend.innerHTML = '<i></i>変えた部分';
+      copyButton.disabled = true;
+      return;
+    }
+    var direction = getRadio('direction', 'toKanji');
+    var r = direction === 'toNumber' ? convertToNumber(text) : convertToKanji(text, getRadio('style', 'digit'));
+    var plain = r.pieces.map(function (p) { return p.text; }).join('');
+    lastResult = plain;
+    preview.classList.remove('empty');
+    // 文字数がとても多いときは、画面が固まらないよう色付けを省略する（凡例の文で知らせる）
+    legend.innerHTML = plain.length > PREVIEW_LIMIT ? '色付けは省略' : '<i></i>変えた部分';
+    if (plain.length > PREVIEW_LIMIT) {
+      preview.textContent = plain;
+    } else {
+      preview.innerHTML = r.pieces.map(function (p) {
+        return p.mark ? '<mark>' + escapeHtml(p.text) + '</mark>' : escapeHtml(p.text);
+      }).join('');
+    }
+
+    var msg, warn = false;
+    if (direction === 'toNumber') {
+      if (r.changed > 0) msg = '漢数字を' + fmt(r.changed) + '個、数字にしました。';
+      else msg = '数字にできる漢数字のセルはありませんでした。';
+      if (r.unreadCount > 0) {
+        msg += '数として読めなかった' + fmt(r.unreadCount) + '個のセルはそのままです（' + linesLabel(r.unreadLines) + '）。';
+        warn = true;
+      } else if (r.changed === 0) {
+        msg += hasDigit(text)
+          ? '入力の数はすでに数字です。数字を漢数字にするときは、「変換の向き」で「数字 → 漢数字」を選んでください。'
+          : '入力が空白だけです。漢数字のセルを貼り付けてください。';
+      }
+    } else {
+      var kept = r.keptLatin + r.keptUrl;
+      if (r.changed > 0) {
+        msg = '数字を' + fmt(r.changed) + 'か所、漢数字にしました。';
+      } else if (kept > 0) {
+        msg = '変えた数字はありません。';
+      } else {
+        msg = '数字（0〜9）が見つからないため、変えた所はありません。';
+        if (hasKanjiNumeral(text)) msg += '漢数字を数字にするときは、「変換の向き」で「漢数字 → 数字」を選んでください。';
+      }
+      var keptParts = [];
+      if (r.keptLatin > 0) keptParts.push('英字とくっついた数字' + fmt(r.keptLatin) + 'か所');
+      if (r.keptUrl > 0) keptParts.push('URL' + fmt(r.keptUrl) + 'か所の中の数字');
+      if (keptParts.length) msg += keptParts.join('と、') + 'は、型番や住所として残しました。';
+    }
+    summary.textContent = msg;
+    summary.className = warn ? 'summary found' : 'summary';
+    copyButton.disabled = false;
+  }
+
+  function setStatus(message, isError) {
+    status.textContent = '';
+    if (message) {
+      var span = document.createElement('span');
+      span.textContent = message;
+      status.appendChild(span);
+    }
+    status.classList.toggle('error', !!isError);
+  }
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+  function selectPreview() {
+    var range = document.createRange();
+    range.selectNodeContents(preview);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed() {
+    flashButton('コピーできませんでした', 4000);
+    selectPreview();
+    setStatus('コピーできませんでした。結果の文字を選んだ状態にしたので、Ctrl+C（スマートフォンでは長押しして「コピー」）でコピーしてください。', true);
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (sourceText.value === '') return;
+    var done = function () {
+      setStatus('結果をコピーしました（' + fmt(countChars(text)) + '文字）。');
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed();
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed();
+    }
+  });
+
+  var SAMPLE_TO_KANJI = [
+    '2026年10月18日に、125人が集まった。',
+    '費用は1,500,000円、A4用紙で3.5枚分の資料を配った。'
+  ];
+  var SAMPLE_TO_NUMBER = ['数量', '百二十五', '一万五千', '二〇二六', '三・五'];
+
+  sampleButton.addEventListener('click', function () {
+    var toNumber = getRadio('direction', 'toKanji') === 'toNumber';
+    sourceText.value = (toNumber ? SAMPLE_TO_NUMBER : SAMPLE_TO_KANJI).join(LF);
+    update();
+    resetCopyButton();
+    setStatus(toNumber
+      ? '「漢数字 → 数字」の例を入れました。結果で、色が付いた部分が数字にした所です。'
+      : '「数字 → 漢数字」の例を入れました。結果で、色が付いた部分が漢数字にした所です。');
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    update();
+    resetCopyButton();
+    setStatus('入力と結果を消しました。「変換したいテキスト」の欄に、新しいテキストを貼り付けてください。');
+  });
+
+  sourceText.addEventListener('input', function () {
+    update();
+    resetCopyButton();
+    setStatus('');
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="direction"], input[name="style"]'), function (input) {
+    input.addEventListener('change', function () {
+      updateSettingNote();
+      update();
+      resetCopyButton();
+      var legend = input.closest('fieldset').querySelector('legend').textContent;
+      setStatus('「' + legend + '」を「' + input.nextElementSibling.textContent + '」にしました。' +
+        (sourceText.value === '' ? 'テキストを入力すると、この設定で結果が表示されます。' : '結果を更新しました。'));
+    });
+  });
+
+  updateSettingNote();
+  update();
+})();
+</script>
+</body>
+</html>
