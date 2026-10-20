@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>セルを行に分割 - セル内改行で行を分ける｜AIツールひろば</title>
+  <meta name="description" content="Excelやスプレッドシートで、セル内改行や読点・カンマで1つのセルに入った値を1件ずつの行に分け、ほかの列は各行にコピーする無料ツールです。マクロ不要・登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/gyo-bunkatsu/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="セルを行に分割 - セル内改行で行を分ける｜AIツールひろば">
+  <meta property="og:description" content="Excelやスプレッドシートで、セル内改行や読点・カンマで1つのセルに入った値を1件ずつの行に分け、ほかの列は各行にコピーする無料ツールです。マクロ不要・登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/gyo-bunkatsu/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/gyo-bunkatsu.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "セルを行に分割",
+    "description": "Excelやスプレッドシートで、セル内改行や読点・カンマで1つのセルに入った値を1件ずつの行に分け、ほかの列は各行にコピーする無料ツールです。マクロ不要・登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/gyo-bunkatsu/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "セルを行に分割",
+        "item": "https://autotoolspublisher-ui.github.io/tools/gyo-bunkatsu/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "ほかの列の値はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "区切りのないセルの値は、分けてできたすべての行にくり返して入れます。たとえば「注文番号」の列の値は、品目の数だけ同じ値が並びます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "2つ以上の列を同時に分けられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。「分ける列」で選んだ列のうち、区切りのあるセルを同時に分け、1つ目どうし・2つ目どうしを同じ行に並べます。行の数は、その行で最も多く分かれたセルに合わせます。数がそろっていない場合、足りない所は空欄にして、何行目かを表示します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "改行ではなく「、」や「,」で区切られている場合は？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「区切り」で「読点（、）」「カンマ（, ，）」「スラッシュ（/ ／）」を選べます。複数を同時に選ぶこともできます。3桁ごとに区切った数（1,500、12,345,678）のカンマと、数字にはさまれたスラッシュ（2026/10/19、10/19、1/2 のような日付や分数）は、区切りとして扱いません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Excelに貼り付けると「001」の先頭の0が消えます。",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Excelが数字として読み込むためです。貼り付ける前に、貼り付け先の列の表示形式を「文字列」にしてから貼り付けると、0が残ります。日付のように見える値（1/2 など）も同じです。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した表は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。処理はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --mark: #fdf1b8; --ok: #137333; --warn-ink: #7a4f01; }
+  /* 結果の欄の中身が変わっても、ブラウザがスクロール位置を自動で動かさないようにする */
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 44em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { color: #3c4043; font-weight: 600; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; height: 150px; min-height: 120px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 ui-monospace, "SFMono-Regular", Consolas, "BIZ UDGothic", monospace; color: var(--ink); background: #fff; white-space: pre; overflow-wrap: normal; overflow-x: auto; tab-size: 8; transition: border-color .18s ease, box-shadow .18s ease; }
+  /* 例（placeholder）は折り返して全文を見せる。入力した表は折り返さない */
+  textarea:placeholder-shown { white-space: pre-wrap; overflow-x: hidden; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  /* 結果の行数が変わっても下の部品が動かないよう、高さを決める（長い結果は欄の中でスクロール） */
+  .preview { height: 150px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .preview.empty { padding: 14px 15px; color: var(--muted); }
+  .preview table { border-collapse: collapse; font-size: .9rem; line-height: 1.5; background: #fff; }
+  .preview th, .preview td { min-width: 3em; max-width: 16em; padding: 5px 9px; border: 1px solid #dadce0; text-align: left; vertical-align: top; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .preview thead th { position: sticky; top: 0; z-index: 1; background: #f1f3f4; color: #3c4043; font-weight: 600; text-align: center; }
+  .preview tbody th { background: #f1f3f4; color: #3c4043; font-weight: 400; text-align: right; min-width: 2.6em; }
+  .preview td.split { background: var(--mark); }
+  .preview .more td { color: var(--muted); background: var(--paper); }
+  .legend-line { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  .legend-line i { display: inline-block; width: 1em; height: 1em; margin-right: 4px; vertical-align: -2px; border-radius: 3px; background: var(--mark); box-shadow: 0 0 0 1px #f2d25c; }
+  /* まとめ。最も長い文の高さを先に確保して、出ても消えても下の部品が動かないようにする（1行 = 14.4px × 1.5 = 21.6px） */
+  .summary { margin: 10px 0 12px; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; }
+  .summary.warn { color: var(--warn-ink); }
+  .settings { margin: 4px 0 0; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting { display: flex; align-items: flex-start; gap: 6px 14px; }
+  .setting legend { float: left; flex: none; width: 12em; white-space: nowrap; padding: 0; margin: 0; min-height: 44px; display: flex; align-items: center; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .setting .chips, .setting .cols-empty { flex: 1 1 auto; min-width: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .chip input:checked + span small { color: #174ea6; }
+  .cols-empty { margin: 0; min-height: 44px; display: flex; align-items: center; color: var(--muted); font-size: .9rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 14px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い「コピーできませんでした」に合わせる） */
+  #copyButton { min-width: 14.5em; }
+  /* ボタンと設定の知らせ。ボタンの上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 44px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端（部品が画面の上半分なら下端、下半分なら上端）に重ねて見せる。
+     押した部品やその隣の部品の文字を隠さないため。本来の場所の高さは確保したままなので、ほかの部品は動かない。
+     ページをスクロールしたら重ねるのをやめる（本来の場所に戻る）。重なった部品も押せるよう、知らせは押せないものにする */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .status.error { color: var(--warn-ink); }
+  .manual { margin: 0 0 14px; }
+  .manual label { display: block; margin-bottom: 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { height: 120px; background: var(--paper); }
+  .note { margin: 0 0 14px; color: var(--muted); font-size: .875rem; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 900px) { .summary { min-height: 88px; } }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    textarea { height: 170px; }
+    .preview { height: 240px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .setting { display: block; }
+    .setting legend { float: none; width: auto; min-height: 0; margin-bottom: 8px; }
+    .summary { min-height: 132px; }
+    .howto { padding: 12px 14px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyButton { flex-basis: 100%; min-width: 0; }
+  }
+  @media (max-width: 380px) {
+    .summary { min-height: 153px; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    textarea { height: 100px; min-height: 100px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">セルを行に分割</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">SPLIT TO ROWS</p>
+    <h1>セルを行に分割</h1>
+    <p>セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</p>
+  </header>
+
+  <section class="card" aria-label="セルを行に分割">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>表をコピーして、下の欄に貼り付けます。</li>
+        <li>結果が自動で出ます。区切りはボタンの下で選べます。</li>
+        <li>「結果をコピー」を押して、Excelに貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="sourceText">Excelからコピーした表</label><span id="sourceCount" class="count">0行</span></div>
+        <textarea id="sourceText" spellcheck="false" placeholder="ExcelやGoogleスプレッドシートでセル範囲を選んでコピーし、ここに貼り付けます"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="resultLabel">結果（Excelに貼り付けたときの見え方）</span><span class="legend-line"><i></i>分けた値</span></div>
+        <div id="preview" class="preview empty" role="region" aria-labelledby="resultLabel" tabindex="0">「Excelからコピーした表」の欄に貼り付けると、ここに結果が表示されます。</div>
+      </div>
+    </div>
+    <p id="summary" class="summary" aria-live="polite"></p>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyButton" class="btn primary" disabled>結果をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <div class="manual" id="manualBox" hidden>
+      <label for="manualText">コピー用のテキスト（選んだ状態です）</label>
+      <textarea id="manualText" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="settings">
+      <fieldset class="setting">
+        <legend>区切り（複数選べます）</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" class="delim" value="lf" data-name="セル内の改行" checked><span>セル内の改行</span></label>
+          <label class="chip"><input type="checkbox" class="delim" value="touten" data-name="読点（、）"><span>読点 <small>、 ､</small></span></label>
+          <label class="chip"><input type="checkbox" class="delim" value="comma" data-name="カンマ（, ，）"><span>カンマ <small>, ，</small></span></label>
+          <label class="chip"><input type="checkbox" class="delim" value="slash" data-name="スラッシュ（/ ／）"><span>スラッシュ <small>/ ／</small></span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>分ける列</legend>
+        <div class="chips" id="colChips"></div>
+        <p class="cols-empty" id="colsEmpty">表を貼り付けると、ここに列が表示されます（初めはすべての列を分けます）。</p>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>分けた値の扱い</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="optTrim" checked><span>前後の空白を除く</span></label>
+          <label class="chip"><input type="checkbox" id="optDrop" checked><span>空の値を除く</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>1行目</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="optHeader" checked><span>1行目は見出し（分けない）</span></label>
+        </div>
+      </fieldset>
+    </div>
+
+    <p class="note">分ける列のセルを区切りで分け、その行で最も多く分かれた数だけ行を作ります。分かれないセルの値は、作ったすべての行にそのままくり返します。分かれたセルで数が足りない所は空欄にします。「前後の空白を除く」は分けた値の前後の空白（半角・全角）と改行を、「空の値を除く」は続けて書いた区切り（、、）や最後の改行でできる空の値を除きます。2つ以上の値に分かれないセルは、入力のまま残します。「1行目は見出し（分けない）」は、表が2行以上のときだけ使います（セルを1つだけ貼ったときも分けます）。</p>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力した表は、このページの中だけで処理され、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>セル内改行で入った品目を1行ずつに分ける</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>注文番号	店舗	品目
+1001	東町店	"りんご
+みかん
+ぶどう"
+1002	西町店	バナナ</pre><p class="note">Excelで3行×3列をコピーしたもの（列の間はタブ。セル内改行のあるセルは「"」で囲まれます）</p></dd>
+        <dt>設定</dt><dd>区切り：セル内の改行／分ける列：すべて（初期設定のまま）</dd>
+        <dt>結果</dt><dd><pre>注文番号	店舗	品目
+1001	東町店	りんご
+1001	東町店	みかん
+1001	東町店	ぶどう
+1002	西町店	バナナ</pre>
+        「3行を5行に分けました（C列）。」と表示されます。注文番号と店舗は、分けた3行すべてにくり返します。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>2つの列を同時に分ける（品目と数量）</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>担当	品目	数量
+田中	りんご、みかん	3、5
+佐藤	バナナ、いちご、もも	10、2</pre></dd>
+        <dt>設定</dt><dd>区切り：セル内の改行と読点（、）／分ける列：すべて</dd>
+        <dt>結果</dt><dd><pre>担当	品目	数量
+田中	りんご	3
+田中	みかん	5
+佐藤	バナナ	10
+佐藤	いちご	2
+佐藤	もも	</pre>
+        「3行を6行に分けました（B列・C列）。」に続けて、「数がそろわない行が1行あります（3行目：B列3個・C列2個）。足りない所は空欄にしました。」と表示されます。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>ほかの列の値はどうなりますか？</summary>
+      <p>区切りのないセルの値は、分けてできたすべての行にくり返して入れます。たとえば「注文番号」の列の値は、品目の数だけ同じ値が並びます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>2つ以上の列を同時に分けられますか？</summary>
+      <p>はい。「分ける列」で選んだ列のうち、区切りのあるセルを同時に分け、1つ目どうし・2つ目どうしを同じ行に並べます。行の数は、その行で最も多く分かれたセルに合わせます。数がそろっていない場合、足りない所は空欄にして、何行目かを表示します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>改行ではなく「、」や「,」で区切られている場合は？</summary>
+      <p>「区切り」で「読点（、）」「カンマ（, ，）」「スラッシュ（/ ／）」を選べます。複数を同時に選ぶこともできます。3桁ごとに区切った数（1,500、12,345,678）のカンマと、数字にはさまれたスラッシュ（2026/10/19、10/19、1/2 のような日付や分数）は、区切りとして扱いません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>Excelに貼り付けると「001」の先頭の0が消えます。</summary>
+      <p>Excelが数字として読み込むためです。貼り付ける前に、貼り付け先の列の表示形式を「文字列」にしてから貼り付けると、0が残ります。日付のように見える値（1/2 など）も同じです。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した表は、どこかに送信されますか？</summary>
+      <p>いいえ。処理はすべてお使いのブラウザの中で行われ、入力した内容が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+      <li><a href="../kishu-izon/">機種依存文字チェック</a><span>①・㈱・髙などの機種依存文字や、CSVで「?」になる文字を探して、使える文字に置き換えます。</span></li>
+      <li><a href="../kansuji-henkan/">漢数字変換</a><span>文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換します。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var QUOTE = String.fromCharCode(34);   // "
+  // 区切りの種類ごとの文字（半角と全角の両方）
+  var DELIMS = {
+    lf: [LF],
+    touten: ['、', String.fromCharCode(0xFF64)],          // 、 ､（半角）
+    comma: [',', String.fromCharCode(0xFF0C)],            // , ，
+    slash: ['/', String.fromCharCode(0xFF0F)]             // / ／
+  };
+  // 前後から除く空白：半角スペース、全角スペース、改行しない空白（U+00A0）、タブ、改行
+  var TRIM_CHARS = ' ' + String.fromCharCode(0x3000) + String.fromCharCode(0xA0) + TAB + LF + CR;
+  var PREVIEW_LIMIT = 500;
+  // 区切りとして扱わない記号：3桁ごとの区切りの数（1,500　12,345,678　１，５００）のカンマと、
+  // 数字にはさまれたスラッシュ（2026/10/19　10/19　1/2　２０２６／１０／１９。日付・分数）
+  var DIGIT = '[0-9' + String.fromCharCode(0xFF10) + '-' + String.fromCharCode(0xFF19) + ']';
+  var THOUSANDS = new RegExp('(?<=' + DIGIT + ')[,' + String.fromCharCode(0xFF0C) + '](?=' + DIGIT + '{3}(?!' + DIGIT + '))', 'g');
+  var SL = '[/' + String.fromCharCode(0xFF0F) + ']';
+  var DIGIT_SLASH = new RegExp('(?<=' + DIGIT + ')' + SL + '(?=' + DIGIT + ')', 'g');
+  function protectedPositions(cell, delimChars) {
+    var keep = {};
+    var m;
+    if (delimChars.indexOf(',') >= 0) {
+      THOUSANDS.lastIndex = 0;
+      while ((m = THOUSANDS.exec(cell)) !== null) keep[m.index] = true;
+    }
+    if (delimChars.indexOf('/') >= 0) {
+      DIGIT_SLASH.lastIndex = 0;
+      while ((m = DIGIT_SLASH.exec(cell)) !== null) keep[m.index] = true;
+    }
+    return keep;
+  }
+
+  var sourceText = document.getElementById('sourceText');
+  var sourceCount = document.getElementById('sourceCount');
+  var preview = document.getElementById('preview');
+  var summary = document.getElementById('summary');
+  var colChips = document.getElementById('colChips');
+  var colsEmpty = document.getElementById('colsEmpty');
+  var optTrim = document.getElementById('optTrim');
+  var optDrop = document.getElementById('optDrop');
+  var optHeader = document.getElementById('optHeader');
+  var copyButton = document.getElementById('copyButton');
+  var sampleButton = document.getElementById('sampleButton');
+  var clearButton = document.getElementById('clearButton');
+  var status = document.getElementById('status');
+  var manualBox = document.getElementById('manualBox');
+  var manualText = document.getElementById('manualText');
+
+  var lastResult = '';
+  var lastCopyNote = '';
+  var copyTimer = null;
+  var excluded = {};      // 「分ける列」で外した列（0から数えた列の番号）
+  var shownCols = -1;     // いま「分ける列」に並べている列の数
+  var shownLabels = '';
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+  function normalizeNewlines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF); }
+  function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function colName(i) {
+    var s = '';
+    i += 1;
+    while (i > 0) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); }
+    return s;
+  }
+
+  // ---------- 表の読み込み ----------
+  // Excelからコピーしたタブ区切りの表を読む。セル内改行や " のあるセルは " で囲まれ、中の " は "" になっている
+  function findCellEnd(text, from) {
+    var t = text.indexOf(TAB, from);
+    var n = text.indexOf(LF, from);
+    if (t < 0) t = text.length;
+    if (n < 0) n = text.length;
+    return Math.min(t, n);
+  }
+  function parseSheet(text) {
+    var rows = [];
+    var row = [];
+    var len = text.length;
+    var i = 0;
+    while (i <= len) {
+      var cell;
+      if (text.charAt(i) === QUOTE) {
+        // 閉じる " の直後がタブ・改行・終わりなら、" で囲まれたセルとして読む
+        var j = i + 1;
+        var buf = '';
+        var closed = -1;
+        while (j < len) {
+          var c = text.charAt(j);
+          if (c === QUOTE) {
+            if (text.charAt(j + 1) === QUOTE) { buf += QUOTE; j += 2; continue; }
+            closed = j;
+            break;
+          }
+          buf += c;
+          j++;
+        }
+        var after = closed >= 0 ? text.charAt(closed + 1) : null;
+        if (closed >= 0 && (after === TAB || after === LF || after === '')) {
+          cell = buf;
+          i = closed + 1;
+        } else {
+          // 囲みではない（"abc"def のように、たまたま " で始まるセル）。次のタブか改行までをそのまま読む
+          var endPlain = findCellEnd(text, i);
+          cell = text.slice(i, endPlain);
+          i = endPlain;
+        }
+      } else {
+        var end = findCellEnd(text, i);
+        cell = text.slice(i, end);
+        i = end;
+      }
+      row.push(cell);
+      var sep = text.charAt(i);
+      if (sep === TAB) { i++; continue; }
+      rows.push(row);
+      row = [];
+      if (sep === LF) { i++; if (i === len) break; continue; }
+      break;
+    }
+    return rows;
+  }
+  function isEmptyRow(row) {
+    for (var i = 0; i < row.length; i++) if (row[i] !== '') return false;
+    return true;
+  }
+  function readTable(text) {
+    var rows = parseSheet(normalizeNewlines(text));
+    // 最初と最後の空の行（Excelのコピーの最後の改行や、選んだ範囲の上下の空の行）は除く
+    while (rows.length && isEmptyRow(rows[rows.length - 1])) rows.pop();
+    while (rows.length && isEmptyRow(rows[0])) rows.shift();
+    var cols = 0;
+    rows.forEach(function (r) { if (r.length > cols) cols = r.length; });
+    return { rows: rows, cols: cols };
+  }
+
+  // ---------- 分ける ----------
+  function isTrimChar(ch) { return TRIM_CHARS.indexOf(ch) >= 0; }
+  function trimValue(s) {
+    var a = 0, b = s.length;
+    while (a < b && isTrimChar(s.charAt(a))) a++;
+    while (b > a && isTrimChar(s.charAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  // セルを区切りで分ける。2つ以上の値に分かれなかったセルは、区切りや空白を含めて入力のまま1つの値として返す
+  function splitCell(cell, delimChars, trim, drop) {
+    var keep = protectedPositions(cell, delimChars);
+    var parts = [];
+    var cur = '';
+    for (var i = 0; i < cell.length; i++) {
+      var ch = cell.charAt(i);
+      if (delimChars.indexOf(ch) >= 0 && !keep[i]) { parts.push(cur); cur = ''; continue; }
+      cur += ch;
+    }
+    parts.push(cur);
+    if (trim) parts = parts.map(trimValue);
+    if (drop) parts = parts.filter(function (p) { return p !== ''; });
+    if (parts.length < 2) return [cell];
+    return parts;
+  }
+
+  // 表を分ける。戻り値の rows は出力のセル、splitMark は「分けた値」のセルの印
+  function splitTable(table, delimChars, targets, trim, drop, header) {
+    var out = [];
+    var marks = [];
+    var splitCols = {};
+    var mismatches = [];
+    var expandedRows = 0;
+    table.rows.forEach(function (row, ri) {
+      if (header && ri === 0) {
+        out.push(row.slice());
+        marks.push(row.map(function () { return false; }));
+        return;
+      }
+      var partsByCol = [];
+      var n = 1;
+      for (var c = 0; c < row.length; c++) {
+        if (targets[c]) {
+          var parts = splitCell(row[c], delimChars, trim, drop);
+          partsByCol.push(parts);
+          if (parts.length > n) n = parts.length;
+        } else {
+          partsByCol.push(null);
+        }
+      }
+      if (n > 1) {
+        expandedRows++;
+        var counts = [];
+        for (var c2 = 0; c2 < row.length; c2++) {
+          var p = partsByCol[c2];
+          if (p && p.length > 1) {
+            splitCols[c2] = true;
+            counts.push({ col: c2, n: p.length });
+          }
+        }
+        var uneven = counts.some(function (x) { return x.n !== n; });
+        if (uneven) mismatches.push({ row: ri + 1, counts: counts });
+      }
+      for (var k = 0; k < n; k++) {
+        var cells = [];
+        var mk = [];
+        for (var c3 = 0; c3 < row.length; c3++) {
+          var parts3 = partsByCol[c3];
+          if (!parts3) { cells.push(row[c3]); mk.push(false); continue; }
+          if (parts3.length === 1) { cells.push(parts3[0]); mk.push(false); continue; }
+          cells.push(k < parts3.length ? parts3[k] : '');
+          mk.push(k < parts3.length);
+        }
+        out.push(cells);
+        marks.push(mk);
+      }
+    });
+    return { rows: out, marks: marks, splitCols: splitCols, mismatches: mismatches, expandedRows: expandedRows };
+  }
+
+  // Excelに貼り戻せる形のセル。改行・タブ・" のあるセルは " で囲み、中の " は "" にする
+  function toSheetCell(s) {
+    if (s.indexOf(LF) >= 0 || s.indexOf(TAB) >= 0 || s.indexOf(QUOTE) >= 0 || s.indexOf(CR) >= 0) {
+      return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    }
+    return s;
+  }
+  function toSheetText(rows) {
+    return rows.map(function (r) { return r.map(toSheetCell).join(TAB); }).join(LF);
+  }
+
+  // ---------- 画面 ----------
+  function getDelimKeys() {
+    var keys = [];
+    Array.prototype.forEach.call(document.querySelectorAll('input.delim'), function (inp) { if (inp.checked) keys.push(inp.value); });
+    return keys;
+  }
+  function charsFor(keys) {
+    var chars = [];
+    keys.forEach(function (k) { chars = chars.concat(DELIMS[k]); });
+    return chars;
+  }
+  function delimLabel(keys) {
+    return keys.map(function (k) { return document.querySelector('input.delim[value="' + k + '"]').getAttribute('data-name'); }).join('・');
+  }
+
+  function firstLine(s) {
+    var t = trimValue(s);
+    var nl = t.indexOf(LF);
+    if (nl >= 0) t = t.slice(0, nl);
+    var arr = Array.from(t);
+    return arr.length > 10 ? arr.slice(0, 10).join('') + '…' : t;
+  }
+
+  // 「分ける列」の選択肢を、表の列に合わせて作り直す（外した列は、列の番号で覚えておく）
+  function renderColChips(table) {
+    var labels = [];
+    for (var c = 0; c < table.cols; c++) labels.push(table.rows.length ? firstLine(table.rows[0][c] || '') : '');
+    var key = table.cols + '|' + labels.join(TAB);
+    if (key === shownLabels) return;
+    shownLabels = key;
+    // 列の数が変わったら（別の表を貼り付けたら）、外した列の記憶を消して、すべての列を分ける列に戻す
+    if (table.cols !== shownCols) excluded = {};
+    shownCols = table.cols;
+    colChips.innerHTML = '';
+    for (var c2 = 0; c2 < table.cols; c2++) {
+      var label = document.createElement('label');
+      label.className = 'chip';
+      var inp = document.createElement('input');
+      inp.type = 'checkbox';
+      inp.className = 'colopt';
+      inp.value = String(c2);
+      inp.checked = !excluded[c2];
+      var span = document.createElement('span');
+      span.appendChild(document.createTextNode(colName(c2) + '列'));
+      if (labels[c2] !== '') {
+        var small = document.createElement('small');
+        small.textContent = labels[c2];
+        span.appendChild(small);
+      }
+      label.appendChild(inp);
+      label.appendChild(span);
+      colChips.appendChild(label);
+    }
+    colsEmpty.hidden = table.cols > 0;
+  }
+
+  function setSummary(text, warn) {
+    summary.textContent = text;
+    summary.className = warn ? 'summary warn' : 'summary';
+  }
+  function showEmptyPreview(message) {
+    preview.className = 'preview empty';
+    preview.textContent = message;
+  }
+  function renderPreview(rows, marks, cols) {
+    var html = '<table><thead><tr><th></th>';
+    for (var c = 0; c < cols; c++) html += '<th>' + colName(c) + '</th>';
+    html += '</tr></thead><tbody>';
+    var limit = Math.min(rows.length, PREVIEW_LIMIT);
+    for (var r = 0; r < limit; r++) {
+      html += '<tr><th>' + (r + 1) + '</th>';
+      for (var c2 = 0; c2 < cols; c2++) {
+        var v = c2 < rows[r].length ? rows[r][c2] : '';
+        html += '<td' + (marks[r][c2] ? ' class="split"' : '') + '>' + escapeHtml(v) + '</td>';
+      }
+      html += '</tr>';
+    }
+    if (rows.length > limit) {
+      html += '<tr class="more"><td colspan="' + (cols + 1) + '">ここには最初の' + fmt(limit) + '行だけを表示しています。「結果をコピー」では、' + fmt(rows.length) + '行すべてをコピーします。</td></tr>';
+    }
+    preview.className = 'preview';
+    preview.innerHTML = html + '</tbody></table>';
+  }
+
+  function colList(map) {
+    var names = Object.keys(map).map(Number).sort(function (a, b) { return a - b; }).map(function (c) { return colName(c) + '列'; });
+    return names.join('・');
+  }
+
+  function update() {
+    var text = sourceText.value;
+    lastResult = '';
+    lastCopyNote = '';
+    copyButton.disabled = true;
+    manualBox.hidden = true;
+    manualText.value = '';
+    if (text.trim() === '') {
+      sourceCount.textContent = '0行';
+      renderColChips({ rows: [], cols: 0 });
+      showEmptyPreview(text === '' ? '「Excelからコピーした表」の欄に貼り付けると、ここに結果が表示されます。' : '入力が空白だけです。表を貼り付けてください。');
+      setSummary('', false);
+      return;
+    }
+    var table = readTable(text);
+    sourceCount.textContent = fmt(table.rows.length) + '行×' + fmt(table.cols) + '列';
+    renderColChips(table);
+    // 外した列の記憶は、いまの表の列の範囲だけを使う
+    var keys = getDelimKeys();
+    var targets = {};
+    var anyTarget = false;
+    for (var c = 0; c < table.cols; c++) { if (!excluded[c]) { targets[c] = true; anyTarget = true; } }
+    // 1行だけの表（セルを1つだけ貼ったときなど）は、見出しとみなさずに分ける
+    var headerUsed = optHeader.checked && table.rows.length > 1;
+    var res = splitTable(table, charsFor(keys), targets, optTrim.checked, optDrop.checked, headerUsed);
+    // 見出しとして分けなかった1行目に、分かれるセルがあるか
+    var headerSplits = false;
+    if (headerUsed) {
+      for (var ch0 = 0; ch0 < table.rows[0].length; ch0++) {
+        if (targets[ch0] && splitCell(table.rows[0][ch0], charsFor(keys), optTrim.checked, optDrop.checked).length > 1) headerSplits = true;
+      }
+    }
+    var HEADER_HINT = '1行目は見出しとして分けていません（「1行目は見出し（分けない）」をオフにすると分けます）。';
+    lastResult = toSheetText(res.rows);
+    lastCopyNote = fmt(res.rows.length) + '行×' + fmt(table.cols) + '列';
+    renderPreview(res.rows, res.marks, table.cols);
+    copyButton.disabled = false;
+
+    if (!keys.length) {
+      setSummary('区切りが1つも選ばれていないため、分けていません。ボタンの下の「区切り」で、分けるのに使う区切りを選んでください。', true);
+      return;
+    }
+    if (!anyTarget) {
+      setSummary('「分ける列」がすべて外れているため、分けていません。ボタンの下の「分ける列」で、分けたい列を選んでください。', true);
+      return;
+    }
+    if (!res.expandedRows) {
+      var chars = charsFor(keys);
+      if (headerSplits) {
+        setSummary('2行目から下の分ける列のセルには、2つ以上の値に分かれる区切りがありませんでした。結果は入力と同じです。' + HEADER_HINT, true);
+        return;
+      }
+      var msg = '分ける列のセルに、2つ以上の値に分かれる区切り（' + delimLabel(keys) + '）がありませんでした。結果は入力と同じです。';
+      // 外した列に区切りがあるか
+      var hiddenCols = {};
+      table.rows.forEach(function (r, ri4) {
+        if (headerUsed && ri4 === 0) return;
+        for (var c4 = 0; c4 < r.length; c4++) {
+          if (excluded[c4] && splitCell(r[c4], chars, optTrim.checked, optDrop.checked).length > 1) hiddenCols[c4] = true;
+        }
+      });
+      if (Object.keys(hiddenCols).length) {
+        msg += colList(hiddenCols) + 'には区切りがあります。分けるときは「分ける列」で選んでください。';
+      } else {
+        // 選んでいない区切りなら分かれるか
+        var other = ['lf', 'touten', 'comma', 'slash'].filter(function (k) { return keys.indexOf(k) < 0; });
+        var could = other.filter(function (k) {
+          return table.rows.some(function (r, ri5) {
+            if (headerUsed && ri5 === 0) return false;
+            for (var c5 = 0; c5 < r.length; c5++) {
+              if (!excluded[c5] && splitCell(r[c5], DELIMS[k], optTrim.checked, optDrop.checked).length > 1) return true;
+            }
+            return false;
+          });
+        });
+        if (could.length) msg += '「' + delimLabel(could) + '」で分けるときは、「区切り」で選んでください。';
+      }
+      setSummary(msg, true);
+      return;
+    }
+    var msg2 = fmt(table.rows.length) + '行を' + fmt(res.rows.length) + '行に分けました（' + colList(res.splitCols) + '）。';
+    if (res.mismatches.length) {
+      var m = res.mismatches[0];
+      var detail = fmt(m.row) + '行目：' + m.counts.map(function (x) { return colName(x.col) + '列' + fmt(x.n) + '個'; }).join('・');
+      msg2 += '数がそろわない行が' + fmt(res.mismatches.length) + '行あります（' + detail + (res.mismatches.length > 1 ? ' など' : '') + '）。足りない所は空欄にしました。';
+      if (headerSplits) msg2 += HEADER_HINT;
+      setSummary(msg2, true);
+      return;
+    }
+    if (headerSplits) { setSummary(msg2 + HEADER_HINT, true); return; }
+    setSummary(msg2, false);
+  }
+
+  // 知らせを出す。押した直後は画面の端に留めて見えるようにする（スクロールしたらやめる）
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && el.nextElementSibling) el = el.nextElementSibling; // 選択肢は見えている部分（span）で測る
+    if (!el || !el.getBoundingClientRect) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    if (!status.classList.contains('pin')) return;
+    status.classList.remove('pin');
+    var span = status.firstChild;
+    if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+  }
+  function setStatus(message, isError) {
+    unpin();
+    status.textContent = '';
+    status.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    status.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return; // 本来の場所で見えている
+    var box = status.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    status.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if (status.classList.contains('pin') && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+
+  // コピー後のボタンの文字を元に戻す（入力や設定を変えたら、コピー済みの表示を残さない）
+  function resetCopyButton() {
+    clearTimeout(copyTimer);
+    copyButton.textContent = '結果をコピー';
+  }
+  function flashButton(label, ms) {
+    copyButton.textContent = label;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(function () { copyButton.textContent = '結果をコピー'; }, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(text) {
+    flashButton('コピーできませんでした', 4000);
+    // 表の形の結果を選んでコピーすると、セル内改行がくずれることがあるため、貼り戻せる形のテキストを出して選ぶ
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    // 欄の下の端が画面の外にあるときだけ、欄が見える所まで最小限スクロールする（ボタンは画面に残る）
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, copyButton.getBoundingClientRect().top - 8)));
+    setStatus('コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+
+  copyButton.addEventListener('click', function () {
+    var text = lastResult;
+    if (text === '') return;
+    var note = lastCopyNote;
+    var done = function () {
+      setStatus('結果をコピーしました（' + note + '）。Excelやスプレッドシートのセルを1つ選んで貼り付けてください。');
+      flashButton('✓ コピーしました', 2500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        if (fallbackCopy(text)) done(); else copyFailed(text);
+      });
+    } else if (fallbackCopy(text)) {
+      done();
+    } else {
+      copyFailed(text);
+    }
+  });
+
+  var SAMPLE = [
+    '注文番号' + TAB + '店舗' + TAB + '品目' + TAB + '数量',
+    '1001' + TAB + '東町店' + TAB + QUOTE + 'りんご' + LF + 'みかん' + LF + 'ぶどう' + QUOTE + TAB + QUOTE + '3' + LF + '5' + LF + '2' + QUOTE,
+    '1002' + TAB + '西町店' + TAB + 'バナナ' + TAB + '10'
+  ].join(LF);
+
+  sampleButton.addEventListener('click', function () {
+    sourceText.value = SAMPLE;
+    excluded = {};
+    shownLabels = '';
+    update();
+    resetCopyButton();
+    setStatus('例を入れました（3行×4列の注文の表。品目と数量がセル内改行で入っています）。結果では、1001の注文が3行に分かれています。');
+  });
+
+  clearButton.addEventListener('click', function () {
+    sourceText.value = '';
+    excluded = {};
+    shownLabels = '';
+    update();
+    resetCopyButton();
+    setStatus('入力と結果を消しました。入力欄に、新しい表を貼り付けてください。');
+  });
+
+  sourceText.addEventListener('input', function () {
+    if (sourceText.value === '') { excluded = {}; shownLabels = ''; }
+    update();
+    resetCopyButton();
+    setStatus('');
+  });
+
+  function afterSetting(message) {
+    update();
+    resetCopyButton();
+    setStatus(message + (sourceText.value.trim() === '' ? '表を貼り付けると、この設定で結果が表示されます。' : '結果を更新しました。'));
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('input.delim'), function (inp) {
+    inp.addEventListener('change', function () {
+      afterSetting('区切りの「' + inp.getAttribute('data-name') + '」を' + (inp.checked ? 'オン' : 'オフ') + 'にしました。');
+    });
+  });
+  colChips.addEventListener('change', function (e) {
+    var inp = e.target;
+    if (!inp.classList || !inp.classList.contains('colopt')) return;
+    var c = Number(inp.value);
+    if (inp.checked) delete excluded[c]; else excluded[c] = true;
+    afterSetting('「' + colName(c) + '列」を' + (inp.checked ? '分ける列にしました。' : '分ける列から外しました。'));
+  });
+  optTrim.addEventListener('change', function () {
+    afterSetting('「前後の空白を除く」を' + (optTrim.checked ? 'オン' : 'オフ') + 'にしました。');
+  });
+  optHeader.addEventListener('change', function () {
+    afterSetting('「1行目は見出し（分けない）」を' + (optHeader.checked ? 'オン' : 'オフ') + 'にしました。');
+  });
+  optDrop.addEventListener('change', function () {
+    afterSetting('「空の値を除く」を' + (optDrop.checked ? 'オン' : 'オフ') + 'にしました。');
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
