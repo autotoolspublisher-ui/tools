@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>連番チケット印刷 - 整理券・抽選券を連番でA4に印刷｜AIツールひろば</title>
+  <meta name="description" content="整理券・抽選券・引換券を、開始番号から終了番号まで連番入りでA4に面付けして印刷できる無料ツールです。切って重ねると番号順になる並びや半券付きも選べます。Excelやマクロは不要、登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/renban-ticket/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="連番チケット印刷 - 整理券・抽選券を連番でA4に印刷｜AIツールひろば">
+  <meta property="og:description" content="整理券・抽選券・引換券を、開始番号から終了番号まで連番入りでA4に面付けして印刷できる無料ツールです。切って重ねると番号順になる並びや半券付きも選べます。Excelやマクロは不要、登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/renban-ticket/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/renban-ticket.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "連番チケット印刷",
+    "description": "整理券・抽選券・引換券を、開始番号から終了番号まで連番入りでA4に面付けして印刷できる無料ツールです。切って重ねると番号順になる並びや半券付きも選べます。Excelやマクロは不要、登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/renban-ticket/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "連番チケット印刷",
+        "item": "https://autotoolspublisher-ui.github.io/tools/renban-ticket/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "「切って重ねると順」とは、どういう並びですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "印刷した紙を、1ページ目を上にして重ねたまま裁断機などで切ると、同じ位置の券が1つの束になります。その束を左上→右上→2段目の左→…の順に重ねると、上から番号順にそろうように、番号をページをまたいで振る並びです。たとえば100枚を1ページ8枚（13ページ）で作ると、1ページ目の左上が1番、2ページ目の左上が2番、1ページ目の右上が14番になります。1枚ずつ並べ替える手間がなくなります。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "印刷すると大きさや位置がずれます。",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "印刷の画面で、倍率を「100%」（「実際のサイズ」）にし、「用紙に合わせる」をオフにしてください。用紙はA4・縦を選びます。このツールは用紙の端から10mmの余白をとって券を並べます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "PDFで保存できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。「印刷する」を押して開いた印刷の画面で、送信先（プリンター）に「PDFに保存」を選ぶと、PDFとして保存できます。スマートフォンでは、共有メニューの「プリント」からPDFにできます（機種によって手順が異なります）。印刷の画面が開かないときは、LINEなどのアプリの中ではなく、SafariやChromeなどのブラウザでこのページを開き直してください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "何枚まで作れますか？番号は何番まで使えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1回に9,999枚までです。番号は0から999999までの整数を使えます。それより多いときは、番号の範囲を分けて（1〜9999番、10000〜19998番のように）、何回かに分けて印刷してください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。処理はすべてお使いのブラウザの中で行われ、入力した番号や文言が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅では、左に入力、右にまとめ・印刷ボタン・プレビュー（右は画面に留める） */
+  .layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: 0 28px; align-items: start; }
+  .outputs { position: sticky; top: 12px; }
+  .group { margin: 0 0 18px; padding: 0; border: 0; min-width: 0; }
+  .group > legend { padding: 0; margin: 0 0 8px; color: #202124; font-weight: 600; font-size: 1rem; }
+  .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+  .fields .wide { grid-column: span 2; }
+  .field label small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .field label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .field input[type="text"], .field select { display: block; width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; }
+  .field input[type="text"]:focus, .field select:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .field input.bad { border-color: #b3261e; box-shadow: 0 0 0 1px #b3261e; }
+  .setting { margin: 0 0 12px; padding: 0; border: 0; min-width: 0; display: flex; align-items: flex-start; gap: 6px 14px; }
+  .setting legend { float: left; flex: none; width: 7.5em; white-space: nowrap; padding: 0; margin: 0; min-height: 44px; display: flex; align-items: center; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; gap: 8px 10px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .setting-note { margin: -4px 0 12px calc(7.5em + 14px); color: var(--muted); font-size: .875rem; display: grid; }
+  /* 2つの説明を同じ場所に重ね、選んでいない方は見えなくする（高さは長い方に合わせるので、切り替えても下の部品が動かない） */
+  .setting-note span { grid-area: 1 / 1; }
+  .setting-note span.off { visibility: hidden; }
+  /* まとめ。ボタンの下に置くので、長くなってもボタンは動かない。よく出る長さ（3行）を先に確保して、プレビューが動きにくくする */
+  .summary { margin: 0 0 8px; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; overflow-wrap: anywhere; }
+  .summary.warn { color: var(--warn-ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 14px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* ボタンと設定の知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .status.error { color: var(--warn-ink); }
+  .preview-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin: 8px 0 8px; }
+  .preview-head .label { color: #3c4043; font-weight: 600; }
+  .preview-head .count { color: var(--muted); font-size: .875rem; }
+  .pages { display: flex; gap: 14px; overflow-x: auto; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); min-height: 200px; }
+  .pages.empty { align-items: center; color: var(--muted); font-size: .9rem; }
+  .pv { flex: none; }
+  .pv-label { margin: 0 0 4px; color: #3c4043; font-size: .875rem; font-weight: 600; }
+  .pv-box { position: relative; overflow: hidden; background: #fff; box-shadow: 0 1px 3px rgba(60,64,67,.3); }
+  .pv-box .sheet { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .pv-gap { flex: none; align-self: center; color: var(--muted); font-size: .875rem; width: 7em; text-align: center; }
+  .note { margin: 14px 0; color: var(--muted); font-size: .875rem; }
+  .note ul { margin: 4px 0 0; padding-left: 1.3em; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  /* 券面（A4 1ページ）。印刷とプレビューで同じものを使う。単位は mm */
+  .sheet { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: #fff; color: #000; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, "Noto Sans CJK JP", sans-serif; line-height: 1.25; }
+  .sheet .t { position: absolute; display: flex; box-sizing: border-box; }
+  .sheet .m { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; align-items: stretch; padding: 3mm 4mm; text-align: center; }
+  .sheet .m > div, .sheet .s > div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sheet .tt { font-weight: 700; }
+  .sheet .no, .sheet .sn { font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+  .sheet .no { margin: .8mm 0; }
+  /* 番号は「前の文字」「数字」「後ろの文字」に分け、入りきらないときは前後の文字の側を「…」で切る（数字は切らない） */
+  .sheet .no, .sheet .sn { display: flex; justify-content: center; }
+  .sheet .no span, .sheet .sn span { white-space: nowrap; }
+  .sheet .no .pf, .sheet .no .sf, .sheet .sn .pf, .sheet .sn .sf { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .sheet .no .nm, .sheet .sn .nm { flex: none; }
+  .sheet .s { flex: none; width: 28mm; display: flex; flex-direction: column; justify-content: center; padding: 2mm 2.5mm; text-align: center; border-left: .35mm dashed #333; box-sizing: border-box; }
+  .sheet .sl { font-size: 3mm; color: #333; }
+  .sheet .ln { position: absolute; }
+  .sheet .ln.v { border-left: .3mm dashed #555; width: 0; }
+  .sheet .ln.h { border-top: .3mm dashed #555; height: 0; }
+  .sheet .ln.tv { border-left: .25mm solid #000; width: 0; }
+  .sheet .ln.th { border-top: .25mm solid #000; height: 0; }
+  .measure { position: absolute; left: -10000px; top: 0; visibility: hidden; white-space: nowrap; }
+  #printArea { display: none; }
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    body { background: #fff; min-height: 0; }
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block; }
+    #printArea .sheet { break-after: page; page-break-after: always; }
+    #printArea .sheet:last-child { break-after: auto; page-break-after: auto; }
+    .sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .outputs { position: static; }
+    .status { margin-top: 4px; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .setting { display: block; }
+    .setting legend { float: none; width: auto; min-height: 0; margin-bottom: 8px; }
+    .setting-note { margin-left: 0; }
+    .howto { padding: 12px 14px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #printButton { flex-basis: 100%; }
+    .chip span { padding: 0 11px; }
+  }
+  @media (max-width: 380px) {
+    .fields { gap: 10px 10px; }
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    .summary { min-height: 88px; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">連番チケット印刷</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">NUMBERED TICKETS</p>
+    <h1>連番チケット印刷</h1>
+    <p>整理券・抽選券・引換券を、番号の範囲と文言を入れるだけで連番入りのA4に並べて印刷します。Excelのマクロや差し込み印刷を使わずに全ページを一度に作れ、切って重ねると番号順になる並びや半券付きも選べます。</p>
+  </header>
+
+  <section class="card" aria-label="連番チケット印刷">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>開始番号・終了番号と、券に入れる文言を入れます。</li>
+        <li>1ページの枚数などを選び、プレビューで確かめます。</li>
+        <li>「印刷する」を押します（PDFにも保存できます）。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+    <div class="inputs">
+    <fieldset class="group">
+      <legend>番号</legend>
+      <div class="fields">
+        <div class="field"><label for="startNo">開始番号</label><input type="text" id="startNo" inputmode="numeric" autocomplete="off" value="1"></div>
+        <div class="field"><label for="endNo">終了番号</label><input type="text" id="endNo" inputmode="numeric" autocomplete="off" value="100"></div>
+        <div class="field"><label for="digits">桁数（0でそろえる）</label>
+          <select id="digits">
+            <option value="0">そろえない（1）</option>
+            <option value="2">2桁（01）</option>
+            <option value="3" selected>3桁（001）</option>
+            <option value="4">4桁（0001）</option>
+            <option value="5">5桁（00001）</option>
+            <option value="6">6桁（000001）</option>
+          </select>
+        </div>
+        <div class="field"><label for="prefix">番号の前の文字<small>（20文字まで）</small></label><input type="text" id="prefix" maxlength="20" autocomplete="off" value="No." placeholder="例：No.　A-"></div>
+        <div class="field"><label for="suffix">番号の後ろの文字<small>（20文字まで）</small></label><input type="text" id="suffix" maxlength="20" autocomplete="off" placeholder="例：番"></div>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>券面の文言</legend>
+      <div class="fields">
+        <div class="field wide"><label for="title">タイトル<small>（40文字まで）</small></label><input type="text" id="title" maxlength="40" autocomplete="off" value="整理券" placeholder="例：整理券　抽選券　引換券"></div>
+        <div class="field wide"><label for="dateText">日付・場所<small>（60文字まで）</small></label><input type="text" id="dateText" maxlength="60" autocomplete="off" placeholder="例：10月26日（日）　中央公民館"></div>
+        <div class="field wide"><label for="note1">注意書き（1行目）<small>（60文字まで）</small></label><input type="text" id="note1" maxlength="60" autocomplete="off" placeholder="例：当日のみ有効です"></div>
+        <div class="field wide"><label for="note2">注意書き（2行目）<small>（60文字まで）</small></label><input type="text" id="note2" maxlength="60" autocomplete="off" placeholder="例：番号順にお呼びします"></div>
+      </div>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>レイアウト（A4・縦）</legend>
+      <fieldset class="setting">
+        <legend>1ページの枚数</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="perPage" value="4" data-name="4枚（2列×2段）"><span>4枚</span></label>
+          <label class="chip"><input type="radio" name="perPage" value="6" data-name="6枚（2列×3段）"><span>6枚</span></label>
+          <label class="chip"><input type="radio" name="perPage" value="8" data-name="8枚（2列×4段）" checked><span>8枚</span></label>
+          <label class="chip"><input type="radio" name="perPage" value="10" data-name="10枚（2列×5段）"><span>10枚</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>半券（控え）</legend>
+        <div class="chips">
+          <label class="chip"><input type="checkbox" id="stub"><span>半券を付ける（同じ番号）</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>切り取り線</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="cutLine" value="dot" data-name="点線" checked><span>点線</span></label>
+          <label class="chip"><input type="radio" name="cutLine" value="tombo" data-name="トンボ（余白に印）"><span>トンボ（余白に印）</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="setting">
+        <legend>番号の並び</legend>
+        <div class="chips">
+          <label class="chip"><input type="radio" name="order" value="page" data-name="ページごとに順" checked><span>ページごとに順</span></label>
+          <label class="chip"><input type="radio" name="order" value="stack" data-name="切って重ねると順"><span>切って重ねると順</span></label>
+        </div>
+      </fieldset>
+      <p class="setting-note" id="orderNote"><span data-order="page">1ページ目の左上から右へ、次の段へと番号を振り、次のページに続けます。</span><span data-order="stack">印刷した紙を1ページ目を上にして重ねたまま切り、左上の束→右上の束→2段目の左の束→…の順に重ねると、上から番号順になります。</span></p>
+    </fieldset>
+    </div>
+    <div class="outputs">
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+    <div class="actions">
+      <button type="button" id="printButton" class="btn primary">印刷する（PDF保存も）</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="resetButton" class="btn">最初の状態に戻す</button>
+    </div>
+    <p id="summary" class="summary" aria-live="polite"></p>
+
+    <div class="preview-head"><span class="label" id="previewLabel">プレビュー</span><span class="count" id="previewCount"></span></div>
+    <div id="pages" class="pages" role="region" aria-labelledby="previewLabel" tabindex="0"></div>
+    </div>
+    </div>
+
+    <div class="note">
+      <strong>番号の振り方と並べ方</strong>
+      <ul>
+        <li>枚数は「終了番号 − 開始番号 ＋ 1」、ページ数は「枚数 ÷ 1ページの枚数」（切り上げ）です。1回に9,999枚まで作れます。</li>
+        <li>券はA4の上下左右に10mmの余白をとり、2列に並べます（券の幅は95mm）。印刷の倍率は「100%」にしてください。</li>
+        <li>「ページごとに順」：1ページ目の左上から右へ、次の段へと番号を振り、次のページに続けます。空きの面は最後のページの後ろに出ます。</li>
+        <li>「切って重ねると順」：同じ位置の券がページ順に続く番号になるように振ります。印刷した紙を1ページ目を上にして重ねたまま切り、左上の束→右上の束→2段目の左の束→…の順に重ねると、上から番号順になります。空きの面は各ページの後ろの位置に出ます。</li>
+        <li>桁数を選ぶと、足りない桁を先頭の0で埋めます（3桁なら 7 → 007）。桁数より長い番号は、そのまま表示します。</li>
+        <li>入りきらない長さの文言は、文字を小さくして1行に収めます。それでも入らないときは「…」で切れます。</li>
+      </ul>
+    </div>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 入力した番号や文言は、このページの中だけで使われ、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>整理券を100枚、1ページ8枚で作る</h3>
+      <dl>
+        <dt>入力</dt><dd>開始番号：1／終了番号：100／桁数：3桁（001）／番号の前の文字：No.／タイトル：整理券（最初の状態のまま）</dd>
+        <dt>設定</dt><dd>1ページの枚数：8枚／切り取り線：点線／番号の並び：ページごとに順</dd>
+        <dt>結果</dt><dd>「No.001〜No.100（100枚）を、1ページ8枚でA4 13ページに並べます。空きの面は4面です（最後のページの後ろ）。」と表示されます。1ページ目は No.001〜No.008、13ページ目は No.097〜No.100 の4枚です。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>半券付きの抽選券を500枚、切って重ねると番号順になるように作る</h3>
+      <dl>
+        <dt>入力</dt><dd>開始番号：1／終了番号：500／桁数：3桁（001）／番号の前の文字：No.／タイトル：抽選券</dd>
+        <dt>設定</dt><dd>1ページの枚数：10枚／半券を付ける／番号の並び：切って重ねると順</dd>
+        <dt>結果</dt><dd>「No.001〜No.500（500枚）を、1ページ10枚でA4 50ページに並べます。空きの面はありません。」と表示されます。1ページ目は左上から No.001、No.051、No.101 … No.451、2ページ目は No.002、No.052 … と並びます。50枚を重ねて切り、左上の束（No.001〜No.050）の下に右上の束（No.051〜No.100）…と重ねると、No.001〜No.500 の順にそろいます。半券にも同じ番号が入ります。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>「切って重ねると順」とは、どういう並びですか？</summary>
+      <p>印刷した紙を、1ページ目を上にして重ねたまま裁断機などで切ると、同じ位置の券が1つの束になります。その束を左上→右上→2段目の左→…の順に重ねると、上から番号順にそろうように、番号をページをまたいで振る並びです。たとえば100枚を1ページ8枚（13ページ）で作ると、1ページ目の左上が1番、2ページ目の左上が2番、1ページ目の右上が14番になります。1枚ずつ並べ替える手間がなくなります。</p>
+    </details>
+    <details class="faq-item">
+      <summary>印刷すると大きさや位置がずれます。</summary>
+      <p>印刷の画面で、倍率を「100%」（「実際のサイズ」）にし、「用紙に合わせる」をオフにしてください。用紙はA4・縦を選びます。このツールは用紙の端から10mmの余白をとって券を並べます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>PDFで保存できますか？</summary>
+      <p>はい。「印刷する」を押して開いた印刷の画面で、送信先（プリンター）に「PDFに保存」を選ぶと、PDFとして保存できます。スマートフォンでは、共有メニューの「プリント」からPDFにできます（機種によって手順が異なります）。印刷の画面が開かないときは、LINEなどのアプリの中ではなく、SafariやChromeなどのブラウザでこのページを開き直してください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>何枚まで作れますか？番号は何番まで使えますか？</summary>
+      <p>1回に9,999枚までです。番号は0から999999までの整数を使えます。それより多いときは、番号の範囲を分けて（1〜9999番、10000〜19998番のように）、何回かに分けて印刷してください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。処理はすべてお使いのブラウザの中で行われ、入力した番号や文言が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+      <li><a href="../kishu-izon/">機種依存文字チェック</a><span>①・㈱・髙などの機種依存文字や、CSVで「?」になる文字を探して、使える文字に置き換えます。</span></li>
+      <li><a href="../kansuji-henkan/">漢数字変換</a><span>文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換します。</span></li>
+      <li><a href="../gyo-bunkatsu/">セルを行に分割</a><span>セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+<div id="printArea" aria-hidden="true"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり（数値は mm） ----------
+  var PAGE_W = 210, PAGE_H = 297, MARGIN = 10, COLS = 2;
+  var TICKET_W = (PAGE_W - MARGIN * 2) / COLS;   // 95mm
+  var STUB_W = 28;
+  var MAX_COUNT = 9999, MAX_NO = 999999, MIN_FONT = 2.4;
+  var PX_PER_MM = 96 / 25.4;
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var SPACES = ' ' + String.fromCharCode(0x3000) + String.fromCharCode(0xA0) + String.fromCharCode(9);   // 半角・全角・改行しない空白・タブ
+  var FW_COMMA = String.fromCharCode(0xFF0C);   // ，
+
+  var $ = function (id) { return document.getElementById(id); };
+  var startNo = $('startNo'), endNo = $('endNo'), digits = $('digits'), prefix = $('prefix'), suffix = $('suffix');
+  var title = $('title'), dateText = $('dateText'), note1 = $('note1'), note2 = $('note2'), stub = $('stub');
+  var summary = $('summary'), status = $('status'), pagesBox = $('pages'), previewCount = $('previewCount');
+  var printButton = $('printButton'), sampleButton = $('sampleButton'), resetButton = $('resetButton');
+  var printArea = $('printArea'), orderNote = $('orderNote');
+
+  var current = null;      // いまの設定と計算結果
+  var printDirty = true;
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+  function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function radioValue(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ''; }
+  function radioName(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.getAttribute('data-name') : ''; }
+
+  // 番号の読み取り。全角数字・前後の空白・3桁区切りのカンマ（, ，）を受け付ける
+  function parseNo(raw) {
+    var s = '';
+    for (var i = 0; i < raw.length; i++) {
+      var code = raw.charCodeAt(i);
+      if (code >= 0xFF10 && code <= 0xFF19) s += String.fromCharCode(code - 0xFEE0);
+      else s += raw.charAt(i);
+    }
+    // 前後の空白（半角・全角・改行しない空白・タブ）だけを除く。数字の間の空白は打ち間違いとみなして受け付けない
+    while (s.length && SPACES.indexOf(s.charAt(0)) >= 0) s = s.slice(1);
+    while (s.length && SPACES.indexOf(s.charAt(s.length - 1)) >= 0) s = s.slice(0, -1);
+    if (s === '') return { empty: true };
+    // 3桁区切りのカンマ（, ，）は、正しい位置（1,000　12,345）にあるときだけ受け付ける
+    s = s.split(FW_COMMA).join(',');
+    if (!/^[0-9]+$/.test(s) && !/^[0-9]{1,3}(,[0-9]{3})+$/.test(s)) return { bad: true };
+    s = s.split(',').join('');
+    var n = Number(s);
+    if (n > MAX_NO) return { big: true };
+    return { value: n };
+  }
+
+  function pad(n, d) { var s = String(n); while (s.length < d) s = '0' + s; return s; }
+
+  // ---------- 番号の割り当て ----------
+  // ページ p（0から）・位置 s（0から。左上から右へ、次の段へ）の番号。空きの面は null
+  function numberAt(st, p, s) {
+    var k = st.order === 'stack' ? s * st.pages + p : p * st.perPage + s;
+    return k < st.count ? st.start + k : null;
+  }
+  function slotPos(st, s) {
+    var rows = st.perPage / COLS;
+    var h = (PAGE_H - MARGIN * 2) / rows;
+    return { x: MARGIN + (s % COLS) * TICKET_W, y: MARGIN + Math.floor(s / COLS) * h, w: TICKET_W, h: h };
+  }
+  function labelOf(st, n) { return st.prefix + pad(n, st.digits) + st.suffix; }
+
+  // ---------- 文字の大きさ ----------
+  var measurer = document.createElement('span');
+  measurer.className = 'measure sheet';
+  measurer.style.width = 'auto';
+  measurer.style.height = 'auto';
+  document.body.appendChild(measurer);
+  function widthAt10mm(text, bold) {
+    measurer.style.fontSize = '10mm';
+    measurer.style.fontWeight = bold ? '700' : '400';
+    measurer.style.fontVariantNumeric = 'tabular-nums';
+    measurer.style.letterSpacing = bold ? '.02em' : '0';
+    measurer.textContent = text;
+    return measurer.getBoundingClientRect().width / PX_PER_MM;   // mm
+  }
+  // 決めた大きさ（base）で入らなければ、入るまで小さくする（最小 MIN_FONT。それでも入らなければ切れる）
+  function fit(text, bold, base, avail) {
+    if (text === '') return { size: base, over: false };
+    var w = widthAt10mm(text, bold) * 1.03;
+    var size = Math.min(base, avail * 10 / w);
+    if (size < MIN_FONT) return { size: MIN_FONT, over: true };
+    return { size: size, over: false };
+  }
+  // 番号：前後の文字を含めて入らないときは、数字（と「…」2つ分）が入る大きさにし、前後の文字の側を切る
+  function fitNo(st, longest, base, avail) {
+    var r = fit(longest, true, base, avail);
+    if (!r.over) return r;
+    var digitsOnly = pad(st.end, st.digits);
+    var d = fit(digitsOnly + '……', true, base, avail);
+    return { size: d.size, over: true };
+  }
+  function computeFonts(st) {
+    var h = slotPos(st, 0).h;
+    var mainW = (st.stub ? TICKET_W - STUB_W : TICKET_W) - 8;
+    var longest = labelOf(st, st.end).length >= labelOf(st, st.start).length ? labelOf(st, st.end) : labelOf(st, st.start);
+    var f = {
+      title: fit(st.title, true, Math.min(h * 0.16, 14), mainW),
+      no: fitNo(st, longest, Math.min(h * 0.26, 26), mainW),
+      date: fit(st.date, false, Math.min(h * 0.09, 6), mainW),
+      n1: fit(st.note1, false, Math.min(h * 0.075, 5), mainW),
+      n2: fit(st.note2, false, Math.min(h * 0.075, 5), mainW),
+      sn: st.stub ? fitNo(st, longest, Math.min(h * 0.2, 9), STUB_W - 5) : { size: 0, over: false }
+    };
+    return f;
+  }
+
+  function numHtml(st, n) {
+    var h = '';
+    if (st.prefix) h += '<span class="pf">' + escapeHtml(st.prefix) + '</span>';
+    h += '<span class="nm">' + pad(n, st.digits) + '</span>';
+    if (st.suffix) h += '<span class="sf">' + escapeHtml(st.suffix) + '</span>';
+    return h;
+  }
+
+  // ---------- 1ページ分の HTML ----------
+  function sheetHtml(st, p) {
+    var f = st.fonts;
+    var out = [];
+    out.push('<div class="sheet" data-page="' + (p + 1) + '">');
+    var rows = st.perPage / COLS;
+    var h = (PAGE_H - MARGIN * 2) / rows;
+    var xs = [], ys = [];
+    for (var c = 0; c <= COLS; c++) xs.push(MARGIN + c * TICKET_W);
+    for (var r = 0; r <= rows; r++) ys.push(MARGIN + r * h);
+    var mm = function (v) { return v.toFixed(3) + 'mm'; };
+    if (st.cut === 'dot') {
+      xs.forEach(function (x) { out.push('<div class="ln v" style="left:' + mm(x) + ';top:' + mm(MARGIN) + ';height:' + mm(PAGE_H - MARGIN * 2) + '"></div>'); });
+      ys.forEach(function (y) { out.push('<div class="ln h" style="top:' + mm(y) + ';left:' + mm(MARGIN) + ';width:' + mm(PAGE_W - MARGIN * 2) + '"></div>'); });
+    } else {
+      // トンボ：切る線の延長上、用紙の余白（端から3〜8mm）に短い線
+      xs.forEach(function (x) {
+        out.push('<div class="ln tv" style="left:' + mm(x) + ';top:3mm;height:5mm"></div>');
+        out.push('<div class="ln tv" style="left:' + mm(x) + ';top:' + mm(PAGE_H - 8) + ';height:5mm"></div>');
+      });
+      ys.forEach(function (y) {
+        out.push('<div class="ln th" style="top:' + mm(y) + ';left:3mm;width:5mm"></div>');
+        out.push('<div class="ln th" style="top:' + mm(y) + ';left:' + mm(PAGE_W - 8) + ';width:5mm"></div>');
+      });
+    }
+    for (var s = 0; s < st.perPage; s++) {
+      var pos = slotPos(st, s);
+      var n = numberAt(st, p, s);
+      var attrs = ' data-slot="' + (s + 1) + '" data-x="' + pos.x.toFixed(3) + '" data-y="' + pos.y.toFixed(3) + '" data-no="' + (n === null ? '' : escapeHtml(labelOf(st, n))) + '"';
+      var style = ' style="left:' + mm(pos.x) + ';top:' + mm(pos.y) + ';width:' + mm(pos.w) + ';height:' + mm(pos.h) + '"';
+      if (n === null) { out.push('<div class="t blank"' + attrs + style + '></div>'); continue; }
+      var m = '<div class="m">';
+      if (st.title) m += '<div class="tt" style="font-size:' + mm(f.title.size) + '">' + escapeHtml(st.title) + '</div>';
+      m += '<div class="no" style="font-size:' + mm(f.no.size) + '">' + numHtml(st, n) + '</div>';
+      if (st.date) m += '<div class="dt" style="font-size:' + mm(f.date.size) + '">' + escapeHtml(st.date) + '</div>';
+      if (st.note1) m += '<div class="nt" style="font-size:' + mm(f.n1.size) + '">' + escapeHtml(st.note1) + '</div>';
+      if (st.note2) m += '<div class="nt" style="font-size:' + mm(f.n2.size) + '">' + escapeHtml(st.note2) + '</div>';
+      m += '</div>';
+      if (st.stub) m += '<div class="s"><div class="sl">控え</div><div class="sn" style="font-size:' + mm(f.sn.size) + '">' + numHtml(st, n) + '</div></div>';
+      out.push('<div class="t"' + attrs + style + '>' + m + '</div>');
+    }
+    out.push('</div>');
+    return out.join('');
+  }
+
+  // ---------- 設定を読む ----------
+  function readState() {
+    var st = {
+      digits: Number(digits.value), prefix: prefix.value, suffix: suffix.value,
+      title: title.value.trim(), date: dateText.value.trim(), note1: note1.value.trim(), note2: note2.value.trim(),
+      stub: stub.checked, perPage: Number(radioValue('perPage')), cut: radioValue('cutLine'), order: radioValue('order')
+    };
+    var a = parseNo(startNo.value), b = parseNo(endNo.value);
+    startNo.classList.toggle('bad', !!(a.empty || a.bad || a.big));
+    endNo.classList.toggle('bad', !!(b.empty || b.bad || b.big));
+    var err = '';
+    if (a.empty) err = '開始番号を入れてください（例：1）。';
+    else if (a.bad) err = '開始番号は、0以上の整数（数字だけ）で入れてください（例：1）。';
+    else if (a.big) err = '開始番号が大きすぎます。番号は999999までです。';
+    else if (b.empty) err = '終了番号を入れてください（例：100）。';
+    else if (b.bad) err = '終了番号は、0以上の整数（数字だけ）で入れてください（例：100）。';
+    else if (b.big) err = '終了番号が大きすぎます。番号は999999までです。';
+    else if (a.value > b.value) {
+      err = '開始番号（' + a.value + '）が終了番号（' + b.value + '）より大きくなっています。終了番号を開始番号以上にしてください。';
+      startNo.classList.add('bad'); endNo.classList.add('bad');
+    } else if (b.value - a.value + 1 > MAX_COUNT) {
+      err = '枚数が' + fmt(b.value - a.value + 1) + '枚になり、1回に作れる9,999枚を超えています。番号の範囲を分けて、何回かに分けて印刷してください。';
+      startNo.classList.add('bad'); endNo.classList.add('bad');
+    }
+    st.error = err;
+    if (!err) {
+      st.start = a.value; st.end = b.value;
+      st.count = st.end - st.start + 1;
+      st.pages = Math.ceil(st.count / st.perPage);
+      st.blanks = st.pages * st.perPage - st.count;
+    }
+    return st;
+  }
+
+  function setSummary(text, warn) {
+    summary.textContent = text;
+    summary.className = warn ? 'summary warn' : 'summary';
+  }
+
+  var PREVIEW_W = 250;
+  function renderPreview(st) {
+    var list = [0];
+    if (st.pages > 1) list.push(1);
+    if (st.pages > 2) list.push(st.pages - 1);
+    var scale = PREVIEW_W / (PAGE_W * PX_PER_MM);
+    var hPx = Math.round(PAGE_H * PX_PER_MM * scale);
+    var html = '';
+    list.forEach(function (p, i) {
+      if (i > 0 && p - list[i - 1] > 1) {
+        html += '<div class="pv-gap">' + fmt(list[i - 1] + 2) + (p - list[i - 1] > 2 ? '〜' + fmt(p) : '') + 'ページ目は省略</div>';
+      }
+      html += '<div class="pv"><p class="pv-label">' + fmt(p + 1) + 'ページ目' + (p === st.pages - 1 && st.pages > 1 ? '（最後）' : '') + '</p>' +
+        '<div class="pv-box" style="width:' + PREVIEW_W + 'px;height:' + hPx + 'px">' +
+        sheetHtml(st, p).replace('<div class="sheet"', '<div class="sheet" style="transform:scale(' + scale.toFixed(5) + ')"') + '</div></div>';
+    });
+    pagesBox.className = 'pages';
+    pagesBox.innerHTML = html;
+    previewCount.textContent = '全' + fmt(st.pages) + 'ページ・' + fmt(st.count) + '枚';
+  }
+
+  function update() {
+    printWaiting = false;
+    clearTimeout(printMsgTimer);   // 次の操作をしたら、印刷の知らせへの書き換えはしない
+    var st = readState();
+    current = st;
+    printDirty = true;
+    if (st.error) {
+      setSummary(st.error, true);
+      printButton.disabled = true;
+      pagesBox.className = 'pages empty';
+      pagesBox.textContent = '番号を正しく入れると、ここに券面が表示されます。';
+      previewCount.textContent = '';
+      return;
+    }
+    st.fonts = computeFonts(st);
+    printButton.disabled = false;
+    var msg = labelOf(st, st.start) + '〜' + labelOf(st, st.end) + '（' + fmt(st.count) + '枚）を、1ページ' + st.perPage + '枚でA4 ' + fmt(st.pages) + 'ページに並べます。';
+    if (st.blanks === 0) msg += '空きの面はありません。';
+    else msg += '空きの面は' + fmt(st.blanks) + '面です（' + (st.order === 'stack' && st.pages > 1 ? '各ページの後ろの位置' : '最後のページの後ろ') + '）。';
+    var warn = false;
+    if (st.digits > 0 && String(st.end).length > st.digits) {
+      // 指定の桁数より長くなる番号を、桁が増える境目ごとに案内する（例：5,000番からは4桁、10,000番からは5桁）
+      var parts = [];
+      for (var L = Math.max(st.digits + 1, String(st.start).length); L <= String(st.end).length; L++) {
+        parts.push(fmt(Math.max(st.start, Math.pow(10, L - 1))) + '番からは' + L + '桁');
+      }
+      msg += parts.join('、') + 'で表示します（そろえるときは「桁数」を' + String(st.end).length + '桁に）。';
+      warn = true;
+    }
+    var over = [];
+    if (st.fonts.title.over) over.push('タイトル');
+    if (st.fonts.no.over || st.fonts.sn.over) over.push('番号の前後の文字');
+    if (st.fonts.date.over) over.push('日付・場所');
+    if (st.fonts.n1.over) over.push('注意書き（1行目）');
+    if (st.fonts.n2.over) over.push('注意書き（2行目）');
+    if (over.length) {
+      msg += '入りきらない文言が「…」で切れます（' + over.join('、') + '）。' + (st.stub ? '短くするか、半券を外してください（券の幅が広くなります）。' : '短くしてください。');
+      warn = true;
+    }
+    setSummary(msg, warn);
+    renderPreview(st);
+  }
+
+  function buildPrint() {
+    if (!printDirty) return;
+    var st = current;
+    if (!st || st.error) {
+      printArea.innerHTML = '<p style="margin:20mm;font-size:5mm">番号の入れ方に誤りがあるため、券を作れませんでした。ページに戻り、まとめの案内に従って直してから印刷してください。</p>';
+    } else {
+      var parts = [];
+      for (var p = 0; p < st.pages; p++) parts.push(sheetHtml(st, p));
+      printArea.innerHTML = parts.join('');
+    }
+    printDirty = false;
+  }
+  var printOpened = false, printWaiting = false, printMsgTimer = null;
+  window.addEventListener('beforeprint', function () {
+    printOpened = true;
+    buildPrint();
+    // 印刷の画面が後から開いた場合（スマートフォンなど）は、知らせを「開きました」に変える
+    if (printWaiting) { printWaiting = false; clearTimeout(printMsgTimer); printMsgTimer = setTimeout(function () { setStatus(printDoneMessage()); }, 0); }
+  });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('print');
+    var onMq = function (e) { if (e.matches) buildPrint(); };
+    if (mq.addEventListener) mq.addEventListener('change', onMq); else if (mq.addListener) mq.addListener(onMq);
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    if (!status.classList.contains('pin')) return;
+    status.classList.remove('pin');
+    var span = status.firstChild;
+    if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+  }
+  function setStatus(message, isError) {
+    unpin();
+    status.textContent = '';
+    status.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    status.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = status.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    status.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if (status.classList.contains('pin') && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+
+  // ---------- 操作 ----------
+  printButton.addEventListener('click', function () {
+    update();
+    if (current.error) { setStatus('番号の入れ方に誤りがあるため、印刷できません。ボタンの下のまとめの案内に従って直してください。', true); return; }
+    buildPrint();
+    printOpened = false;
+    printWaiting = true;
+    try {
+      window.print();
+    } catch (e) {
+      printWaiting = false;
+      setStatus('印刷の画面を開けませんでした。LINEなどのアプリの中で開いている場合は、SafariやChromeなどのブラウザでこのページを開き直してください。', true);
+      return;
+    }
+    // 印刷の画面が開いたこと（beforeprint）を確かめられたときだけ「開きました」と出す
+    if (printOpened) { printWaiting = false; setStatus(printDoneMessage()); }
+    else setStatus('印刷の画面が開かないときは、LINEなどのアプリの中ではなく、SafariやChromeなどのブラウザでこのページを開き直してください。', true);
+  });
+  function printDoneMessage() {
+    return '印刷の画面を開きました（' + fmt(current.pages) + 'ページ）。倍率は「100%」に。PDFは送信先で「PDFに保存」を選びます。';
+  }
+
+  var DEFAULTS = { startNo: '1', endNo: '100', digits: '3', prefix: 'No.', suffix: '', title: '整理券', dateText: '', note1: '', note2: '', stub: false, perPage: '8', cutLine: 'dot', order: 'page' };
+  var SAMPLE = { startNo: '1', endNo: '500', digits: '3', prefix: 'No.', suffix: '', title: '抽選券', dateText: '10月26日（日）　中央公民館　秋まつり', note1: '抽選は14時から本部テントで行います', note2: '当日のみ有効です', stub: true, perPage: '10', cutLine: 'dot', order: 'stack' };
+  function applyValues(v) {
+    startNo.value = v.startNo; endNo.value = v.endNo; digits.value = v.digits; prefix.value = v.prefix; suffix.value = v.suffix;
+    title.value = v.title; dateText.value = v.dateText; note1.value = v.note1; note2.value = v.note2; stub.checked = v.stub;
+    ['perPage', 'cutLine', 'order'].forEach(function (name) {
+      var r = document.querySelector('input[name="' + name + '"][value="' + v[name] + '"]');
+      if (r) r.checked = true;
+    });
+    updateOrderNote();
+    update();
+  }
+  sampleButton.addEventListener('click', function () {
+    applyValues(SAMPLE);
+    setStatus('例を入れました（半券付きの抽選券 No.001〜No.500、1ページ10枚、切って重ねると順）。下のプレビューで券面を確かめてください。');
+  });
+  resetButton.addEventListener('click', function () {
+    applyValues(DEFAULTS);
+    setStatus('最初の状態に戻しました（整理券 No.001〜No.100、1ページ8枚）。');
+  });
+
+  function updateOrderNote() {
+    var v = radioValue('order');
+    Array.prototype.forEach.call(orderNote.querySelectorAll('span'), function (sp) {
+      var on = sp.getAttribute('data-order') === v;
+      sp.className = on ? '' : 'off';
+      sp.setAttribute('aria-hidden', on ? 'false' : 'true');
+    });
+  }
+
+  [startNo, endNo, prefix, suffix, title, dateText, note1, note2].forEach(function (el) {
+    el.addEventListener('input', function () { update(); setStatus(''); });
+  });
+  function afterSetting(message) {
+    update();
+    setStatus(message + (current.error ? '番号を正しく入れると、この設定でプレビューが表示されます。' : 'プレビューを更新しました。'));
+  }
+  digits.addEventListener('change', function () {
+    afterSetting('桁数を「' + digits.options[digits.selectedIndex].text + '」にしました。');
+  });
+  stub.addEventListener('change', function () {
+    afterSetting(stub.checked ? '半券（控え）を付けました。' : '半券（控え）を外しました。');
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="perPage"]'), function (r) {
+    r.addEventListener('change', function () { afterSetting('1ページの枚数を' + radioName('perPage') + 'にしました。'); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="cutLine"]'), function (r) {
+    r.addEventListener('change', function () { afterSetting('切り取り線を「' + radioName('cutLine') + '」にしました。'); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="order"]'), function (r) {
+    r.addEventListener('change', function () { updateOrderNote(); afterSetting('番号の並びを「' + radioName('order') + '」にしました。'); });
+  });
+
+  // ブラウザが戻る操作などで入力欄の値を復元した場合も、その値で表示する
+  updateOrderNote();
+  update();
+  window.addEventListener('pageshow', function () { updateOrderNote(); update(); });
+})();
+</script>
+</body>
+</html>
