@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>フォーム回答を表に - 出欠表・提出状況を名簿順に｜AIツールひろば</title>
+  <meta name="description" content="Googleフォーム・Formsの回答表と名簿を貼るだけで、出席する→○の置換、列の選択、名簿順への並べ替え、未回答者（未提出者）の一覧を一度に作れる無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/form-kaito-hyo/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="フォーム回答を表に - 出欠表・提出状況を名簿順に｜AIツールひろば">
+  <meta property="og:description" content="Googleフォーム・Formsの回答表と名簿を貼るだけで、出席する→○の置換、列の選択、名簿順への並べ替え、未回答者（未提出者）の一覧を一度に作れる無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/form-kaito-hyo/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/form-kaito-hyo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "フォーム回答を表に",
+    "description": "Googleフォーム・Formsの回答表と名簿を貼るだけで、出席する→○の置換、列の選択、名簿順への並べ替え、未回答者（未提出者）の一覧を一度に作れる無料ツールです。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/form-kaito-hyo/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "フォーム回答を表に",
+        "item": "https://autotoolspublisher-ui.github.io/tools/form-kaito-hyo/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "名簿の名前と回答の名前は、どう照らし合わせますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "前後の空白を除いて、同じ名前かどうかを比べます。初期設定では、全角と半角の違い（「ﾀﾅｶ」と「タナカ」など）、名前の途中の空白（「山田 太郎」と「山田太郎」）、英字の大文字と小文字の違いも無視します（「照らし合わせで無視する違い」で変えられます）。ひらがなとカタカナ、「髙」と「高」のような字の違い、1文字違いは別の名前として扱い、似た名前を推測して結びつけることはしません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "同じ人が2回以上回答していたら、どれを使いますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "初期設定では最後の回答を使います（「使う回答」で最初の回答に変えられます）。タイムスタンプの列があり、その人の回答の日時がすべて読めるときは日時の順で、それ以外は回答表の行の順（下の行ほど後）で決めます。使わなかった回答の行番号は、結果の「2回以上回答した人」に表示します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "置換表はどう書きますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1行に1つ、「元の値→置き換え後」の形で書きます（例：出席する→○）。矢印は「->」「－＞」でもかまいません。Excelの2列をコピーして貼り付けても使えます。置き換え後が空の行は使いません（回答した人の欄が、未回答の人と同じ空欄に見えてしまうため）。「（空欄）→−」と書くと、回答した人の空の答えを「−」にします。セルの値（前後の空白を除く）が元の値とまったく同じときだけ置き換え、一部だけ同じ値は置き換えません。まだ回答していない人の欄は空欄のままです。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Excelに貼ると「001」や「3-1」が数や日付に変わりませんか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「表をコピー」では、表の文字と一緒に、セルを「文字列」として貼る指定もコピーします。そのため、ExcelやLibreOffice Calcに貼り付けると、「001」「3-1」「=1+1」のような回答も、回答と同じ文字のまま入ります（集計行の数は数として入ります）。ただし、セル内改行のある回答を含む表は、改行を保つため文字だけをコピーします。このときは、貼り付ける前に、貼り付け先の列の書式を「文字列」にしてください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した回答表や名簿は、どこかに送信・保存されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。処理はすべてお使いのブラウザの中で行い、回答表・名簿・置換表が外部に送信されたり、保存されたりすることはありません。ページを閉じると消えます。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --none-bg: #f1f3f4; --extra-bg: #fef7e0; }
+  /* 結果の欄の中身が変わっても、ブラウザがスクロール位置を自動で動かさないようにする */
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  /* 見出しと件数は1行に並べる。件数は右に寄せ、見出しは件数に押されて折り返さない長さにしてある */
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: nowrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label, .field-head .label { min-width: 0; color: #3c4043; font-weight: 600; }
+  .field-head small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; height: 160px; min-height: 100px; resize: vertical; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif; color: var(--ink); background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .colpick { display: flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 8px; color: #3c4043; font-size: .9rem; }
+  .colpick label { font-weight: 600; white-space: nowrap; min-width: 8.5em; }
+  select { min-height: 44px; min-width: 0; max-width: 100%; flex: 1 1 auto; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; font-size: .94rem; }
+  select:disabled { color: var(--muted); background: var(--paper); }
+  select:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .settings-head { margin-top: 22px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .settings-title { margin: 0; color: #202124; font-weight: 600; font-size: 1rem; }
+  .settings-head .hint { margin: 2px 0 0; }
+  .settings-grid { margin-top: 14px; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting legend, .setting .legend { padding: 0; margin: 0 0 8px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+  .chip { position: relative; display: inline-flex; min-width: 0; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { content: ""; background: #fff; box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 8px var(--green); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #80868b; background: var(--paper); cursor: not-allowed; }
+  .chip input:disabled + span::before { border-color: #bdc1c6; }
+  /* 名簿がないときだけ見せる案内。高さは常に取っておき、出ても消えても下の部品が動かないようにする */
+  .roster-only.off { visibility: hidden; }
+  .hint { margin: 6px 0 8px; color: var(--muted); font-size: .875rem; }
+  #replText { height: 136px; }
+  /* 出す列の一覧。枠の高さを決めておき（列の数で下の部品が動かない）、列が多いときは枠の中でスクロールする */
+  .cols-box { position: relative; height: 266px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .cols-box .empty { margin: 10px 14px; color: var(--muted); font-size: .9rem; }
+  .cols-list { margin: 0; padding: 0; list-style: none; }
+  .cols-list li { display: flex; align-items: center; gap: 6px; min-height: 52px; padding: 4px 8px 4px 10px; border-bottom: 1px solid #e8eaed; }
+  .cols-list li:last-child { border-bottom: 0; }
+  .cols-list .chip { flex: 1 1 auto; }
+  .cols-list .chip span { width: 100%; border-radius: 10px; overflow-wrap: anywhere; }
+  .cols-list .chip span b { color: var(--muted); font-weight: 600; margin-right: 2px; }
+  button.mini { flex: none; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--green-dark); font-size: 1rem; font-weight: 700; cursor: pointer; }
+  button.mini:hover { background: #f6fafe; }
+  button.mini:disabled { color: #9aa0a6; background: var(--paper); cursor: not-allowed; }
+  /* まとめ。数字だけが変わる決まった形にして、出ても変わっても下の部品が動かないようにする */
+  .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .stats li { min-width: 0; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: var(--paper); }
+  /* 語の途中で折り返さない（空白の所でだけ折り返す） */
+  .stats .k { display: block; color: var(--muted); font-size: .875rem; line-height: 1.4; word-break: keep-all; }
+  .stats .v { display: block; color: #202124; font-size: 1.05rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+  .stats .s { display: block; min-height: 2.8em; color: #3c4043; font-size: .875rem; line-height: 1.4; word-break: keep-all; }
+  .stats li.bad .v { color: #a50e0e; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 14px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い文字に合わせる） */
+  #copyTable, #copyMissing { min-width: 13.5em; }
+  /* ボタンと設定の知らせ。ボタンの上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 66px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。
+     ページをスクロールしたら重ねるのをやめる（本来の場所に戻る）。重なった部品も押せるよう、知らせは押せないものにする */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .status.error { color: var(--warn-ink); }
+  .manual { margin: 0 0 14px; }
+  .manual label { display: block; margin-bottom: 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { height: 120px; background: var(--paper); white-space: pre; overflow-x: auto; overflow-wrap: normal; font-family: ui-monospace, Consolas, monospace; }
+  .result-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 8px; }
+  .result-head .label { color: #3c4043; font-weight: 600; }
+  .legend-line { color: var(--muted); font-size: .875rem; }
+  .legend-line .lg { display: inline-block; white-space: nowrap; }
+  .legend-line i { display: inline-block; width: 1em; height: 1em; margin: 0 4px 0 10px; vertical-align: -2px; border-radius: 3px; border: 1px solid #c4c7c5; }
+  .legend-line i.ln { background: var(--none-bg); }
+  .legend-line i.le { background: var(--extra-bg); }
+  /* 結果の件数が変わっても下の部品が動かないよう、高さを決める（長い結果は欄の中でスクロール） */
+  .results { height: 480px; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .results .empty { margin: 4px 6px; color: var(--muted); }
+  /* お知らせと一覧は、表とは別の、高さを決めた枠に入れる（長くなっても表の位置が下がらず、下の部品も動かない） */
+  .info { height: 150px; overflow: auto; margin: 0 0 10px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .info .empty { margin: 4px 6px; color: var(--muted); font-size: .9rem; }
+  .info .notes, .info .lists { margin-bottom: 8px; }
+  .info > :last-child { margin-bottom: 0; }
+  .notes { margin: 0 0 10px; padding: 10px 14px 10px 30px; border-radius: 10px; background: #fef7e0; color: var(--warn-ink); font-size: .875rem; }
+  .notes li + li { margin-top: 4px; }
+  .lists { margin: 0 0 10px; padding: 10px 14px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; font-size: .9rem; }
+  .lists p { margin: 0; overflow-wrap: anywhere; }
+  .lists p + p { margin-top: 6px; }
+  .lists strong { color: #202124; }
+  .table-wrap { overflow-x: auto; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  table.out { border-collapse: collapse; min-width: 100%; font-size: .9rem; }
+  table.out th, table.out td { padding: 6px 10px; border-bottom: 1px solid #e8eaed; border-right: 1px solid #f1f3f4; text-align: left; vertical-align: top; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 4em; max-width: 18em; }
+  table.out th { white-space: nowrap; position: sticky; top: 0; z-index: 1; background: #f1f3f4; color: #3c4043; font-weight: 600; }
+  table.out td.rn, table.out th.rn { min-width: 0; width: 1%; color: var(--muted); white-space: nowrap; font-size: .875rem; }
+  table.out tr.none td { background: var(--none-bg); }
+  table.out tr.extra td { background: var(--extra-bg); }
+  table.out tr.sum td { background: #e8f0fe; font-weight: 600; }
+  table.out tr.sum:first-of-type td, table.out tr.sum1 td { border-top: 2px solid #aecbfa; }
+  .tag { display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 999px; background: #fff; color: #3c4043; font-size: .875rem; font-weight: 600; border: 1px solid #dadce0; }
+  .note { margin: 14px 0 14px; color: var(--muted); font-size: .875rem; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 900px) {
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    textarea { height: 140px; }
+    #rosterText { height: 136px; }
+    .cols-box { height: 214px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .howto { padding: 12px 14px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats .v { font-size: .95rem; }
+    .status { min-height: 110px; }
+    .results { height: 440px; padding: 8px; }
+    .info { height: 190px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyTable, .actions #copyMissing { flex-basis: 100%; min-width: 0; }
+    .colpick { flex-wrap: wrap; }
+    .colpick label { min-width: 0; }
+    .colpick select { flex-basis: 100%; }
+  }
+  @media (max-width: 380px) {
+    /* 最初の1画面に「回答表」の欄が入るよう、見出し・説明・使い方を詰める */
+    h1 { font-size: 1.75rem; }
+    header p { font-size: .875rem; line-height: 1.55; }
+    .howto { margin-bottom: 10px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 16px; }
+    header { margin-bottom: 14px; }
+    .status { min-height: 132px; }
+    .card { padding: 19px 12px; }
+    .stats li { padding: 8px 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">フォーム回答を表に</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">FORM TO TABLE</p>
+    <h1>フォーム回答を表に</h1>
+    <p>Googleフォーム・Formsの回答表を、名簿の順の出欠表・提出状況にします。VLOOKUPや置換を組む代わりに、貼るだけで「出席する→○」・列の選択・未回答の空欄・2回以上の回答の整理まで一度に済み、Excelに貼れる形でコピーできます。</p>
+  </header>
+
+  <section class="card" aria-label="フォーム回答を表に">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>回答のスプレッドシートを見出しごとコピーし、「回答表」に貼ります。</li>
+        <li>名簿の名前の列を「名簿」に貼ると、名簿の順に並びます（任意）。</li>
+        <li>下に表ができ、「表をコピー」でExcelに貼れます。置換表などは表の下で設定します。</li>
+      </ol>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="field-head"><label for="answerText">回答表 <small>（見出しの行ごと）</small></label><span id="answerCount" class="count">0件</span></div>
+        <textarea id="answerText" spellcheck="false" placeholder="フォームの回答のスプレッドシート（またはExcel）で、見出しの行を含めて表を選んでコピーし、ここに貼り付けます。"></textarea>
+        <div class="colpick"><label for="nameCol">名前の列</label><select id="nameCol" disabled><option>回答表を貼ると選べます</option></select></div>
+        <div class="colpick"><label for="tsCol">タイムスタンプ</label><select id="tsCol" disabled><option>回答表を貼ると選べます</option></select></div>
+      </div>
+      <div>
+        <div class="field-head"><label for="rosterText">名簿 <small>（任意）</small></label><span id="rosterCount" class="count">0人</span></div>
+        <textarea id="rosterText" spellcheck="false" placeholder="名簿の名前の列（1行に1人）を貼り付けます。番号・クラスの列を含む表でも使えます。空なら、回答した人だけの表になります。"></textarea>
+        <div class="colpick"><label for="rosterCol">名簿の名前の列</label><select id="rosterCol" disabled><option>2列以上を貼ると選べます</option></select></div>
+        <div class="chips" style="margin-top:8px">
+          <label class="chip"><input type="checkbox" id="optRosterHeader" data-name="名簿の1行目は見出し"><span>名簿の1行目は見出し</span></label>
+        </div>
+        <p class="hint roster-only" id="rosterHint1">名簿を貼ると選べます。</p>
+      </div>
+    </div>
+
+    <ul class="stats" id="stats" aria-label="まとめ">
+      <li id="stRoster"><span class="k">名簿の人数</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stDone"><span class="k">回答あり</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stMissing"><span class="k">未回答</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stExtra"><span class="k">名簿にない回答者</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stMulti"><span class="k">2回以上回答</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stNoName"><span class="k">名前が空の回答</span><span class="v">－</span><span class="s"></span></li>
+    </ul>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyTable" class="btn primary" disabled>表をコピー</button>
+      <button type="button" id="copyMissing" class="btn" disabled>未回答の名前をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <div class="manual" id="manualBox" hidden>
+      <label for="manualText">コピー用のテキスト（選んだ状態です）</label>
+      <textarea id="manualText" readonly spellcheck="false"></textarea>
+    </div>
+
+    <div class="result-head">
+      <span class="label" id="resultLabel">できた表<span class="legend-line"><span class="lg"><i class="ln"></i>未回答</span><span class="lg"><i class="le"></i>名簿にない回答者</span></span></span>
+    </div>
+    <div id="info" class="info" role="region" aria-label="お知らせと一覧" tabindex="0"><p class="empty">お知らせと、未回答の人などの一覧が、ここに出ます。</p></div>
+    <div id="results" class="results" role="region" aria-labelledby="resultLabel" tabindex="0"><p class="empty">「回答表」の欄に貼り付けると、ここに表ができます。</p></div>
+
+    <div class="settings-head"><p class="settings-title" id="settingsTitle">置換表・出す列などの設定</p><p class="hint">変えると、すぐ上の表に反映されます。</p></div>
+    <div class="grid settings-grid" role="group" aria-labelledby="settingsTitle">
+      <div>
+        <fieldset class="setting">
+          <legend>照らし合わせで無視する違い</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="optWidth" data-name="全角・半角" checked><span>全角・半角</span></label>
+            <label class="chip"><input type="checkbox" id="optSpace" data-name="名前の途中の空白" checked><span>名前の途中の空白</span></label>
+            <label class="chip"><input type="checkbox" id="optCase" data-name="大文字・小文字" checked><span>大文字・小文字</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>2回以上回答した人の、使う回答</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="pick" id="pickLast" value="last" data-name="最後の回答" checked><span>最後の回答</span></label>
+            <label class="chip"><input type="radio" name="pick" id="pickFirst" value="first" data-name="最初の回答"><span>最初の回答</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>表の作り方</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="optSummary" data-name="集計行を付ける" checked><span>集計行を付ける</span></label>
+            <label class="chip"><input type="checkbox" id="optExtra" data-name="名簿にない回答者も表に足す"><span>名簿にない回答者も表に足す</span></label>
+          </div>
+          <p class="hint roster-only" id="rosterHint2">「名簿にない回答者も表に足す」は、名簿を貼ると選べます。</p>
+        </fieldset>
+        <div class="field-head"><label for="replText">置換表 <small>（1行に1つ）</small></label><span id="replCount" class="count">0件</span></div>
+        <textarea id="replText" spellcheck="false" placeholder="例：&#10;出席する→○&#10;欠席する→×&#10;（空欄）→−"></textarea>
+        <p class="hint">「元の値→置き換え後」の形で書きます（矢印は「->」でも可。Excelの2列も可）。置き換え後が空の行は使いません。「（空欄）」は回答した人の空の答えです。値がまったく同じときだけ置き換えます。</p>
+      </div>
+      <div>
+        <div class="field-head"><span class="label" id="colsLabel">出す列と順番</span><span id="colsCount" class="count">0列</span></div>
+        <div class="cols-box" id="colsBox" role="group" aria-labelledby="colsLabel"><p class="empty">回答表を貼ると、ここに列の一覧が出ます。表に出す列に印を付け、↑↓で順番を変えます。</p></div>
+        <p class="hint">メールアドレス・タイムスタンプ・IDの列は、初めは印を外しています。表の左には名簿の列（名簿がなければ回答の名前）が並び、その右に印を付けた列が付きます。</p>
+      </div>
+    </div>
+
+    <p class="note">名前は、前後の空白を除いて照らし合わせます（初期設定では全角・半角、名前の途中の空白、大文字・小文字の違いも無視します）。ひらがな・カタカナ、「髙」と「高」のような字の違い、1文字違いは別の名前です。置換表は、セルの値（前後の空白を除く）がまったく同じときだけ置き換えます。2回以上回答した人は、タイムスタンプの日時（読めないときは回答表の行の順）で最後（または最初）の回答を使います。集計行の「回答数」は空でないセルの数、「○の数」は置換表の置き換え後の値ごとのセルの数です。</p>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 貼り付けた回答表・名簿は、このページの中だけで処理され、保存も外部への送信もされません。メールアドレス・タイムスタンプ・IDの列は、初めは表に出さない設定です。表に要らない列は、貼り付けなくても使えます。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>行事の出欠を名簿順の○×表にする</h3>
+      <dl>
+        <dt>入力</dt><dd>回答表（Googleフォームの回答のスプレッドシートをコピー）<pre>タイムスタンプ	お名前	出欠	参加人数	メールアドレス
+2026/10/18 20:15:02	山田 太郎	出席する	2	yamada@example.com
+2026/10/18 21:03:45	佐藤花子	欠席する		sato@example.com
+2026/10/19 7:30:10	鈴木　一郎	出席する	1	suzuki@example.com
+2026/10/19 12:00:00	高橋 美咲	出席する	1	takahashi@example.com
+2026/10/20 8:45:30	山田太郎	欠席する		yamada@example.com
+2026/10/20 9:10:00	伊藤 健	出席する	3	ito@example.com</pre>名簿<pre>山田 太郎
+佐藤 花子
+鈴木 一郎
+田中 次郎
+高橋 美咲</pre></dd>
+        <dt>設定</dt><dd>置換表：<pre>出席する→○
+欠席する→×
+（空欄）→−</pre>ほかは初期設定のまま（メールアドレスとタイムスタンプの列は出さない、最後の回答を使う、集計行を付ける）</dd>
+        <dt>結果</dt><dd>まとめは「名簿の人数 5人」「回答あり 4人」「未回答 1人」「名簿にない回答者 1人」「2回以上回答 1人」になります。「佐藤花子」「鈴木　一郎」は空白の違いを無視して名簿の人と照らし合わせ、2回回答した山田さんは日時が後の回答（欠席）を使います。「表をコピー」でコピーされる表（列の間はタブ）：<pre>お名前	出欠	参加人数
+山田 太郎	×	−
+佐藤 花子	×	−
+鈴木 一郎	○	1
+田中 次郎		
+高橋 美咲	○	1
+回答数	4	4
+○の数	2	0
+×の数	2	0
+−の数	0	2</pre>名簿にない「伊藤 健」（7行目）は、表の上の一覧に出ます（「名簿にない回答者も表に足す」で表の最後に入れられます）。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>クラス別の提出状況を作り、未提出の人を書き出す</h3>
+      <dl>
+        <dt>入力</dt><dd>回答表<pre>タイムスタンプ	児童氏名	提出状況	ひとこと
+2026/10/20 18:02:11	青木 さくら	提出しました	
+2026/10/20 19:40:05	井上 陽太	提出しました	遅くなりました
+2026/10/21 7:15:30	江藤 光	提出しました	</pre>名簿（Excelの3列）<pre>組	番号	氏名
+1組	1	青木 さくら
+1組	2	井上 陽太
+1組	3	上田 陸
+2組	1	江藤 光
+2組	2	大野 葵</pre></dd>
+        <dt>設定</dt><dd>名簿の1行目は見出し：オン／置換表：<pre>提出しました→済</pre>集計行を付ける：オフ</dd>
+        <dt>結果</dt><dd>名簿の「氏名」の列で照らし合わせ、名簿の3列の右に回答の列が付きます（タイムスタンプの列は出しません）：<pre>組	番号	氏名	提出状況	ひとこと
+1組	1	青木 さくら	済	
+1組	2	井上 陽太	済	遅くなりました
+1組	3	上田 陸		
+2組	1	江藤 光	済	
+2組	2	大野 葵		</pre>「未回答の名前をコピー」でコピーされる内容：<pre>上田 陸
+大野 葵</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>名簿の名前と回答の名前は、どう照らし合わせますか？</summary>
+      <p>前後の空白を除いて、同じ名前かどうかを比べます。初期設定では、全角と半角の違い（「ﾀﾅｶ」と「タナカ」など）、名前の途中の空白（「山田 太郎」と「山田太郎」）、英字の大文字と小文字の違いも無視します（「照らし合わせで無視する違い」で変えられます）。ひらがなとカタカナ、「髙」と「高」のような字の違い、1文字違いは別の名前として扱い、似た名前を推測して結びつけることはしません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>同じ人が2回以上回答していたら、どれを使いますか？</summary>
+      <p>初期設定では最後の回答を使います（「使う回答」で最初の回答に変えられます）。タイムスタンプの列があり、その人の回答の日時がすべて読めるときは日時の順で、それ以外は回答表の行の順（下の行ほど後）で決めます。使わなかった回答の行番号は、結果の「2回以上回答した人」に表示します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>置換表はどう書きますか？</summary>
+      <p>1行に1つ、「元の値→置き換え後」の形で書きます（例：出席する→○）。矢印は「->」「－＞」でもかまいません。Excelの2列をコピーして貼り付けても使えます。置き換え後が空の行は使いません（回答した人の欄が、未回答の人と同じ空欄に見えてしまうため）。「（空欄）→−」と書くと、回答した人の空の答えを「−」にします。セルの値（前後の空白を除く）が元の値とまったく同じときだけ置き換え、一部だけ同じ値は置き換えません。まだ回答していない人の欄は空欄のままです。</p>
+    </details>
+    <details class="faq-item">
+      <summary>Excelに貼ると「001」や「3-1」が数や日付に変わりませんか？</summary>
+      <p>「表をコピー」では、表の文字と一緒に、セルを「文字列」として貼る指定もコピーします。そのため、ExcelやLibreOffice Calcに貼り付けると、「001」「3-1」「=1+1」のような回答も、回答と同じ文字のまま入ります（集計行の数は数として入ります）。ただし、セル内改行のある回答を含む表は、改行を保つため文字だけをコピーします。このときは、貼り付ける前に、貼り付け先の列の書式を「文字列」にしてください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した回答表や名簿は、どこかに送信・保存されますか？</summary>
+      <p>いいえ。処理はすべてお使いのブラウザの中で行い、回答表・名簿・置換表が外部に送信されたり、保存されたりすることはありません。ページを閉じると消えます。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+      <li><a href="../kishu-izon/">機種依存文字チェック</a><span>①・㈱・髙などの機種依存文字や、CSVで「?」になる文字を探して、使える文字に置き換えます。</span></li>
+      <li><a href="../kansuji-henkan/">漢数字変換</a><span>文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換します。</span></li>
+      <li><a href="../gyo-bunkatsu/">セルを行に分割</a><span>セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></li>
+      <li><a href="../renban-ticket/">連番チケット印刷</a><span>整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></li>
+      <li><a href="../bunsho-check/">文章まとめてチェック</a><span>通知表の所見など、Excelの列の文章の文字数の過不足・表記ルールに当たる表現・前学期と同じ文を、まとめて一覧にします。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var QUOTE = String.fromCharCode(34);        // "
+  var NBSP = String.fromCharCode(0xA0);       // 改行しない空白
+  var IDSP = String.fromCharCode(0x3000);     // 全角スペース
+  var ARROW = '→';
+  // 前後の空白・名前の途中の空白として扱う文字（半角・全角のスペース、改行しない空白、タブ、改行）
+  var SPACE_CHARS = ' ' + IDSP + NBSP + TAB + LF + CR;
+  // 全角・半角を無視するときに NFKC で変える文字（全角スペースと、全角の英数字・記号・半角カナの範囲 U+FF01〜U+FFEF）。①や㈱は変えない
+  var WIDTH_RE = new RegExp('[' + IDSP + String.fromCharCode(0xFF01) + '-' + String.fromCharCode(0xFFEF) + ']+', 'g');
+  // 日時（年が先の形だけ）：2026/10/20 9:05:03、2026-10-20T09:05 など
+  var TS_RE = new RegExp('^([0-9]{4})[/-]([0-9]{1,2})[/-]([0-9]{1,2})(?:[ T]([0-9]{1,2}):([0-9]{2})(?::([0-9]{2}))?)?$');
+  var TS_HEADERS = ['タイムスタンプ', 'timestamp', '完了時刻', '開始時刻'];
+  // 初期で「出す列」から外す列（Microsoft Forms が自動で付ける「名前」（回答者のアカウント名）も含む）
+  var HIDE_HEADERS = ['タイムスタンプ', 'timestamp', '完了時刻', '開始時刻', '最終変更時刻', 'id', '名前'];
+  var DISPLAY_LIMIT = 300;
+  // 表の上の一覧は短く切る（人数が多くても、表が結果の欄の中で遠くへ下がらないように）
+  var LIST_LIMIT = 10, MULTI_LIMIT = 5;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var answerText = $('answerText'), rosterText = $('rosterText'), replText = $('replText');
+  var nameCol = $('nameCol'), tsCol = $('tsCol'), rosterCol = $('rosterCol');
+  var answerCount = $('answerCount'), rosterCount = $('rosterCount'), replCount = $('replCount'), colsCount = $('colsCount');
+  var optRosterHeader = $('optRosterHeader'), optWidth = $('optWidth'), optSpace = $('optSpace'), optCase = $('optCase');
+  var pickLast = $('pickLast'), pickFirst = $('pickFirst'), optSummary = $('optSummary'), optExtra = $('optExtra');
+  var colsBox = $('colsBox');
+  var info = $('info');
+  var copyTable = $('copyTable'), copyMissing = $('copyMissing'), sampleButton = $('sampleButton'), clearButton = $('clearButton');
+  var status = $('status'), manualBox = $('manualBox'), manualText = $('manualText'), results = $('results');
+
+  var last = null;   // 最後に計算した結果
+
+  function fmt(n) { return n.toLocaleString('ja-JP'); }
+  function normalizeNewlines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF); }
+  function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function colName(i) {
+    var s = '';
+    i += 1;
+    while (i > 0) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); }
+    return s;
+  }
+  function isSpace(ch) { return SPACE_CHARS.indexOf(ch) >= 0; }
+  function trimSpaces(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charAt(a))) a++;
+    while (b > a && isSpace(s.charAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  function removeSpaces(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) { var ch = s.charAt(i); if (!isSpace(ch)) out += ch; }
+    return out;
+  }
+  function shortLabel(s, n) {
+    var arr = Array.from(trimSpaces(s.split(LF)[0]));
+    return arr.length > n ? arr.slice(0, n).join('') + '…' : arr.join('');
+  }
+
+  // ---------- 表の読み込み（Excel・スプレッドシートのコピーの形） ----------
+  function findCellEnd(text, from) {
+    var t = text.indexOf(TAB, from);
+    var n = text.indexOf(LF, from);
+    if (t < 0) t = text.length;
+    if (n < 0) n = text.length;
+    return Math.min(t, n);
+  }
+  function parseSheet(text) {
+    var rows = [];
+    var row = [];
+    var len = text.length;
+    var i = 0;
+    while (i <= len) {
+      var cell;
+      if (text.charAt(i) === QUOTE) {
+        // 閉じる " の直後がタブ・改行・終わりなら、" で囲まれたセル（セル内改行など）として読む
+        var j = i + 1;
+        var buf = '';
+        var closed = -1;
+        while (j < len) {
+          var c = text.charAt(j);
+          if (c === QUOTE) {
+            if (text.charAt(j + 1) === QUOTE) { buf += QUOTE; j += 2; continue; }
+            closed = j;
+            break;
+          }
+          buf += c;
+          j++;
+        }
+        var after = closed >= 0 ? text.charAt(closed + 1) : null;
+        if (closed >= 0 && (after === TAB || after === LF || after === '')) {
+          cell = buf;
+          i = closed + 1;
+        } else {
+          var endPlain = findCellEnd(text, i);
+          cell = text.slice(i, endPlain);
+          i = endPlain;
+        }
+      } else {
+        var end = findCellEnd(text, i);
+        cell = text.slice(i, end);
+        i = end;
+      }
+      row.push(cell);
+      var sep = text.charAt(i);
+      if (sep === TAB) { i++; continue; }
+      rows.push(row);
+      row = [];
+      if (sep === LF) { i++; if (i === len) break; continue; }
+      break;
+    }
+    return rows;
+  }
+  function isEmptyRow(row) {
+    for (var i = 0; i < row.length; i++) if (trimSpaces(row[i]) !== '') return false;
+    return true;
+  }
+  // 最後の空の行（コピーの最後の改行など）を除く
+  function readTable(text) {
+    if (trimSpaces(text) === '') return { rows: [], cols: 0 };
+    var rows = parseSheet(normalizeNewlines(text));
+    while (rows.length && isEmptyRow(rows[rows.length - 1])) rows.pop();
+    // 先頭の空の行も除く（見出しの行を正しく読むため）
+    while (rows.length && isEmptyRow(rows[0])) rows.shift();
+    var cols = 0;
+    rows.forEach(function (r) { if (r.length > cols) cols = r.length; });
+    return { rows: rows, cols: cols };
+  }
+  function cell(row, c) { return c >= 0 && c < row.length ? row[c] : ''; }
+
+  // ---------- 列の自動の選び方 ----------
+  function headerKey(h) { return trimSpaces(h).toLowerCase(); }
+  function isTsHeader(h) { return TS_HEADERS.indexOf(headerKey(h)) >= 0; }
+  function isMailHeader(h) { var k = headerKey(h); return k.indexOf('メール') >= 0 || k.indexOf('mail') >= 0; }
+  function isHiddenHeader(h) { return HIDE_HEADERS.indexOf(headerKey(h)) >= 0 || isMailHeader(h); }
+  // 見出しから名前の列を選ぶ。「氏名」を含む → 「名前」を含む →「name」を含む →「名」で終わる（児童名・生徒名）→ 外す列でない最初の列。
+  // 同じ選び方の中では、回答がすべて空の列（Microsoft Forms の匿名の「名前」列など）は後回しにする
+  // 人を表す語（見出しがこの語で終わるときだけ。クラス名・チーム名・参加者数などには当てない）
+  var PERSON_WORDS = ['児童名', '生徒名', '園児名', '子ども名', '子供名', 'こども名', '参加者', '参加者名', '回答者', '回答者名', '会員名', '利用者名', '保護者名', '選手名', '担当者名', '代表者', '代表者名'];
+  // 名前の列にしない見出し：メール、ふりがな・読み、数・人数で終わるもの
+  var NOT_NAME = ['ふりがな', 'フリガナ', 'よみがな', 'ヨミガナ', '読み', 'カナ', 'かな'];
+  function nameBase(h) {
+    var t = trimSpaces(h);
+    // 末尾の「（ ）」の補足（例：氏名（漢字））は除いて判定する
+    var m = t.match(/^(.*?)[（(][^（()）]*[)）]$/);
+    if (m && trimSpaces(m[1]) !== '') t = trimSpaces(m[1]);
+    return t;
+  }
+  function blockedName(h) {
+    var t = nameBase(h);
+    if (isMailHeader(h)) return true;
+    if (NOT_NAME.some(function (w) { return h.indexOf(w) >= 0; })) return true;
+    return t.slice(-1) === '数';
+  }
+  var NAME_TESTS = [
+    function (h) { return !blockedName(h) && h.indexOf('氏名') >= 0; },
+    function (h) { return !blockedName(h) && h.indexOf('名前') >= 0; },
+    function (h) { return !blockedName(h) && headerKey(h).indexOf('name') >= 0; },
+    function (h) { var t = nameBase(h); return !blockedName(h) && PERSON_WORDS.some(function (w) { return t.slice(-w.length) === w; }); }
+  ];
+  function isNameLike(h) { return NAME_TESTS.some(function (t) { return t(h); }); }
+  function detectNameCol(headers, rows) {
+    // 回答がすべて数（人数・番号など）の列か
+    var allNumber = function (c) {
+      var seen = false;
+      for (var r = 1; r < rows.length; r++) {
+        var v = trimSpaces(cell(rows[r], c)).normalize('NFKC');
+        if (v === '') continue;
+        seen = true;
+        if (!/^[0-9.,+-]+$/.test(v)) return false;
+      }
+      return seen;
+    };
+    var order = [];
+    // 名前らしい見出しがないときは、外す列・名前にしない見出し・回答がすべて数の列を後回しにして、左の列から選ぶ
+    NAME_TESTS.concat([
+      function (h, i) { return !isHiddenHeader(h) && !blockedName(h) && !allNumber(i); },
+      function (h) { return !isHiddenHeader(h); }
+    ]).forEach(function (t) {
+      for (var i = 0; i < headers.length; i++) if (order.indexOf(i) < 0 && t(headers[i], i)) order.push(i);
+    });
+    var nonEmpty = function (c) {
+      for (var r = 1; r < rows.length; r++) if (trimSpaces(cell(rows[r], c)) !== '') return true;
+      return false;
+    };
+    for (var k = 0; k < order.length; k++) if (nonEmpty(order[k])) return order[k];
+    return order.length ? order[0] : 0;
+  }
+  function detectTsCol(headers) {
+    for (var k = 0; k < TS_HEADERS.length; k++) {
+      for (var i = 0; i < headers.length; i++) if (headerKey(headers[i]) === TS_HEADERS[k]) return i;
+    }
+    return -1;
+  }
+  function detectRosterCol(headerRow, cols, hasHeader) {
+    if (!hasHeader || !headerRow) return 0;
+    var i;
+    for (i = 0; i < cols; i++) if (cell(headerRow, i).indexOf('氏名') >= 0) return i;
+    for (i = 0; i < cols; i++) if (cell(headerRow, i).indexOf('名前') >= 0) return i;
+    return 0;
+  }
+
+  // ---------- 名前の照合 ----------
+  function nameKey(s, opt) {
+    var k = s.normalize('NFC');
+    if (opt.width) k = k.replace(WIDTH_RE, function (m) { return m.normalize('NFKC'); });
+    k = trimSpaces(k);
+    if (opt.space) k = removeSpaces(k);
+    if (opt.lower) k = k.toLowerCase();
+    return k;
+  }
+
+  // ---------- 日時 ----------
+  function parseTs(s) {
+    var m = TS_RE.exec(trimSpaces(s));
+    if (!m) return null;
+    var y = Number(m[1]), mo = Number(m[2]), d = Number(m[3]);
+    var h = m[4] !== undefined ? Number(m[4]) : 0, mi = m[5] !== undefined ? Number(m[5]) : 0, se = m[6] !== undefined ? Number(m[6]) : 0;
+    if (mo < 1 || mo > 12 || d < 1 || h > 23 || mi > 59 || se > 59) return null;
+    var t = Date.UTC(y, mo - 1, d, h, mi, se);
+    var dt = new Date(t);
+    if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null; // 2026/2/30 など
+    return t;
+  }
+
+  // ---------- 置換表 ----------
+  function isBlankMarker(s) { return s === '（空欄）' || s === '(空欄)'; }
+  function parseRepl(text) {
+    var lines = normalizeNewlines(text).split(LF);
+    var map = new Map();
+    var blank = null;       // （空欄）の置き換え後
+    var list = [];
+    var ignored = [];
+    var seen = {};
+    lines.forEach(function (line, idx) {
+      var lineNo = idx + 1;
+      if (trimSpaces(line) === '') return;
+      var left, right, sepFound = true;
+      var t = line.indexOf(TAB);
+      if (t >= 0) {
+        left = line.slice(0, t);
+        var rest = line.slice(t + 1);
+        var t2 = rest.indexOf(TAB);
+        right = t2 >= 0 ? rest.slice(0, t2) : rest;
+      } else {
+        // 区切りは「→」、半角の「->」、全角の「－＞」（日本語入力のまま打った形）。行の中で最初に出てきたもので1回だけ分ける
+        var best = -1, blen = 0;
+        [[ARROW, 1], ['->', 2], ['－＞', 2]].forEach(function (s) {
+          var at = line.indexOf(s[0]);
+          if (at >= 0 && (best < 0 || at < best)) { best = at; blen = s[1]; }
+        });
+        if (best >= 0) { left = line.slice(0, best); right = line.slice(best + blen); }
+        else { sepFound = false; left = line; right = ''; }
+      }
+      left = trimSpaces(left).normalize('NFC');
+      right = trimSpaces(right);
+      if (!sepFound) { ignored.push(fmt(lineNo) + '行目（「→」がない）'); return; }
+      if (left === '') { ignored.push(fmt(lineNo) + '行目（元の値が空。空のセルは「（空欄）」と書きます）'); return; }
+      // 置き換え後が空の行は使わない（回答した人の欄が、未回答の人と同じ空欄に見えてしまうため）
+      if (right === '') { ignored.push(fmt(lineNo) + '行目（置き換え後が空）'); return; }
+      var key = isBlankMarker(left) ? '' : left;
+      if (Object.prototype.hasOwnProperty.call(seen, key)) { ignored.push(fmt(lineNo) + '行目（' + fmt(seen[key]) + '行目と同じ元の値）'); return; }
+      seen[key] = lineNo;
+      if (key === '') blank = right; else map.set(key, right);
+      list.push({ left: left, right: right, line: lineNo });
+    });
+    // 集計行に使う、置き換え後の値（空でないもの、上から、重複なし）
+    var values = [];
+    list.forEach(function (r) { if (r.right !== '' && values.indexOf(r.right) < 0) values.push(r.right); });
+    return { map: map, blank: blank, list: list, ignored: ignored, values: values };
+  }
+  function applyRepl(value, repl) {
+    var t = trimSpaces(value).normalize('NFC');
+    if (t === '') return repl.blank !== null ? repl.blank : value;
+    if (repl.map.has(t)) return repl.map.get(t);
+    return value;
+  }
+
+  // ---------- Excelに貼る形 ----------
+  function toSheetCell(s) {
+    if (s.indexOf(LF) >= 0 || s.indexOf(TAB) >= 0 || s.indexOf(QUOTE) >= 0 || s.indexOf(CR) >= 0) {
+      return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    }
+    return s;
+  }
+  function toSheetText(rows) {
+    return rows.map(function (r) { return r.map(toSheetCell).join(TAB); }).join(LF);
+  }
+  // 同じ表を HTML の表としてもコピーする。セルに「文字列」の書式（Excel：mso-number-format、LibreOffice Calc：sdnum）を付け、
+  // 「001」「3-1」「=1+1」などが数・日付・計算式に変わらないようにする。集計行の数（numericFrom 行目から下の、2列目から右）は数のまま。
+  // セル内改行のあるセルを含む表は、HTML では改行が保てない貼り付け先があるため、HTML を付けない（呼び出し側で判断）
+  var TEXT_ATTR = ' style="mso-number-format:' + String.fromCharCode(39) + String.fromCharCode(92) + '@' + String.fromCharCode(39) + '" sdnum="1041;0;@"';
+  function toHtmlTable(rows, numericFrom) {
+    var html = '<meta charset="utf-8"><table>';
+    rows.forEach(function (r, i) {
+      html += '<tr>' + r.map(function (v, j) {
+        var num = i >= numericFrom && j > 0 && v !== '';
+        return '<td' + (num ? '' : TEXT_ATTR) + '>' + escapeHtml(v) + '</td>';
+      }).join('') + '</tr>';
+    });
+    return html + '</table>';
+  }
+  function hasLineBreak(rows) {
+    return rows.some(function (r) { return r.some(function (v) { return v.indexOf(LF) >= 0 || v.indexOf(CR) >= 0; }); });
+  }
+
+  // ---------- 列の状態 ----------
+  // 回答表の見出しの行が変わったら（別の表を貼ったら）、名前・タイムスタンプの列と出す列を選び直す。
+  // 名前の列・名簿の名前の列は、利用者が選んでいなければ（manual が false）、貼り直すたびに自動で選び直す
+  var colState = { key: null, headers: [], name: 0, ts: -1, order: [], on: {}, manual: false, shown: null };
+  var rosterState = { key: null, col: 0, manual: false };
+
+  function syncAnswerCols(headers, rows) {
+    var key = headers.join(TAB);
+    if (colState.key === key) return;
+    colState.key = key;
+    colState.headers = headers;
+    colState.manual = false;
+    colState.name = headers.length ? detectNameCol(headers, rows) : 0;
+    colState.ts = headers.length ? detectTsCol(headers) : -1;
+    colState.order = [];
+    colState.on = {};
+    for (var c = 0; c < headers.length; c++) {
+      colState.order.push(c);
+      colState.on[c] = !isHiddenHeader(headers[c]);
+    }
+    colState.shown = null;
+  }
+  // 名簿があるときは、回答表の列と名簿の列の組み合わせのうち、名前が一致する人数が最も多いものを選ぶ（推定ではなく完全一致の数）。
+  // 同じ数なら、見出しから選んだ列（回答表）・見出しから選んだ列（名簿）を優先し、次に左の列。1人も一致しなければ見出しから選んだ列
+  function autoPick(ans, headers, rosterTable, rosterHeader, opt) {
+    var tierName = headers.length ? detectNameCol(headers, ans.rows) : 0;
+    var rosterDefault = detectRosterCol(rosterTable.rows[0], rosterTable.cols, rosterHeader);
+    var res = { byMatch: false };
+    if (!colState.manual) colState.name = tierName;
+    if (!rosterState.manual) rosterState.col = rosterTable.cols >= 2 ? rosterDefault : 0;
+    if (!headers.length || !rosterTable.rows.length || (colState.manual && (rosterState.manual || rosterTable.cols < 2))) return res;
+    var aCands = [];
+    if (colState.manual) aCands.push(colState.name);
+    else for (var a = 0; a < headers.length; a++) if (a !== colState.ts) aCands.push(a);
+    var rCands = [];
+    if (rosterState.manual || rosterTable.cols < 2) rCands.push(rosterState.col);
+    else for (var rc = 0; rc < rosterTable.cols; rc++) rCands.push(rc);
+    var sets = {};
+    aCands.forEach(function (ac) {
+      var set = new Set();
+      for (var r = 1; r < ans.rows.length; r++) { var k = nameKey(cell(ans.rows[r], ac), opt); if (k !== '') set.add(k); }
+      sets[ac] = set;
+    });
+    var first = rosterHeader ? 1 : 0;
+    var best = null;
+    rCands.forEach(function (rcol) {
+      var keys = [];
+      for (var r = first; r < rosterTable.rows.length; r++) { var k = nameKey(cell(rosterTable.rows[r], rcol), opt); if (k !== '') keys.push(k); }
+      aCands.forEach(function (ac) {
+        var n = 0;
+        keys.forEach(function (k) { if (sets[ac].has(k)) n++; });
+        var cand = { n: n, a: ac, r: rcol, pa: ac === tierName ? 0 : 1, pr: rcol === rosterDefault ? 0 : 1 };
+        if (!best || cand.n > best.n || (cand.n === best.n && (cand.pa < best.pa || (cand.pa === best.pa && cand.pr < best.pr)))) best = cand;
+      });
+    });
+    if (best && best.n > 0) {
+      res.matched = true;
+      if (!colState.manual) { colState.name = best.a; res.byMatch = best.a !== tierName; }
+      if (!rosterState.manual) rosterState.col = best.r;
+    }
+    return res;
+  }
+  function headerLabel(c) {
+    var h = shortLabel(colState.headers[c] || '', 20);
+    return colName(c) + '列：' + (h === '' ? '（見出しなし）' : h);
+  }
+  function renderSelects() {
+    var h = colState.headers;
+    nameCol.innerHTML = '';
+    tsCol.innerHTML = '';
+    if (!h.length) {
+      nameCol.appendChild(new Option('回答表を貼ると選べます'));
+      tsCol.appendChild(new Option('回答表を貼ると選べます'));
+      nameCol.disabled = true; tsCol.disabled = true;
+      return;
+    }
+    tsCol.appendChild(new Option('なし（行の順で判断）', '-1'));
+    for (var c = 0; c < h.length; c++) {
+      nameCol.appendChild(new Option(headerLabel(c), String(c)));
+      var o = new Option(headerLabel(c) + (c === colState.name ? '（名前の列）' : ''), String(c));
+      o.disabled = c === colState.name; // 名前の列をタイムスタンプにはしない
+      tsCol.appendChild(o);
+    }
+    nameCol.disabled = false; tsCol.disabled = false;
+    nameCol.value = String(colState.name);
+    tsCol.value = String(colState.ts);
+  }
+  function visibleOrder() { return colState.order.filter(function (c) { return c !== colState.name; }); }
+  function renderCols(focusId) {
+    var order = visibleOrder();
+    if (!colState.headers.length) {
+      colsBox.innerHTML = '<p class="empty">回答表を貼ると、ここに列の一覧が出ます。表に出す列に印を付け、↑↓で順番を変えます。</p>';
+      colsCount.textContent = '0列';
+      return;
+    }
+    if (!order.length) {
+      colsBox.innerHTML = '<p class="empty">回答表には名前の列しかありません。名前のほかに出す列はありません。</p>';
+      colsCount.textContent = '0列';
+      return;
+    }
+    var keepTop = colsBox.scrollTop;
+    var html = '<ul class="cols-list">';
+    order.forEach(function (c, i) {
+      var h = colState.headers[c] || '';
+      var label = trimSpaces(h) === '' ? '（見出しなし）' : shortLabel(h, 40);
+      html += '<li><label class="chip"><input type="checkbox" data-col="' + c + '"' + (colState.on[c] ? ' checked' : '') + '><span><b>' + colName(c) + '</b>' + escapeHtml(label) + '</span></label>' +
+        '<button type="button" class="mini" data-move="up" data-col="' + c + '" id="up' + c + '" aria-label="「' + escapeHtml(label) + '」を上へ"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+        '<button type="button" class="mini" data-move="down" data-col="' + c + '" id="down' + c + '" aria-label="「' + escapeHtml(label) + '」を下へ"' + (i === order.length - 1 ? ' disabled' : '') + '>↓</button></li>';
+    });
+    colsBox.innerHTML = html + '</ul>';
+    colsBox.scrollTop = keepTop;
+    var n = order.filter(function (c) { return colState.on[c]; }).length;
+    colsCount.textContent = fmt(n) + '列を出す';
+    if (focusId) {
+      var el = $(focusId);
+      if (el && el.disabled) el = $(focusId.indexOf('up') === 0 ? focusId.replace('up', 'down') : focusId.replace('down', 'up'));
+      if (el) {
+        el.focus({ preventScroll: true });
+        // 動かした列が枠の見えない所に行ったら、枠の中だけをスクロールして見せる（ページは動かさない）
+        var li = el.closest('li');
+        if (li.offsetTop < colsBox.scrollTop) colsBox.scrollTop = li.offsetTop;
+        else if (li.offsetTop + li.offsetHeight > colsBox.scrollTop + colsBox.clientHeight) colsBox.scrollTop = li.offsetTop + li.offsetHeight - colsBox.clientHeight;
+      }
+    }
+  }
+  function syncRosterCol(table, hasHeader) {
+    var key = table.cols < 2 ? String(table.cols) : table.cols + '|' + (hasHeader ? 'h' : '') + '|' + (table.rows[0] || []).join(TAB);
+    if (rosterState.key === key) return;
+    rosterState.key = key;
+    rosterState.manual = false;
+    rosterCol.innerHTML = '';
+    if (table.cols < 2) {
+      rosterCol.appendChild(new Option(table.cols === 1 ? 'A列（1列だけです）' : '2列以上を貼ると選べます'));
+      rosterCol.disabled = true;
+      return;
+    }
+    for (var c = 0; c < table.cols; c++) {
+      var lab = colName(c) + '列';
+      if (hasHeader) { var hh = shortLabel(cell(table.rows[0], c), 20); if (hh !== '') lab += '：' + hh; }
+      rosterCol.appendChild(new Option(lab, String(c)));
+    }
+    rosterCol.disabled = false;
+  }
+
+  // ---------- 計算 ----------
+  function compute() {
+    var opt = { width: optWidth.checked, space: optSpace.checked, lower: optCase.checked };
+    var pick = pickFirst.checked ? 'first' : 'last';
+    var ans = readTable(answerText.value);
+    var headers = [];
+    if (ans.rows.length) for (var hc = 0; hc < ans.cols; hc++) headers.push(cell(ans.rows[0], hc));
+    syncAnswerCols(headers, ans.rows);
+    var hasRoster = trimSpaces(rosterText.value) !== '';
+    var rosterHeader = optRosterHeader.checked;
+    var rosterTable = hasRoster ? readTable(rosterText.value) : { rows: [], cols: 0 };
+    syncRosterCol(rosterTable, rosterHeader);
+    var pickRes = autoPick(ans, headers, rosterTable, rosterHeader, opt);
+    var notes = [];
+    // 名前の列とタイムスタンプの列は同じにしない
+    if (headers.length && colState.ts === colState.name) {
+      colState.ts = -1;
+      notes.push('名前の列（' + colName(colState.name) + '列）とタイムスタンプが同じ列になったため、タイムスタンプは「なし（行の順で判断）」にしています。');
+    }
+    // 選択肢と出す列の一覧は、名前の列が変わったときだけ作り直す（一覧の中のフォーカスを保つ）
+    var shownKey = colState.key + '|' + colState.name + '|' + colState.ts;
+    if (colState.shown !== shownKey) { colState.shown = shownKey; renderSelects(); renderCols(); }
+    else { nameCol.value = String(colState.name); tsCol.value = String(colState.ts); }
+    if (rosterTable.cols >= 2) rosterCol.value = String(rosterState.col);
+    var nc = colState.name, tc = colState.ts;
+    var repl = parseRepl(replText.value);
+    if (headers.length && !colState.manual && !pickRes.matched && !headers.some(isNameLike)) {
+      notes.push('回答表に名前らしい見出し（氏名・名前など）の列がないため、' + colName(nc) + '列（' + shortLabel(headers[nc] || '', 20) + '）を名前の列にしています。違うときは「名前の列」で選んでください。');
+    }
+    if (pickRes.byMatch) notes.push('名簿の名前と一致する人数が最も多い' + colName(nc) + '列（' + shortLabel(headers[nc] || '', 20) + '）を名前の列にしています（「名前の列」で変えられます）。');
+    if (ans.cols === 1 && ans.rows.length && (headers[0].indexOf(',') >= 0 || headers[0].indexOf('，') >= 0)) {
+      notes.push('回答表が1列で、カンマ（,）で区切られています。CSVファイルをメモ帳などで開いてコピーした形のようです。CSVファイルをExcelかスプレッドシートで開き、表を選んでコピーし直してください（カンマでは列に分けません）。');
+    }
+
+    // 回答（2行目から下。すべて空の行は数えない）
+    var responses = [];
+    for (var r = 1; r < ans.rows.length; r++) {
+      if (isEmptyRow(ans.rows[r])) continue;
+      responses.push({ row: r + 1, cells: ans.rows[r] });
+    }
+    var groups = new Map();
+    var noName = [];
+    responses.forEach(function (resp) {
+      var k = nameKey(cell(resp.cells, nc), opt);
+      if (k === '') { noName.push(resp.row); return; }
+      if (!groups.has(k)) groups.set(k, { key: k, list: [], first: resp.row });
+      groups.get(k).list.push(resp);
+    });
+    // 2回以上回答した人：使う回答を決める
+    var multi = [];
+    var tsFallback = 0;
+    groups.forEach(function (g) {
+      var list = g.list.slice();
+      var byTs = false;
+      if (list.length > 1 && tc >= 0) {
+        var ts = list.map(function (x) { return parseTs(cell(x.cells, tc)); });
+        if (ts.every(function (v) { return v !== null; })) {
+          byTs = true;
+          list.forEach(function (x, i) { x.ts = ts[i]; });
+          list.sort(function (a, b) { return (a.ts - b.ts) || (a.row - b.row); });
+        } else {
+          tsFallback++;
+        }
+      }
+      g.sorted = list;
+      g.used = pick === 'first' ? list[0] : list[list.length - 1];
+      if (list.length > 1) multi.push({ g: g, byTs: byTs });
+    });
+
+    // 出す列
+    var outCols = visibleOrder().filter(function (c) { return colState.on[c]; });
+    function answerValues(resp) {
+      return outCols.map(function (c) {
+        var v = cell(resp.cells, c);
+        return c === tc ? v : applyRepl(v, repl);
+      });
+    }
+    function emptyValues() { return outCols.map(function () { return ''; }); }
+
+    var outHeader = [];
+    var data = [];          // { type: 'ans' | 'none' | 'blank' | 'extra', cells: [], name, row }
+    var leftCols = 1;
+    var stats = { roster: 0, done: 0, missing: 0, extra: 0, multi: multi.length, noName: noName.length, people: groups.size };
+    var missingNames = [];
+    var extraList = [];
+    var rc = rosterTable.cols >= 2 ? rosterState.col : 0;
+    // 名簿の人数（欄の右の数）。回答表がまだなくても数える
+    var rosterPeople = 0;
+    for (var rp0 = rosterHeader ? 1 : 0; rp0 < rosterTable.rows.length; rp0++) if (nameKey(cell(rosterTable.rows[rp0], rc), opt) !== '') rosterPeople++;
+
+    // 回答がまだないときは、名簿だけで表を作らない（全員が未回答に見えてしまうため）
+    if (hasRoster && responses.length) {
+      leftCols = Math.max(1, rosterTable.cols);
+      var firstR = rosterHeader ? 1 : 0;
+      for (var lc = 0; lc < leftCols; lc++) {
+        if (rosterHeader && rosterTable.rows.length) outHeader.push(cell(rosterTable.rows[0], lc));
+        else outHeader.push(lc === rc ? (ans.rows.length ? cell(ans.rows[0], nc) : '名前') : '名簿' + colName(lc) + '列');
+      }
+      var rosterKeys = new Map();
+      var rosterNoName = [];
+      for (var ri = firstR; ri < rosterTable.rows.length; ri++) {
+        var rrow = rosterTable.rows[ri];
+        var left = [];
+        for (var c2 = 0; c2 < leftCols; c2++) left.push(trimSpaces(cell(rrow, c2)));
+        if (isEmptyRow(rrow)) { data.push({ type: 'blank', cells: left.concat(emptyValues()), row: ri + 1 }); continue; }
+        var nm = trimSpaces(cell(rrow, rc));
+        var key = nameKey(nm, opt);
+        if (key === '') { rosterNoName.push(ri + 1); data.push({ type: 'blank', cells: left.concat(emptyValues()), row: ri + 1 }); continue; }
+        stats.roster++;
+        if (!rosterKeys.has(key)) rosterKeys.set(key, []);
+        rosterKeys.get(key).push(ri + 1);
+        var g = groups.get(key);
+        if (g) { stats.done++; data.push({ type: 'ans', cells: left.concat(answerValues(g.used)), name: nm, row: ri + 1 }); }
+        else { stats.missing++; missingNames.push(trimSpaces(nm)); data.push({ type: 'none', cells: left.concat(emptyValues()), name: nm, row: ri + 1 }); }
+      }
+      // 名簿にない回答者（回答表で最初に出てきた順）
+      groups.forEach(function (g) {
+        if (rosterKeys.has(g.key)) return;
+        extraList.push(g);
+      });
+      extraList.sort(function (a, b) { return a.first - b.first; });
+      stats.extra = extraList.length;
+      if (optExtra.checked) {
+        extraList.forEach(function (g) {
+          var left2 = [];
+          for (var c3 = 0; c3 < leftCols; c3++) left2.push(c3 === rc ? trimSpaces(cell(g.used.cells, nc)) : '');
+          data.push({ type: 'extra', cells: left2.concat(answerValues(g.used)), name: cell(g.used.cells, nc), row: g.used.row });
+        });
+      }
+      var dupRoster = [];
+      rosterKeys.forEach(function (rows) { if (rows.length > 1) dupRoster.push(rows); });
+      if (dupRoster.length) {
+        notes.push('名簿の' + dupRoster.slice(0, 3).map(function (rows) { return rows.map(fmt).join('行目と') + '行目'; }).join('、') +
+          (dupRoster.length > 3 ? ' など' + fmt(dupRoster.length) + '組' : '') + 'は、同じ名前として照らし合わせたため、同じ回答を入れています。別の人なら、名簿と回答の名前を区別できる書き方にしてください。');
+      }
+      if (rosterNoName.length) notes.push('名簿の' + rosterNoName.slice(0, 5).map(fmt).join('・') + '行目' + (rosterNoName.length > 5 ? ' など' + fmt(rosterNoName.length) + '行' : '') + 'は、名前の列（' + colName(rc) + '列）が空のため、空の行として残しています。');
+      if (rosterTable.cols >= 2) notes.push('名簿は' + fmt(rosterTable.cols) + '列の表です。' + colName(rc) + '列を名前として照らし合わせています（「名簿の名前の列」で変えられます）。');
+      if (rosterHeader && rosterTable.rows.length === 1) notes.push('名簿は見出しの1行だけです。名前を2行目から下に貼り付けるか、「名簿の1行目は見出し」をオフにしてください。');
+    } else {
+      outHeader.push(ans.rows.length ? cell(ans.rows[0], nc) : '名前');
+      var ordered = [];
+      groups.forEach(function (g) { ordered.push(g); });
+      ordered.sort(function (a, b) { return a.first - b.first; });
+      ordered.forEach(function (g) {
+        data.push({ type: 'ans', cells: [trimSpaces(cell(g.used.cells, nc))].concat(answerValues(g.used)), name: cell(g.used.cells, nc), row: g.used.row });
+      });
+    }
+    outCols.forEach(function (c) { outHeader.push(cell(ans.rows[0] || [], c)); });
+
+    // 集計行
+    var sumRows = [];
+    if (optSummary.checked && outCols.length && data.length) {
+      var width = leftCols + outCols.length;
+      var makeRow = function (label, test) {
+        var row = [label];
+        for (var j = 1; j < width; j++) {
+          if (j < leftCols) { row.push(''); continue; }
+          var n = 0;
+          data.forEach(function (d) { if (test(d.cells[j])) n++; });
+          row.push(String(n));
+        }
+        return row;
+      };
+      sumRows.push(makeRow('回答数', function (v) { return trimSpaces(v) !== ''; }));
+      repl.values.forEach(function (v) { sumRows.push(makeRow(v + 'の数', function (x) { return x === v; })); });
+    }
+
+    // 知らせ
+    if (!hasRoster && responses.length >= 4) {
+      var biggest = null;
+      groups.forEach(function (g) { if (!biggest || g.list.length > biggest.list.length) biggest = g; });
+      if (biggest && biggest.list.length * 2 >= responses.length) {
+        notes.push('名前の列（' + colName(nc) + '列）で、' + fmt(responses.length) + '件の回答のうち' + fmt(biggest.list.length) + '件が同じ「' + shortLabel(cell(biggest.used.cells, nc), 12) + '」です。名前ではない列（人数・クラスなど）が名前の列になっていないか、「名前の列」を確かめてください。');
+      }
+    }
+    if (ans.rows.length && !responses.length) notes.push('回答表は見出しの1行だけです。回答の行も含めてコピーしてください（1行目は必ず見出しとして読みます）。');
+    if (noName.length) notes.push('回答表の' + noName.slice(0, 5).map(fmt).join('・') + '行目' + (noName.length > 5 ? ' など' + fmt(noName.length) + '件' : '') + 'は、名前の列（' + colName(nc) + '列）が空のため、表に入れていません。');
+    if (tsFallback) notes.push('2回以上回答した人のうち' + fmt(tsFallback) + '人は、タイムスタンプの列（' + colName(tc) + '列）に日時として読めない値があるため、回答表の行の順で' + (pick === 'first' ? '最初' : '最後') + 'の回答を決めました。');
+    if (repl.ignored.length) notes.push('置換表の' + repl.ignored.slice(0, 5).join('、') + (repl.ignored.length > 5 ? ' など' + fmt(repl.ignored.length) + '行' : '') + 'は使っていません。');
+    if (responses.length && headers.length && !visibleOrder().length) notes.push('回答表に名前の列しかないため、名前だけの表です。');
+    else if (responses.length && !outCols.length) notes.push('「出す列と順番」で印の付いた列がないため、名前だけの表です。表に出す列に印を付けてください。');
+
+    return { ans: ans, headers: headers, responses: responses, groups: groups, multi: multi, noName: noName, hasRoster: hasRoster,
+      outHeader: outHeader, data: data, sumRows: sumRows, stats: stats, missingNames: missingNames, extraList: extraList,
+      notes: notes, nc: nc, rosterPeople: rosterPeople, pick: pick, leftCols: leftCols, repl: repl, outCols: outCols };
+  }
+
+  // ---------- 表示 ----------
+  function setStat(id, value, bad, sub) {
+    var li = $(id);
+    li.querySelector('.v').textContent = value;
+    li.querySelector('.s').textContent = sub || '';
+    li.classList.toggle('bad', !!bad);
+  }
+  function renderStats(res) {
+    var s = res.stats;
+    var has = res.responses.length > 0;
+    if (!has) { ['stRoster', 'stDone', 'stMissing', 'stExtra', 'stMulti', 'stNoName'].forEach(function (id) { setStat(id, '－', false); }); return; }
+    if (res.hasRoster) {
+      setStat('stRoster', fmt(s.roster) + '人', false);
+      setStat('stDone', fmt(s.done) + '人', false, '回答した人 計' + fmt(s.people) + '人');
+      setStat('stMissing', fmt(s.missing) + '人', s.missing > 0);
+      setStat('stExtra', fmt(s.extra) + '人', s.extra > 0, s.extra && !optExtra.checked ? '表に入れていない' : '');
+    } else {
+      setStat('stRoster', '－', false, '名簿なし');
+      setStat('stDone', fmt(s.people) + '人', false, '回答した人');
+      setStat('stMissing', '－', false, '名簿なし');
+      setStat('stExtra', '－', false, '名簿なし');
+    }
+    setStat('stMulti', fmt(s.multi) + '人', false, s.multi ? (res.pick === 'first' ? '最初の回答を使用' : '最後の回答を使用') : '');
+    setStat('stNoName', fmt(s.noName) + '件', s.noName > 0, s.noName ? '表に入れていない' : '');
+  }
+  function joinNames(list, limit) {
+    var shown = list.slice(0, limit);
+    return shown.join('、') + (list.length > limit ? ' ほか' + fmt(list.length - limit) + '人' : '');
+  }
+  function renderResults(res) {
+    var html = '';
+    var top = '';
+    if (res.notes.length) top += '<ul class="notes">' + res.notes.map(function (n) { return '<li>' + escapeHtml(n) + '</li>'; }).join('') + '</ul>';
+    if (!res.data.length) {
+      info.innerHTML = top || '<p class="empty">お知らせと、未回答の人などの一覧が、ここに出ます。</p>';
+      var msg;
+      if (trimSpaces(answerText.value) === '') msg = '「回答表」の欄に貼り付けると、ここに表ができます。';
+      else if (!res.responses.length) msg = '回答がありません。回答表を見出しの行ごと貼り付けてください。';
+      else msg = '名前の入った回答がありません。「名前の列」が合っているか確かめてください。';
+      results.innerHTML = '<p class="empty">' + escapeHtml(msg) + '</p>';
+      return;
+    }
+    // 一覧（未回答・名簿にない回答者・2回以上回答）
+    var lists = [];
+    if (res.hasRoster) {
+      lists.push('<p><strong>未回答（' + fmt(res.missingNames.length) + '人）：</strong>' + (res.missingNames.length ? escapeHtml(joinNames(res.missingNames, LIST_LIMIT) + (res.missingNames.length > LIST_LIMIT ? '（「未回答の名前をコピー」で全員をコピーできます）' : '')) : 'なし') + '</p>');
+      lists.push('<p><strong>名簿にない回答者（' + fmt(res.extraList.length) + '人）：</strong>' + (res.extraList.length
+        ? escapeHtml(res.extraList.slice(0, LIST_LIMIT).map(function (g) { return trimSpaces(cell(g.used.cells, res.nc)) + '（' + fmt(g.used.row) + '行目）'; }).join('、') + (res.extraList.length > LIST_LIMIT ? ' ほか' + fmt(res.extraList.length - LIST_LIMIT) + '人' + (optExtra.checked ? '（全員を表の最後に入れています）' : '（「名簿にない回答者も表に足す」で表に入れると全員を見られます）') : ''))
+        : 'なし') + '</p>');
+    }
+    if (res.multi.length) {
+      lists.push('<p><strong>2回以上回答した人（' + fmt(res.multi.length) + '人）：</strong>' + escapeHtml(res.multi.slice(0, MULTI_LIMIT).map(function (m) {
+        var g = m.g;
+        var others = g.list.filter(function (x) { return x !== g.used; }).map(function (x) { return x.row; }).sort(function (a, b) { return a - b; }).map(fmt);
+        return trimSpaces(cell(g.used.cells, res.nc)) + '（' + fmt(g.used.row) + '行目を使用、' + others.join('・') + '行目は使わない' + (m.byTs ? '・日時の順' : '・行の順') + '）';
+      }).join('、') + (res.multi.length > MULTI_LIMIT ? ' ほか' + fmt(res.multi.length - MULTI_LIMIT) + '人' : '')) + '</p>');
+    }
+    if (lists.length) top += '<div class="lists">' + lists.join('') + '</div>';
+    info.innerHTML = top || '<p class="empty">お知らせはありません。</p>';
+
+    var shown = res.data.slice(0, DISPLAY_LIMIT);
+    html += '<div class="table-wrap"><table class="out"><thead><tr><th class="rn" scope="col">行</th>' +
+      res.outHeader.map(function (h) { return '<th scope="col">' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    shown.forEach(function (d, i) {
+      var cls = d.type === 'none' ? 'none' : d.type === 'extra' ? 'extra' : '';
+      var tag = d.type === 'none' ? '<span class="tag">未回答</span>' : d.type === 'extra' ? '<span class="tag">名簿にない</span>' : '';
+      html += '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td class="rn">' + fmt(i + 2) + tag + '</td>' +
+        d.cells.map(function (v) { return '<td>' + escapeHtml(v) + '</td>'; }).join('') + '</tr>';
+    });
+    if (res.data.length <= DISPLAY_LIMIT) {
+      res.sumRows.forEach(function (row, k) {
+        html += '<tr class="sum' + (k === 0 ? ' sum1' : '') + '"><td class="rn">' + fmt(res.data.length + 2 + k) + '</td>' + row.map(function (v) { return '<td>' + escapeHtml(v) + '</td>'; }).join('') + '</tr>';
+      });
+    }
+    html += '</tbody></table></div>';
+    if (res.data.length > DISPLAY_LIMIT) {
+      html += '<p class="empty">ここには最初の' + fmt(DISPLAY_LIMIT) + '行だけを表示しています。「表をコピー」では、' + fmt(res.data.length) + '行すべて' + (res.sumRows.length ? 'と集計行' : '') + 'をコピーします。</p>';
+    }
+    results.innerHTML = html;
+  }
+
+  function update() {
+    manualBox.hidden = true;
+    manualText.value = '';
+    var res = compute();
+    last = res;
+    answerCount.textContent = fmt(res.responses.length) + '件';
+    rosterCount.textContent = fmt(res.rosterPeople) + '人';
+    replCount.textContent = fmt(res.repl.list.length) + '件';
+    renderStats(res);
+    renderResults(res);
+    copyTable.disabled = !res.data.length;
+    copyMissing.disabled = !(res.hasRoster && res.missingNames.length);
+    // 名簿がないと効かない設定は押せないようにする
+    optRosterHeader.disabled = !res.hasRoster;
+    optExtra.disabled = !res.hasRoster;
+    $('rosterHint1').classList.toggle('off', res.hasRoster);
+    $('rosterHint2').classList.toggle('off', res.hasRoster);
+  }
+
+  function tableRows(res) { return [res.outHeader].concat(res.data.map(function (d) { return d.cells; })).concat(res.sumRows); }
+
+  // ---------- 知らせ ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio') && el.nextElementSibling) el = el.nextElementSibling; // 選択肢は見えている部分（span）で測る
+    if (!el || !el.getBoundingClientRect || !document.body.contains(el)) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    if (!status.classList.contains('pin')) return;
+    status.classList.remove('pin');
+    var span = status.firstChild;
+    if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+  }
+  function setStatus(message, isError) {
+    unpin();
+    status.textContent = '';
+    status.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    status.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return; // 本来の場所で見えている
+    var box = status.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    status.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if (status.classList.contains('pin') && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+
+  // ---------- コピー ----------
+  var LABELS = { copyTable: '表をコピー', copyMissing: '未回答の名前をコピー' };
+  var timers = {};
+  function resetCopyButtons() {
+    [copyTable, copyMissing].forEach(function (b) { clearTimeout(timers[b.id]); b.textContent = LABELS[b.id]; });
+  }
+  function flashButton(btn, label, ms) {
+    resetCopyButtons();
+    btn.textContent = label;
+    timers[btn.id] = setTimeout(function () { btn.textContent = LABELS[btn.id]; }, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(btn, text) {
+    flashButton(btn, 'コピーできませんでした', 4000);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    // 欄の下の端が画面の外にあるときだけ、欄が見える所まで最小限スクロールする（ボタンは画面に残る）
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, btn.getBoundingClientRect().top - 8)));
+    setStatus('コピーできませんでした。ボタンの下の「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message, html) {
+    var done = function () {
+      setStatus(message);
+      flashButton(btn, '✓ コピーしました', 2500);
+    };
+    var plain = function () {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+          });
+          return;
+        }
+      } catch (e) { /* 下の方法で試す */ }
+      if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+    };
+    // HTML の表も一緒にコピーできるときは、テキストと HTML の両方を入れる（できなければテキストだけ）
+    try {
+      if (html && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+        var item = new window.ClipboardItem({
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' })
+        });
+        navigator.clipboard.write([item]).then(done, plain);
+        return;
+      }
+    } catch (e) { /* テキストだけでコピーする */ }
+    plain();
+  }
+  copyTable.addEventListener('click', function () {
+    if (!last || !last.data.length) return;
+    var rows = tableRows(last);
+    var html = hasLineBreak(rows) ? null : toHtmlTable(rows, 1 + last.data.length);
+    doCopy(copyTable, toSheetText(rows), '表を' + fmt(rows.length) + '行×' + fmt(last.outHeader.length) + '列コピーしました（1行目は見出し' + (last.sumRows.length ? '、最後の' + fmt(last.sumRows.length) + '行は集計' : '') + '）。Excelやスプレッドシートで、左上にしたいセルを選んで貼り付けてください。', html);
+  });
+  copyMissing.addEventListener('click', function () {
+    if (!last || !last.missingNames.length) return;
+    doCopy(copyMissing, last.missingNames.join(LF), '未回答の' + fmt(last.missingNames.length) + '人の名前を、名簿の順に1行に1人でコピーしました。');
+  });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE_ANSWER = [
+    ['タイムスタンプ', 'お名前', '出欠', '参加人数', 'メールアドレス'],
+    ['2026/10/18 20:15:02', '山田 太郎', '出席する', '2', 'yamada@example.com'],
+    ['2026/10/18 21:03:45', '佐藤花子', '欠席する', '', 'sato@example.com'],
+    ['2026/10/19 7:30:10', '鈴木' + IDSP + '一郎', '出席する', '1', 'suzuki@example.com'],
+    ['2026/10/19 12:00:00', '高橋 美咲', '出席する', '1', 'takahashi@example.com'],
+    ['2026/10/20 8:45:30', '山田太郎', '欠席する', '', 'yamada@example.com'],
+    ['2026/10/20 9:10:00', '伊藤 健', '出席する', '3', 'ito@example.com']
+  ].map(function (r) { return r.join(TAB); }).join(LF);
+  var SAMPLE_ROSTER = ['山田 太郎', '佐藤 花子', '鈴木 一郎', '田中 次郎', '高橋 美咲'].join(LF);
+  var SAMPLE_REPL = ['出席する→○', '欠席する→×', '（空欄）→−'].join(LF);
+
+  sampleButton.addEventListener('click', function () {
+    answerText.value = SAMPLE_ANSWER;
+    rosterText.value = SAMPLE_ROSTER;
+    optRosterHeader.checked = false;
+    var filled = trimSpaces(replText.value) === '';
+    if (filled) replText.value = SAMPLE_REPL;
+    update();
+    resetCopyButtons();
+    setStatus('例を入れました（回答6件と名簿5人）。' + (filled ? '置換表も入れました。' : '置換表は、入っていたものをそのまま使っています。') + '下の表で、未回答の人・2回回答した人の扱いを確かめてください。');
+  });
+
+  clearButton.addEventListener('click', function () {
+    answerText.value = '';
+    rosterText.value = '';
+    update();
+    resetCopyButtons();
+    setStatus('回答表と名簿の欄を消しました（置換表と設定は残しています）。新しい回答表を貼り付けてください。');
+  });
+
+  // ---------- 入力と設定 ----------
+  [answerText, rosterText, replText].forEach(function (el) {
+    el.addEventListener('input', function () { update(); resetCopyButtons(); setStatus(''); });
+  });
+  function afterSetting(message) {
+    update(); resetCopyButtons();
+    setStatus(message + (last && last.data.length ? '表を更新しました。' : '回答表を貼り付けると、この設定で表ができます。'));
+  }
+  nameCol.addEventListener('change', function () {
+    colState.name = Number(nameCol.value);
+    colState.manual = true;
+    var clash = colState.ts === colState.name;
+    if (clash) colState.ts = -1;
+    afterSetting('名前の列を' + colName(colState.name) + '列にしました。' +
+      (clash ? 'タイムスタンプと同じ列になったため、タイムスタンプは「なし」にし、2回以上回答した人は回答表の行の順で決めます。' : ''));
+  });
+  tsCol.addEventListener('change', function () {
+    colState.ts = Number(tsCol.value);
+    afterSetting(colState.ts < 0 ? 'タイムスタンプの列を「なし」にしました（2回以上回答した人は、回答表の行の順で決めます）。' : 'タイムスタンプの列を' + colName(colState.ts) + '列にしました。');
+  });
+  rosterCol.addEventListener('change', function () {
+    rosterState.col = Number(rosterCol.value);
+    rosterState.manual = true;
+    afterSetting('名簿の名前の列を' + colName(rosterState.col) + '列にしました。');
+  });
+  [optRosterHeader, optWidth, optSpace, optCase, optSummary, optExtra].forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      afterSetting('「' + inp.getAttribute('data-name') + '」を' + (inp.checked ? 'オン' : 'オフ') + 'にしました。');
+    });
+  });
+  [pickLast, pickFirst].forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      afterSetting('2回以上回答した人は「' + inp.getAttribute('data-name') + '」を使います。');
+    });
+  });
+  colsBox.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t || t.getAttribute('data-col') === null) return;
+    var c = Number(t.getAttribute('data-col'));
+    colState.on[c] = t.checked;
+    var n = visibleOrder().filter(function (x) { return colState.on[x]; }).length;
+    colsCount.textContent = fmt(n) + '列を出す';
+    afterSetting('「' + shortLabel(colState.headers[c] || '', 20) + '」の列を' + (t.checked ? '表に出します' : '表から外しました') + '。');
+  });
+  colsBox.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.getAttribute || !t.getAttribute('data-move')) return;
+    var c = Number(t.getAttribute('data-col'));
+    var dir = t.getAttribute('data-move');
+    var order = visibleOrder();
+    var i = order.indexOf(c);
+    var j = dir === 'up' ? i - 1 : i + 1;
+    if (i < 0 || j < 0 || j >= order.length) return;
+    var other = order[j];
+    var a = colState.order.indexOf(c), b = colState.order.indexOf(other);
+    colState.order[a] = other; colState.order[b] = c;
+    renderCols((dir === 'up' ? 'up' : 'down') + c);
+    var newOrder = visibleOrder();
+    afterSetting('「' + shortLabel(colState.headers[c] || '', 20) + '」の列を' + (dir === 'up' ? '上' : '下') + 'に動かしました（' + fmt(newOrder.indexOf(c) + 1) + '番目）。');
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
