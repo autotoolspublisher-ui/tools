@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>仕込み発注計算 - 食材の必要量と発注数を一括計算｜AIツールひろば</title>
+  <meta name="description" content="レシピ表と販売予定数を貼るだけで、飲食店の仕込みに使う食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注量を出せる無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/shikomi-hachu/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="仕込み発注計算 - 食材の必要量と発注数を一括計算｜AIツールひろば">
+  <meta property="og:description" content="レシピ表と販売予定数を貼るだけで、飲食店の仕込みに使う食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注量を出せる無料ツールです。登録不要で、入力した内容は外部に送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/shikomi-hachu/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/shikomi-hachu.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "仕込み発注計算",
+    "description": "レシピ表と販売予定数を貼るだけで、飲食店の仕込みに使う食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注量を出せる無料ツールです。登録不要で、入力した内容は外部に送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/shikomi-hachu/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "仕込み発注計算",
+        "item": "https://autotoolspublisher-ui.github.io/tools/shikomi-hachu/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "gとkgのように、単位が違う食材はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1kg＝1000g、1L＝1000ml、1cc＝1mlだけを換算します。同じ食材にgとkgが混ざっていても足し合わせ、「表示する単位」で選んだ単位（初期設定ではレシピの単位。gとkgが混ざるときはg）で表示します。量の欄にも単位の欄にも単位がない行は、gか個か分からないため使いません。個・本・袋などは換算しないため、同じ食材にgと個、個と玉、gとmlのように換算できない単位が混ざると、その食材は計算せずに「単位をそろえてください」と表示します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "発注数はどう計算しますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "不足量（必要量−在庫。0未満は0）を発注単位で割り、小数点以下を切り上げた数です。たとえば必要量8,500g・在庫2kg・発注単位1kgなら、不足量6,500gで発注数は7、発注後の余りは500gです。在庫で足りる食材の発注数は0です。発注単位を入れていない食材は、不足があると発注数を「－」にします。計算は丸めずに行い、「小数の表示」で丸めるのは表示だけです。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "メニュー名や食材名の書き方が少し違うと、どうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "前後の空白と、全角・半角の違い（「ｶﾚｰ」と「カレー」など）、英字の大文字・小文字の違いは無視して、それ以外がまったく同じときに同じものとみなします。「玉ねぎ」と「玉葱」、「カレー」と「カレーライス」のような違いは別のものとして扱い、似た名前を推測して結びつけることはしません。販売予定数にあってレシピ表にないメニューは、表の上の一覧に出ます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "原価や仕入れ金額も計算できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。このツールは量だけを扱い、金額（原価・売価・仕入れ金額）は計算しません。発注表をコピーしてExcelに貼り、単価の列を足して計算してください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力したレシピや販売予定数は、どこかに送信・保存されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。処理はすべてお使いのブラウザの中で行い、レシピ表・販売予定数・在庫が外部に送信されたり、保存されたりすることはありません。ページを閉じると消えます。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --order-bg: #e8f0fe; --bad-bg: #fef7e0; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  .grid3 { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+  .field-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: nowrap; gap: 2px 8px; margin-bottom: 8px; }
+  .field-head label { min-width: 0; color: #3c4043; font-weight: 600; white-space: nowrap; }
+  .field-head small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .count { color: var(--muted); font-size: .875rem; white-space: nowrap; }
+  textarea { display: block; width: 100%; height: 150px; min-height: 100px; resize: vertical; padding: 12px 13px; border: 1px solid var(--line); border-radius: 12px; font: .94rem/1.65 "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif; color: var(--ink); background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; transition: border-color .18s ease, box-shadow .18s ease; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .settings-head { margin-top: 22px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .settings-title { margin: 0; color: #202124; font-weight: 600; font-size: 1rem; }
+  .settings-head .hint { margin: 2px 0 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+  .chip { position: relative; display: inline-flex; min-width: 0; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { content: ""; background: #fff; box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 8px var(--green); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  .chip input:disabled + span::before { border-color: #bdc1c6; }
+  .hint { margin: 6px 0 8px; color: var(--muted); font-size: .875rem; }
+  /* 発注単位と在庫がないときだけ見せる案内。高さは常に取っておき、出ても消えても下の部品が動かないようにする */
+  #zeroHint.off { visibility: hidden; }
+  .settings-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; margin-top: 10px; }
+  .colpick { display: flex; align-items: center; gap: 8px; min-height: 44px; color: #3c4043; font-size: .9rem; }
+  .colpick label { font-weight: 600; white-space: nowrap; }
+  select { min-height: 44px; min-width: 0; max-width: 100%; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; font-size: .94rem; }
+  select:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  /* 表示の設定の知らせ。発注表と設定の間に置き、高さを先に確保する（設定を押しても、表と設定が動かない） */
+  .set-status { min-height: 44px; margin: 8px 0 0; }
+  /* まとめ。数字だけが変わる決まった形にして、出ても変わっても下の部品が動かないようにする */
+  .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+  .stats li { min-width: 0; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: var(--paper); }
+  .stats .k { display: block; color: var(--muted); font-size: .875rem; line-height: 1.4; word-break: keep-all; }
+  .stats .v { display: block; color: #202124; font-size: 1.05rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+  .stats .s { display: block; min-height: 1.4em; color: #3c4043; font-size: .875rem; line-height: 1.4; word-break: keep-all; overflow-wrap: anywhere; }
+  .stats li.bad .v { color: #a50e0e; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 14px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* コピーの前後で文字が変わっても、ボタンの幅を変えない（最も長い文字に合わせる） */
+  #copyTable { min-width: 13.5em; }
+  /* ボタンと設定の知らせ。ボタンの上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 66px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .status.error { color: var(--warn-ink); }
+  .manual { margin: 0 0 14px; }
+  .manual label { display: block; margin-bottom: 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { height: 120px; background: var(--paper); white-space: pre; overflow-x: auto; overflow-wrap: normal; font-family: ui-monospace, Consolas, monospace; }
+  .result-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 8px; }
+  .result-head .label { color: #3c4043; font-weight: 600; }
+  .legend-line { color: var(--muted); font-size: .875rem; font-weight: 400; }
+  .legend-line .lg { display: inline-block; white-space: nowrap; }
+  .legend-line i { display: inline-block; width: 1em; height: 1em; margin: 0 4px 0 10px; vertical-align: -2px; border-radius: 3px; border: 1px solid #c4c7c5; }
+  .legend-line i.lo { background: var(--order-bg); }
+  .legend-line i.lb { background: var(--bad-bg); }
+  /* お知らせと一覧は、表とは別の、高さを決めた枠に入れる（長くなっても表の位置が下がらず、下の部品も動かない） */
+  .info { height: 130px; overflow: auto; margin: 0 0 10px; padding: 8px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .info .empty { margin: 4px 6px; color: var(--muted); font-size: .9rem; }
+  .info > :last-child { margin-bottom: 0; }
+  .notes { margin: 0 0 8px; padding: 10px 14px 10px 30px; border-radius: 10px; background: var(--bad-bg); color: var(--warn-ink); font-size: .875rem; overflow-wrap: anywhere; }
+  .notes li + li { margin-top: 4px; }
+  .lists { margin: 0 0 8px; padding: 10px 14px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; font-size: .9rem; }
+  .lists p { margin: 0; overflow-wrap: anywhere; }
+  .lists p + p { margin-top: 6px; }
+  .lists strong { color: #202124; }
+  /* 結果の件数が変わっても下の部品が動かないよう、高さを決める（長い結果は欄の中でスクロール） */
+  .results { height: 420px; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .results .empty { margin: 4px 6px; color: var(--muted); }
+  .results .more { margin: 8px 4px 0; color: var(--muted); font-size: .875rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  table.out { border-collapse: collapse; min-width: 100%; font-size: .9rem; }
+  table.out th, table.out td { padding: 6px 10px; border-bottom: 1px solid #e8eaed; border-right: 1px solid #f1f3f4; text-align: left; vertical-align: top; overflow-wrap: anywhere; min-width: 3.5em; max-width: 16em; }
+  table.out th { white-space: nowrap; position: sticky; top: 0; z-index: 1; background: #f1f3f4; color: #3c4043; font-weight: 600; }
+  table.out td:first-child, table.out th:first-child { min-width: 6.5em; }
+  table.out .n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.out tr.order td { background: var(--order-bg); }
+  table.out tr.bad td { background: var(--bad-bg); color: var(--warn-ink); }
+  .note { margin: 14px 0 14px; color: var(--muted); font-size: .875rem; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+  @media (max-width: 900px) {
+    .grid3 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .grid3 > :first-child { grid-column: 1 / -1; }
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .grid3 { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    textarea { height: 140px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .howto { padding: 12px 14px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats .v { font-size: .95rem; }
+    .stats .s { min-height: 2.8em; }
+    .status { min-height: 110px; }
+    .set-status { min-height: 66px; }
+    .colpick { flex: 1 1 100%; }
+    .colpick label { min-width: 6.5em; }
+    .colpick select { flex: 1 1 auto; }
+    .settings-row { gap: 8px; }
+    .results { height: 340px; padding: 8px; }
+    .info { height: 170px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #copyTable { flex-basis: 100%; min-width: 0; }
+  }
+  @media (max-width: 380px) {
+    h1 { font-size: 1.75rem; }
+    header p { font-size: .875rem; line-height: 1.55; }
+    .howto { margin-bottom: 10px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 16px; }
+    header { margin-bottom: 14px; }
+    .status { min-height: 132px; }
+    .set-status { min-height: 88px; }
+    .card { padding: 19px 12px; }
+    .stats li { padding: 8px 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">仕込み発注計算</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">PREP ORDER</p>
+    <h1>仕込み発注計算</h1>
+    <p>レシピ表と販売予定数を貼るだけで、食材ごとの必要量を合計し、在庫を引いて、1袋1kgなどの発注単位で切り上げた発注数を出します。電卓やSUMIFを組む代わりに、gとkgの換算も、メニューが変わったときの計算し直しも、貼り直すだけで済みます。</p>
+  </header>
+
+  <section class="card" aria-label="仕込み発注計算">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>Excelなどの「メニュー・食材・1食あたりの量・単位」の4列を「レシピ表」に貼ります。</li>
+        <li>「メニュー・数」の2列を「販売予定数」に貼ります。発注単位と在庫は任意です。</li>
+        <li>下に発注表ができ、「発注表をコピー」でExcelに貼れます。</li>
+      </ol>
+    </div>
+
+    <div class="grid3">
+      <div>
+        <div class="field-head"><label for="recipeText">レシピ表 <small>（4列）</small></label><span id="recipeCount" class="count">0行</span></div>
+        <textarea id="recipeText" spellcheck="false" placeholder="メニュー・食材・1食あたりの量・単位の4列をコピーして貼り付けます。&#10;例：カレー　玉ねぎ　150　g"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><label for="salesText">販売予定数 <small>（2列）</small></label><span id="salesCount" class="count">0行</span></div>
+        <textarea id="salesText" spellcheck="false" placeholder="メニュー・数の2列を貼り付けます。&#10;例：カレー　40"></textarea>
+      </div>
+      <div>
+        <div class="field-head"><label for="stockText">発注単位と在庫 <small>（任意）</small></label><span id="stockCount" class="count">0行</span></div>
+        <textarea id="stockText" spellcheck="false" placeholder="食材・発注単位・在庫の3列を貼ると、発注数を出します。&#10;例：玉ねぎ　1kg　2kg"></textarea>
+      </div>
+    </div>
+
+    <ul class="stats" id="stats" aria-label="まとめ">
+      <li id="stMenus"><span class="k">メニュー</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stServings"><span class="k">販売予定の食数</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stIngr"><span class="k">食材</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stOrder"><span class="k">発注する食材</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stBad"><span class="k">使えなかった行</span><span class="v">－</span><span class="s"></span></li>
+      <li id="stNoRecipe"><span class="k">レシピにない</span><span class="v">－</span><span class="s"></span></li>
+    </ul>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+
+    <div class="actions">
+      <button type="button" id="copyTable" class="btn primary" disabled>発注表をコピー</button>
+      <button type="button" id="sampleButton" class="btn">例を入れる</button>
+      <button type="button" id="clearButton" class="btn">クリア</button>
+    </div>
+    <div class="manual" id="manualBox" hidden>
+      <label for="manualText">コピー用のテキスト（選んだ状態です）</label>
+      <textarea id="manualText" readonly spellcheck="false"></textarea>
+    </div>
+
+    <div class="result-head">
+      <span class="label" id="resultLabel">発注表<span class="legend-line"><span class="lg"><i class="lo"></i>発注する食材</span><span class="lg"><i class="lb"></i>確かめてほしい食材</span></span></span>
+    </div>
+    <div id="info" class="info" role="region" aria-label="お知らせと一覧" tabindex="0"><p class="empty">使えなかった行や、レシピにないメニューなどのお知らせが、ここに出ます。</p></div>
+    <div id="results" class="results" role="region" aria-labelledby="resultLabel" tabindex="0"><p class="empty">「レシピ表」と「販売予定数」に貼り付けると、ここに発注表ができます。</p></div>
+
+    <p id="setStatus" class="status set-status" role="status" aria-live="polite"></p>
+    <div class="settings-head"><p class="settings-title" id="settingsTitle">表示の設定</p><p class="hint">変えると、すぐ上の発注表に反映されます。</p></div>
+    <div class="settings-row" role="group" aria-labelledby="settingsTitle">
+      <div class="colpick"><label for="unitSel">表示する単位</label><select id="unitSel">
+        <option value="recipe" selected>レシピの単位</option><option value="small">g・ml にそろえる</option><option value="large">kg・L にそろえる</option></select></div>
+      <div class="colpick"><label for="digitsSel">小数の表示</label><select id="digitsSel">
+        <option value="all" selected>そのまま</option><option value="0">整数</option><option value="1">小数1桁</option><option value="2">小数2桁</option></select></div>
+      <div class="chips zero-chip"><label class="chip"><input type="checkbox" id="optZero" data-name="発注数が0の食材も表に出す" checked><span>発注数が0の食材も表に出す</span></label></div>
+    </div>
+    <p class="hint" id="settingsHint">「レシピの単位」は、その食材のレシピの単位です（gとkgが混ざるときはg、mlとLが混ざるときはml）。個・本などはどの設定でもそのままです。小数を四捨五入するのは表示だけで、発注数は丸める前の量で計算します。<span id="zeroHint">「発注数が0の食材も表に出す」は、「発注単位と在庫」を貼ると選べます。</span></p>
+
+    <p class="note">必要量は「1食あたりの量×販売予定数」をメニューごとに足したものです。不足量は「必要量−在庫」（0未満は0）、発注数は「不足量÷発注単位」を切り上げた数、発注後の余りは「在庫＋発注数×発注単位−必要量」です。換算するのは 1kg＝1000g、1L＝1000ml、1cc＝1ml だけで、gと個のように換算できない単位が同じ食材に混ざると計算しません。メニュー名・食材名は、前後の空白と、全角・半角、英字の大文字・小文字の違いを無視して、まったく同じときに同じものとみなします。タブのない行（手で打った行）は、半角・全角の空白で列に分けます。量は「0.5」「1/2」「150g」のように書け、量の欄にも単位の欄にも単位がない行は使いません。「発注単位と在庫」のD列に単位を書くと、単位を書いていない発注単位・在庫はその単位とみなします（D列がなければレシピの単位）。空白で区切った在庫の行では、数のすぐ後ろの単位（「1 kg 2 kg」）はその数の単位、最後に1つだけ書いた単位（「1 2 kg」）はD列の単位です。1行目が計算に使えない行（数の欄が数でない、在庫の表ではレシピにない食材）なら、見出しの行として飛ばし、一覧で知らせます。</p>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 貼り付けたレシピ表・販売予定数・在庫は、このページの中だけで処理され、保存も外部への送信もされません。金額（原価・売価）は扱いません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>2つのメニューで使う食材をまとめ、在庫を引いて発注数を出す</h3>
+      <dl>
+        <dt>入力</dt><dd>レシピ表（Excelの4列をコピー）<pre>メニュー	食材	1食あたりの量	単位
+カレー	玉ねぎ	150	g
+カレー	豚肉	120	g
+カレー	米	0.15	kg
+ハヤシライス	玉ねぎ	100	g
+ハヤシライス	牛肉	100	g
+ハヤシライス	米	150	g
+サラダ	レタス	0.25	個
+サラダ	ドレッシング	30	ml</pre>販売予定数<pre>メニュー	販売予定数
+カレー	40
+ハヤシライス	25
+サラダ	30
+オムライス	10</pre>発注単位と在庫<pre>食材	発注単位	在庫
+玉ねぎ	1kg	2kg
+豚肉	2kg	500g
+牛肉	1kg	
+米	10kg	12kg
+レタス	1	3
+ドレッシング	1L	300ml</pre></dd>
+        <dt>設定</dt><dd>初期設定のまま（表示する単位：レシピの単位、小数の表示：そのまま、発注数が0の食材も表に出す）</dd>
+        <dt>結果</dt><dd>まとめは「メニュー 3品」「販売予定の食数 95食」「食材 6品」「発注する食材 5品」「レシピにない 1品」になります。玉ねぎはカレーとハヤシライスの合計（150g×40＋100g×25＝8,500g）、米はkgとgを足して9,750gです。在庫2kgを引いた玉ねぎの不足6,500gを1kg単位で切り上げて、発注数は7です。「発注表をコピー」でコピーされる表（列の間はタブ）：<pre>食材	単位	必要量	在庫	不足量	発注単位	発注数	発注後の余り
+玉ねぎ	g	8500	2000	6500	1000	7	500
+豚肉	g	4800	500	4300	2000	3	1700
+米	g	9750	12000	0	10000	0	2250
+牛肉	g	2500	0	2500	1000	3	500
+レタス	個	7.5	3	4.5	1	5	0.5
+ドレッシング	ml	900	300	600	1000	1	400</pre>レシピにない「オムライス（10食）」は、表の上の一覧に出ます。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>定食の食材の必要量をkgで出す（量の欄に単位を書いた表）</h3>
+      <dl>
+        <dt>入力</dt><dd>レシピ表（見出しなし、量の欄に単位）<pre>唐揚げ定食	鶏もも肉	200g
+唐揚げ定食	キャベツ	50g
+生姜焼き定食	豚ロース	150g
+生姜焼き定食	キャベツ	50g
+生姜焼き定食	生姜	5g</pre>販売予定数<pre>唐揚げ定食	35
+生姜焼き定食	28</pre></dd>
+        <dt>設定</dt><dd>表示する単位：kg・L にそろえる／発注単位と在庫：空のまま</dd>
+        <dt>結果</dt><dd>キャベツは2つの定食の合計（50g×63食＝3,150g）です。「発注表をコピー」でコピーされる表：<pre>食材	単位	必要量
+鶏もも肉	kg	7
+キャベツ	kg	3.15
+豚ロース	kg	4.2
+生姜	kg	0.14</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>gとkgのように、単位が違う食材はどうなりますか？</summary>
+      <p>1kg＝1000g、1L＝1000ml、1cc＝1mlだけを換算します。同じ食材にgとkgが混ざっていても足し合わせ、「表示する単位」で選んだ単位（初期設定ではレシピの単位。gとkgが混ざるときはg）で表示します。量の欄にも単位の欄にも単位がない行は、gか個か分からないため使いません。個・本・袋などは換算しないため、同じ食材にgと個、個と玉、gとmlのように換算できない単位が混ざると、その食材は計算せずに「単位をそろえてください」と表示します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>発注数はどう計算しますか？</summary>
+      <p>不足量（必要量−在庫。0未満は0）を発注単位で割り、小数点以下を切り上げた数です。たとえば必要量8,500g・在庫2kg・発注単位1kgなら、不足量6,500gで発注数は7、発注後の余りは500gです。在庫で足りる食材の発注数は0です。発注単位を入れていない食材は、不足があると発注数を「－」にします。計算は丸めずに行い、「小数の表示」で丸めるのは表示だけです。</p>
+    </details>
+    <details class="faq-item">
+      <summary>メニュー名や食材名の書き方が少し違うと、どうなりますか？</summary>
+      <p>前後の空白と、全角・半角の違い（「ｶﾚｰ」と「カレー」など）、英字の大文字・小文字の違いは無視して、それ以外がまったく同じときに同じものとみなします。「玉ねぎ」と「玉葱」、「カレー」と「カレーライス」のような違いは別のものとして扱い、似た名前を推測して結びつけることはしません。販売予定数にあってレシピ表にないメニューは、表の上の一覧に出ます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>原価や仕入れ金額も計算できますか？</summary>
+      <p>いいえ。このツールは量だけを扱い、金額（原価・売価・仕入れ金額）は計算しません。発注表をコピーしてExcelに貼り、単価の列を足して計算してください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力したレシピや販売予定数は、どこかに送信・保存されますか？</summary>
+      <p>いいえ。処理はすべてお使いのブラウザの中で行い、レシピ表・販売予定数・在庫が外部に送信されたり、保存されたりすることはありません。ページを閉じると消えます。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/">区切り変換くん</a><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></li>
+      <li><a href="../matomete-chikan/">まとめて置換</a><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></li>
+      <li><a href="../zenkaku-hankaku/">全角半角そろえ</a><span>全角と半角が混ざったテキストを、英数字は半角・カナは全角のように、文字の種類ごとにそろえます。</span></li>
+      <li><a href="../list-hikaku/">リスト比較</a><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></li>
+      <li><a href="../kaigyo-sakujo/">改行削除</a><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></li>
+      <li><a href="../hiragana-katakana/">ひらがなカタカナ変換</a><span>ひらがなとカタカナを、まとめて相互に変換します。半角カタカナにも対応しています。</span></li>
+      <li><a href="../hyo-markdown/">表マークダウン変換</a><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></li>
+      <li><a href="../kishu-izon/">機種依存文字チェック</a><span>①・㈱・髙などの機種依存文字や、CSVで「?」になる文字を探して、使える文字に置き換えます。</span></li>
+      <li><a href="../kansuji-henkan/">漢数字変換</a><span>文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換します。</span></li>
+      <li><a href="../gyo-bunkatsu/">セルを行に分割</a><span>セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></li>
+      <li><a href="../renban-ticket/">連番チケット印刷</a><span>整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></li>
+      <li><a href="../bunsho-check/">文章まとめてチェック</a><span>通知表の所見など、Excelの列の文章の文字数の過不足・表記ルールに当たる表現・前学期と同じ文を、まとめて一覧にします。</span></li>
+      <li><a href="../form-kaito-hyo/">フォーム回答を表に</a><span>Googleフォーム・Formsの回答表と名簿から、名簿の順の出欠表・提出状況の表を作り、未回答の人を書き出します。</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+<script>
+(function () {
+  'use strict';
+
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var TAB = String.fromCharCode(9);
+  var QUOTE = String.fromCharCode(34);        // "
+  var NBSP = String.fromCharCode(0xA0);       // 改行しない空白
+  var IDSP = String.fromCharCode(0x3000);     // 全角スペース
+  var SPACE_CHARS = ' ' + IDSP + NBSP + TAB + LF + CR;
+  // 名前の照らし合わせで NFKC にする文字（全角スペースと、全角の英数字・記号・半角カナの範囲 U+FF01〜U+FFEF）
+  var WIDTH_RE = new RegExp('[' + IDSP + String.fromCharCode(0xFF01) + '-' + String.fromCharCode(0xFFEF) + ']+', 'g');
+  // 数の欄：「150」「0.25」「1,000」「150g」「1.5 kg」。数の後ろは単位（なくてもよい）
+  var NUM_RE = new RegExp('^([0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:[.]([0-9]+))?(.*)$');
+  var MAX_ROWS = 5000;
+  // タブのない行を列に分ける空白（半角・全角のスペース、改行しない空白）
+  var SPACE_RUN = new RegExp('[ ' + IDSP + NBSP + ']+');
+  var COMMA_RE = new RegExp('[,' + String.fromCharCode(0xFF0C) + String.fromCharCode(0x3001) + ']');   // , ， 、
+  // 結合用の濁点・半濁点（U+3099・U+309A）で分かれたかな（1文字にまとめてから比べる）
+  var SPLIT_KANA_RE = new RegExp('[' + String.fromCharCode(0x3041) + '-' + String.fromCharCode(0x30FF) + '][' + String.fromCharCode(0x3099) + String.fromCharCode(0x309A) + ']', 'g');
+  var NBSP_RE = new RegExp(NBSP, 'g');
+  // 分数：「1/2」「1/4本」
+  var FRAC_RE = new RegExp('^([0-9]+)/([0-9]+)(.*)$');
+  // 数の後ろに続いたら単位として読まない文字（範囲・分数・別の数）
+  var RANGE_CHARS = '~-' + String.fromCharCode(0x301C) + String.fromCharCode(0x2212) + String.fromCharCode(0x30FC) + String.fromCharCode(0x2015) + String.fromCharCode(0x2010);
+  var DISPLAY_LIMIT = 300;
+  var NOTE_LIMIT = 20;
+  var SCALE = 1000000n;            // 1g・1ml・1個 を 1,000,000 とした整数で計算する
+  var MAX_FRAC = 6;
+  // 換算できる単位（固定の表だけ）
+  var UNITS = {
+    'g': { dim: 'mass', f: 1n, label: 'g' },
+    'kg': { dim: 'mass', f: 1000n, label: 'kg' },
+    'ml': { dim: 'vol', f: 1n, label: 'ml' },
+    'cc': { dim: 'vol', f: 1n, label: 'cc' },
+    'l': { dim: 'vol', f: 1000n, label: 'L' }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var recipeText = $('recipeText'), salesText = $('salesText'), stockText = $('stockText');
+  var recipeCount = $('recipeCount'), salesCount = $('salesCount'), stockCount = $('stockCount');
+  var optZero = $('optZero'), zeroHint = $('zeroHint'), unitSel = $('unitSel'), digitsSel = $('digitsSel'), setStatusEl = $('setStatus');
+  var copyTable = $('copyTable'), sampleButton = $('sampleButton'), clearButton = $('clearButton');
+  var status = $('status'), manualBox = $('manualBox'), manualText = $('manualText'), results = $('results'), info = $('info');
+
+  var last = null;   // 最後に計算した結果
+
+  function fmt(n) { return Number(n).toLocaleString('ja-JP'); }
+  function normalizeNewlines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF); }
+  function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function isSpace(ch) { return SPACE_CHARS.indexOf(ch) >= 0; }
+  function trimSpaces(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charAt(a))) a++;
+    while (b > a && isSpace(s.charAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  function shortText(s, n) {
+    var arr = Array.from(s);
+    return arr.length > n ? arr.slice(0, n).join('') + '…' : s;
+  }
+  function quoteText(s) { return '「' + shortText(s, 20) + '」'; }
+
+  // ---------- 表の読み込み（Excel・スプレッドシートのコピーの形） ----------
+  function findCellEnd(text, from) {
+    var t = text.indexOf(TAB, from);
+    var n = text.indexOf(LF, from);
+    if (t < 0) t = text.length;
+    if (n < 0) n = text.length;
+    return Math.min(t, n);
+  }
+  function parseSheet(text) {
+    var rows = [];
+    var row = [];
+    var len = text.length;
+    var i = 0;
+    while (i <= len) {
+      var cell;
+      if (text.charAt(i) === QUOTE) {
+        var j = i + 1;
+        var buf = '';
+        var closed = -1;
+        while (j < len) {
+          var c = text.charAt(j);
+          if (c === QUOTE) {
+            if (text.charAt(j + 1) === QUOTE) { buf += QUOTE; j += 2; continue; }
+            closed = j;
+            break;
+          }
+          buf += c;
+          j++;
+        }
+        var after = closed >= 0 ? text.charAt(closed + 1) : null;
+        if (closed >= 0 && (after === TAB || after === LF || after === '')) {
+          cell = buf;
+          i = closed + 1;
+        } else {
+          var endPlain = findCellEnd(text, i);
+          cell = text.slice(i, endPlain);
+          i = endPlain;
+        }
+      } else {
+        var end = findCellEnd(text, i);
+        cell = text.slice(i, end);
+        i = end;
+      }
+      row.push(cell);
+      var sep = text.charAt(i);
+      if (sep === TAB) { i++; continue; }
+      rows.push(row);
+      row = [];
+      if (sep === LF) { i++; if (i === len) break; continue; }
+      break;
+    }
+    return rows;
+  }
+  function isEmptyRow(row) {
+    for (var i = 0; i < row.length; i++) if (trimSpaces(row[i]) !== '') return false;
+    return true;
+  }
+  // 行番号（貼り付けた欄の何行目か）を付けて、空の行を除いた行を返す
+  function readRows(text) {
+    if (trimSpaces(text) === '') return [];
+    var rows = parseSheet(normalizeNewlines(text));
+    var out = [];
+    rows.forEach(function (r, i) {
+      if (isEmptyRow(r)) return;
+      var row = { line: i + 1, cells: r.map(trimSpaces) };
+      // タブのない行（手で打った行）は、半角・全角の空白で列に分ける
+      if (r.length === 1) {
+        var parts = row.cells[0].split(SPACE_RUN).filter(function (x) { return x !== ''; });
+        if (parts.length > 1) { row.cells = parts; row.spaced = true; }
+        else if (COMMA_RE.test(row.cells[0])) row.comma = true;
+      }
+      out.push(row);
+    });
+    return out;
+  }
+  function cell(row, c) { return c < row.cells.length ? row.cells[c] : ''; }
+
+  // ---------- 名前・数・単位 ----------
+  function nameKey(s) {
+    return trimSpaces(s).replace(NBSP_RE, ' ').replace(SPLIT_KANA_RE, function (m) { return m.normalize('NFC'); })
+      .replace(WIDTH_RE, function (m) { return m.normalize('NFKC'); }).toLowerCase();
+  }
+  function unitKey(u) { return trimSpaces(u.normalize('NFKC')).toLowerCase(); }
+  function unitInfo(u) {
+    var k = unitKey(u);
+    if (UNITS[k]) return UNITS[k];
+    // 換算しない単位（個・本・袋・空欄など）。書き方が同じときだけ同じ単位
+    return { dim: 'count:' + k, f: 1n, label: trimSpaces(u.normalize('NFKC')) };
+  }
+  // 数の欄を読む。{ ok, v: 1,000,000倍の整数（その単位で）, unit: 欄に書かれた単位（なければ null）, why }
+  function parseNumber(raw) {
+    var s = trimSpaces(raw.normalize('NFKC'));
+    var c0 = s.charAt(0);
+    if ((c0 === '-' || c0 === String.fromCharCode(0x2212)) && /^[0-9]/.test(s.slice(1))) return { ok: false, why: 'neg' };
+    var v, unit;
+    var fm = FRAC_RE.exec(s);
+    if (fm) {
+      var den = BigInt(fm[2]);
+      if (den === 0n) return { ok: false, why: 'notnum' };
+      var num = BigInt(fm[1]) * SCALE;
+      if (num % den !== 0n) return { ok: false, why: 'fracdiv' };   // 小数6桁で割り切れない分数（1/3 など）
+      v = num / den;
+      unit = trimSpaces(fm[3]);
+    } else {
+      var m = NUM_RE.exec(s);
+      if (!m) return { ok: false, why: 'notnum' };
+      var frac = m[2] || '';
+      if (frac.length > MAX_FRAC) return { ok: false, why: 'frac' };
+      unit = trimSpaces(m[3]);
+      v = BigInt(m[1].split(',').join('')) * SCALE + BigInt((frac + '000000').slice(0, MAX_FRAC));
+    }
+    if (unit !== '') {
+      var u0 = unit.charAt(0);
+      if (RANGE_CHARS.indexOf(u0) >= 0) return { ok: false, why: 'range' };
+      if (/^[0-9.,+/]/.test(unit)) return { ok: false, why: 'notnum' };
+    }
+    return { ok: true, v: v, unit: unit === '' ? null : unit };
+  }
+
+  // 1,000,000倍の整数 → 表示の文字列（d：小数の桁。null ならそのまま）。den：表示する単位の倍率×SCALE
+  function showValue(v, f, d) {
+    var den = f * SCALE;
+    if (d === null) {
+      var ip = v / den, rem = v % den;
+      if (rem === 0n) return ip.toString();
+      var width = den.toString().length - 1;
+      var fs = rem.toString();
+      while (fs.length < width) fs = '0' + fs;
+      fs = fs.replace(/0+$/, '');
+      return ip.toString() + '.' + fs;
+    }
+    var p = 10n ** BigInt(d);
+    var r = (v * p * 2n + den) / (den * 2n);   // 四捨五入（0以上の値だけ）
+    if (d === 0) return r.toString();
+    var s = r.toString();
+    while (s.length <= d) s = '0' + s;
+    return s.slice(0, s.length - d) + '.' + s.slice(s.length - d);
+  }
+  function ceilDiv(a, b) { return (a + b - 1n) / b; }
+
+  // ---------- 計算 ----------
+  function badNumberText(p, raw) {
+    if (p.why === 'frac') return quoteText(raw) + 'の小数が7桁以上のため';
+    if (p.why === 'neg') return quoteText(raw) + 'が0以上の数ではないため';
+    if (p.why === 'fracdiv') return quoteText(raw) + 'が小数6桁で割り切れない分数のため（0.333のように小数で書いてください）';
+    if (p.why === 'range') return quoteText(raw) + 'が1つの数ではないため（範囲ではなく1つの数で書いてください）';
+    return quoteText(raw) + 'が数として読めないため';
+  }
+  var MSG_COMMA = '列に分かれていないため（Excelからコピーするか、列の間をタブか空白で区切ってください）';
+  var MSG_MANY = '空白で区切った列が多すぎるため（名前に空白があるときは、Excelからコピーしたタブ区切りで貼ってください）';
+  function shapeError(r, max) {
+    if (r.comma) return MSG_COMMA;
+    if (r.spaced && r.cells.length > max) return MSG_MANY;
+    return null;
+  }
+  // 1行を読む。読めなければ { err: 理由 }
+  function readSalesRow(r) {
+    var shape = shapeError(r, 2);
+    if (shape) return { err: shape };
+    var menu = cell(r, 0), raw = cell(r, 1);
+    if (menu === '') return { err: 'メニューが空のため' };
+    if (raw === '') return { err: '数が空のため', head: true };
+    var p = parseNumber(raw);
+    var notNum = !p.ok && p.why === 'notnum' || p.ok && p.unit !== null && unitKey(p.unit) !== '食';
+    if (notNum || !p.ok || p.v % SCALE !== 0n) return { err: '数' + quoteText(raw) + 'が0以上の整数ではないため', head: notNum };
+    return { menu: menu, n: p.v / SCALE };
+  }
+  function readRecipeRow(r) {
+    var shape = shapeError(r, 4);
+    if (shape) return { err: shape };
+    var menu = cell(r, 0), food = cell(r, 1), raw = cell(r, 2), unitCell = cell(r, 3);
+    if (menu === '' || food === '') return { err: (menu === '' ? 'メニュー' : '食材') + 'が空のため' };
+    // head：1行目なら見出しとみなす誤り（数の欄が空・数でない、量の欄の単位と単位の欄が違う）
+    if (raw === '') return { err: '1食あたりの量が空のため', head: true };
+    var p = parseNumber(raw);
+    if (!p.ok) return { err: '1食あたりの量' + badNumberText(p, raw), head: p.why === 'notnum' };
+    var unit = unitCell;
+    if (p.unit !== null) {
+      if (unitCell !== '' && unitKey(unitCell) !== unitKey(p.unit)) return { err: '量の欄の単位' + quoteText(p.unit) + 'と、単位の欄' + quoteText(unitCell) + 'が違うため', head: true };
+      unit = p.unit;
+    }
+    if (trimSpaces(unit) === '') return { err: '単位が空のため' };
+    return { menu: menu, food: food, v: p.v, unit: unit };
+  }
+  // 空白で分けた在庫の行（「豚肉 1 kg 2 kg」）は、数のすぐ後ろの単位だけの列を、その数につなぐ
+  var PLAIN_NUMBER = new RegExp('^[0-9][0-9,]*([.][0-9]+)?$');
+  // 単位だけの列は、(1) すぐ後ろに数が続くとき（「1 kg 2 kg」の最初の kg）、(2) 行の数が1つだけのとき（「1 kg」）に、前の数につなぐ。
+  // それ以外の最後の単位（「1 2 kg」）は、タブ区切りと同じく D列の単位（両方の数に付く）として残す
+  function isNum(c) { return /^[0-9]/.test(c.normalize('NFKC')); }
+  function joinUnits(cells) {
+    var nums = cells.slice(1).filter(isNum).length;
+    var out = [cells[0]];
+    for (var i = 1; i < cells.length; i++) {
+      var c = cells[i], prev = out[out.length - 1];
+      var unitOnly = !isNum(c);
+      var afterPlain = out.length > 1 && PLAIN_NUMBER.test(prev.normalize('NFKC'));
+      var nextNum = i + 1 < cells.length && isNum(cells[i + 1]);
+      if (unitOnly && afterPlain && (nextNum || nums === 1)) out[out.length - 1] = prev + c;
+      else out.push(c);
+    }
+    return out;
+  }
+  function headerText(r) { return r.cells.filter(function (c) { return c !== ''; }).map(function (c) { return shortText(c, 12); }).join('／'); }
+
+  function compute() {
+    var recipeRows = readRows(recipeText.value);
+    var salesRows = readRows(salesText.value);
+    var stockRows = readRows(stockText.value);
+    var res = {
+      recipeLines: recipeRows.length, salesLines: salesRows.length, stockLines: stockRows.length,
+      over: null, bad: [], notes: [], guess: [], hasStock: stockRows.length > 0, ready: false, headers: []
+    };
+    var over = [];
+    if (recipeRows.length > MAX_ROWS) over.push('レシピ表');
+    if (salesRows.length > MAX_ROWS) over.push('販売予定数');
+    if (stockRows.length > MAX_ROWS) over.push('発注単位と在庫');
+    if (over.length) { res.over = over; return res; }
+
+    // 1行目が使えない行（数として読めないなど）なら、見出しの行として飛ばす（飛ばしたことは一覧で知らせる）
+    if (recipeRows.length && readRecipeRow(recipeRows[0]).head) res.headers.push('レシピ表の' + fmt(recipeRows[0].line) + '行目（' + headerText(recipeRows.shift()) + '）');
+    if (salesRows.length && readSalesRow(salesRows[0]).head) res.headers.push('販売予定数の' + fmt(salesRows[0].line) + '行目（' + headerText(salesRows.shift()) + '）');
+
+    // 販売予定数
+    var sales = new Map();   // メニューの鍵 → { name, n }
+    var salesOrder = [];
+    salesRows.forEach(function (r) {
+      var x = readSalesRow(r);
+      if (x.err) { res.bad.push({ t: '販売予定数', line: r.line, msg: x.err }); return; }
+      var k = nameKey(x.menu);
+      var e = sales.get(k);
+      if (!e) { e = { name: x.menu, n: 0n, lines: [] }; sales.set(k, e); salesOrder.push(e); }
+      e.n += x.n;
+      e.lines.push(r.line);
+    });
+
+    // レシピ表
+    var menus = new Map();      // メニューの鍵 → { name }
+    var ingr = new Map();       // 食材の鍵 → { name, dims: Map(単位の種類 → { units, lines }), total }
+    var ingrOrder = [];
+    recipeRows.forEach(function (r) {
+      var x = readRecipeRow(r);
+      if (x.err) { res.bad.push({ t: 'レシピ表', line: r.line, msg: x.err }); return; }
+      var u = unitInfo(x.unit);
+      var mk = nameKey(x.menu);
+      if (!menus.has(mk)) menus.set(mk, { name: x.menu });
+      var fk = nameKey(x.food);
+      var g = ingr.get(fk);
+      if (!g) { g = { key: fk, name: x.food, dims: new Map(), total: 0n, dimOrder: [] }; ingr.set(fk, g); ingrOrder.push(g); }
+      var d = g.dims.get(u.dim);
+      if (!d) { d = { units: new Map(), lines: [] }; g.dims.set(u.dim, d); g.dimOrder.push(u.dim); }
+      d.lines.push(r.line);
+      if (!d.units.has(unitKey(x.unit))) d.units.set(unitKey(x.unit), u.label);
+      var s = sales.get(mk);
+      g.total += x.v * u.f * (s ? s.n : 0n);    // g・ml・換算しない単位の 1,000,000倍
+    });
+
+    // 食材ごとの単位
+    ingrOrder.forEach(function (g) {
+      if (g.dims.size > 1) { g.mixed = true; return; }
+      var dim = g.dimOrder[0];
+      g.dim = dim;
+      var d = g.dims.get(dim);
+      if (dim === 'mass' || dim === 'vol') {
+        if (d.units.size === 1) { var only = Array.from(d.units.keys())[0]; g.recipeUnit = UNITS[only]; }
+        else g.recipeUnit = dim === 'mass' ? UNITS.g : UNITS.ml;
+      } else {
+        g.recipeUnit = { dim: dim, f: 1n, label: Array.from(d.units.values())[0] };
+      }
+    });
+
+    // 発注単位と在庫
+    var stockSeen = new Map();
+    var unusedStock = [];
+    var dupStock = [];
+    stockRows.forEach(function (r) { if (r.spaced && !r.joined) { r.cells = joinUnits(r.cells); r.joined = true; } });
+    if (stockRows.length && !shapeError(stockRows[0], 4) && !ingr.has(nameKey(cell(stockRows[0], 0)))) res.headers.push('発注単位と在庫の' + fmt(stockRows[0].line) + '行目（' + headerText(stockRows.shift()) + '）');
+    stockRows.forEach(function (r) {
+      var shape = shapeError(r, 4);
+      if (shape) { res.bad.push({ t: '発注単位と在庫', line: r.line, msg: shape }); return; }
+      var food = cell(r, 0);
+      if (food === '') { res.bad.push({ t: '発注単位と在庫', line: r.line, msg: '食材が空のため' }); return; }
+      var fk = nameKey(food);
+      if (stockSeen.has(fk)) { dupStock.push({ name: food, line: r.line, first: stockSeen.get(fk) }); return; }
+      var g = ingr.get(fk);
+      if (!g) { stockSeen.set(fk, r.line); unusedStock.push({ name: food, line: r.line }); return; }
+      if (g.mixed) { stockSeen.set(fk, r.line); return; }
+      var defUnit = cell(r, 3);
+      var parts = [['発注単位', cell(r, 1)], ['在庫', cell(r, 2)]];
+      var vals = [], given = [];
+      for (var i = 0; i < parts.length; i++) {
+        var label = parts[i][0], raw = parts[i][1];
+        if (raw === '') { vals.push(null); continue; }
+        var p = parseNumber(raw);
+        if (!p.ok) { res.bad.push({ t: '発注単位と在庫', line: r.line, msg: label + badNumberText(p, raw) }); return; }
+        if (i === 0 && p.v === 0n) { res.bad.push({ t: '発注単位と在庫', line: r.line, msg: label + quoteText(raw) + 'が0より大きい数ではないため' }); return; }
+        var u = p.unit !== null ? unitInfo(p.unit) : (defUnit !== '' ? unitInfo(defUnit) : g.recipeUnit);
+        if (u.dim !== g.dim) {
+          var ul = p.unit !== null ? p.unit : defUnit;
+          res.bad.push({ t: '発注単位と在庫', line: r.line, msg: label + 'の単位' + quoteText(ul) + 'が、「' + g.name + '」のレシピの単位（' + (g.recipeUnit.label === '' ? '単位なし' : g.recipeUnit.label) + '）と換算できないため' });
+          return;
+        }
+        vals.push(p.v * u.f);
+        given.push({ label: label, raw: raw, unit: p.unit, zero: p.v === 0n });
+      }
+      // 片方だけに単位を書いた行（「1」と「2kg」）は、単位のない数をレシピの単位で読んだことを知らせる（取り違えに気づけるように）
+      if (defUnit === '' && given.length === 2) {
+        var withU = given.filter(function (x) { return x.unit !== null; });
+        var bare = given[0].unit === null ? given[0] : given[1];
+        // 0 はどの単位でも同じ量なので知らせない
+        if (withU.length === 1 && !bare.zero && unitInfo(withU[0].unit).f !== g.recipeUnit.f) {
+          res.guess.push('発注単位と在庫の' + fmt(r.line) + '行目（' + g.name + '）：' + bare.label + quoteText(bare.raw) + 'は単位がないため、レシピの単位（' + g.recipeUnit.label + '）として読みました。' +
+            withU[0].unit + 'のときは' + quoteText(bare.raw + withU[0].unit) + 'と書いてください。');
+        }
+      }
+      stockSeen.set(fk, r.line);
+      g.unit = vals[0];            // null：発注単位なし
+      g.stock = vals[1] === null ? 0n : vals[1];
+      g.stockLine = r.line;
+    });
+
+    // 表の行
+    var rows = [];
+    var orderCount = 0, noUnit = [];
+    ingrOrder.forEach(function (g) {
+      if (g.mixed) { rows.push({ g: g, mixed: true }); return; }
+      var row = { g: g, need: g.total };
+      if (res.hasStock) {
+        var stock = g.stock || 0n;
+        row.stock = stock;
+        row.short = g.total > stock ? g.total - stock : 0n;
+        row.unit = g.unit === undefined ? null : g.unit;
+        if (row.short === 0n) {
+          row.orders = 0n;
+          row.rest = stock - g.total;
+        } else if (row.unit === null) {
+          row.orders = null;
+          row.rest = null;
+          noUnit.push(g.name);
+        } else {
+          row.orders = ceilDiv(row.short, row.unit);
+          row.rest = stock + row.orders * row.unit - g.total;
+          orderCount++;
+        }
+      }
+      rows.push(row);
+    });
+
+    // お知らせ
+    var noRecipe = salesOrder.filter(function (s) { return !menus.has(nameKey(s.name)); });
+    var noSales = [];
+    menus.forEach(function (m, k) { if (!sales.has(k)) noSales.push(m.name); });
+    var mixed = ingrOrder.filter(function (g) { return g.mixed; });
+    mixed.forEach(function (g) {
+      var parts = g.dimOrder.map(function (dim) {
+        var d = g.dims.get(dim);
+        var labels = Array.from(d.units.values()).map(function (l) { return l === '' ? '単位なし' : l; }).join('・');
+        return labels + '（' + d.lines.slice(0, 3).map(fmt).join('・') + (d.lines.length > 3 ? '…' : '') + '行目）';
+      });
+      res.notes.push('「' + g.name + '」は、換算できない単位が混ざっているため計算していません：' + parts.join('、') + '。レシピ表で単位をそろえてください（gとkg、mlとLは混ざってもかまいません）。');
+    });
+    res.guess.slice(0, 5).forEach(function (m) { res.notes.push(m); });
+    if (res.guess.length > 5) res.notes.push('単位のない数をレシピの単位で読んだ行は、ほかに' + fmt(res.guess.length - 5) + '行あります。');
+    if (noUnit.length) res.notes.push('発注単位がないため、発注数を出していない食材（' + fmt(noUnit.length) + '）：' + listNames(noUnit) + '。「発注単位と在庫」のB列に発注単位（1kgなど）を入れると出ます。');
+    var dupSales = salesOrder.filter(function (e) { return e.lines.length > 1; });
+    if (dupSales.length) res.notes.push('販売予定数に同じメニューが2回以上あります。足して計算しました：' + dupSales.slice(0, 5).map(function (e) {
+      return e.name + '（' + e.lines.slice(0, 5).map(fmt).join('・') + (e.lines.length > 5 ? '…' : '') + '行目、' + fmt(e.n) + '食）';
+    }).join('、') + (dupSales.length > 5 ? ' ほか' + fmt(dupSales.length - 5) + 'メニュー' : '') + '。');
+    if (dupStock.length) res.notes.push('「発注単位と在庫」に同じ食材が2回以上あります。最初の行を使い、' + dupStock.slice(0, 5).map(function (d) { return fmt(d.line) + '行目（' + d.name + '）'; }).join('、') + (dupStock.length > 5 ? ' ほか' + fmt(dupStock.length - 5) + '行' : '') + 'は使っていません。');
+
+    res.lists = [];
+    if (noRecipe.length) res.lists.push({ k: 'レシピにないメニュー（計算に入れていません）', v: listNames(noRecipe.map(function (s) { return s.name + '（' + fmt(s.n) + '食）'; })) });
+    if (noSales.length) res.lists.push({ k: '販売予定数にないメニュー（0食として計算）', v: listNames(noSales) });
+    if (unusedStock.length) res.lists.push({ k: '「発注単位と在庫」にあって、レシピで使わない食材', v: listNames(unusedStock.map(function (s) { return s.name; })) });
+
+    if (res.headers.length) res.lists.push({ k: '見出しとして飛ばした1行目', v: res.headers.join('、') });
+
+    var servings = 0n, noRecipeServings = 0n;
+    salesOrder.forEach(function (s) { if (menus.has(nameKey(s.name))) servings += s.n; else noRecipeServings += s.n; });
+
+    var TABLE_ORDER = { 'レシピ表': 0, '販売予定数': 1, '発注単位と在庫': 2 };
+    res.bad.sort(function (a, b) { return (TABLE_ORDER[a.t] - TABLE_ORDER[b.t]) || (a.line - b.line); });
+    res.rows = rows;
+    res.menus = menus.size;
+    res.servings = servings;
+    res.noRecipeServings = noRecipeServings;
+    res.noRecipe = noRecipe.length;
+    res.orderCount = orderCount;
+    res.ingrCount = ingrOrder.length;
+    res.ready = res.recipeLines > 0 || res.salesLines > 0 || res.stockLines > 0;
+    res.hasRecipe = ingrOrder.length > 0;
+    res.hasSales = salesOrder.length > 0;
+    return res;
+  }
+  function listNames(arr) {
+    var limit = 30;
+    return arr.slice(0, limit).join('、') + (arr.length > limit ? ' ほか' + fmt(arr.length - limit) : '');
+  }
+
+  // ---------- 表示 ----------
+  function displayUnit(g) {
+    var mode = unitSel.value;
+    if (g.dim === 'mass') return mode === 'small' ? UNITS.g : mode === 'large' ? UNITS.kg : g.recipeUnit;
+    if (g.dim === 'vol') return mode === 'small' ? UNITS.ml : mode === 'large' ? UNITS.l : g.recipeUnit;
+    return g.recipeUnit;
+  }
+  function digits() {
+    var v = digitsSel.value;
+    return v === 'all' ? null : Number(v);
+  }
+  // 表の文字（見出しと各行）
+  function buildTable(res) {
+    var d = digits();
+    var header = res.hasStock
+      ? ['食材', '単位', '必要量', '在庫', '不足量', '発注単位', '発注数', '発注後の余り']
+      : ['食材', '単位', '必要量'];
+    var body = [];
+    res.rows.forEach(function (row) {
+      var g = row.g;
+      if (row.mixed) {
+        var labels = g.dimOrder.map(function (dim) { return Array.from(g.dims.get(dim).units.values()).map(function (l) { return l === '' ? '単位なし' : l; }).join('・'); }).join('・');
+        var cells = [g.name, labels, '単位をそろえてください'];
+        if (res.hasStock) cells = cells.concat(['', '', '', '', '']);
+        body.push({ cells: cells, cls: 'bad', num: [] });
+        return;
+      }
+      if (res.hasStock && !optZero.checked && row.orders === 0n) return;
+      var u = displayUnit(g);
+      var show = function (v) { return showValue(v, u.f, d); };
+      var c = [g.name, u.label, show(row.need)];
+      var cls = '';
+      if (res.hasStock) {
+        c.push(show(row.stock), show(row.short));
+        c.push(row.unit === null ? '' : show(row.unit));
+        c.push(row.orders === null ? '－' : row.orders.toString());
+        c.push(row.rest === null ? '－' : show(row.rest));
+        if (row.orders === null) cls = 'bad';
+        else if (row.orders > 0n) cls = 'order';
+      }
+      body.push({ cells: c, cls: cls });
+    });
+    return { header: header, body: body };
+  }
+
+  function setStat(id, value, bad, sub) {
+    var li = $(id);
+    li.querySelector('.v').textContent = value;
+    li.querySelector('.s').textContent = sub || '';
+    li.classList.toggle('bad', !!bad);
+  }
+  function renderStats(res) {
+    if (!res || res.over || !res.ready) {
+      ['stMenus', 'stServings', 'stIngr', 'stOrder', 'stBad', 'stNoRecipe'].forEach(function (id) { setStat(id, '－', false); });
+      return;
+    }
+    setStat('stMenus', fmt(res.menus) + '品', false);
+    setStat('stServings', fmt(res.servings) + '食', false, res.noRecipeServings > 0n ? fmt(res.noRecipeServings) + '食を除く' : '');
+    setStat('stIngr', fmt(res.ingrCount) + '品', false);
+    setStat('stOrder', res.hasStock ? fmt(res.orderCount) + '品' : '－', false, res.hasStock ? '' : '在庫の表で出ます');
+    setStat('stBad', fmt(res.bad.length) + '行', res.bad.length > 0, res.bad.length ? '下の一覧に理由' : '');
+    setStat('stNoRecipe', fmt(res.noRecipe) + '品', res.noRecipe > 0);
+  }
+  function renderInfo(res) {
+    var html = '';
+    if (res && !res.over && res.ready) {
+      var notes = [];
+      res.bad.slice(0, NOTE_LIMIT).forEach(function (b) { notes.push(b.t + 'の' + fmt(b.line) + '行目：' + b.msg + '、この行は使っていません。'); });
+      if (res.bad.length > NOTE_LIMIT) notes.push('使えなかった行はほかに' + fmt(res.bad.length - NOTE_LIMIT) + '行あります。');
+      notes = notes.concat(res.notes);
+      if (notes.length) html += '<ul class="notes">' + notes.map(function (n) { return '<li>' + escapeHtml(n) + '</li>'; }).join('') + '</ul>';
+      if (res.lists.length) html += '<div class="lists">' + res.lists.map(function (l) { return '<p><strong>' + escapeHtml(l.k) + '：</strong>' + escapeHtml(l.v) + '</p>'; }).join('') + '</div>';
+    }
+    info.innerHTML = html || '<p class="empty">' + (res && res.ready && !res.over ? 'お知らせはありません。すべての行を計算に使いました。' : '使えなかった行や、レシピにないメニューなどのお知らせが、ここに出ます。') + '</p>';
+  }
+  function renderResults(res) {
+    last = null;
+    copyTable.disabled = true;
+    if (res && res.over) {
+      results.innerHTML = '<p class="empty">' + escapeHtml(res.over.join('・')) + 'が' + fmt(MAX_ROWS) + '行を超えているため、計算していません。' + fmt(MAX_ROWS) + '行以下に分けて貼り付けてください。</p>';
+      return;
+    }
+    if (!res || !res.ready) {
+      results.innerHTML = '<p class="empty">「レシピ表」と「販売予定数」に貼り付けると、ここに発注表ができます。</p>';
+      return;
+    }
+    if (!res.hasRecipe) {
+      results.innerHTML = '<p class="empty">' + (res.recipeLines ? 'レシピ表に、計算に使える行がありません。上のお知らせで理由を確かめてください。' : '「レシピ表」に、メニュー・食材・1食あたりの量・単位の4列を貼り付けると、発注表ができます。') + '</p>';
+      return;
+    }
+    if (!res.hasSales) {
+      results.innerHTML = '<p class="empty">' + (res.salesLines ? '販売予定数に、計算に使える行がありません。上のお知らせで理由を確かめてください。' : '「販売予定数」に、メニュー・数の2列を貼り付けると、発注表ができます。') + '</p>';
+      return;
+    }
+    var t = buildTable(res);
+    last = { res: res, table: t };
+    if (!t.body.length) {
+      results.innerHTML = '<p class="empty">発注する食材はありません（在庫で足ります）。「発注数が0の食材も表に出す」をオンにすると、すべての食材を表に出します。</p>';
+      return;
+    }
+    copyTable.disabled = false;
+    var html = '<div class="table-wrap"><table class="out"><thead><tr>' +
+      t.header.map(function (h, i) { return '<th scope="col"' + (i >= 2 ? ' class="n"' : '') + '>' + escapeHtml(h) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    t.body.slice(0, DISPLAY_LIMIT).forEach(function (r) {
+      html += '<tr' + (r.cls ? ' class="' + r.cls + '"' : '') + '>' + r.cells.map(function (v, i) {
+        return '<td' + (i >= 2 ? ' class="n"' : '') + '>' + escapeHtml(v) + '</td>';
+      }).join('') + '</tr>';
+    });
+    html += '</tbody></table></div>';
+    if (t.body.length > DISPLAY_LIMIT) html += '<p class="more">画面には最初の' + fmt(DISPLAY_LIMIT) + '食材を表示しています（全' + fmt(t.body.length) + '食材）。「発注表をコピー」では、すべての食材をコピーします。</p>';
+    results.innerHTML = html;
+  }
+
+  function update() {
+    var res = compute();
+    recipeCount.textContent = fmt(res.recipeLines) + '行';
+    salesCount.textContent = fmt(res.salesLines) + '行';
+    stockCount.textContent = fmt(res.stockLines) + '行';
+    optZero.disabled = !res.hasStock;
+    zeroHint.classList.toggle('off', res.hasStock);
+    renderStats(res);
+    renderInfo(res);
+    renderResults(res);
+    return res;
+  }
+
+  // ---------- Excelに貼る形 ----------
+  function toSheetCell(s) {
+    if (s.indexOf(LF) >= 0 || s.indexOf(TAB) >= 0 || s.indexOf(QUOTE) >= 0 || s.indexOf(CR) >= 0) {
+      return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    }
+    return s;
+  }
+  function tableRows(t) { return [t.header].concat(t.body.map(function (r) { return r.cells; })); }
+  function toSheetText(rows) { return rows.map(function (r) { return r.map(toSheetCell).join(TAB); }).join(LF); }
+  // HTML の表：食材・単位・見出しは「文字列」の書式（数や日付に変わらないように）、数の欄は数のまま
+  var TEXT_ATTR = ' style="mso-number-format:' + String.fromCharCode(39) + String.fromCharCode(92) + '@' + String.fromCharCode(39) + '" sdnum="1041;0;@"';
+  var PLAIN_NUM = /^[0-9]+([.][0-9]+)?$/;
+  function toHtmlTable(rows) {
+    var html = '<meta charset="utf-8"><table>';
+    rows.forEach(function (r, i) {
+      html += '<tr>' + r.map(function (v, j) {
+        var num = i > 0 && j >= 2 && PLAIN_NUM.test(v);
+        return '<td' + (num ? '' : TEXT_ATTR) + '>' + escapeHtml(v) + '</td>';
+      }).join('') + '</tr>';
+    });
+    return html + '</table>';
+  }
+
+  // ---------- 知らせ ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio') && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect || !document.body.contains(el)) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpinOne(el) {
+    if (!el.classList.contains('pin')) return;
+    el.classList.remove('pin');
+    var span = el.firstChild;
+    if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+  }
+  function unpin() { unpinOne(status); unpinOne(setStatusEl); }
+  // target：知らせを出す欄（ボタンの上の欄か、表示の設定のすぐ上の欄）。もう一方の欄は空にする
+  function setStatus(message, isError, target) {
+    unpin();
+    status.textContent = '';
+    setStatusEl.textContent = '';
+    var el = target || status;
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+
+  // ---------- コピー ----------
+  var COPY_LABEL = '発注表をコピー';
+  var copyTimer = null;
+  function resetCopyButton() { clearTimeout(copyTimer); copyTable.textContent = COPY_LABEL; }
+  function flashButton(label, ms) {
+    resetCopyButton();
+    copyTable.textContent = label;
+    copyTimer = setTimeout(function () { copyTable.textContent = COPY_LABEL; }, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(text) {
+    flashButton('コピーできませんでした', 4000);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, copyTable.getBoundingClientRect().top - 8)));
+    setStatus('コピーできませんでした。ボタンの下の「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(text, message, html) {
+    var done = function () {
+      manualBox.hidden = true;
+      setStatus(message);
+      flashButton('✓ コピーしました', 2500);
+    };
+    var plain = function () {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () {
+            if (fallbackCopy(text)) done(); else copyFailed(text);
+          });
+          return;
+        }
+      } catch (e) { /* 下の方法で試す */ }
+      if (fallbackCopy(text)) done(); else copyFailed(text);
+    };
+    try {
+      if (html && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+        var item = new window.ClipboardItem({
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' })
+        });
+        navigator.clipboard.write([item]).then(done, plain);
+        return;
+      }
+    } catch (e) { /* テキストだけでコピーする */ }
+    plain();
+  }
+  copyTable.addEventListener('click', function () {
+    if (!last || !last.table.body.length) return;
+    var rows = tableRows(last.table);
+    // セル内改行のある表は、HTML では改行が保てない貼り付け先があるため、テキストだけをコピーする
+    var html = rows.some(function (r) { return r.some(function (v) { return v.indexOf(LF) >= 0 || v.indexOf(CR) >= 0; }); }) ? null : toHtmlTable(rows);
+    doCopy(toSheetText(rows), '発注表を' + fmt(rows.length) + '行×' + fmt(last.table.header.length) + '列コピーしました（1行目は見出し）。Excelやスプレッドシートで、左上にしたいセルを選んで貼り付けてください。', html);
+  });
+
+  // ---------- 例・クリア ----------
+  function tsv(rows) { return rows.map(function (r) { return r.join(TAB); }).join(LF); }
+  var SAMPLE_RECIPE = tsv([
+    ['メニュー', '食材', '1食あたりの量', '単位'],
+    ['カレー', '玉ねぎ', '150', 'g'],
+    ['カレー', '豚肉', '120', 'g'],
+    ['カレー', '米', '0.15', 'kg'],
+    ['ハヤシライス', '玉ねぎ', '100', 'g'],
+    ['ハヤシライス', '牛肉', '100', 'g'],
+    ['ハヤシライス', '米', '150', 'g'],
+    ['サラダ', 'レタス', '0.25', '個'],
+    ['サラダ', 'ドレッシング', '30', 'ml']
+  ]);
+  var SAMPLE_SALES = tsv([
+    ['メニュー', '販売予定数'],
+    ['カレー', '40'],
+    ['ハヤシライス', '25'],
+    ['サラダ', '30'],
+    ['オムライス', '10']
+  ]);
+  var SAMPLE_STOCK = tsv([
+    ['食材', '発注単位', '在庫'],
+    ['玉ねぎ', '1kg', '2kg'],
+    ['豚肉', '2kg', '500g'],
+    ['牛肉', '1kg', ''],
+    ['米', '10kg', '12kg'],
+    ['レタス', '1', '3'],
+    ['ドレッシング', '1L', '300ml']
+  ]);
+  sampleButton.addEventListener('click', function () {
+    recipeText.value = SAMPLE_RECIPE;
+    salesText.value = SAMPLE_SALES;
+    stockText.value = SAMPLE_STOCK;
+    update();
+    resetCopyButton();
+    manualBox.hidden = true;
+    setStatus('例を入れました（レシピ8行・販売予定4メニュー・発注単位と在庫6食材）。下の発注表で、玉ねぎ（2メニューの合計）と米（kgとgの換算）を確かめてください。');
+  });
+  clearButton.addEventListener('click', function () {
+    recipeText.value = '';
+    salesText.value = '';
+    stockText.value = '';
+    update();
+    resetCopyButton();
+    manualBox.hidden = true;
+    setStatus('3つの欄を消しました（表示の設定は残しています）。新しいレシピ表と販売予定数を貼り付けてください。');
+  });
+
+  // ---------- 入力と設定 ----------
+  [recipeText, salesText, stockText].forEach(function (el) {
+    el.addEventListener('input', function () { update(); resetCopyButton(); manualBox.hidden = true; setStatus(''); });
+  });
+  [unitSel, digitsSel].forEach(function (sel) {
+    sel.addEventListener('change', function () {
+      update();
+      resetCopyButton();
+      manualBox.hidden = true;
+      var name = sel.options[sel.selectedIndex].text;
+      var what = sel === unitSel ? '表示する単位を「' + name + '」にしました。' : '小数の表示を「' + name + '」にしました。';
+      setStatus(what + (last ? '発注表を更新しました。' : 'レシピ表と販売予定数を貼り付けると、この設定で発注表ができます。'), false, setStatusEl);
+    });
+  });
+  optZero.addEventListener('change', function () {
+    update();
+    resetCopyButton();
+    manualBox.hidden = true;
+    setStatus('「発注数が0の食材も表に出す」を' + (optZero.checked ? 'オン' : 'オフ') + 'にしました。' + (last ? '発注表を更新しました。' : ''), false, setStatusEl);
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
