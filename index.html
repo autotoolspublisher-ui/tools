@@ -52,56 +52,56 @@
       {
         "@type": "ListItem",
         "position": 4,
-        "name": "リスト比較",
-        "url": "https://autotoolspublisher-ui.github.io/tools/list-hikaku/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
         "name": "改行削除",
         "url": "https://autotoolspublisher-ui.github.io/tools/kaigyo-sakujo/"
       },
       {
         "@type": "ListItem",
-        "position": 6,
+        "position": 5,
         "name": "ひらがなカタカナ変換",
         "url": "https://autotoolspublisher-ui.github.io/tools/hiragana-katakana/"
       },
       {
         "@type": "ListItem",
-        "position": 7,
-        "name": "表マークダウン変換",
-        "url": "https://autotoolspublisher-ui.github.io/tools/hyo-markdown/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
+        "position": 6,
         "name": "機種依存文字チェック",
         "url": "https://autotoolspublisher-ui.github.io/tools/kishu-izon/"
       },
       {
         "@type": "ListItem",
-        "position": 9,
+        "position": 7,
         "name": "漢数字変換",
         "url": "https://autotoolspublisher-ui.github.io/tools/kansuji-henkan/"
       },
       {
         "@type": "ListItem",
+        "position": 8,
+        "name": "文章まとめてチェック",
+        "url": "https://autotoolspublisher-ui.github.io/tools/bunsho-check/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "name": "リスト比較",
+        "url": "https://autotoolspublisher-ui.github.io/tools/list-hikaku/"
+      },
+      {
+        "@type": "ListItem",
         "position": 10,
+        "name": "表マークダウン変換",
+        "url": "https://autotoolspublisher-ui.github.io/tools/hyo-markdown/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
         "name": "セルを行に分割",
         "url": "https://autotoolspublisher-ui.github.io/tools/gyo-bunkatsu/"
       },
       {
         "@type": "ListItem",
-        "position": 11,
+        "position": 12,
         "name": "連番チケット印刷",
         "url": "https://autotoolspublisher-ui.github.io/tools/renban-ticket/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "name": "文章まとめてチェック",
-        "url": "https://autotoolspublisher-ui.github.io/tools/bunsho-check/"
       },
       {
         "@type": "ListItem",
@@ -127,26 +127,31 @@
     .brand-mark i { display:block; border-radius:3px; background:#4285f4; }
     .brand-mark i:nth-child(2) { background:#34a853; } .brand-mark i:nth-child(3) { background:#fbbc04; } .brand-mark i:nth-child(4) { background:#ea4335; }
     .brand-name { color:#5f6368; font-family:Arial,sans-serif; font-size:1.08rem; letter-spacing:-.035em; }
-    main { width:min(920px,100% - 48px); margin:0 auto; padding:72px 0 42px; }
-    .hero { max-width:720px; margin:0 auto 72px; }
-    .eyebrow { margin:0 0 15px; color:var(--green); font-family:Arial,sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.12em; }
-    h1 { margin:0; color:#202124; font-size:clamp(2.4rem,7vw,4rem); font-weight:500; line-height:1.12; letter-spacing:-.055em; }
-    .intro { max-width:39em; margin:20px 0 22px; color:var(--muted); font-size:1.12rem; line-height:1.8; }
+    main { width:min(1040px,100% - 48px); margin:0 auto; padding:48px 0 42px; }
+    .hero { max-width:720px; margin:0 0 40px; }
+    .eyebrow { margin:0 0 12px; color:var(--green); font-family:Arial,sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.12em; }
+    h1 { margin:0; color:#202124; font-size:clamp(2rem,6vw,3.2rem); font-weight:500; line-height:1.12; letter-spacing:-.05em; }
+    .intro { max-width:39em; margin:16px 0 18px; color:var(--muted); font-size:1.05rem; line-height:1.8; }
     .notice { display:inline-flex; align-items:center; gap:9px; margin:0; padding:8px 14px; border-radius:999px; background:#e8f0fe; color:#174ea6; font-size:.86rem; font-weight:600; }
     .notice::before { content:"✦"; font-size:.95rem; color:#1a73e8; }
     h2 { margin:0; font-size:1.35rem; font-weight:500; letter-spacing:-.025em; }
-    .section-head { display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:17px; }
+    .section-head { display:flex; align-items:baseline; justify-content:space-between; gap:14px; margin-bottom:12px; }
     .tool-count { color:var(--muted); font-size:.88rem; }
-    .tool { position:relative; display:flex; align-items:center; gap:18px; min-height:112px; padding:20px 22px; border:1px solid #e1e3e6; border-radius:18px; background:#fff; text-decoration:none; box-shadow:var(--shadow-card); transition:background .18s ease,box-shadow .18s ease,border-color .18s ease; }
+    .cat-nav { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 8px; }
+    .cat-nav a { display:inline-flex; align-items:center; gap:8px; min-height:40px; padding:0 14px; border:1px solid #dadce0; border-radius:999px; background:#fff; color:#3c4043; font-size:.9rem; font-weight:600; text-decoration:none; }
+    .cat-nav a:hover { border-color:#d2e3fc; background:#f8fbff; color:#174ea6; }
+    .cat-count { min-width:1.6em; padding:1px 6px; border-radius:999px; background:#f1f3f4; color:#5f6368; font-size:.8rem; text-align:center; }
+    .cat { margin-top:28px; scroll-margin-top:16px; }
+    .cat h3 { margin:0 0 12px; color:#3c4043; font-size:1.02rem; font-weight:600; }
+    .tool-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+    .tool { position:relative; display:flex; align-items:flex-start; gap:14px; padding:16px 18px; border:1px solid #e1e3e6; border-radius:16px; background:#fff; text-decoration:none; box-shadow:var(--shadow-card); transition:background .18s ease,box-shadow .18s ease,border-color .18s ease; }
     .tool:hover { border-color:#d2e3fc; background:#fcfdff; box-shadow:0 2px 8px rgba(60,64,67,.16); }
-    .tool + .tool { margin-top:12px; }
-    .tool-icon { flex:0 0 54px; width:54px; height:54px; display:grid; place-items:center; border-radius:16px; background:#e8f0fe; color:#1a73e8; font-size:1.65rem; }
+    .tool-icon { flex:0 0 42px; width:42px; height:42px; display:grid; place-items:center; border-radius:13px; background:#e8f0fe; color:#1a73e8; font-size:1.3rem; white-space:nowrap; }
     .tool-copy { flex:1; min-width:0; }
-    .tool-title { display:block; color:#202124; font-size:1.08rem; font-weight:600; }
-    .tool-description { display:block; margin-top:5px; color:var(--muted); font-size:.93rem; }
-    .tool::after { content:"›"; color:#5f6368; font-size:1.8rem; line-height:1; }
-    footer { margin-top:72px; padding:18px 0 0; border-top:1px solid #e8eaed; color:var(--muted); font-size:.84rem; }
-    @media(max-width:560px) { .topbar { height:58px; } .topbar-inner { width:calc(100% - 32px); } main { width:calc(100% - 32px); padding:52px 0 30px; } .hero { margin-bottom:54px; } .intro { font-size:1rem; } .tool { gap:13px; min-height:100px; padding:16px; border-radius:16px; } .tool-icon { flex-basis:46px; width:46px; height:46px; border-radius:14px; } .tool-description { font-size:.86rem; } footer { margin-top:54px; } }
+    .tool-title { display:block; color:#202124; font-size:1.02rem; font-weight:600; }
+    .tool-description { display:block; margin-top:4px; color:var(--muted); font-size:.875rem; line-height:1.6; }
+    footer { margin-top:56px; padding:18px 0 0; border-top:1px solid #e8eaed; color:var(--muted); font-size:.84rem; }
+    @media(max-width:560px) { .topbar { height:58px; } .topbar-inner { width:calc(100% - 32px); } main { width:calc(100% - 32px); padding:32px 0 30px; } .hero { margin-bottom:28px; } .intro { font-size:.95rem; line-height:1.7; margin:10px 0 12px; } h1 { font-size:1.9rem; } .tool-grid { grid-template-columns:1fr; gap:8px; } .tool { gap:12px; padding:12px 14px; border-radius:14px; box-shadow:none; } .tool-description { margin-top:2px; line-height:1.55; } .tool-icon { flex-basis:40px; width:40px; height:40px; border-radius:12px; font-size:1.2rem; } .tool-description { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; font-size:.85rem; } .cat { margin-top:20px; } .cat h3 { margin-bottom:8px; } footer { margin-top:44px; } }
     @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
   </style>
 </head>
@@ -161,78 +166,98 @@
     <p class="intro">文字の置換やリストの変換など、毎日のちょっとした作業に使える無料ツールを集めています。すべてブラウザだけで動き、登録やインストールは不要です。入力した内容はブラウザの外に送信されません。</p>
     <p class="notice">このサイトのツールはAIが作っています</p>
     </section>
-    <section aria-labelledby="tools-heading">
+    <section id="tools" aria-labelledby="tools-heading">
       <div class="section-head"><h2 id="tools-heading">ツール一覧</h2><span class="tool-count">14 件</span></div>
-      <a class="tool" href="./kugiri-henkan/">
-        <span class="tool-icon" aria-hidden="true">≡</span>
-        <span class="tool-copy"><span class="tool-title">区切り変換くん</span>
-        <span class="tool-description">カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></span>
-      </a>
-      <a class="tool" href="./matomete-chikan/">
-        <span class="tool-icon" aria-hidden="true">⇄</span>
-        <span class="tool-copy"><span class="tool-title">まとめて置換</span>
-        <span class="tool-description">置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></span>
-      </a>
-      <a class="tool" href="./zenkaku-hankaku/">
-        <span class="tool-icon" aria-hidden="true">Ａa</span>
-        <span class="tool-copy"><span class="tool-title">全角半角そろえ</span>
-        <span class="tool-description">全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></span>
-      </a>
-      <a class="tool" href="./list-hikaku/">
-        <span class="tool-icon" aria-hidden="true">∩</span>
-        <span class="tool-copy"><span class="tool-title">リスト比較</span>
-        <span class="tool-description">2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></span>
-      </a>
-      <a class="tool" href="./kaigyo-sakujo/">
-        <span class="tool-icon" aria-hidden="true">↵</span>
-        <span class="tool-copy"><span class="tool-title">改行削除</span>
-        <span class="tool-description">PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></span>
-      </a>
-      <a class="tool" href="./hiragana-katakana/">
-        <span class="tool-icon" aria-hidden="true">あア</span>
-        <span class="tool-copy"><span class="tool-title">ひらがなカタカナ変換</span>
-        <span class="tool-description">ひらがなをカタカナに、カタカナをひらがなにまとめて変換します。名簿のふりがなの表記をそろえるときに使えます。</span></span>
-      </a>
-      <a class="tool" href="./hyo-markdown/">
-        <span class="tool-icon" aria-hidden="true">▦</span>
-        <span class="tool-copy"><span class="tool-title">表マークダウン変換</span>
-        <span class="tool-description">Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></span>
-      </a>
-      <a class="tool" href="./kishu-izon/">
-        <span class="tool-icon" aria-hidden="true">①</span>
-        <span class="tool-copy"><span class="tool-title">機種依存文字チェック</span>
-        <span class="tool-description">①や㈱、髙などの機種依存文字や、Shift_JISのCSVで「?」になる文字を探して、使える文字に置き換えます。</span></span>
-      </a>
-      <a class="tool" href="./kansuji-henkan/">
-        <span class="tool-icon" aria-hidden="true">二</span>
-        <span class="tool-copy"><span class="tool-title">漢数字変換</span>
-        <span class="tool-description">文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換します。</span></span>
-      </a>
-      <a class="tool" href="./gyo-bunkatsu/">
-        <span class="tool-icon" aria-hidden="true">⇣</span>
-        <span class="tool-copy"><span class="tool-title">セルを行に分割</span>
-        <span class="tool-description">セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></span>
-      </a>
-      <a class="tool" href="./renban-ticket/">
-        <span class="tool-icon" aria-hidden="true">№</span>
-        <span class="tool-copy"><span class="tool-title">連番チケット印刷</span>
-        <span class="tool-description">整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></span>
-      </a>
-      <a class="tool" href="./bunsho-check/">
-        <span class="tool-icon" aria-hidden="true">✓</span>
-        <span class="tool-copy"><span class="tool-title">文章まとめてチェック</span>
-        <span class="tool-description">通知表の所見など、Excelの列の文章の文字数の過不足・表記ルールに当たる表現・前学期と同じ文を、まとめて一覧にします。</span></span>
-      </a>
-      <a class="tool" href="./shikomi-hachu/">
-        <span class="tool-icon" aria-hidden="true">⚖</span>
-        <span class="tool-copy"><span class="tool-title">仕込み発注計算</span>
-        <span class="tool-description">レシピ表と販売予定数から、食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注数を出します。gとkgの換算もできます。</span></span>
-      </a>
-      <a class="tool" href="./shashin-satsueibi/">
-        <span class="tool-icon" aria-hidden="true">▣</span>
-        <span class="tool-copy"><span class="tool-title">写真を撮影日で改名</span>
-        <span class="tool-description">写真のファイル名を撮影日時＋連番にまとめて変えて、zipで保存します。カメラの時計のずれの補正、HEICからJPGへの変換、縮小も一度にできます。</span></span>
-      </a>
+      <nav class="cat-nav" aria-label="ツールの分類">
+        <a href="#cat-text">文字・文章を整える<span class="cat-count">8</span></a>
+        <a href="#cat-table">表・リストを扱う<span class="cat-count">3</span></a>
+        <a href="#cat-print">印刷・計算・写真<span class="cat-count">3</span></a>
+      </nav>
+      <section class="cat" id="cat-text" aria-labelledby="cat-text-heading">
+        <h3 id="cat-text-heading">文字・文章を整える</h3>
+        <div class="tool-grid">
+          <a class="tool" href="./kugiri-henkan/">
+            <span class="tool-icon" aria-hidden="true">≡</span>
+            <span class="tool-copy"><span class="tool-title">区切り変換くん</span>
+            <span class="tool-description">カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></span>
+          </a>
+          <a class="tool" href="./matomete-chikan/">
+            <span class="tool-icon" aria-hidden="true">⇄</span>
+            <span class="tool-copy"><span class="tool-title">まとめて置換</span>
+            <span class="tool-description">置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></span>
+          </a>
+          <a class="tool" href="./zenkaku-hankaku/">
+            <span class="tool-icon" aria-hidden="true">Ａa</span>
+            <span class="tool-copy"><span class="tool-title">全角半角そろえ</span>
+            <span class="tool-description">全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></span>
+          </a>
+          <a class="tool" href="./kaigyo-sakujo/">
+            <span class="tool-icon" aria-hidden="true">↵</span>
+            <span class="tool-copy"><span class="tool-title">改行削除</span>
+            <span class="tool-description">PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></span>
+          </a>
+          <a class="tool" href="./hiragana-katakana/">
+            <span class="tool-icon" aria-hidden="true">あア</span>
+            <span class="tool-copy"><span class="tool-title">ひらがなカタカナ変換</span>
+            <span class="tool-description">ひらがなをカタカナに、カタカナをひらがなにまとめて変換します。名簿のふりがなの表記をそろえるときに使えます。</span></span>
+          </a>
+          <a class="tool" href="./kishu-izon/">
+            <span class="tool-icon" aria-hidden="true">①</span>
+            <span class="tool-copy"><span class="tool-title">機種依存文字チェック</span>
+            <span class="tool-description">①や㈱、髙などの機種依存文字や、Shift_JISのCSVで「?」になる文字を探して、使える文字に置き換えます。</span></span>
+          </a>
+          <a class="tool" href="./kansuji-henkan/">
+            <span class="tool-icon" aria-hidden="true">二</span>
+            <span class="tool-copy"><span class="tool-title">漢数字変換</span>
+            <span class="tool-description">文章の数字を漢数字（二〇二六・二千二十六）に、Excelの列の漢数字を数字に、まとめて変換します。</span></span>
+          </a>
+          <a class="tool" href="./bunsho-check/">
+            <span class="tool-icon" aria-hidden="true">✓</span>
+            <span class="tool-copy"><span class="tool-title">文章まとめてチェック</span>
+            <span class="tool-description">通知表の所見など、Excelの列の文章の文字数の過不足・表記ルールに当たる表現・前学期と同じ文を、まとめて一覧にします。</span></span>
+          </a>
+        </div>
+      </section>
+      <section class="cat" id="cat-table" aria-labelledby="cat-table-heading">
+        <h3 id="cat-table-heading">表・リストを扱う</h3>
+        <div class="tool-grid">
+          <a class="tool" href="./list-hikaku/">
+            <span class="tool-icon" aria-hidden="true">∩</span>
+            <span class="tool-copy"><span class="tool-title">リスト比較</span>
+            <span class="tool-description">2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></span>
+          </a>
+          <a class="tool" href="./hyo-markdown/">
+            <span class="tool-icon" aria-hidden="true">▦</span>
+            <span class="tool-copy"><span class="tool-title">表マークダウン変換</span>
+            <span class="tool-description">Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></span>
+          </a>
+          <a class="tool" href="./gyo-bunkatsu/">
+            <span class="tool-icon" aria-hidden="true">⇣</span>
+            <span class="tool-copy"><span class="tool-title">セルを行に分割</span>
+            <span class="tool-description">セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></span>
+          </a>
+        </div>
+      </section>
+      <section class="cat" id="cat-print" aria-labelledby="cat-print-heading">
+        <h3 id="cat-print-heading">印刷・計算・写真</h3>
+        <div class="tool-grid">
+          <a class="tool" href="./renban-ticket/">
+            <span class="tool-icon" aria-hidden="true">№</span>
+            <span class="tool-copy"><span class="tool-title">連番チケット印刷</span>
+            <span class="tool-description">整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></span>
+          </a>
+          <a class="tool" href="./shikomi-hachu/">
+            <span class="tool-icon" aria-hidden="true">⚖</span>
+            <span class="tool-copy"><span class="tool-title">仕込み発注計算</span>
+            <span class="tool-description">レシピ表と販売予定数から、食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注数を出します。gとkgの換算もできます。</span></span>
+          </a>
+          <a class="tool" href="./shashin-satsueibi/">
+            <span class="tool-icon" aria-hidden="true">▣</span>
+            <span class="tool-copy"><span class="tool-title">写真を撮影日で改名</span>
+            <span class="tool-description">写真のファイル名を撮影日時＋連番にまとめて変えて、zipで保存します。カメラの時計のずれの補正、HEICからJPGへの変換、縮小も一度にできます。</span></span>
+          </a>
+        </div>
+      </section>
     </section>
     <footer>AIが作った便利なツールを公開しています。</footer>
   </main>
