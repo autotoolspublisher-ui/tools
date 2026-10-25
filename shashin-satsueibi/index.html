@@ -135,7 +135,7 @@
   .sh-nums { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 6px; }
   .shift input.num { width: 3.8em; }
   input:focus, select:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
-  .unit { color: #3c4043; font-size: .9rem; }
+  .unit { color: #3c4043; font-size: .9rem; white-space: nowrap; }
   .shift { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px 10px; }
   .chip { position: relative; display: inline-flex; min-width: 0; }
@@ -149,7 +149,9 @@
   .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
   .chip span:hover { background: #f6fafe; }
   .hint { margin: 6px 0 2px; color: var(--muted); font-size: .875rem; }
-  .example-name { margin: 8px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--surface-soft); color: #202124; font-family: ui-monospace, Consolas, monospace; font-size: .875rem; overflow-wrap: anywhere; }
+  /* 例の行は1行に決め、長い名前は横にスクロール（名前の長さで下の部品が動かない） */
+  .example-name { margin: 8px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--surface-soft); color: #202124; font-family: ui-monospace, Consolas, monospace; font-size: .875rem; white-space: nowrap; overflow-x: auto; }
+  fieldset:disabled { opacity: .6; }
   .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
   .stats li { min-width: 0; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: var(--paper); }
   .stats .k { display: block; color: var(--muted); font-size: .875rem; line-height: 1.4; word-break: keep-all; }
@@ -163,7 +165,8 @@
   button.btn:disabled { opacity: .5; cursor: not-allowed; }
   #saveZip { min-width: 11em; }
   /* 知らせ。ボタンの上に置き、高さを先に確保して、出ても消えても下の部品が動かないようにする */
-  .status { min-height: 66px; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); overflow-wrap: anywhere; }
+  /* 知らせの欄の高さは決めておき、まれに長い文は欄の中でスクロールする（下の部品を動かさない） */
+  .status { height: 66px; overflow-y: auto; margin: 6px 0 0; font-size: .9rem; line-height: 1.5; color: var(--ok); overflow-wrap: anywhere; }
   .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
   .status.error { color: var(--warn-ink); }
   .result-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 8px; }
@@ -174,15 +177,16 @@
   .legend-line i.lc { background: var(--chg-bg); }
   .legend-line i.lb { background: var(--bad-bg); }
   /* 一覧は高さを決めた枠に入れる（枚数が変わっても下の部品が動かない） */
-  .results { height: 420px; overflow: auto; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .results { height: 420px; overflow: hidden; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
   .results .empty { margin: 4px 6px; color: var(--muted); }
-  .table-wrap { overflow-x: auto; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .table-wrap { max-height: 100%; overflow: auto; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
   table.out { border-collapse: collapse; min-width: 100%; font-size: .9rem; }
-  table.out th, table.out td { padding: 6px 10px; border-bottom: 1px solid #e8eaed; border-right: 1px solid #f1f3f4; text-align: left; vertical-align: top; overflow-wrap: anywhere; min-width: 4em; max-width: 18em; }
+  /* 一覧は折り返さず、狭い幅では枠の中で横にスクロールする（1行が1枚） */
+  table.out th, table.out td { padding: 6px 10px; border-bottom: 1px solid #e8eaed; border-right: 1px solid #f1f3f4; text-align: left; vertical-align: top; white-space: nowrap; }
   table.out th { white-space: nowrap; position: sticky; top: 0; z-index: 1; background: #f1f3f4; color: #3c4043; font-weight: 600; }
-  table.out td.name { font-family: ui-monospace, Consolas, monospace; font-size: .875rem; color: #202124; min-width: 12em; }
+  table.out td.name { font-family: ui-monospace, Consolas, monospace; font-size: .875rem; color: #202124; white-space: nowrap; max-width: none; }
   table.out td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  table.out td.dt { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.out td.dt { white-space: nowrap; max-width: none; font-variant-numeric: tabular-nums; }
   table.out tr.chg td { background: var(--chg-bg); }
   table.out tr.bad td { background: var(--bad-bg); color: var(--warn-ink); }
   .note { margin: 14px 0 14px; color: var(--muted); font-size: .875rem; }
@@ -203,9 +207,14 @@
     fieldset { padding: 12px; }
     .row > label, .row > .lbl { flex: 0 0 6.5em; min-width: 0; }
     .row select { flex: 1 1 0; }
+  }
+  @media (max-width: 480px) {
+    .row > label, .row > .lbl { flex: 1 1 100%; }
+    .row select { flex: 1 1 100%; }
+    .row { margin: 8px 0 10px; gap: 4px 10px; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .stats .v { font-size: .95rem; }
-    .status { min-height: 110px; }
+    .status { height: 132px; }
     .results { height: 360px; padding: 8px; }
     .actions .btn { flex: 1 1 40%; }
     .actions #saveZip { flex-basis: 100%; min-width: 0; }
@@ -216,7 +225,9 @@
     .howto { margin-bottom: 10px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
     main { padding-top: 16px; }
     header { margin-bottom: 14px; }
-    .status { min-height: 132px; }
+    .status { height: 176px; }
+    .shift input.num { width: 3.2em; padding: 0 8px; }
+    .sh-nums { gap: 4px; }
     .card { padding: 19px 12px; }
     .stats li { padding: 8px 6px; }
   }
@@ -319,7 +330,7 @@
     <div class="result-head">
       <span class="label" id="resultLabel">新しい名前の一覧<span class="legend-line"><span class="lg"><i class="lc"></i>中身を書き換える写真</span><span class="lg"><i class="lb"></i>zipに入らない写真</span></span></span>
     </div>
-    <div id="results" class="results" role="region" aria-labelledby="resultLabel" tabindex="0"><p class="empty">写真を選ぶと、ここに新しい名前の一覧が出ます。</p></div>
+    <div id="results" class="results" aria-labelledby="resultLabel"><p class="empty">写真を選ぶと、ここに新しい名前の一覧が出ます。</p></div>
 
     <p class="note">撮影日時は、写真の中の情報（EXIF）の「撮影日時」→「デジタル化した日時」→「変更日時」の順に、最初に読めたものを使います。並び順は撮影日時の古い順で、同じ秒の写真は元のファイル名の順です（名前の中の数字は数の大きさで比べます）。連番の桁数を超える枚数のときは、桁を増やしてそろえます。名前を変えるだけの写真は、中身を1バイトも変えずにzipに入れます。日時の補正では、写真の中の3つの日時を同じだけずらし、ほかの情報（向き・機種・位置情報など）は変えません。HEICをJPGに変換・縮小した写真は、向きを画像に反映し、元の写真の情報（位置情報を含む）を写します。zipの保存の画面が出ないとき（LINEなどのアプリの中で開いたページ）は、SafariやChromeで開き直してください。</p>
 
@@ -729,7 +740,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
   function fileKey(it) { return it.name + '\u0000' + it.size + '\u0000' + it.file.lastModified + '\u0000' + it.sig; }
   function addFiles(list, folders) {
-    if (busy) return;
+    if (busy) { if (list && list.length) setStatus('写真の読み込みかzipの作成の途中のため、今入れた写真は追加していません。終わってから、もう一度入れてください。', true); return; }
     var arr = Array.prototype.slice.call(list || []);
     folders = folders || 0;
     if (!arr.length) {
@@ -764,14 +775,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       setBusy(false);
       render();
       var parts = [];
-      if (added) parts.push(fmtInt(added) + '枚を追加しました（全部で' + fmtInt(items.length) + '枚）。下の一覧で新しい名前を確かめてください。');
+      if (added) parts.push(fmtInt(added) + '枚を追加しました（全部で' + fmtInt(items.length) + '枚）。');
       else parts.push('写真を追加できませんでした（全部で' + fmtInt(items.length) + '枚のままです）。');
-      if (dup) parts.push('同じ写真' + fmtInt(dup) + '枚は、もう入っているため二重に入れていません。');
-      if (overCount) parts.push('上限の300枚を超えた' + fmtInt(overCount) + '枚は追加していません。300枚を保存してから「クリア」し、残りを分けて保存してください。');
-      if (overBytes) parts.push('合計1 GBの上限を超える' + fmtInt(overBytes) + '枚は追加していません。保存してから「クリア」し、残りを分けて保存してください。');
-      if (folders) parts.push('フォルダ' + fmtInt(folders) + '個はそのまま入れられないため、入れていません。フォルダを開いて中の写真を選んでください。');
+      if (dup) parts.push('同じ写真' + fmtInt(dup) + '枚は二重に入れていません。');
+      if (overCount) parts.push('上限（300枚）を超える' + fmtInt(overCount) + '枚は入れていません。');
+      if (overBytes) parts.push('上限（合計1 GB）を超える' + fmtInt(overBytes) + '枚は入れていません。');
+      if (overCount || overBytes) parts.push('保存してから「クリア」し、残りを分けて保存してください。');
+      if (folders) parts.push('フォルダ' + fmtInt(folders) + '個は入れていません（フォルダを開いて中の写真を選んでください）。');
       var empty = emptyZipMessage();
       if (empty) parts.push(empty);
+      else if (added && parts.length === 1) parts.push('下の一覧で新しい名前を確かめてください。');
       setStatus(parts.join(''), !!(overCount || overBytes || folders || empty || !added));
     });
   }
@@ -780,7 +793,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     if (!items.length || (plan && plan.inZip.length)) return '';
     var st = readSettings();
     var nodateSkip = items.some(function (it) { return it.type && it.size && !it.srcDate; }) && st.nodate === 'skip';
-    if (nodateSkip) return 'zipに入る写真がありません。撮影日時がない写真を「除外する」設定のためです。入れるときは「撮影日時がない写真」の扱い方を変えてください。';
+    if (nodateSkip) return 'zipに入る写真がありません（撮影日時がない写真を「除外する」設定のため）。入れるときは扱い方を変えてください。';
     return 'zipに入る写真がありません。JPG・HEIC・PNGの写真を選んでください。';
   }
   function clearFailed() { items.forEach(function (it) { it.failed = ''; }); }
@@ -788,17 +801,19 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   // ---------- 設定 ----------
   var BAD_CHARS = /[\\\/:*?"<>|\u0000-\u001F\u007F]/g;
   var PREFIX_MAX = 50;
+  var segmenter = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
+  function graphemes(str) { return segmenter ? Array.from(segmenter.segment(str), function (x) { return x.segment; }) : Array.from(str); }
   function cleanPrefix(raw) {
     var s = raw.replace(BAD_CHARS, '');
     s = s.replace(/^[\s\u3000]+|[\s\u3000.]+$/g, '');
-    if (Array.from(s).length > PREFIX_MAX) s = Array.from(s).slice(0, PREFIX_MAX).join('').replace(/[\s\u3000.]+$/g, '');
+    if (graphemes(s).length > PREFIX_MAX) s = graphemes(s).slice(0, PREFIX_MAX).join('').replace(/[\s\u3000.]+$/g, '');
     return s;
   }
   function prefixInfo(raw) {
     var trimmed = raw.replace(/^[\s\u3000]+|[\s\u3000]+$/g, '');
     var removed = /[\\\/:*?"<>|\u0000-\u001F\u007F]/.test(raw) || /\.$/.test(trimmed);
     var noBad = trimmed.replace(BAD_CHARS, '').replace(/[\s\u3000.]+$/g, '');
-    var cut = Array.from(noBad).length > PREFIX_MAX;
+    var cut = graphemes(noBad).length > PREFIX_MAX;
     return { removed: removed, cut: cut };
   }
   function intField(el, max) {
@@ -884,11 +899,11 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       inZip.forEach(function (r, i) { r.newName = bases[i] + '_' + pad(i + 1, width) + '.' + r.ext; });
     } else {
       var groups = {};
-      inZip.forEach(function (r, i) { var k = (bases[i] + '.' + r.ext).toLowerCase(); (groups[k] = groups[k] || []).push(i); });
+      inZip.forEach(function (r, i) { var k = bases[i].toLowerCase(); (groups[k] = groups[k] || []).push(i); });
       var gw = st.digits;
       Object.keys(groups).forEach(function (k) { gw = Math.max(gw, String(groups[k].length).length); });
       inZip.forEach(function (r, i) {
-        var g = groups[(bases[i] + '.' + r.ext).toLowerCase()];
+        var g = groups[bases[i].toLowerCase()];
         r.newName = g.length > 1 ? bases[i] + '_' + pad(g.indexOf(i) + 1, gw) + '.' + r.ext : bases[i] + '.' + r.ext;
       });
     }
@@ -939,6 +954,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       return;
     }
     var wrap = document.createElement('div'); wrap.className = 'table-wrap';
+    wrap.tabIndex = 0; wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-label', '新しい名前の一覧（矢印キーでスクロール）');
     var table = document.createElement('table'); table.className = 'out';
     var thead = document.createElement('thead'), hr = document.createElement('tr');
     ['新しい名前', '元の名前', '撮影日時', '日時の元', '処理', 'サイズ'].forEach(function (h) { var th = document.createElement('th'); th.textContent = h; hr.appendChild(th); });
@@ -1011,6 +1027,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 
   function setBusy(b) {
     busy = b;
+    document.querySelectorAll('.settings fieldset').forEach(function (f) { f.disabled = b; });
     fileInput.disabled = b; pickLabel.classList.toggle('busy', b);
     sampleButton.disabled = b; clearButton.disabled = b;
     saveZip.disabled = b || !(plan && plan.inZip.length);
@@ -1021,14 +1038,14 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     var st = readSettings();
     var se = shiftError();
     if (se) return { m: se, e: true };
-    if (!st.pxOk) return { m: '縮小後の長辺の「' + resizePx.value.trim() + '」は使えません。320〜10000の整数で入れてください。直すまでzipで保存できません（縮小しないときは「長辺を縮小」をオフにしてください）。', e: true };
-    var pi = prefixInfo(st.rawPrefix), msg = '';
+    if (!st.pxOk) return { m: (resizePx.value.trim() === '' ? '縮小後の長辺が空です。' : '縮小後の長辺の「' + resizePx.value.trim() + '」は使えません。') + '320〜10000の整数で入れてください。直すまでzipで保存できません（縮小しないときは「長辺を縮小」をオフにしてください）。', e: true };
+    // 先頭の文字の注意は、先頭の文字を変えたとき（changedName が空）だけ出す
+    var pi = changedName ? { removed: false, cut: false } : prefixInfo(st.rawPrefix), msg = '';
     if (pi.removed) msg += '先頭の文字から、ファイル名に使えない文字（\\ / : * ? " < > | と最後の「.」）を除きました。';
-    if (pi.cut) msg += '先頭の文字は' + PREFIX_MAX + '文字までです。' + (PREFIX_MAX + 1) + '文字目から後は使いません。';
-    if (pi.removed || pi.cut) msg += '名前には「' + (st.prefix || '（なし）') + '」を使います。';
+    if (pi.cut) msg += '先頭の文字は' + PREFIX_MAX + '文字までです（' + (PREFIX_MAX + 1) + '文字目からは使いません）。';
     if (changedName) msg = '「' + changedName + '」にしました。' + msg;
     if (!items.length) return msg ? { m: msg + (changedName ? '写真を選ぶと、この設定で名前を付けます。' : ''), e: false } : null;
-    if (st.heic === false && st.resize && plan && plan.rows.some(function (r) { return r.heicNoResize; })) msg += 'HEICの写真は変換しないため、縮小しません（縮小するには「HEICをJPGに変換」も選んでください）。';
+    if (st.heic === false && st.resize && plan && plan.rows.some(function (r) { return r.heicNoResize; })) msg += 'HEICは変換しないため縮小しません（縮小するには「HEICをJPGに変換」も選んでください）。';
     var empty = emptyZipMessage();
     if (empty) return { m: msg + empty, e: true };
     return msg ? { m: msg + '一覧に反映しました。', e: false } : null;
@@ -1273,8 +1290,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         return;
       }
       setBusy(false); render();
-      var msg = 'zip（' + fmtInt(added) + '枚、' + fmtBytes(blob.size) + '）の保存を始めました。ブラウザのダウンロードの一覧か、保存先を確かめてください。保存の画面が出ないときは、SafariやChromeで開き直してください。';
-      if (failed.length) msg += '次の' + fmtInt(failed.length) + '枚はzipに入れていません（一覧の「入らない」に移しました）：' + failed.join('、') + '。';
+      var msg = 'zip（' + fmtInt(added) + '枚、' + fmtBytes(blob.size) + '）の保存を始めました。ダウンロードの一覧か保存先を確かめてください（保存の画面が出ないときはSafariやChromeで開き直してください）。';
+      if (failed.length) msg += '読めなかった' + fmtInt(failed.length) + '枚はzipに入れていません（一覧の「入らない」に理由があります）。';
       setStatus(msg, failed.length > 0);
     }).catch(function () {
       setBusy(false); render();
@@ -1339,7 +1356,6 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       ['DSC_0101.JPG', '2026:10:18 09:02:11', '#a142f4', '例4', 640, 480],
       ['screenshot.png', null, '#5f6368', '例5', 360, 640]
     ];
-    items = [];
     Promise.all(specs.map(function (s) { return samplePhoto.apply(null, s); })).then(function (files) {
       addFiles(files);
     }, function () { setStatus('例の写真を作れませんでした。お使いのブラウザでは、ご自分の写真を選んでお試しください。', true); });
