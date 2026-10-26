@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>値札・ラベル面付け印刷 - 商品一覧から値札をまとめて印刷｜AIツールひろば</title>
+  <meta name="description" content="Excelの商品一覧を貼り付けて、値札・プライスカードをラベル用紙にまとめて面付け印刷できる無料ツールです。どのメーカーの用紙も寸法を入れて使え、ずれをmmで補正、税込・税抜の併記もできます。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/nefuda-label/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="値札・ラベル面付け印刷 - 商品一覧から値札をまとめて印刷｜AIツールひろば">
+  <meta property="og:description" content="Excelの商品一覧を貼り付けて、値札・プライスカードをラベル用紙にまとめて面付け印刷できる無料ツールです。どのメーカーの用紙も寸法を入れて使え、ずれをmmで補正、税込・税抜の併記もできます。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/nefuda-label/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/nefuda-label.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "値札・ラベル面付け印刷",
+    "description": "Excelの商品一覧を貼り付けて、値札・プライスカードをラベル用紙にまとめて面付け印刷できる無料ツールです。どのメーカーの用紙も寸法を入れて使え、ずれをmmで補正、税込・税抜の併記もできます。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/nefuda-label/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "値札・ラベル面付け印刷",
+        "item": "https://autotoolspublisher-ui.github.io/tools/nefuda-label/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "印刷すると位置がずれます。どうすればよいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "印刷の画面で倍率を「100%」（「実際のサイズ」）にし、「用紙に合わせる」をオフにして、用紙の大きさを使う用紙と同じにしてください。それでもずれるときは、普通紙に「枠線：点線」で1枚印刷し、ラベル用紙と重ねて明かりに透かして、ずれの向きと長さを測ります。印刷が右に2mmずれているなら「横の補正」に-2、上に1mmずれているなら「縦の補正」に1を入れて、印刷し直してください。補正は-20〜20mmの範囲で、0.01mm単位まで入れられます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "使っているラベル用紙が一覧にありません。",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「用紙の種類」で「自分で入れる」を選ぶか、寸法の欄を書き換えてください。用紙の袋や説明書に書かれた、用紙の幅と高さ、ラベルの幅と高さ、列と段の数、上と左の余白、ラベルとラベルの間隔を入れます。間隔が書かれていないときは、定規で「隣のラベルの左端までの長さ − ラベルの幅」を測って入れます。一覧の寸法は例なので、お使いの用紙の値と違うときは書き換えてください。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "税込と税抜を両方表示できますか？端数はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。「表示」で「税込を大きく、下に税抜」または「税抜を大きく、下に税込」を選びます。表の価格が税込か税抜かは「表の価格は」で選びます。計算は「税抜 ×（1＋税率）」または「税込 ÷（1＋税率）」で、1円未満は「切り捨て」「四捨五入」「切り上げ」から選べます。たとえば税抜1,234円・税率10%・切り捨てなら、税込は1,357円です。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "使いかけのラベル用紙に印刷できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "できます。「開始位置」に、使い始める面の番号を入れます。左上を1として右へ、次の段へと数えます（2列×5段の用紙で、2段目の左の面なら3）。プレビューでは、使わない面を薄い点線で表示します（点線は印刷されません）。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。処理はすべてお使いのブラウザの中で行われ、貼り付けた表や設定が外部に送信されたり、保存されたりすることはありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style id="pageStyle">@page { size: 210mm 297mm; margin: 0; }</style>
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に表と設定、右にまとめ・印刷ボタン・プレビュー（右は画面に留める）。狭い幅：表 → まとめとプレビュー → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); grid-template-areas: "table outputs" "settings outputs"; gap: 0 28px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-table { grid-area: table; }
+  .area-settings { grid-area: settings; }
+  .outputs { grid-area: outputs; position: sticky; top: 12px; }
+  .group { margin: 0 0 18px; padding: 0; border: 0; min-width: 0; }
+  .group > legend, .group-title { padding: 0; margin: 0 0 8px; color: #202124; font-weight: 600; font-size: 1rem; }
+  .settings-head { margin: 4px 0 12px; padding-top: 14px; border-top: 1px solid #e8eaed; color: #202124; font-size: 1.05rem; font-weight: 600; }
+  .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+  .fields .wide { grid-column: span 2; }
+  .field { min-width: 0; }
+  .field label small, .hint { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .field label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .field input[type="text"], select { display: block; width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  .field input[type="text"]:focus, select:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .field input:disabled { background: var(--surface-soft); color: var(--muted); }
+  input.bad { border-color: #b3261e !important; box-shadow: 0 0 0 1px #b3261e !important; }
+  textarea { display: block; width: 100%; min-height: 168px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: .95rem/1.55 inherit; font-family: inherit; resize: vertical; tab-size: 8; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  .setting { margin: 0 0 12px; padding: 0; border: 0; min-width: 0; display: flex; align-items: flex-start; gap: 6px 14px; }
+  .setting legend { float: left; flex: none; width: 7.5em; padding: 0; margin: 0; min-height: 44px; display: flex; align-items: center; color: #3c4043; font-weight: 600; font-size: .94rem; line-height: 1.3; }
+  .chips { flex: 1 1 auto; min-width: 0; display: flex; flex-wrap: wrap; gap: 8px 10px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  /* 1面の内容（1〜4行目） */
+  .lines { display: grid; gap: 10px; margin: 0 0 14px; }
+  .line-row { display: grid; grid-template-columns: 3.4em minmax(0, 1fr) 6.2em auto; gap: 6px 10px; align-items: center; }
+  .line-row .ln-label { color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .line-row .size { display: flex; align-items: center; gap: 4px; }
+  .line-row .size input { width: 4em; min-height: 44px; padding: 8px 8px; border: 1px solid var(--line); border-radius: 10px; font-size: .95rem; text-align: right; }
+  .line-row .size span { color: var(--muted); font-size: .875rem; }
+  .sub-row { display: flex; flex-wrap: wrap; gap: 12px 14px; }
+  .sub-row .field { flex: 1 1 10em; }
+  /* まとめ。ボタンの下に置くので、長くなってもボタンは動かない */
+  .summary { margin: 0 0 8px; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; overflow-wrap: anywhere; }
+  .summary.warn { color: var(--warn-ink); }
+  .summary .w { display: block; margin-top: 4px; color: var(--warn-ink); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 14px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  /* ボタンと設定の知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .status.error { color: var(--warn-ink); }
+  .preview-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin: 8px 0 8px; }
+  .preview-head .label { color: #3c4043; font-weight: 600; }
+  .preview-head .count { color: var(--muted); font-size: .875rem; }
+  .pages { display: flex; gap: 14px; overflow-x: auto; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); min-height: 200px; }
+  .pages.empty { align-items: center; color: var(--muted); font-size: .9rem; }
+  .pv { flex: none; }
+  .zoom-wrap { margin: 0 0 10px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
+  .pv-label { margin: 0 0 4px; color: #3c4043; font-size: .875rem; font-weight: 600; }
+  .pv-box { position: relative; overflow: hidden; background: #fff; box-shadow: 0 1px 3px rgba(60,64,67,.3); }
+  .pv-box .sheet { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .pv-box .sheet .slot { position: absolute; box-sizing: border-box; border: .3mm dashed #80868b; }
+  .pv-gap { flex: none; align-self: center; color: var(--muted); font-size: .875rem; width: 7em; text-align: center; }
+  .note { margin: 14px 0; color: var(--muted); font-size: .875rem; }
+  .note ul { margin: 4px 0 0; padding-left: 1.3em; }
+  .privacy { margin-top: 8px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  /* 用紙（1枚）。印刷とプレビューで同じものを使う。単位は mm */
+  .sheet { position: relative; overflow: hidden; background: #fff; color: #000; font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, "Noto Sans CJK JP", sans-serif; }
+  .sheet .lb { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .sheet .lb.al-left { text-align: left; }
+  .sheet .lb.al-center { text-align: center; }
+  .sheet .lb.al-right { text-align: right; }
+  .sheet .lb.bd-dot { border: .25mm dashed #555; }
+  .sheet .lb.bd-solid { border: .2mm solid #000; }
+  .sheet .lb > div { flex: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+  .sheet .lb .b { font-weight: 700; }
+  #printArea { display: none; }
+  /* 狭い幅で、設定を変えている間にプレビューへ戻るボタン（プレビューが画面の上に外れたときだけ出す） */
+  .to-preview { position: fixed; right: 14px; bottom: 14px; z-index: 4; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: var(--green); color: #fff; font-size: .9rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 6px rgba(60,64,67,.35); }
+  .to-preview:hover { background: var(--green-dark); }
+  @media print {
+    body { background: #fff; min-height: 0; }
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block; }
+    #printArea .sheet { break-after: page; page-break-after: always; }
+    #printArea .sheet:last-child { break-after: auto; page-break-after: auto; }
+    .sheet { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 900px) {
+    .layout { display: flex; flex-direction: column; align-items: stretch; }
+    .area-table { order: 1; }
+    .outputs { order: 2; position: static; margin-bottom: 18px; }
+    .area-settings { order: 3; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    .setting { display: block; }
+    .setting legend { float: none; width: auto; min-height: 0; margin-bottom: 8px; }
+    .howto { padding: 12px 14px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions #printButton { flex-basis: 100%; }
+    .chip span { padding: 0 11px; }
+  }
+  @media (max-width: 480px) {
+    select { font-size: .875rem; padding-left: 10px; padding-right: 4px; }
+    .fields .field.sel { grid-column: span 2; }
+    .line-row { grid-template-columns: 3.4em minmax(0, 1fr) auto; }
+    .line-row select { grid-column: 2 / span 2; }
+    .line-row .size { grid-column: 2; }
+    .line-row .chip { grid-column: 3; }
+  }
+  @media (max-width: 380px) {
+    .fields { gap: 10px 10px; }
+    header p { font-size: .9rem; line-height: 1.55; }
+    header .more { display: none; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    .summary { min-height: 88px; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">値札・ラベル面付け印刷</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">PRICE LABELS</p>
+    <h1>値札・ラベル面付け印刷</h1>
+    <p>Excelの商品一覧を貼り付けて、値札・プライスカードをラベル用紙にまとめて印刷します。<span class="more">差し込み印刷のように1枚ずつ設定する必要がなく、どのメーカーの用紙も寸法を数値で入れて使え、印刷のずれはmm単位で補正できます。価格は税込・税抜の併記と端数処理を選べます。</span></p>
+  </header>
+
+  <section class="card" aria-label="値札・ラベル面付け印刷">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>Excelなどで商品の表（1行目は見出し）をコピーし、下の欄に貼り付けます。</li>
+        <li>用紙と、1面に入れる内容・価格の書き方を選び、プレビューで確かめます。</li>
+        <li>「印刷する」を押します（PDFにも保存できます）。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+    <div class="area-table">
+      <div class="group">
+        <label class="group-title" for="table" style="display:block">商品の表<small class="hint">（1行目は見出し）</small></label>
+        <textarea id="table" spellcheck="false" autocomplete="off" placeholder="表をコピーして貼り付けます。&#10;例（カンマ区切りでも可）：&#10;商品名,価格,品番&#10;ビーズのピアス,1200,AC-001&#10;レジンのヘアゴム,800,AC-002"></textarea>
+        <p class="hint">1行目は見出しとして使い、2行目から下の1行が1つの商品になります。Excelのセル内改行は、ラベルでは空白にして1行で表示します。</p>
+      </div>
+    </div>
+
+    <div class="outputs">
+      <div class="actions">
+        <button type="button" id="printButton" class="btn primary">印刷する（PDF保存も）</button>
+        <button type="button" id="sampleButton" class="btn">例を入れる</button>
+        <button type="button" id="resetButton" class="btn">最初の状態に戻す</button>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <p id="summary" class="summary" aria-live="polite"></p>
+      <div class="preview-head"><span class="label" id="previewLabel">プレビュー</span><span class="count" id="previewCount"></span></div>
+      <div id="zoom" class="zoom-wrap" hidden></div>
+      <div id="pages" class="pages" role="region" aria-labelledby="previewLabel" tabindex="0"></div>
+    </div>
+
+    <div class="area-settings">
+      <h2 class="settings-head">用紙と内容の設定</h2>
+      <fieldset class="group">
+        <legend>用紙</legend>
+        <div class="fields">
+          <div class="field wide"><label for="preset">用紙の種類<small>（寸法の例）</small></label>
+            <select id="preset">
+              <option value="a4-10">A4 名刺サイズ 10面（91×55mm）</option>
+              <option value="a4-12">A4 12面（86.4×42.3mm）</option>
+              <option value="a4-24">A4 24面（70×33.9mm）</option>
+              <option value="a4-44">A4 44面（48.3×25.4mm）</option>
+              <option value="a4-65">A4 65面（38.1×21.2mm）</option>
+              <option value="a4-36">A4 普通紙に36面（50×30mm）</option>
+              <option value="custom">自分で入れる</option>
+            </select>
+          </div>
+          <div class="field"><label for="paperW">用紙の幅<small>（mm）</small></label><input type="text" id="paperW" inputmode="decimal" autocomplete="off" data-label="用紙の幅"></div>
+          <div class="field"><label for="paperH">用紙の高さ<small>（mm）</small></label><input type="text" id="paperH" inputmode="decimal" autocomplete="off" data-label="用紙の高さ"></div>
+          <div class="field"><label for="labelW">ラベルの幅<small>（mm）</small></label><input type="text" id="labelW" inputmode="decimal" autocomplete="off" data-label="ラベルの幅"></div>
+          <div class="field"><label for="labelH">ラベルの高さ<small>（mm）</small></label><input type="text" id="labelH" inputmode="decimal" autocomplete="off" data-label="ラベルの高さ"></div>
+          <div class="field"><label for="cols">列の数<small>（横に並ぶ数）</small></label><input type="text" id="cols" inputmode="numeric" autocomplete="off" data-label="列の数"></div>
+          <div class="field"><label for="rows">段の数<small>（縦に並ぶ数）</small></label><input type="text" id="rows" inputmode="numeric" autocomplete="off" data-label="段の数"></div>
+          <div class="field"><label for="marginT">上の余白<small>（mm）</small></label><input type="text" id="marginT" inputmode="decimal" autocomplete="off" data-label="上の余白"></div>
+          <div class="field"><label for="marginL">左の余白<small>（mm）</small></label><input type="text" id="marginL" inputmode="decimal" autocomplete="off" data-label="左の余白"></div>
+          <div class="field"><label for="gapX">横の間隔<small>（mm）</small></label><input type="text" id="gapX" inputmode="decimal" autocomplete="off" data-label="横の間隔"></div>
+          <div class="field"><label for="gapY">縦の間隔<small>（mm）</small></label><input type="text" id="gapY" inputmode="decimal" autocomplete="off" data-label="縦の間隔"></div>
+        </div>
+        <p class="hint">寸法は、お使いの用紙の袋や説明書に書かれた値に合わせてください。一覧の寸法は例で、書き換えると「自分で入れる」に変わります。</p>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>1面の内容</legend>
+        <div class="lines" id="lines"></div>
+        <fieldset class="setting">
+          <legend>そろえ</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="align" value="left" data-name="左"><span>左</span></label>
+            <label class="chip"><input type="radio" name="align" value="center" data-name="中央" checked><span>中央</span></label>
+            <label class="chip"><input type="radio" name="align" value="right" data-name="右"><span>右</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>枠線</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="border" value="none" data-name="なし" checked><span>なし</span></label>
+            <label class="chip"><input type="radio" name="border" value="dot" data-name="点線"><span>点線</span></label>
+            <label class="chip"><input type="radio" name="border" value="solid" data-name="実線"><span>実線</span></label>
+          </div>
+        </fieldset>
+        <div class="fields">
+          <div class="field"><label for="pad">ラベルの内側の余白<small>（mm）</small></label><input type="text" id="pad" inputmode="decimal" autocomplete="off" value="2" data-label="ラベルの内側の余白"></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>価格</legend>
+        <div class="fields">
+          <div class="field wide"><label for="priceCol">価格の列</label><select id="priceCol" data-label="価格の列"></select></div>
+        </div>
+        <fieldset class="setting" style="margin-top:12px">
+          <legend>表の価格は</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="base" value="in" data-name="税込" checked><span>税込</span></label>
+            <label class="chip"><input type="radio" name="base" value="ex" data-name="税抜"><span>税抜</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>税率</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="rate" value="10" data-name="10%" checked><span>10%</span></label>
+            <label class="chip"><input type="radio" name="rate" value="8" data-name="8%"><span>8%</span></label>
+            <label class="chip"><input type="radio" name="rate" value="custom" data-name="自分で入れる"><span>自分で入れる</span></label>
+          </div>
+        </fieldset>
+        <div class="fields" id="rateField" hidden style="margin:-4px 0 12px">
+          <div class="field"><label for="rateCustom">税率<small>（%）</small></label><input type="text" id="rateCustom" inputmode="decimal" autocomplete="off" value="10" data-label="税率"></div>
+        </div>
+        <div class="fields">
+          <div class="field wide"><label for="show">表示</label>
+            <select id="show" data-label="表示">
+              <option value="in">税込だけ（1,100円（税込））</option>
+              <option value="ex">税抜だけ（1,000円（税抜））</option>
+              <option value="in-ex">税込を大きく、下に税抜</option>
+              <option value="ex-in">税抜を大きく、下に税込</option>
+            </select>
+          </div>
+        </div>
+        <fieldset class="setting" style="margin-top:12px">
+          <legend>端数処理</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="round" value="floor" data-name="切り捨て" checked><span>切り捨て</span></label>
+            <label class="chip"><input type="radio" name="round" value="round" data-name="四捨五入"><span>四捨五入</span></label>
+            <label class="chip"><input type="radio" name="round" value="ceil" data-name="切り上げ"><span>切り上げ</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>書き方</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="yen" value="suffix" data-name="1,100円" checked><span>1,100円</span></label>
+            <label class="chip"><input type="radio" name="yen" value="prefix" data-name="¥1,100"><span>¥1,100</span></label>
+            <label class="chip"><input type="radio" name="yen" value="prefix-fw" data-name="￥1,100（全角）"><span>￥1,100（全角）</span></label>
+            <label class="chip"><input type="checkbox" id="comma" checked><span>3桁ごとのカンマ</span></label>
+          </div>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>枚数と印刷の位置</legend>
+        <div class="fields">
+          <div class="field"><label for="copies">同じ商品を何枚ずつ</label><input type="text" id="copies" inputmode="numeric" autocomplete="off" value="1" data-label="同じ商品を何枚ずつ"></div>
+          <div class="field sel"><label for="countCol">枚数の列<small>（任意）</small></label><select id="countCol" data-label="枚数の列"></select></div>
+          <div class="field"><label for="startPos">開始位置<small>（何面目から）</small></label><input type="text" id="startPos" inputmode="numeric" autocomplete="off" value="1" data-label="開始位置"></div>
+          <div class="field"></div>
+          <div class="field"><label for="offX">横の補正<small>（mm・右へ）</small></label><input type="text" id="offX" inputmode="decimal" autocomplete="off" value="0" data-label="横の補正"></div>
+          <div class="field"><label for="offY">縦の補正<small>（mm・下へ）</small></label><input type="text" id="offY" inputmode="decimal" autocomplete="off" value="0" data-label="縦の補正"></div>
+        </div>
+        <p class="hint">枚数の列を選ぶと、商品ごとにその列の数だけ作ります（この間は「同じ商品を何枚ずつ」は使いません）。開始位置は、左上を1として右へ、次の段へと数えます。使いかけの用紙の残りから使えます。補正は、印刷が左や上にずれるときはプラス、右や下にずれるときはマイナスを入れます（例：右に2mmずれる → 横の補正 −2）。</p>
+      </fieldset>
+    </div>
+    </div>
+
+    <div class="note">
+      <strong>並べ方と計算の決まり</strong>
+      <ul>
+        <li>ラベルは用紙の左上から右へ、次の段へと並べます。列 c・段 r（どちらも0から数える）のラベルの左上は、横が「左の余白 ＋ c ×（ラベルの幅 ＋ 横の間隔）＋ 横の補正」、縦が「上の余白 ＋ r ×（ラベルの高さ ＋ 縦の間隔）＋ 縦の補正」です。</li>
+        <li>面の数は「商品ごとの枚数の合計」、用紙の枚数は「（開始位置 − 1 ＋ 面の数）÷ 1枚の面数」の切り上げです。1回に商品2,000行・5,000面まで作れます。</li>
+        <li>税込は「税抜 ×（1 ＋ 税率）」、税抜は「税込 ÷（1 ＋ 税率）」を、選んだ端数処理で1円単位にします。価格の列は、数字だけ（カンマ・円・¥は可）の0以上の整数を価格として読み、それ以外はセルの文字をそのまま表示します。</li>
+        <li>入りきらない行は、文字を小さくして1行に収めます（最小5pt）。それでも入らないときは「…」で切れます。</li>
+        <li>印刷するときは、倍率を「100%」（実際のサイズ）にし、「用紙に合わせる」をオフにしてください。</li>
+      </ul>
+    </div>
+
+    <div class="privacy"><strong>ブラウザ内で処理します。</strong> 貼り付けた表や設定は、このページの中だけで使われ、保存も外部への送信もされません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>ハンドメイドの値札を、名刺サイズ10面のラベル用紙に作る（税抜の価格から税込を計算）</h3>
+      <dl>
+        <dt>入力</dt><dd>「例を入れる」の表（商品名・価格（税抜）・品番・素材の4列、商品6行。1行目は「ビーズのピアス（青）／1200／AC-001／ガラスビーズ」）</dd>
+        <dt>設定</dt><dd>用紙：A4 名刺サイズ 10面／1面の内容：1行目 商品名・2行目 価格（税抜）・3行目 品番（自動で選ばれます）／表の価格は：税抜（見出しの「税抜」から自動）／税率：10%／表示：税込を大きく、下に税抜／端数処理：切り捨て</dd>
+        <dt>結果</dt><dd>「商品6行から6面を作り、A4 名刺サイズ 10面の用紙1枚に並べます（1枚10面・1面目から）。最後の用紙の空きは4面です。」と表示されます。1面目は「ビーズのピアス（青）」「1,320円（税込）」「税抜 1,200円」「AC-001」の4行、6面目は「天然石のブレスレット」「3,080円（税込）」「税抜 2,800円」「AC-006」です。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>使いかけの44面のラベル用紙の13面目から、文房具の値札を2枚ずつ作る</h3>
+      <dl>
+        <dt>入力</dt><dd>品名・税込価格・品番の3列の表（商品5行：ボールペン 黒／165／BP-01、ボールペン 赤／165／BP-02、ノート A5／330／NT-05、付せん 75mm／220／FS-75、クリアファイル／110／CF-A4）</dd>
+        <dt>設定</dt><dd>用紙：A4 44面／表示：税込だけ／書き方：¥1,100／同じ商品を何枚ずつ：2／開始位置：13</dd>
+        <dt>結果</dt><dd>「商品5行から10面を作り、A4 44面の用紙1枚に並べます（1枚44面・13面目から）。最後の用紙の空きは22面です。」と表示されます。4段目の左（13面目）と隣（14面目）が「ボールペン 黒」「¥165（税込）」「BP-01」、22面目が「クリアファイル」「¥110（税込）」「CF-A4」です。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>印刷すると位置がずれます。どうすればよいですか？</summary>
+      <p>印刷の画面で倍率を「100%」（「実際のサイズ」）にし、「用紙に合わせる」をオフにして、用紙の大きさを使う用紙と同じにしてください。それでもずれるときは、普通紙に「枠線：点線」で1枚印刷し、ラベル用紙と重ねて明かりに透かして、ずれの向きと長さを測ります。印刷が右に2mmずれているなら「横の補正」に-2、上に1mmずれているなら「縦の補正」に1を入れて、印刷し直してください。補正は-20〜20mmの範囲で、0.01mm単位まで入れられます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>使っているラベル用紙が一覧にありません。</summary>
+      <p>「用紙の種類」で「自分で入れる」を選ぶか、寸法の欄を書き換えてください。用紙の袋や説明書に書かれた、用紙の幅と高さ、ラベルの幅と高さ、列と段の数、上と左の余白、ラベルとラベルの間隔を入れます。間隔が書かれていないときは、定規で「隣のラベルの左端までの長さ − ラベルの幅」を測って入れます。一覧の寸法は例なので、お使いの用紙の値と違うときは書き換えてください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>税込と税抜を両方表示できますか？端数はどうなりますか？</summary>
+      <p>はい。「表示」で「税込を大きく、下に税抜」または「税抜を大きく、下に税込」を選びます。表の価格が税込か税抜かは「表の価格は」で選びます。計算は「税抜 ×（1＋税率）」または「税込 ÷（1＋税率）」で、1円未満は「切り捨て」「四捨五入」「切り上げ」から選べます。たとえば税抜1,234円・税率10%・切り捨てなら、税込は1,357円です。</p>
+    </details>
+    <details class="faq-item">
+      <summary>使いかけのラベル用紙に印刷できますか？</summary>
+      <p>できます。「開始位置」に、使い始める面の番号を入れます。左上を1として右へ、次の段へと数えます（2列×5段の用紙で、2段目の左の面なら3）。プレビューでは、使わない面を薄い点線で表示します（点線は印刷されません）。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。処理はすべてお使いのブラウザの中で行われ、貼り付けた表や設定が外部に送信されたり、保存されたりすることはありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../renban-ticket/"><strong>連番チケット印刷</strong><span>整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></a></li>
+      <li><a href="../shikomi-hachu/"><strong>仕込み発注計算</strong><span>レシピ表と販売予定数から、食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注数を出します。</span></a></li>
+      <li><a href="../shashin-satsueibi/"><strong>写真を撮影日で改名</strong><span>写真のファイル名を撮影日時＋連番にまとめて変えて、zipで保存します。時計のずれの補正、HEICからJPGへの変換、縮小も一度にできます。</span></a></li>
+      <li><a href="../kugiri-henkan/"><strong>区切り変換くん</strong><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（15件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+<a href="#summary" id="toPreview" class="to-preview" hidden>▲ プレビューと印刷へ</a>
+<div id="printArea" aria-hidden="true"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var TAB = String.fromCharCode(9);
+  var LF = String.fromCharCode(10);
+  var SPACES = ' ' + String.fromCharCode(0x3000) + String.fromCharCode(0xA0) + TAB;   // 半角・全角・改行しない空白・タブ
+  var YEN_MARKS = String.fromCharCode(0xA5) + String.fromCharCode(0xFFE5) + String.fromCharCode(0x5C);   // ¥ ￥ と、日本語の環境で円記号として表示される U+005C
+  var MAX_ROWS = 2000, MAX_FACES = 5000, MAX_PRICE = 999999999;
+  var PT = 25.4 / 72;            // 1pt の mm
+  var MIN_PT = 5, MIN_MM = MIN_PT * PT;
+  var PX_PER_MM = 96 / 25.4;
+  var LINE_H = 1.2;              // 行の高さ（文字の大きさの倍）
+  var SUB_RATIO = 0.55;          // 下に小さく出す価格の大きさ（主の価格の倍）
+  var WIDTH_SAFETY = 0.97;       // 測った幅に対する余裕
+  var FONT = '"Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, "Noto Sans CJK JP", sans-serif';
+  var LINES = 4;
+  var DEFAULT_SIZES = ['12', '16', '8', '8'];
+  var DEFAULT_BOLD = [true, true, false, false];
+  var PRICE_WORDS = ['価格', '売価', '値段', '金額', '税込', '税抜', '税別', '本体', '単価', '円', 'price'];
+  var NAME_WORDS = ['商品名', '品名', '名称', '商品', '名前', '作品', 'タイトル', 'name', 'item', 'product', 'title'];
+  var EX_WORDS = ['税抜', '税別', '本体'];
+  // 見出しらしい語（1行目が見出しでなく商品かもしれないと知らせる判定に使う）
+  var HEADER_WORDS = ['名', '品', '商品', '価格', '番', 'コード', '素材', 'サイズ', '色', 'カラー', '備考', '数', '量', '分類', '種類', 'メモ', '説明', '税', '円', 'no', 'id', 'jan', 'sku', 'name', 'price', 'item', 'product', 'code', 'qty', 'title'];
+  var CODE_WORDS = ['品番', '型番', 'コード', 'JAN', 'SKU', '番号', '商品No', 'No.'];
+
+  // 用紙の寸法の例（mm）。メーカーの品番は書かない
+  var PRESETS = {
+    'a4-10': { name: 'A4 名刺サイズ 10面', pw: '210', ph: '297', lw: '91', lh: '55', cols: '2', rows: '5', mt: '11', ml: '14', gx: '0', gy: '0' },
+    'a4-12': { name: 'A4 12面', pw: '210', ph: '297', lw: '86.4', lh: '42.3', cols: '2', rows: '6', mt: '21.5', ml: '18.6', gx: '0', gy: '0' },
+    'a4-24': { name: 'A4 24面', pw: '210', ph: '297', lw: '70', lh: '33.9', cols: '3', rows: '8', mt: '12.9', ml: '0', gx: '0', gy: '0' },
+    'a4-44': { name: 'A4 44面', pw: '210', ph: '297', lw: '48.3', lh: '25.4', cols: '4', rows: '11', mt: '8.8', ml: '8.4', gx: '0', gy: '0' },
+    'a4-65': { name: 'A4 65面', pw: '210', ph: '297', lw: '38.1', lh: '21.2', cols: '5', rows: '13', mt: '10.7', ml: '4.7', gx: '2.5', gy: '0' },
+    'a4-36': { name: 'A4 普通紙に36面', pw: '210', ph: '297', lw: '50', lh: '30', cols: '4', rows: '9', mt: '13.5', ml: '5', gx: '0', gy: '0' }
+  };
+  var DIM_FIELDS = [
+    ['paperW', 'pw'], ['paperH', 'ph'], ['labelW', 'lw'], ['labelH', 'lh'], ['cols', 'cols'], ['rows', 'rows'],
+    ['marginT', 'mt'], ['marginL', 'ml'], ['gapX', 'gx'], ['gapY', 'gy']
+  ];
+  var RADIO_LABELS = { align: 'そろえ', border: '枠線', base: '表の価格は', rate: '税率', round: '端数処理', yen: '書き方' };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var tableEl = $('table'), preset = $('preset'), priceCol = $('priceCol'), countCol = $('countCol'), show = $('show');
+  var summary = $('summary'), status = $('status'), pagesBox = $('pages'), previewCount = $('previewCount');
+  var printButton = $('printButton'), sampleButton = $('sampleButton'), resetButton = $('resetButton');
+  var printArea = $('printArea'), pageStyle = $('pageStyle'), linesBox = $('lines'), rateField = $('rateField');
+  var comma = $('comma'), zoomBox = $('zoom');
+
+  var current = null;
+  var printDirty = true;
+  var lastHeaderKey = null;
+
+  function fmt(n) { return Number(n).toLocaleString('ja-JP'); }
+  function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function radioValue(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.value : ''; }
+  function radioName(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.getAttribute('data-name') : ''; }
+  function setRadio(name, value) { var r = document.querySelector('input[name="' + name + '"][value="' + value + '"]'); if (r) r.checked = true; }
+  // 英字は大文字・小文字を区別しない
+  function includesAny(s, words) { var low = s.toLowerCase(); for (var i = 0; i < words.length; i++) if (low.indexOf(words[i].toLowerCase()) >= 0) return true; return false; }
+
+  function trimSpaces(s) {
+    var a = 0, b = s.length;
+    while (a < b && SPACES.indexOf(s.charAt(a)) >= 0) a++;
+    while (b > a && SPACES.indexOf(s.charAt(b - 1)) >= 0) b--;
+    return s.slice(a, b);
+  }
+  // 全角の数字・記号を半角に（数の読み取り用）
+  function toHalf(raw) {
+    var s = '';
+    for (var i = 0; i < raw.length; i++) {
+      var code = raw.charCodeAt(i);
+      if (code >= 0xFF01 && code <= 0xFF5E) s += String.fromCharCode(code - 0xFEE0);   // 全角の英数字・記号
+      else s += raw.charAt(i);
+    }
+    return s;
+  }
+  // 数の読み取り。d は小数の桁数の上限。値は 10^d 倍した整数で返す（小数の誤差を出さない）
+  // 先頭のマイナスとして読む文字：- − ‐ – ー（IME の長音） ｰ
+  var MINUS_MARKS = '-' + String.fromCharCode(0x2212) + String.fromCharCode(0x2010) + String.fromCharCode(0x2013) + String.fromCharCode(0x30FC) + String.fromCharCode(0xFF70);
+  function parseFixed(raw, d, allowNeg, unit) {
+    var s = trimSpaces(toHalf(raw));
+    if (s === '') return { empty: true };
+    // 欄の単位（mm・%・pt）が後ろに付いていても読む
+    if (unit) {
+      var low = s.toLowerCase();
+      if (low.length > unit.length && low.slice(-unit.length) === unit) s = trimSpaces(s.slice(0, -unit.length));
+    }
+    var neg = false;
+    if (MINUS_MARKS.indexOf(s.charAt(0)) >= 0 || s.charAt(0) === '+') { neg = s.charAt(0) !== '+'; s = trimSpaces(s.slice(1)); }
+    if (!/^[0-9]+([.][0-9]+)?$/.test(s)) return { bad: true };
+    var parts = s.split('.');
+    var frac = parts[1] || '';
+    if (frac.length > d) return { decimals: true };
+    while (frac.length < d) frac += '0';
+    var v = Number(parts[0] + frac);
+    if (!isFinite(v) || v > 1e12) return { bad: true };
+    if (neg && v !== 0) { if (!allowNeg) return { negative: true }; v = -v; }
+    return { value: v };
+  }
+  function fromHundredths(v) { return (v / 100); }
+  function mmText(v) { var s = (v / 100).toFixed(2); return s.replace(/[.]?0+$/, ''); }
+
+  // ---------- 表の読み取り（タブ区切り＝Excelのコピー、またはカンマ区切り。" で囲んだセルの中の改行・区切り・"" に対応） ----------
+  function parseTable(text) {
+    var delim = null;
+    if (text.indexOf(TAB) >= 0) delim = TAB;
+    else if (text.indexOf(',') >= 0) delim = ',';
+    var rows = [], row = [], cell = '', inQ = false, atStart = true;
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      var code = text.charCodeAt(i);
+      if (inQ) {
+        if (ch === '"') {
+          if (text.charAt(i + 1) === '"') { cell += '"'; i++; }
+          else inQ = false;
+        } else cell += ch;
+        continue;
+      }
+      if (ch === '"' && atStart) { inQ = true; atStart = false; continue; }
+      if (delim !== null && ch === delim) { row.push(cell); cell = ''; atStart = true; continue; }
+      if (code === 13 || code === 10) {
+        row.push(cell); rows.push(row); row = []; cell = ''; atStart = true;
+        if (code === 13 && text.charCodeAt(i + 1) === 10) i++;
+        continue;
+      }
+      cell += ch; atStart = false;
+    }
+    if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+    return { rows: rows, delim: delim };
+  }
+  // セルの値：セル内改行は空白にし、前後の空白を除く
+  function cleanCell(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var code = s.charCodeAt(i);
+      if (code === 13) { if (s.charCodeAt(i + 1) === 10) i++; out += ' '; }
+      else if (code === 10) out += ' ';
+      else out += s.charAt(i);
+    }
+    return trimSpaces(out);
+  }
+  function colLetter(i) {
+    var s = '';
+    i++;
+    while (i > 0) { var m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); }
+    return s;
+  }
+
+  function readTable() {
+    var raw = tableEl.value;
+    var t = { header: [], items: [], skipped: 0, colCount: 0, empty: false, tooMany: false, onlyHeader: false };
+    if (trimSpaces(raw.split(LF).join('').split(String.fromCharCode(13)).join('')) === '') { t.empty = true; return t; }
+    var parsed = parseTable(raw);
+    var rows = parsed.rows.map(function (r) { return r.map(cleanCell); });
+    // 先頭の空の行は飛ばし、最初の空でない行を見出しにする
+    var first = 0;
+    while (first < rows.length && rows[first].join('') === '') first++;
+    if (first >= rows.length) { t.empty = true; return t; }
+    var colCount = 0;
+    rows.forEach(function (r) { if (r.length > colCount) colCount = r.length; });
+    t.colCount = colCount;
+    t.header = rows[first].slice();
+    while (t.header.length < colCount) t.header.push('');
+    t.headerRow = first + 1;
+    t.delim = parsed.delim;
+    t.longRows = [];
+    var headerLen = rows[first].length;
+    while (headerLen > 0 && rows[first][headerLen - 1] === '') headerLen--;
+    t.headerLen = headerLen;
+    for (var i = first + 1; i < rows.length; i++) {
+      var r = rows[i];
+      if (r.join('') === '') { t.skipped++; continue; }
+      // 見出しより右の列に値がある行（カンマ区切りで "1,200" を囲んでいないときなど）
+      var extra = false;
+      for (var j = Math.max(headerLen, 1); j < r.length; j++) if (r[j] !== '') extra = true;
+      if (extra) t.longRows.push({ rowNo: i + 1 });
+      var cells = r.slice();
+      while (cells.length < colCount) cells.push('');
+      t.items.push({ rowNo: i + 1, cells: cells });
+    }
+    if (!t.items.length) t.onlyHeader = true;
+    if (t.items.length > MAX_ROWS) t.tooMany = true;
+    return t;
+  }
+  function colName(t, i) {
+    var h = t.header[i] || '';
+    return colLetter(i) + '列' + (h ? '（' + h + '）' : '');
+  }
+
+  // ---------- 1面の内容の行（1〜4行目）を作る ----------
+  var lineEls = [];
+  (function buildLines() {
+    for (var i = 0; i < LINES; i++) {
+      var row = document.createElement('div');
+      row.className = 'line-row';
+      var n = i + 1;
+      row.innerHTML =
+        '<label class="ln-label" for="line' + n + 'Col">' + n + '行目</label>' +
+        '<select id="line' + n + 'Col" data-label="' + n + '行目に入れる列"><option value="none">なし</option></select>' +
+        '<span class="size"><input type="text" id="line' + n + 'Size" inputmode="decimal" autocomplete="off" value="' + DEFAULT_SIZES[i] + '" aria-label="' + n + '行目の文字の大きさ（pt）" data-label="' + n + '行目の文字の大きさ"><span>pt</span></span>' +
+        '<label class="chip"><input type="checkbox" id="line' + n + 'Bold"' + (DEFAULT_BOLD[i] ? ' checked' : '') + '><span>太字</span></label>';
+      linesBox.appendChild(row);
+      lineEls.push({ col: $('line' + n + 'Col'), size: $('line' + n + 'Size'), bold: $('line' + n + 'Bold') });
+    }
+  })();
+
+  // 表の列が変わったら、選択肢を作り直す。見出しの行が変わったときは、入れる列を自動で選び直す
+  function refreshColumns(t) {
+    // 表を空にしただけでは選び直さない（同じ見出しの表を貼り直したときに、選んだ設定を残す）
+    if (t.empty && lastHeaderKey !== null) return false;
+    var key = t.empty ? '' : t.colCount + '|' + t.header.join(TAB);
+    var changed = key !== lastHeaderKey;
+    lastHeaderKey = key;
+    var opts = '<option value="none">なし</option>';
+    for (var i = 0; i < t.colCount; i++) opts += '<option value="' + i + '">' + escapeHtml(colName(t, i)) + '</option>';
+    if (!changed) return false;
+    var selects = lineEls.map(function (l) { return l.col; }).concat([priceCol, countCol]);
+    selects.forEach(function (sel) { sel.innerHTML = opts; });
+    countCol.options[0].textContent = 'なし（全部同じ枚数）';
+    if (t.empty) { selects.forEach(function (sel) { sel.value = 'none'; }); return false; }
+    autoAssign(t);
+    return true;
+  }
+  function autoAssign(t) {
+    var h = t.header;
+    var priceIdx = -1, codeIdx = -1, i;
+    // 1列だけの表は、価格の列として選ばない（全角スペースなどで区切った表が1列に読まれたときに、価格の誤りの知らせが重ならないように）
+    for (i = 0; i < h.length; i++) if (priceIdx < 0 && t.colCount > 1 && includesAny(h[i], PRICE_WORDS)) priceIdx = i;
+    for (i = 0; i < h.length; i++) if (codeIdx < 0 && i !== priceIdx && includesAny(h[i], CODE_WORDS)) codeIdx = i;
+    var nameIdx = -1;
+    for (i = 0; i < h.length; i++) if (nameIdx < 0 && i !== priceIdx && i !== codeIdx && includesAny(h[i], NAME_WORDS)) nameIdx = i;
+    var used = {};
+    if (nameIdx >= 0) used[nameIdx] = true;
+    var pick = function () { for (var j = 0; j < t.colCount; j++) if (!used[j] && j !== priceIdx && j !== codeIdx && (h[j] !== '' || t.colCount === 1)) { used[j] = true; return j; } return -1; };
+    var l1 = nameIdx >= 0 ? nameIdx : pick();   // 1行目は商品名らしい列を優先する
+    var l2 = priceIdx >= 0 ? priceIdx : pick();
+    if (l2 >= 0) used[l2] = true;
+    var l3 = codeIdx >= 0 ? codeIdx : -1;
+    var vals = [l1, l2, l3, -1];
+    lineEls.forEach(function (l, k) { l.col.value = vals[k] >= 0 ? String(vals[k]) : 'none'; });
+    priceCol.value = priceIdx >= 0 ? String(priceIdx) : 'none';
+    countCol.value = 'none';
+    setRadio('base', priceIdx >= 0 && includesAny(h[priceIdx], EX_WORDS) ? 'ex' : 'in');
+  }
+
+  // ---------- 価格 ----------
+  function parsePrice(raw) {
+    var s = trimSpaces(toHalf(raw));
+    if (s === '') return { empty: true };
+    if (s !== '' && YEN_MARKS.indexOf(s.charAt(0)) >= 0) s = trimSpaces(s.slice(1));
+    if (s !== '' && s.charAt(s.length - 1) === '円') s = trimSpaces(s.slice(0, -1));
+    if (!/^[0-9]+$/.test(s) && !/^[0-9]{1,3}(,[0-9]{3})+$/.test(s)) return { bad: true };
+    var n = Number(s.split(',').join(''));
+    if (n > MAX_PRICE) return { bad: true };
+    return { value: n };
+  }
+  // a ÷ b を端数処理して整数にする（a ≧ 0、b > 0 の整数）
+  function divRound(a, b, mode) {
+    var q = Math.floor(a / b), r = a - q * b;
+    if (mode === 'ceil') return r > 0 ? q + 1 : q;
+    if (mode === 'round') return r * 2 >= b ? q + 1 : q;
+    return q;
+  }
+  function priceText(n, st) {
+    var s = st.comma ? fmt(n) : String(n);
+    if (st.yen === 'prefix') return String.fromCharCode(0xA5) + s;
+    if (st.yen === 'prefix-fw') return String.fromCharCode(0xFFE5) + s;
+    return s + '円';
+  }
+  // 税込・税抜の両方を求める。T は税率の100倍（10% → 1000）
+  function bothPrices(n, st) {
+    if (st.base === 'in') return { inc: n, exc: divRound(n * 10000, 10000 + st.T, st.round) };
+    return { inc: divRound(n * (10000 + st.T), 10000, st.round), exc: n };
+  }
+  function priceLines(n, st) {
+    var p = bothPrices(n, st);
+    if (st.show === 'in') return { main: priceText(p.inc, st) + '（税込）', sub: '' };
+    if (st.show === 'ex') return { main: priceText(p.exc, st) + '（税抜）', sub: '' };
+    if (st.show === 'in-ex') return { main: priceText(p.inc, st) + '（税込）', sub: '税抜 ' + priceText(p.exc, st) };
+    return { main: priceText(p.exc, st) + '（税抜）', sub: '税込 ' + priceText(p.inc, st) };
+  }
+
+  // ---------- 文字の幅（canvas で 100px の大きさで測る） ----------
+  var ctx = document.createElement('canvas').getContext('2d');
+  var widthCache = {};
+  function textWidth100(text, bold) {
+    var key = (bold ? 'b' : 'n') + text;
+    if (widthCache.hasOwnProperty(key)) return widthCache[key];
+    ctx.font = (bold ? '700' : '400') + ' 100px ' + FONT;
+    var w = ctx.measureText(text).width;
+    widthCache[key] = w;
+    return w;
+  }
+
+  // 1つの商品の中身（行ごとの文字・大きさ）を決める
+  function layoutItem(item, st) {
+    var entries = [];
+    var priceInfo = null;
+    st.lines.forEach(function (ln, i) {
+      if (ln.col < 0) return;
+      var text = item.cells[ln.col] || '';
+      if (ln.col === st.priceCol) {
+        var pr = parsePrice(text);
+        priceInfo = pr;
+        if (pr.empty) return;
+        if (pr.bad) { entries.push({ text: text, base: ln.size, bold: ln.bold, lineNo: i + 1, cls: 'pr' }); return; }
+        var pl = priceLines(pr.value, st);
+        entries.push({ text: pl.main, base: ln.size, bold: ln.bold, lineNo: i + 1, cls: 'pr' });
+        if (pl.sub) entries.push({ text: pl.sub, base: ln.size * SUB_RATIO, bold: false, lineNo: i + 1, cls: 'pr sub' });
+        return;
+      }
+      if (text === '') return;
+      entries.push({ text: text, base: ln.size, bold: ln.bold, lineNo: i + 1, cls: '' });
+    });
+    var availW = (st.lw - 2 * st.pad) / 100, availH = (st.lh - 2 * st.pad) / 100;
+    var total = 0;
+    entries.forEach(function (e) { total += e.base * LINE_H; });
+    var f = total > availH ? availH / total : 1;
+    var overLines = {};
+    var sum = 0;
+    entries.forEach(function (e) {
+      var s = e.base * f;
+      var over = false;
+      if (s < MIN_MM) { s = MIN_MM; }
+      var w100 = textWidth100(e.text, e.bold);
+      if (w100 * s / 100 > availW * WIDTH_SAFETY) {
+        var s2 = availW * WIDTH_SAFETY * 100 / w100;
+        if (s2 < MIN_MM) { s = MIN_MM; over = true; } else s = s2;
+      }
+      e.size = s;
+      sum += s * LINE_H;
+      if (over) overLines[e.lineNo] = true;
+    });
+    var tall = sum > availH + 0.01;
+    return { entries: entries, overLines: overLines, tall: tall, price: priceInfo };
+  }
+
+  // ---------- 設定を読む ----------
+  function readState() {
+    var st = { errors: [], warnings: [], notes: [] };
+    var t = readTable();
+    st.table = t;
+    st.autoAssigned = refreshColumns(t);
+    st.presetName = preset.value === 'custom' ? '' : PRESETS[preset.value].name;
+    // 数の欄
+    var bad = [];
+    var err = '';
+    // kind：'atLeast'＝マイナスのときは「0以上の数で」と案内する（余白・間隔）。'count'＝形の誤りも範囲の文で案内する（枚数）
+    function num(id, d, min, max, allowNeg, unit, kind, example) {
+      var el = $(id), label = el.getAttribute('data-label');
+      var r = parseFixed(el.value, d, true, unit === '枚' ? '' : unit);
+      var msg = '';
+      var scale = Math.pow(10, d);
+      var range = label + 'は、' + min + '〜' + max + unit + 'の範囲で入れてください。';
+      if (kind === 'count') range = '「' + label + '」は、' + min + '〜' + max + 'の整数で入れてください。';
+      if (r.empty) msg = (kind === 'count' ? '「' + label + '」' : label) + 'を入れてください。';
+      else if (kind === 'count' && (r.bad || r.decimals)) msg = range;
+      else if (r.bad || (d === 0 && r.decimals)) msg = label + 'は、' + (d ? '数（例：12.5）' : '整数（例：' + (example || 2) + '）') + 'で入れてください。';
+      else if (r.decimals) msg = label + 'は、小数' + d + '桁までの数で入れてください。';
+      else if (r.value < 0 && kind === 'atLeast') msg = label + 'は、0以上の数で入れてください。';
+      else if (r.value < min * scale || r.value > max * scale) msg = range;
+      el.classList.toggle('bad', !!msg);
+      if (msg) { bad.push(el); if (!err) err = msg; return null; }
+      return r.value;
+    }
+    st.pw = num('paperW', 2, 20, 1000, false, 'mm');
+    st.ph = num('paperH', 2, 20, 1000, false, 'mm');
+    st.lw = num('labelW', 2, 5, 1000, false, 'mm');
+    st.lh = num('labelH', 2, 5, 1000, false, 'mm');
+    st.cols = num('cols', 0, 1, 20, false, '', '', 2);
+    st.rows = num('rows', 0, 1, 20, false, '', '', 5);
+    st.mt = num('marginT', 2, 0, 500, false, 'mm', 'atLeast');
+    st.ml = num('marginL', 2, 0, 500, false, 'mm', 'atLeast');
+    st.gx = num('gapX', 2, 0, 100, false, 'mm', 'atLeast');
+    st.gy = num('gapY', 2, 0, 100, false, 'mm', 'atLeast');
+    st.pad = num('pad', 2, 0, 10, false, 'mm');
+    // 枚数の列を使う間は「同じ商品を何枚ずつ」を使わない（欄を止める）
+    var useCountCol = countCol.value !== 'none';
+    $('copies').disabled = useCountCol;
+    if (useCountCol) { st.copies = 1; $('copies').classList.remove('bad'); }
+    else st.copies = num('copies', 0, 1, 99, false, '枚', 'count');
+    st.offX = num('offX', 2, -20, 20, true, 'mm');
+    st.offY = num('offY', 2, -20, 20, true, 'mm');
+    st.rate = radioValue('rate');
+    rateField.hidden = st.rate !== 'custom';
+    if (st.rate === 'custom') st.T = num('rateCustom', 2, 0, 100, false, '%');
+    else { st.T = Number(st.rate) * 100; $('rateCustom').classList.remove('bad'); }
+    st.lines = lineEls.map(function (l, i) {
+      var v = l.col.value;
+      var r = parseFixed(l.size.value, 1, false, 'pt');
+      var label = (i + 1) + '行目の文字の大きさ';
+      var msg = '';
+      if (r.empty) msg = label + 'を入れてください（例：12）。';
+      else if (r.bad || r.decimals) msg = label + 'は、数（例：12）で入れてください（小数は1桁まで）。';
+      else if (r.negative || r.value < 50 || r.value > 720) msg = label + 'は、5〜72ptの範囲で入れてください。';
+      l.size.classList.toggle('bad', !!msg);
+      if (msg) { bad.push(l.size); if (!err) err = msg; }
+      return { col: v === 'none' ? -1 : Number(v), size: msg ? 0 : (r.value / 10) * PT, sizePt: msg ? 0 : r.value / 10, bold: l.bold.checked };
+    });
+    st.priceCol = priceCol.value === 'none' ? -1 : Number(priceCol.value);
+    st.countCol = countCol.value === 'none' ? -1 : Number(countCol.value);
+    st.base = radioValue('base');
+    st.show = show.value;
+    st.round = radioValue('round');
+    st.yen = radioValue('yen');
+    st.comma = comma.checked;
+    st.align = radioValue('align');
+    st.border = radioValue('border');
+
+    // 開始位置は1枚の面数がわかってから確かめる
+    var startEl = $('startPos');
+    if (!err) {
+      var perPage = st.cols * st.rows;
+      st.perPage = perPage;
+      var sp = parseFixed(startEl.value, 0, false, '');
+      var spMsg = '';
+      if (sp.empty) spMsg = '開始位置を入れてください（最初から使うときは1）。';
+      else if (sp.bad || sp.negative || sp.decimals || sp.value < 1 || sp.value > perPage) spMsg = '開始位置は、1〜' + perPage + 'の整数で入れてください（この用紙は1枚' + perPage + '面です）。';
+      startEl.classList.toggle('bad', !!spMsg);
+      if (spMsg) err = spMsg; else st.start = sp.value;
+    } else startEl.classList.remove('bad');
+
+    // ラベルが用紙に入るか（0.05mm まで許す）
+    if (!err) {
+      var right = st.ml + st.cols * st.lw + (st.cols - 1) * st.gx;
+      var bottom = st.mt + st.rows * st.lh + (st.rows - 1) * st.gy;
+      if (right > st.pw + 5) err = 'ラベルが用紙の右から' + mmText(right - st.pw) + 'mmはみ出します（左の余白＋列の数×ラベルの幅＋間隔＝' + mmText(right) + 'mm、用紙の幅は' + mmText(st.pw) + 'mm）。寸法を確かめてください。';
+      else if (bottom > st.ph + 5) err = 'ラベルが用紙の下から' + mmText(bottom - st.ph) + 'mmはみ出します（上の余白＋段の数×ラベルの高さ＋間隔＝' + mmText(bottom) + 'mm、用紙の高さは' + mmText(st.ph) + 'mm）。寸法を確かめてください。';
+      else if (st.pad * 2 >= st.lw || st.pad * 2 >= st.lh) err = 'ラベルの内側の余白（' + mmText(st.pad) + 'mm）が、ラベルの大きさに対して大きすぎます。小さくしてください。';
+    }
+    st.error = err ? err + '直すまで印刷できません。' : '';
+    return st;
+  }
+
+  // 面（ラベル1枚）を並べる
+  function buildFaces(st) {
+    var t = st.table;
+    var faces = [];
+    var priceBad = [], priceEmpty = [], countBad = [], overByLine = {}, tallCount = 0;
+    var products = 0;
+    for (var i = 0; i < t.items.length; i++) {
+      var item = t.items[i];
+      var n = st.copies;
+      if (st.countCol >= 0) {
+        var c = parseFixed(item.cells[st.countCol] || '', 0, false);
+        if (c.empty || c.bad || c.negative || c.decimals || c.value > 999) { countBad.push(item); continue; }
+        n = c.value;
+      }
+      if (n === 0) continue;
+      products++;
+      if (faces.length + n > MAX_FACES) { faces.length = MAX_FACES + 1; break; }
+      var lay = layoutItem(item, st);
+      if (lay.price && lay.price.bad) priceBad.push(item);
+      if (lay.price && lay.price.empty) priceEmpty.push(item);
+      Object.keys(lay.overLines).forEach(function (k) { overByLine[k] = (overByLine[k] || 0) + n; });
+      if (lay.tall) tallCount += n;
+      for (var k = 0; k < n; k++) faces.push({ item: item, lay: lay });
+    }
+    st.faces = faces;
+    st.products = products;
+    st.priceBad = priceBad; st.priceEmpty = priceEmpty; st.countBad = countBad; st.overByLine = overByLine; st.tallCount = tallCount;
+  }
+
+  // 面 k（0から）の位置。座標は 0.01mm 単位の整数
+  function facePos(st, k) {
+    var p = st.start - 1 + k;
+    var page = Math.floor(p / st.perPage), slot = p % st.perPage;
+    var c = slot % st.cols, r = Math.floor(slot / st.cols);
+    return {
+      page: page, slot: slot,
+      x: st.ml + c * (st.lw + st.gx) + st.offX,
+      y: st.mt + r * (st.lh + st.gy) + st.offY
+    };
+  }
+  function slotXY(st, slot) {
+    var c = slot % st.cols, r = Math.floor(slot / st.cols);
+    return { x: st.ml + c * (st.lw + st.gx) + st.offX, y: st.mt + r * (st.lh + st.gy) + st.offY };
+  }
+
+  function mm(v) { return (v / 100).toFixed(2) + 'mm'; }
+  function mmF(v) { return v.toFixed(3) + 'mm'; }
+
+  // ---------- 1枚分の HTML ----------
+  function faceHtml(st, k, atOrigin) {
+    var f = st.faces[k];
+    var pos = facePos(st, k);
+    if (atOrigin) pos = { page: pos.page, slot: pos.slot, x: 0, y: 0 };
+    var cls = 'lb al-' + st.align + (st.border === 'none' ? '' : ' bd-' + st.border);
+    var h = '<div class="' + cls + '" data-page="' + (pos.page + 1) + '" data-slot="' + (pos.slot + 1) + '" data-row="' + f.item.rowNo + '"' +
+      ' data-x="' + (pos.x / 100).toFixed(2) + '" data-y="' + (pos.y / 100).toFixed(2) + '"' +
+      ' style="left:' + mm(pos.x) + ';top:' + mm(pos.y) + ';width:' + mm(st.lw) + ';height:' + mm(st.lh) + ';padding:' + mm(st.pad) + '">';
+    f.lay.entries.forEach(function (e) {
+      var c = (e.bold ? 'b ' : '') + e.cls;
+      h += '<div class="' + c + '" data-line="' + e.lineNo + '" style="font-size:' + mmF(e.size) + '">' + escapeHtml(e.text) + '</div>';
+    });
+    return h + '</div>';
+  }
+  function sheetHtml(st, page, withSlots) {
+    var out = ['<div class="sheet" data-page="' + (page + 1) + '" style="width:' + mm(st.pw) + ';height:' + mm(st.ph) + '">'];
+    var first = page * st.perPage - (st.start - 1);
+    if (withSlots) {
+      // プレビューだけ：使わない面の位置を薄い点線で見せる（印刷はしない）
+      for (var s = 0; s < st.perPage; s++) {
+        var k = first + s;
+        if (k >= 0 && k < st.faces.length) continue;
+        var p = slotXY(st, s);
+        out.push('<div class="slot" style="left:' + mm(p.x) + ';top:' + mm(p.y) + ';width:' + mm(st.lw) + ';height:' + mm(st.lh) + '"></div>');
+      }
+    }
+    for (var j = Math.max(0, first); j < Math.min(st.faces.length, first + st.perPage); j++) out.push(faceHtml(st, j));
+    out.push('</div>');
+    return out.join('');
+  }
+
+  function rowList(items) {
+    var shown = items.slice(0, 5).map(function (it) { return it.rowNo + '行目'; });
+    return shown.join('、') + (items.length > 5 ? ' ほか' + fmt(items.length - 5) + '行' : '');
+  }
+  function rowListWithText(items, col) {
+    var shown = items.slice(0, 5).map(function (it) { return it.rowNo + '行目「' + it.cells[col] + '」'; });
+    return shown.join('、') + (items.length > 5 ? ' ほか' + fmt(items.length - 5) + '行' : '');
+  }
+
+  function setSummary(text, warn, warnings) {
+    summary.textContent = '';
+    var main = document.createElement('span');
+    main.textContent = text;
+    summary.appendChild(main);
+    (warnings || []).forEach(function (w) {
+      var s = document.createElement('span');
+      s.className = 'w';
+      s.textContent = w;
+      summary.appendChild(s);
+    });
+    summary.className = warn ? 'summary warn' : 'summary';
+  }
+
+  function renderPreview(st) {
+    var PREVIEW_W = Math.round(Math.min(250, Math.max(150, (pagesBox.clientWidth || 278) - 28)));
+    var list = [0];
+    if (st.pages > 1) list.push(1);
+    if (st.pages > 2) list.push(st.pages - 1);
+    var scale = PREVIEW_W / (st.pw / 100 * PX_PER_MM);
+    var hPx = Math.round(st.ph / 100 * PX_PER_MM * scale);
+    var html = '';
+    list.forEach(function (p, i) {
+      if (i > 0 && p - list[i - 1] > 1) {
+        html += '<div class="pv-gap">' + fmt(list[i - 1] + 2) + (p - list[i - 1] > 2 ? '〜' + fmt(p) : '') + '枚目は省略</div>';
+      }
+      html += '<div class="pv"><p class="pv-label">' + fmt(p + 1) + '枚目' + (p === st.pages - 1 && st.pages > 1 ? '（最後）' : '') + '</p>' +
+        '<div class="pv-box" style="width:' + PREVIEW_W + 'px;height:' + hPx + 'px">' +
+        sheetHtml(st, p, true).replace('<div class="sheet"', '<div class="sheet" data-scale="' + scale.toFixed(5) + '"').replace('style="width:', 'style="transform:scale(' + scale.toFixed(5) + ');width:') + '</div></div>';
+    });
+    // 1面目の拡大（文字の入り方を確かめる）
+    var zw = Math.max(160, Math.min(300, (pagesBox.clientWidth || 300) - 26));
+    var zs = zw / (st.lw / 100 * PX_PER_MM);
+    var zh = Math.round(st.lh / 100 * PX_PER_MM * zs);
+    zoomBox.innerHTML = '<p class="pv-label">1面目（拡大）</p><div class="pv-box" style="width:' + Math.round(zw) + 'px;height:' + zh + 'px">' +
+      '<div class="sheet" style="transform:scale(' + zs.toFixed(5) + ');width:' + mm(st.lw) + ';height:' + mm(st.lh) + '">' + faceHtml(st, 0, true) + '</div></div>';
+    zoomBox.hidden = false;
+    pagesBox.className = 'pages';
+    pagesBox.innerHTML = html;
+    previewCount.textContent = '全' + fmt(st.pages) + '枚・' + fmt(st.faces.length) + '面';
+  }
+  function emptyPreview(text) {
+    zoomBox.hidden = true;
+    zoomBox.innerHTML = '';
+    pagesBox.className = 'pages empty';
+    pagesBox.textContent = text;
+    previewCount.textContent = '';
+  }
+
+  function paperLabel(st) {
+    return st.presetName ? st.presetName : '自分で入れた寸法（ラベル' + mmText(st.lw) + '×' + mmText(st.lh) + 'mm、' + st.cols + '列×' + st.rows + '段）';
+  }
+
+  function update() {
+    printWaiting = false;
+    clearTimeout(printMsgTimer);
+    var st = readState();
+    current = st;
+    printDirty = true;
+    var t = st.table;
+    pageStyle.textContent = '@page { size: ' + (st.pw ? mm(st.pw) : '210mm') + ' ' + (st.ph ? mm(st.ph) : '297mm') + '; margin: 0; }';
+    var fail = '';
+    if (t.empty) {
+      st.error = st.error || 'empty';
+      setSummary('商品の表を貼り付けてください（1行目は見出し）。「例を入れる」で試すこともできます。', false);
+      printButton.disabled = true;
+      emptyPreview('表を貼り付けると、ここにラベルが表示されます。');
+      return;
+    }
+    if (t.onlyHeader) fail = '見出しの行（' + t.header.filter(function (x) { return x; }).join('・') + '）の下に、商品の行がありません。1行目は見出しとして使うので、2行目から下に商品を入れてください。';
+    else if (t.tooMany) fail = '商品が' + fmt(t.items.length) + '行あり、1回に作れる2,000行を超えています。表を分けて、何回かに分けて印刷してください。';
+    else if (st.error) fail = st.error;
+    if (!fail) {
+      buildFaces(st);
+      if (st.faces.length > MAX_FACES) fail = '面の数が5,000面を超えます。1回に作れるのは5,000面までです。表を分けるか、枚数を減らしてください。';
+      else if (!st.faces.length) {
+        if (st.countBad.length) fail = '作る面がありません。枚数の列（' + colName(t, st.countCol) + '）が空欄か、0〜999の整数でない行だけです（' + rowList(st.countBad) + '）。枚数の列を確かめるか、「なし」にしてください。';
+        else fail = '作る面がありません。枚数の列の値がすべて0です。';
+      }
+    }
+    if (fail) {
+      st.error = fail;
+      setSummary(fail, true);
+      printButton.disabled = true;
+      emptyPreview('案内に従って直すと、ここにラベルが表示されます。');
+      return;
+    }
+    st.pages = Math.ceil((st.start - 1 + st.faces.length) / st.perPage);
+    st.blanks = st.pages * st.perPage - (st.start - 1) - st.faces.length;
+    printButton.disabled = false;
+    var msg = '商品' + fmt(st.products) + '行から' + fmt(st.faces.length) + '面を作り、' + paperLabel(st) + 'の用紙' + fmt(st.pages) + '枚に並べます（1枚' + st.perPage + '面・' + st.start + '面目から）。';
+    msg += st.blanks === 0 ? '最後の用紙の空きはありません。' : '最後の用紙の空きは' + fmt(st.blanks) + '面です。';
+    if (t.skipped) msg += '空の行（' + fmt(t.skipped) + '行）は飛ばしました。';
+    var warns = [];
+    if (t.colCount === 1 && /[　;；|｜]/.test(t.header[0] + (t.items[0] ? t.items[0].cells[0] : ''))) {
+      warns.push('表が1列として読まれました。列は、タブ（Excelやスプレッドシートからのコピー）かカンマで区切ってください。全角スペースや「;」では列に分けません。');
+    }
+    var headerLooksLikeItem = t.header.every(function (h) { return !includesAny(h, HEADER_WORDS); }) || t.header.some(function (h) { return h !== '' && !parsePrice(h).bad; });
+    if (headerLooksLikeItem) warns.push('1行目（' + t.header.filter(function (x) { return x; }).join('・') + '）は見出しとして使い、ラベルにしていません。1行目も商品のときは、表の上に「商品名」などの見出しの行を足してください。');
+    if (t.longRows.length) {
+      warns.push('見出し（' + t.headerLen + '列）より右の列に値がある行があり、その値は使いません（' + rowList(t.longRows) + '）。' +
+        (t.delim === ',' ? 'カンマ区切りでは、カンマを含む値を「"1,200"」のように " で囲むか、Excelから貼り付けてください。' : '見出しの行にも、その列の見出しを入れてください。'));
+    }
+    if (st.countBad.length) warns.push('枚数の列が空欄か、0〜999の整数でない行は作りません（' + rowList(st.countBad) + '）。作るときは、その行の枚数を0〜999の整数にしてください。');
+    if (st.priceBad.length) warns.push('価格として読めない値はセルの文字のまま表示し、税込・税抜の計算をしません（' + rowListWithText(st.priceBad, st.priceCol) + '）。計算するときは、数字だけ（カンマ・円・¥は可）にしてください。');
+    if (st.priceEmpty.length) warns.push('価格が空欄の行は、価格を入れずに作ります（' + rowList(st.priceEmpty) + '）。');
+    var overKeys = Object.keys(st.overByLine).sort();
+    if (overKeys.length) {
+      var parts = overKeys.map(function (k) { return k + '行目：' + fmt(st.overByLine[k]) + '面'; });
+      warns.push('入りきらない文字が「…」で切れる面があります（' + parts.join('、') + '）。文字を短くするか、入れる行を減らすか、大きいラベルの用紙を選んでください。');
+    }
+    if (st.tallCount) warns.push('行が多く、ラベルの高さに入りきらない面があります（' + fmt(st.tallCount) + '面）。上と下の行が欠けるので、入れる行を減らすか、ラベルの内側の余白を小さくするか、大きいラベルの用紙を選んでください。');
+    var usesPrice = st.lines.some(function (l) { return l.col >= 0 && l.col === st.priceCol; });
+    if (st.priceCol >= 0 && !usesPrice) warns.push('価格の列（' + colName(t, st.priceCol) + '）が1面の内容の1〜4行目に入っていないため、価格は印刷されません。');
+    if (!st.lines.some(function (l) { return l.col >= 0; })) warns.push('1面の内容の1〜4行目がすべて「なし」のため、ラベルには何も印刷されません。');
+    setSummary(msg, warns.length > 0, warns);
+    renderPreview(st);
+  }
+
+  function buildPrint() {
+    if (!printDirty) return;
+    var st = current;
+    if (!st || st.error) {
+      printArea.innerHTML = '<p style="margin:20mm;font-size:5mm">表や設定に直すところがあるため、ラベルを作れませんでした。ページに戻り、まとめの案内に従って直してから印刷してください。</p>';
+    } else {
+      var parts = [];
+      for (var p = 0; p < st.pages; p++) parts.push(sheetHtml(st, p, false));
+      printArea.innerHTML = parts.join('');
+    }
+    printDirty = false;
+  }
+  var printOpened = false, printWaiting = false, printMsgTimer = null;
+  window.addEventListener('beforeprint', function () {
+    printOpened = true;
+    buildPrint();
+    if (printWaiting) { printWaiting = false; clearTimeout(printMsgTimer); printMsgTimer = setTimeout(function () { setStatus(printDoneMessage()); }, 0); }
+  });
+  if (window.matchMedia) {
+    var mq = window.matchMedia('print');
+    var onMq = function (e) { if (e.matches) buildPrint(); };
+    if (mq.addEventListener) mq.addEventListener('change', onMq); else if (mq.addListener) mq.addListener(onMq);
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && el.type !== 'text' && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    if (!status.classList.contains('pin')) return;
+    status.classList.remove('pin');
+    var span = status.firstChild;
+    if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+  }
+  var autoMsgShown = false;
+  function setStatus(message, isError) {
+    autoMsgShown = false;
+    unpin();
+    status.textContent = '';
+    status.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    status.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = status.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    status.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = (toPreview.hidden ? 8 : 66) + 'px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if (status.classList.contains('pin') && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+
+  // ---------- 操作 ----------
+  printButton.addEventListener('click', function () {
+    update();
+    if (current.error) { setStatus('表や設定に直すところがあるため、印刷できません。ボタンの下のまとめの案内に従って直してください。', true); return; }
+    buildPrint();
+    printOpened = false;
+    printWaiting = true;
+    try {
+      window.print();
+    } catch (e) {
+      printWaiting = false;
+      setStatus('印刷の画面を開けませんでした。LINEなどのアプリの中で開いている場合は、SafariやChromeなどのブラウザでこのページを開き直してください。', true);
+      return;
+    }
+    if (printOpened) { printWaiting = false; setStatus(printDoneMessage()); }
+    else setStatus('印刷の画面が開かないときは、LINEなどのアプリの中ではなく、SafariやChromeなどのブラウザでこのページを開き直してください。', true);
+  });
+  function printDoneMessage() {
+    return '印刷の画面を開きました（用紙' + fmt(current.pages) + '枚）。倍率は「100%」にし、「用紙に合わせる」はオフに。PDFは送信先で「PDFに保存」を選びます。';
+  }
+
+  function fillPreset(key) {
+    var p = PRESETS[key];
+    if (!p) return;
+    DIM_FIELDS.forEach(function (f) { $(f[0]).value = p[f[1]]; });
+  }
+
+  var SAMPLE_TABLE = [
+    ['商品名', '価格（税抜）', '品番', '素材'],
+    ['ビーズのピアス（青）', '1200', 'AC-001', 'ガラスビーズ'],
+    ['レジンのヘアゴム', '800', 'AC-002', 'レジン'],
+    ['刺しゅうのブローチ', '1500', 'AC-003', '綿・ビーズ'],
+    ['革のキーホルダー', '980', 'AC-004', '牛革'],
+    ['ドライフラワーのしおり', '450', 'AC-005', '紙・ドライフラワー'],
+    ['天然石のブレスレット', '2800', 'AC-006', '天然石']
+  ].map(function (r) { return r.join(TAB); }).join(LF);
+
+  function resetSettings() {
+    preset.value = 'a4-10';
+    fillPreset('a4-10');
+    $('pad').value = '2'; $('copies').value = '1'; $('startPos').value = '1'; $('offX').value = '0'; $('offY').value = '0'; $('rateCustom').value = '10';
+    lineEls.forEach(function (l, i) { l.size.value = DEFAULT_SIZES[i]; l.bold.checked = DEFAULT_BOLD[i]; });
+    setRadio('align', 'center'); setRadio('border', 'none'); setRadio('base', 'in'); setRadio('rate', '10'); setRadio('round', 'floor'); setRadio('yen', 'suffix');
+    comma.checked = true;
+    show.value = 'in';
+    lastHeaderKey = null;   // 列の選択も自動で選び直す
+  }
+
+  // 利用者が変える設定（表から自動で選ぶ列・表の価格は を除く）の今の値
+  function settingsSnapshot() {
+    var snap = {
+      '用紙の種類': preset.value, 'そろえ': radioValue('align'), '枠線': radioValue('border'), '表示': show.value,
+      '税率': radioValue('rate') + '/' + $('rateCustom').value, '端数処理': radioValue('round'), '書き方': radioValue('yen') + '/' + comma.checked
+    };
+    DIM_FIELDS.forEach(function (f) { snap['用紙の寸法'] = (snap['用紙の寸法'] || '') + '/' + $(f[0]).value; });
+    lineEls.forEach(function (l) { snap['文字の大きさ・太字'] = (snap['文字の大きさ・太字'] || '') + '/' + l.size.value + l.bold.checked; });
+    [['pad', 'ラベルの内側の余白'], ['copies', '同じ商品を何枚ずつ'], ['startPos', '開始位置'], ['offX', '横の補正'], ['offY', '縦の補正']].forEach(function (f) { snap[f[1]] = $(f[0]).value; });
+    return snap;
+  }
+  sampleButton.addEventListener('click', function () {
+    var had = trimSpaces(tableEl.value.split(LF).join('')) !== '' && tableEl.value !== SAMPLE_TABLE;
+    var before = settingsSnapshot();
+    resetSettings();
+    tableEl.value = SAMPLE_TABLE;
+    show.value = 'in-ex';
+    update();
+    var after = settingsSnapshot();
+    var changed = Object.keys(before).filter(function (k) { return before[k] !== after[k] && k !== '表示'; });
+    var msg = '例を入れました（ハンドメイドの値札6商品、A4 名刺サイズ 10面、税込を大きく・下に税抜）。';
+    if (had) msg += 'それまでの表は、例の表に置き換えました。';
+    if (changed.length) msg += '変えていた設定（' + changed.slice(0, 2).join('・') + (changed.length > 2 ? 'など' + changed.length + 'つ' : '') + '）も戻しました。';
+    setStatus(msg + 'プレビューで確かめてください。');
+  });
+  resetButton.addEventListener('click', function () {
+    resetSettings();
+    tableEl.value = '';
+    update();
+    setStatus('最初の状態に戻しました（表を空にし、設定を最初の値にしました）。');
+  });
+
+  // 設定を変えたときに、上にあるプレビューの高さが変わっても、操作した部品が画面の中で動かないようにする
+  function keepPosition(el, fn) {
+    var before = el && el.getBoundingClientRect ? el.getBoundingClientRect().top : null;
+    fn();
+    if (before === null) return;
+    var after = el.getBoundingClientRect().top;
+    if (Math.abs(after - before) > 0.5) window.scrollBy(0, after - before);
+  }
+  function afterSetting(message, el, priceSetting) {
+    keepPosition(el || lastPressed, update);
+    var tail;
+    if (current.table.empty) tail = '表を貼り付けると、この設定でラベルを作ります。';
+    else if (current.error) tail = current.error;
+    else if (priceSetting && !current.lines.some(function (l) { return l.col >= 0 && l.col === current.priceCol; })) tail = '価格の列が「なし」か、1〜4行目に入っていないため、ラベルは変わりません。';
+    else tail = 'プレビューを更新しました。';
+    offerPreview();
+    setStatus(message + tail, !!current.error && !current.table.empty);
+  }
+  function autoMessage(st) {
+    var t = st.table;
+    var parts = [];
+    st.lines.forEach(function (l, i) { if (l.col >= 0) parts.push((i + 1) + '行目' + colLetter(l.col) + '列'); });
+    var m = '見出しから入れる列を選びました（' + (parts.length ? parts.join('・') : 'なし') + '）。';
+    m += st.priceCol >= 0 ? '価格は' + colLetter(st.priceCol) + '列・' + radioName('base') + 'として計算します。' : '価格の列は見つかりませんでした。';
+    return m;
+  }
+
+  preset.addEventListener('change', function () {
+    if (preset.value !== 'custom') {
+      fillPreset(preset.value);
+      afterSetting('用紙を「' + PRESETS[preset.value].name + '」にし、寸法の欄に入れました。', preset);
+    } else afterSetting('用紙を「自分で入れる」にしました。寸法の欄を、お使いの用紙に合わせて書き換えてください。', preset);
+  });
+  // 寸法の欄を書き換えたら「自分で入れる」に変える
+  DIM_FIELDS.forEach(function (f) {
+    $(f[0]).addEventListener('input', function () {
+      var wasPreset = preset.value !== 'custom';
+      if (wasPreset) {
+        var p = PRESETS[preset.value];
+        var same = DIM_FIELDS.every(function (g) { return $(g[0]).value === p[g[1]]; });
+        if (!same) preset.value = 'custom';
+      }
+      var el = this;
+      keepPosition(el, update);
+      var m = wasPreset && preset.value === 'custom' ? '寸法を書き換えたので、用紙の種類を「自分で入れる」にしました。' : '';
+      if (current.error && !current.table.empty) m += current.error;
+      setStatus(m, !!current.error && !current.table.empty);
+    });
+  });
+  tableEl.addEventListener('input', function () {
+    var keyBefore = lastHeaderKey;
+    update();
+    // 自動で選んだ知らせは、続けて表を書き換えている間（見出しが同じ間）は残す
+    if (lastHeaderKey !== keyBefore && !current.table.empty) { setStatus(autoMessage(current)); autoMsgShown = true; }
+    else if (!autoMsgShown || current.table.empty) setStatus('');
+  });
+  [$('pad'), $('copies'), $('startPos'), $('offX'), $('offY')].concat(lineEls.map(function (l) { return l.size; })).forEach(function (el) {
+    el.addEventListener('input', function () { keepPosition(el, update); setStatus(current.error && !current.table.empty ? current.error : '', true); });
+  });
+  $('rateCustom').addEventListener('input', function () {
+    var el = this;
+    keepPosition(el, update);
+    var usesPrice = current.lines.some(function (l) { return l.col >= 0 && l.col === current.priceCol; });
+    setStatus(!current.error && !current.table.empty && !usesPrice ? '価格の列が「なし」か、1〜4行目に入っていないため、税率を変えてもラベルは変わりません。' : '');
+  });
+  lineEls.forEach(function (l, i) {
+    l.col.addEventListener('change', function () { afterSetting((i + 1) + '行目に入れる列を「' + l.col.options[l.col.selectedIndex].text + '」にしました。', l.col); });
+    l.bold.addEventListener('change', function () { afterSetting((i + 1) + '行目を' + (l.bold.checked ? '太字にしました。' : '太字でなくしました。'), l.bold.nextElementSibling); });
+  });
+  [priceCol, countCol, show].forEach(function (sel) {
+    sel.addEventListener('change', function () {
+      var extra = sel === countCol && sel.value !== 'none' ? '（この間は「同じ商品を何枚ずつ」は使いません）' : '';
+      afterSetting('「' + sel.getAttribute('data-label') + '」を「' + sel.options[sel.selectedIndex].text + '」にしました' + extra + '。', sel, sel === show);
+    });
+  });
+  var PRICE_RADIOS = { base: true, rate: true, round: true, yen: true };
+  Object.keys(RADIO_LABELS).forEach(function (name) {
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="' + name + '"]'), function (r) {
+      r.addEventListener('change', function () { afterSetting('「' + RADIO_LABELS[name] + '」を「' + radioName(name) + '」にしました。', r.nextElementSibling, !!PRICE_RADIOS[name]); });
+    });
+  });
+  comma.addEventListener('change', function () { afterSetting(comma.checked ? '価格に3桁ごとのカンマを付けました。' : '価格の3桁ごとのカンマをやめました。', comma.nextElementSibling, true); });
+
+  // 数の欄：書き終えたとき（change）に、何を変えたかと結果（誤りのときは誤りの文）を知らせる
+  DIM_FIELDS.map(function (f) { return $(f[0]); }).concat([$('pad'), $('copies'), $('startPos'), $('offX'), $('offY'), $('rateCustom')], lineEls.map(function (l) { return l.size; })).forEach(function (el) {
+    el.addEventListener('change', function () {
+      var label = el.getAttribute('data-label');
+      var isPrice = el.id === 'rateCustom';
+      afterSetting('「' + label + '」を「' + el.value + '」にしました。', el, isPrice);
+    });
+  });
+
+  // 狭い幅で、まとめ・プレビューが画面の上に外れたら「プレビューと印刷へ」を出す
+  var toPreview = $('toPreview'), outputsEl = document.querySelector('.outputs');
+  // 設定を変えた直後の8秒だけ出す（ずっと出して、画面の下の部品に重ならないように）
+  var toPreviewTimer = null;
+  function offerPreview() {
+    var narrow = window.matchMedia ? window.matchMedia('(max-width: 900px)').matches : window.innerWidth <= 900;
+    var r = outputsEl.getBoundingClientRect();
+    clearTimeout(toPreviewTimer);
+    toPreview.hidden = !(narrow && r.bottom < 0);
+    if (!toPreview.hidden) toPreviewTimer = setTimeout(function () { toPreview.hidden = true; }, 8000);
+  }
+  window.addEventListener('scroll', function () { if (!toPreview.hidden && outputsEl.getBoundingClientRect().bottom > 0) toPreview.hidden = true; }, { passive: true });
+  toPreview.addEventListener('click', function (e) {
+    e.preventDefault();
+    unpin();
+    var top = outputsEl.getBoundingClientRect().top + window.scrollY - 8;
+    window.scrollTo(0, top);
+    toPreview.hidden = true;
+  });
+
+  // 最初の表示。ブラウザが戻る操作などで欄の値を復元した場合も、その値で表示する
+  if (!$('paperW').value) fillPreset(preset.value === 'custom' ? 'a4-10' : preset.value);
+  update();
+  window.addEventListener('pageshow', function () { update(); });
+
+  // テストと確かめ用（画面の動作には使わない）
+  window.__nefuda = { buildPrint: function () { printDirty = true; buildPrint(); }, state: function () { return current; } };
+})();
+</script>
+</body>
+</html>
