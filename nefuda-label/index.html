@@ -168,7 +168,7 @@
   button.btn.primary:hover { background: var(--green-dark); }
   button.btn:disabled { opacity: .5; cursor: not-allowed; }
   /* ボタンと設定の知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
-  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status { min-height: 88px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
   /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
   .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
   .status.error { color: var(--warn-ink); }
@@ -225,7 +225,7 @@
     .setting { display: block; }
     .setting legend { float: none; width: auto; min-height: 0; margin-bottom: 8px; }
     .howto { padding: 12px 14px; }
-    .status { min-height: 88px; }
+    .status { min-height: 110px; }
     .actions .btn { flex: 1 1 40%; }
     .actions #printButton { flex-basis: 100%; }
     .chip span { padding: 0 11px; }
@@ -1277,7 +1277,13 @@
     var changed = Object.keys(before).filter(function (k) { return before[k] !== after[k] && k !== '表示'; });
     var msg = '例を入れました（ハンドメイドの値札6商品、A4 名刺サイズ 10面、税込を大きく・下に税抜）。';
     if (had) msg += 'それまでの表は、例の表に置き換えました。';
-    if (changed.length) msg += '変えていた設定（' + changed.slice(0, 2).join('・') + (changed.length > 2 ? 'など' + changed.length + 'つ' : '') + '）も戻しました。';
+    if (had || changed.length) {
+      // 置き換えたことを短く知らせる（メッセージの欄の高さに収める）
+      msg = '例を入れました（値札6商品・名刺サイズ10面）。' + (had ? 'それまでの表' : '') + (had && changed.length ? 'と、' : '') +
+        (changed.length ? '変えていた設定（' + changed[0] + (changed.length > 1 ? 'など' + changed.length + 'つ' : '') + '）' : '') + 'を例のものに置き換えました。';
+      setStatus(msg);
+      return;
+    }
     setStatus(msg + 'プレビューで確かめてください。');
   });
   resetButton.addEventListener('click', function () {
@@ -1295,7 +1301,9 @@
     var after = el.getBoundingClientRect().top;
     if (Math.abs(after - before) > 0.5) window.scrollBy(0, after - before);
   }
-  function afterSetting(message, el, priceSetting) {
+  var switchedToCustom = false;
+  // errorOnly：誤りのときは、何を変えたかの文を省いて誤りの文だけを出す（メッセージを短くし、下の部品を動かさない）
+  function afterSetting(message, el, priceSetting, errorOnly) {
     keepPosition(el || lastPressed, update);
     var tail;
     if (current.table.empty) tail = '表を貼り付けると、この設定でラベルを作ります。';
@@ -1303,6 +1311,7 @@
     else if (priceSetting && !current.lines.some(function (l) { return l.col >= 0 && l.col === current.priceCol; })) tail = '価格の列が「なし」か、1〜4行目に入っていないため、ラベルは変わりません。';
     else tail = 'プレビューを更新しました。';
     offerPreview();
+    if (errorOnly && current.error && !current.table.empty) message = switchedToCustom || message.indexOf('寸法を書き換えたので') === 0 ? '用紙の種類を「自分で入れる」にしました。' : '';
     setStatus(message + tail, !!current.error && !current.table.empty);
   }
   function autoMessage(st) {
@@ -1331,6 +1340,7 @@
       }
       var el = this;
       keepPosition(el, update);
+      if (wasPreset && preset.value === 'custom') switchedToCustom = true;
       var m = wasPreset && preset.value === 'custom' ? '寸法を書き換えたので、用紙の種類を「自分で入れる」にしました。' : '';
       if (current.error && !current.table.empty) m += current.error;
       setStatus(m, !!current.error && !current.table.empty);
@@ -1375,7 +1385,12 @@
     el.addEventListener('change', function () {
       var label = el.getAttribute('data-label');
       var isPrice = el.id === 'rateCustom';
-      afterSetting('「' + label + '」を「' + el.value + '」にしました。', el, isPrice);
+      // 「」の中は、読み取った数（全角・長音のマイナス・単位を直した値）で出す
+      var r = parseFixed(el.value, 2, true, el.id === 'rateCustom' ? '%' : (/^line[0-9]Size$/.test(el.id) ? 'pt' : 'mm'));
+      var shown = r.empty ? null : (r.value !== undefined ? mmText(r.value) : el.value);
+      var msg = shown === null ? '「' + label + '」を空にしました。' : '「' + label + '」を「' + shown + '」にしました。';
+      if (switchedToCustom) { msg = '寸法を書き換えたので、用紙の種類を「自分で入れる」にしました。' + msg; switchedToCustom = false; }
+      afterSetting(msg, el, isPrice, true);
     });
   });
 
