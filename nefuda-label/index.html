@@ -176,9 +176,14 @@
   .preview-head .label { color: #3c4043; font-weight: 600; }
   .preview-head .count { color: var(--muted); font-size: .875rem; }
   .pages { display: flex; gap: 14px; overflow-x: auto; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); min-height: 200px; }
-  .pages.empty { align-items: center; color: var(--muted); font-size: .9rem; }
+  .pages.empty { min-height: 410px; align-items: center; color: var(--muted); font-size: .9rem; }
   .pv { flex: none; }
-  .zoom-wrap { margin: 0 0 10px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
+  /* 狭い幅だけ：設定の欄からまとめ・プレビューへ移るリンク */
+  .jump, .jump-row { display: none; }
+  .jump { align-items: center; min-height: 44px; padding: 0 4px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  .zoom-empty { margin: 0; color: var(--muted); font-size: .9rem; }
+  .zoom-wrap { min-height: 250px; box-sizing: border-box; margin: 0 0 10px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
   .pv-label { margin: 0 0 4px; color: #3c4043; font-size: .875rem; font-weight: 600; }
   .pv-box { position: relative; overflow: hidden; background: #fff; box-shadow: 0 1px 3px rgba(60,64,67,.3); }
   .pv-box .sheet { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
@@ -201,9 +206,6 @@
   .sheet .lb > div { flex: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
   .sheet .lb .b { font-weight: 700; }
   #printArea { display: none; }
-  /* 狭い幅で、設定を変えている間にプレビューへ戻るボタン（プレビューが画面の上に外れたときだけ出す） */
-  .to-preview { position: fixed; right: 14px; bottom: 14px; z-index: 4; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: var(--green); color: #fff; font-size: .9rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 6px rgba(60,64,67,.35); }
-  .to-preview:hover { background: var(--green-dark); }
   @media print {
     body { background: #fff; min-height: 0; }
     body > *:not(#printArea) { display: none !important; }
@@ -218,6 +220,9 @@
     .area-table { order: 1; }
     .outputs { order: 2; position: static; margin-bottom: 18px; }
     .area-settings { order: 3; }
+    .jump { display: inline-flex; }
+    .jump-row { display: flex; justify-content: flex-end; margin: -8px 0 14px; }
+    .settings-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0 10px; }
   }
   @media (max-width: 650px) {
     main { width: calc(100% - 28px); padding-top: 32px; }
@@ -225,7 +230,7 @@
     .setting { display: block; }
     .setting legend { float: none; width: auto; min-height: 0; margin-bottom: 8px; }
     .howto { padding: 12px 14px; }
-    .status { min-height: 110px; }
+    .status { min-height: 132px; }
     .actions .btn { flex: 1 1 40%; }
     .actions #printButton { flex-basis: 100%; }
     .chip span { padding: 0 11px; }
@@ -244,6 +249,7 @@
     header .more { display: none; }
     .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
     .summary { min-height: 88px; }
+    .status { min-height: 176px; }
     main { padding-top: 24px; }
     header { margin-bottom: 20px; }
   }
@@ -294,7 +300,7 @@
     </div>
 
     <div class="area-settings">
-      <h2 class="settings-head">用紙と内容の設定</h2>
+      <h2 class="settings-head">用紙と内容の設定<a href="#summary" class="jump">▲ プレビューと印刷へ</a></h2>
       <fieldset class="group">
         <legend>用紙</legend>
         <div class="fields">
@@ -322,6 +328,7 @@
         </div>
         <p class="hint">寸法は、お使いの用紙の袋や説明書に書かれた値に合わせてください。一覧の寸法は例で、書き換えると「自分で入れる」に変わります。</p>
       </fieldset>
+      <p class="jump-row"><a href="#summary" class="jump">▲ プレビューと印刷へ</a></p>
 
       <fieldset class="group">
         <legend>1面の内容</legend>
@@ -346,6 +353,7 @@
           <div class="field"><label for="pad">ラベルの内側の余白<small>（mm）</small></label><input type="text" id="pad" inputmode="decimal" autocomplete="off" value="2" data-label="ラベルの内側の余白"></div>
         </div>
       </fieldset>
+      <p class="jump-row"><a href="#summary" class="jump">▲ プレビューと印刷へ</a></p>
 
       <fieldset class="group">
         <legend>価格</legend>
@@ -398,6 +406,7 @@
           </div>
         </fieldset>
       </fieldset>
+      <p class="jump-row"><a href="#summary" class="jump">▲ プレビューと印刷へ</a></p>
 
       <fieldset class="group">
         <legend>枚数と印刷の位置</legend>
@@ -411,6 +420,7 @@
         </div>
         <p class="hint">枚数の列を選ぶと、商品ごとにその列の数だけ作ります（この間は「同じ商品を何枚ずつ」は使いません）。開始位置は、左上を1として右へ、次の段へと数えます。使いかけの用紙の残りから使えます。補正は、印刷が左や上にずれるときはプラス、右や下にずれるときはマイナスを入れます（例：右に2mmずれる → 横の補正 −2）。</p>
       </fieldset>
+      <p class="jump-row"><a href="#summary" class="jump">▲ プレビューと印刷へ</a></p>
     </div>
     </div>
 
@@ -491,7 +501,6 @@
     </ul>
   </footer>
 </main>
-<a href="#summary" id="toPreview" class="to-preview" hidden>▲ プレビューと印刷へ</a>
 <div id="printArea" aria-hidden="true"></div>
 
 <script>
@@ -516,7 +525,10 @@
   var DEFAULT_SIZES = ['12', '16', '8', '8'];
   var DEFAULT_BOLD = [true, true, false, false];
   var PRICE_WORDS = ['価格', '売価', '値段', '金額', '税込', '税抜', '税別', '本体', '単価', '円', 'price'];
-  var NAME_WORDS = ['商品名', '品名', '名称', '商品', '名前', '作品', 'タイトル', 'name', 'item', 'product', 'title'];
+  // 1行目に選ぶ商品名の列：はっきり名前を表す語を先に探し、なければ「商品」「作品」などを含む列（ID・区分・番号などを除く）
+  var NAME_STRONG = ['商品名', '品名', '名称', '名前', '作品名', 'タイトル', 'name', 'title'];
+  var NAME_WEAK = ['商品', '作品', 'item', 'product'];
+  var NOT_NAME = ['id', '区分', 'コード', '番号', '分類', 'カテゴリ', '種類', '数', '価格', '税', 'no', 'jan', 'sku', 'code', '型番', '品番', '画像', 'url', '説明', '日', '在庫', '状態', '公開'];
   var EX_WORDS = ['税抜', '税別', '本体'];
   // 見出しらしい語（1行目が見出しでなく商品かもしれないと知らせる判定に使う）
   var HEADER_WORDS = ['名', '品', '商品', '価格', '番', 'コード', '素材', 'サイズ', '色', 'カラー', '備考', '数', '量', '分類', '種類', 'メモ', '説明', '税', '円', 'no', 'id', 'jan', 'sku', 'name', 'price', 'item', 'product', 'code', 'qty', 'title'];
@@ -554,7 +566,21 @@
   function radioName(name) { var r = document.querySelector('input[name="' + name + '"]:checked'); return r ? r.getAttribute('data-name') : ''; }
   function setRadio(name, value) { var r = document.querySelector('input[name="' + name + '"][value="' + value + '"]'); if (r) r.checked = true; }
   // 英字は大文字・小文字を区別しない
-  function includesAny(s, words) { var low = s.toLowerCase(); for (var i = 0; i < words.length; i++) if (low.indexOf(words[i].toLowerCase()) >= 0) return true; return false; }
+  // 英字だけの語（name・no など）は、前後が英字でないときだけ一致とする（Android の「id」などに当てない）
+  function isLetter(c) { return /[a-z]/.test(c); }
+  function includesAny(s, words) {
+    var low = s.toLowerCase();
+    for (var i = 0; i < words.length; i++) {
+      var w = words[i].toLowerCase();
+      var ascii = /^[a-z.]+$/.test(w);
+      var from = 0, at;
+      while ((at = low.indexOf(w, from)) >= 0) {
+        if (!ascii || (!isLetter(low.charAt(at - 1)) && !isLetter(low.charAt(at + w.length)))) return true;
+        from = at + 1;
+      }
+    }
+    return false;
+  }
 
   function trimSpaces(s) {
     var a = 0, b = s.length;
@@ -726,7 +752,8 @@
     for (i = 0; i < h.length; i++) if (priceIdx < 0 && t.colCount > 1 && includesAny(h[i], PRICE_WORDS)) priceIdx = i;
     for (i = 0; i < h.length; i++) if (codeIdx < 0 && i !== priceIdx && includesAny(h[i], CODE_WORDS)) codeIdx = i;
     var nameIdx = -1;
-    for (i = 0; i < h.length; i++) if (nameIdx < 0 && i !== priceIdx && i !== codeIdx && includesAny(h[i], NAME_WORDS)) nameIdx = i;
+    for (i = 0; i < h.length; i++) if (nameIdx < 0 && i !== priceIdx && i !== codeIdx && includesAny(h[i], NAME_STRONG) && !includesAny(h[i], NOT_NAME)) nameIdx = i;
+    for (i = 0; i < h.length; i++) if (nameIdx < 0 && i !== priceIdx && i !== codeIdx && includesAny(h[i], NAME_WEAK) && !includesAny(h[i], NOT_NAME)) nameIdx = i;
     var used = {};
     if (nameIdx >= 0) used[nameIdx] = true;
     var pick = function () { for (var j = 0; j < t.colCount; j++) if (!used[j] && j !== priceIdx && j !== codeIdx && (h[j] !== '' || t.colCount === 1)) { used[j] = true; return j; } return -1; };
@@ -829,7 +856,7 @@
       sum += s * LINE_H;
       if (over) overLines[e.lineNo] = true;
     });
-    var tall = sum > availH + 0.01;
+    var tall = sum > st.lh / 100 + 0.01;   // 内側の余白にはみ出すだけなら欠けない。ラベルの高さを超えたときだけ知らせる
     return { entries: entries, overLines: overLines, tall: tall, price: priceInfo };
   }
 
@@ -1050,8 +1077,8 @@
         sheetHtml(st, p, true).replace('<div class="sheet"', '<div class="sheet" data-scale="' + scale.toFixed(5) + '"').replace('style="width:', 'style="transform:scale(' + scale.toFixed(5) + ');width:') + '</div></div>';
     });
     // 1面目の拡大（文字の入り方を確かめる）
-    var zw = Math.max(160, Math.min(300, (pagesBox.clientWidth || 300) - 26));
-    var zs = zw / (st.lw / 100 * PX_PER_MM);
+    var zs = Math.min(Math.max(160, Math.min(300, (pagesBox.clientWidth || 300) - 26)) / (st.lw / 100 * PX_PER_MM), ZOOM_H / (st.lh / 100 * PX_PER_MM));
+    var zw = st.lw / 100 * PX_PER_MM * zs;
     var zh = Math.round(st.lh / 100 * PX_PER_MM * zs);
     zoomBox.innerHTML = '<p class="pv-label">1面目（拡大）</p><div class="pv-box" style="width:' + Math.round(zw) + 'px;height:' + zh + 'px">' +
       '<div class="sheet" style="transform:scale(' + zs.toFixed(5) + ');width:' + mm(st.lw) + ';height:' + mm(st.lh) + '">' + faceHtml(st, 0, true) + '</div></div>';
@@ -1060,9 +1087,10 @@
     pagesBox.innerHTML = html;
     previewCount.textContent = '全' + fmt(st.pages) + '枚・' + fmt(st.faces.length) + '面';
   }
+  var ZOOM_H = 190;   // 拡大の高さの上限（px）。表がないときも同じ場所を空けておき、下の部品を動かさない
   function emptyPreview(text) {
-    zoomBox.hidden = true;
-    zoomBox.innerHTML = '';
+    zoomBox.hidden = false;
+    zoomBox.innerHTML = '<p class="pv-label">1面目（拡大）</p><p class="zoom-empty">' + escapeHtml(text) + '</p>';
     pagesBox.className = 'pages empty';
     pagesBox.textContent = text;
     previewCount.textContent = '';
@@ -1199,7 +1227,7 @@
     status.classList.add('pin');
     span.style.left = box.left + 'px';
     span.style.width = box.width + 'px';
-    if (toBottom) span.style.bottom = (toPreview.hidden ? 8 : 66) + 'px'; else span.style.top = '8px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
     pinnedScrollY = window.scrollY;
   }
   window.addEventListener('scroll', function () {
@@ -1266,7 +1294,8 @@
     [['pad', 'ラベルの内側の余白'], ['copies', '同じ商品を何枚ずつ'], ['startPos', '開始位置'], ['offX', '横の補正'], ['offY', '縦の補正']].forEach(function (f) { snap[f[1]] = $(f[0]).value; });
     return snap;
   }
-  sampleButton.addEventListener('click', function () {
+  sampleButton.addEventListener('click', function () { keepPosition(sampleButton, sampleAction); });
+  function sampleAction() {
     var had = trimSpaces(tableEl.value.split(LF).join('')) !== '' && tableEl.value !== SAMPLE_TABLE;
     var before = settingsSnapshot();
     resetSettings();
@@ -1280,17 +1309,19 @@
     if (had || changed.length) {
       // 置き換えたことを短く知らせる（メッセージの欄の高さに収める）
       msg = '例を入れました（値札6商品・名刺サイズ10面）。' + (had ? 'それまでの表' : '') + (had && changed.length ? 'と、' : '') +
-        (changed.length ? '変えていた設定（' + changed[0] + (changed.length > 1 ? 'など' + changed.length + 'つ' : '') + '）' : '') + 'を例のものに置き換えました。';
+        (changed.length ? '変えていた設定（' + changed[0] + (changed.length > 1 ? 'など' + changed.length + '項目' : '') + '）' : '') + 'を例のものに置き換えました。';
       setStatus(msg);
       return;
     }
     setStatus(msg + 'プレビューで確かめてください。');
-  });
+  }
   resetButton.addEventListener('click', function () {
-    resetSettings();
-    tableEl.value = '';
-    update();
-    setStatus('最初の状態に戻しました（表を空にし、設定を最初の値にしました）。');
+    keepPosition(resetButton, function () {
+      resetSettings();
+      tableEl.value = '';
+      update();
+      setStatus('最初の状態に戻しました（表を空にし、設定を最初の値にしました）。');
+    });
   });
 
   // 設定を変えたときに、上にあるプレビューの高さが変わっても、操作した部品が画面の中で動かないようにする
@@ -1310,7 +1341,6 @@
     else if (current.error) tail = current.error;
     else if (priceSetting && !current.lines.some(function (l) { return l.col >= 0 && l.col === current.priceCol; })) tail = '価格の列が「なし」か、1〜4行目に入っていないため、ラベルは変わりません。';
     else tail = 'プレビューを更新しました。';
-    offerPreview();
     if (errorOnly && current.error && !current.table.empty) message = switchedToCustom || message.indexOf('寸法を書き換えたので') === 0 ? '用紙の種類を「自分で入れる」にしました。' : '';
     setStatus(message + tail, !!current.error && !current.table.empty);
   }
@@ -1394,24 +1424,14 @@
     });
   });
 
-  // 狭い幅で、まとめ・プレビューが画面の上に外れたら「プレビューと印刷へ」を出す
-  var toPreview = $('toPreview'), outputsEl = document.querySelector('.outputs');
-  // 設定を変えた直後の8秒だけ出す（ずっと出して、画面の下の部品に重ならないように）
-  var toPreviewTimer = null;
-  function offerPreview() {
-    var narrow = window.matchMedia ? window.matchMedia('(max-width: 900px)').matches : window.innerWidth <= 900;
-    var r = outputsEl.getBoundingClientRect();
-    clearTimeout(toPreviewTimer);
-    toPreview.hidden = !(narrow && r.bottom < 0);
-    if (!toPreview.hidden) toPreviewTimer = setTimeout(function () { toPreview.hidden = true; }, 8000);
-  }
-  window.addEventListener('scroll', function () { if (!toPreview.hidden && outputsEl.getBoundingClientRect().bottom > 0) toPreview.hidden = true; }, { passive: true });
-  toPreview.addEventListener('click', function (e) {
-    e.preventDefault();
-    unpin();
-    var top = outputsEl.getBoundingClientRect().top + window.scrollY - 8;
-    window.scrollTo(0, top);
-    toPreview.hidden = true;
+  // 狭い幅で、設定の欄から「▲ プレビューと印刷へ」を押すと、まとめ・プレビューへ移る
+  var outputsEl = document.querySelector('.outputs');
+  Array.prototype.forEach.call(document.querySelectorAll('a.jump'), function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      unpin();
+      window.scrollTo(0, outputsEl.getBoundingClientRect().top + window.scrollY - 8);
+    });
   });
 
   // 最初の表示。ブラウザが戻る操作などで欄の値を復元した場合も、その値で表示する
