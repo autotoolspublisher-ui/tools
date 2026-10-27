@@ -1,0 +1,1486 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>営業日まとめて計算 - 定休日を除いて発送日・納期を一括計算｜AIツールひろば</title>
+  <meta name="description" content="注文日の列を貼り付けて、土日祝と店の定休日（毎週◯曜・第2火曜など）、臨時休業日を除いた◯営業日後の発送日・納期をまとめて計算できる無料ツールです。結果はExcelに貼り戻せます。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/eigyobi-keisan/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="営業日まとめて計算 - 定休日を除いて発送日・納期を一括計算｜AIツールひろば">
+  <meta property="og:description" content="注文日の列を貼り付けて、土日祝と店の定休日（毎週◯曜・第2火曜など）、臨時休業日を除いた◯営業日後の発送日・納期をまとめて計算できる無料ツールです。結果はExcelに貼り戻せます。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/eigyobi-keisan/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/eigyobi-keisan.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "営業日まとめて計算",
+    "description": "注文日の列を貼り付けて、土日祝と店の定休日（毎週◯曜・第2火曜など）、臨時休業日を除いた◯営業日後の発送日・納期をまとめて計算できる無料ツールです。結果はExcelに貼り戻せます。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/eigyobi-keisan/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "営業日まとめて計算",
+        "item": "https://autotoolspublisher-ui.github.io/tools/eigyobi-keisan/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "「3営業日後」は、注文した日を数えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。入力の日（注文日など）は0日目として数え、翌日から営業日を1、2、3と数えます。たとえば土日祝が休みのとき、2026年10月30日（金）の3営業日後は、土日と11月3日（火・文化の日）を飛ばして、11月5日（木）です。入力の日そのもの（休みなら次の営業日）にしたいときは、日数を0にします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "注文日が休みの日のときは、どう数えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "休みの日の注文も、翌日から営業日を数えます。土日祝が休みのとき、2026年10月31日（土）の1営業日後は11月2日（月）、2営業日後は11月4日（水）です。結果の表の「飛ばした休み」に、途中で飛ばした休みの日数と内訳（土日・祝日・定休日・臨時休業）が出ます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「第2火曜」や年末年始の休みも入れられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。「毎月の第何曜日の休み」で「第2」「火曜」を選んで「追加」を押すと、毎月の第2火曜が休みになります（その月の1日から数えて2回目の火曜）。年末年始やお盆の休みは「臨時休業日」に「2026/12/29〜2027/1/4」のように期間で入れます。休みの日に営業するときは「臨時営業日」に入れると、ほかのどの休みよりも優先して営業日になります。設定の下のカレンダーで、休みになる日を確かめられます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "祝日はいつまで対応していますか？法律の期限の計算に使えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "祝日は、内閣府「国民の祝日について」の一覧をもとに、2020年から2027年まで（振替休日・国民の休日を含む143日）を入れています。「祝日を休みにする」がオンのとき、この範囲の外の日を数える行は「祝日表の範囲外」として計算しません。このツールは発送日・納期の目安の計算用です。法律で決められた期限（法定期間）の計算には使えません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。計算はすべてお使いのブラウザの中で行い、貼り付けた日付や設定が外部に送信されることはありません。「休みの設定をこのブラウザに保存する」をオンにしたときだけ、休みの設定（日付の列は含みません）をこのブラウザに保存します。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に計算・日付の列・結果、右に休みの設定とカレンダー。狭い幅：上から順に並べる */
+  .layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-settings { padding-left: 30px; border-left: 1px solid #e8eaed; }
+  .area-settings h2 { margin: 0 0 12px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  .area-settings h3 { margin: 18px 0 8px; color: #202124; font-size: 1rem; font-weight: 600; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend, .setting > .label { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 0 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; line-height: 1.3; padding-top: 6px; padding-bottom: 6px; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; font-weight: 600; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .wd .chip span { padding: 0 11px; }
+  .field { min-width: 0; margin: 0 0 14px; }
+  .field label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  input[type="text"], select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  input[type="text"]:focus, select:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  input.bad, textarea.bad { border-color: #b3261e !important; box-shadow: 0 0 0 1px #b3261e !important; }
+  .n-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .n-row input { width: 6em; text-align: right; }
+  .n-row .unit { color: #3c4043; font-weight: 600; }
+  textarea { display: block; width: 100%; min-height: 168px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: .95rem/1.55 inherit; font-family: inherit; resize: vertical; tab-size: 8; }
+  textarea.small { min-height: 96px; }
+  .cols { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 0 0 14px; }
+  .cols .field { margin: 0; flex: 1 1 12em; }
+  .cols select { width: 100%; }
+  .nth-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .nth-row select { flex: 1 1 5.5em; min-width: 0; }
+  .nth-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+  .nth-list li { display: inline-flex; align-items: center; gap: 2px; min-height: 44px; padding: 0 4px 0 14px; border: 1px solid #aecbfa; border-radius: 999px; background: var(--mint); color: #174ea6; font-size: .9rem; font-weight: 600; }
+  .nth-list button { display: inline-grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: #174ea6; font-size: 1.05rem; cursor: pointer; }
+  .nth-list button:hover { background: #d2e3fc; }
+  .nth-empty { margin: 8px 0 0; color: var(--muted); font-size: .875rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  button.btn.copy { min-width: 12em; }
+  .jump-row { display: none; margin: -6px 0 6px; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* 知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .summary { margin: 4px 0 6px; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; overflow-wrap: anywhere; }
+  .summary.warn { color: var(--warn-ink); }
+  .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); font-weight: 600; }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); font-weight: 400; }
+  .manual { margin: 0 0 12px; }
+  .manual textarea { min-height: 96px; }
+  .result-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 8px; margin: 6px 0 6px; }
+  .result-head .label { color: #3c4043; font-weight: 600; }
+  .result-head .count { color: var(--muted); font-size: .875rem; }
+  .table-wrap { max-height: 460px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .table-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  table.res { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.45; }
+  table.res th, table.res td { padding: 7px 10px; border-bottom: 1px solid #eceef1; text-align: left; vertical-align: top; }
+  table.res thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); color: #3c4043; font-weight: 600; white-space: nowrap; }
+  table.res td.num { color: var(--muted); text-align: right; white-space: nowrap; width: 1%; }
+  table.res td.out { font-weight: 600; white-space: nowrap; }
+  table.res td.in { overflow-wrap: anywhere; }
+  table.res td.br { color: #3c4043; }
+  table.res tr.err td.out { color: #b3261e; font-weight: 600; white-space: normal; }
+  table.res tr.head td { color: var(--muted); font-style: normal; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; }
+  .more-rows { margin: 0; padding: 8px 12px; color: var(--muted); font-size: .875rem; }
+  /* カレンダー */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin: 0 0 6px; }
+  .cal-head .month { color: #202124; font-weight: 600; }
+  .cal-head button { display: inline-grid; place-items: center; min-width: 44px; height: 44px; padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; }
+  .cal-head button:hover { background: #f6fafe; }
+  table.cal { width: 100%; border-collapse: separate; border-spacing: 3px; table-layout: fixed; font-size: .9rem; }
+  table.cal th { padding: 2px 0; color: var(--muted); font-size: .875rem; font-weight: 600; text-align: center; }
+  table.cal td { height: 48px; padding: 2px 0 0; border-radius: 8px; text-align: center; vertical-align: top; line-height: 1.25; background: #fff; border: 1px solid #eceef1; }
+  table.cal td.blank { border-color: transparent; background: transparent; }
+  table.cal td .d { display: block; font-weight: 600; color: #202124; }
+  table.cal td .t { display: block; font-size: .875rem; font-weight: 600; letter-spacing: -.04em; line-height: 1.2; }
+  table.cal td.c-weekend { background: #eceef1; }
+  table.cal td.c-holiday { background: #fce8e6; }
+  table.cal td.c-holiday .t { color: #a50e0e; }
+  table.cal td.c-regular { background: #fef7e0; }
+  table.cal td.c-regular .t { color: #7a4f01; }
+  table.cal td.c-temp { background: #f3e8fd; }
+  table.cal td.c-temp .t { color: #6a1b9a; }
+  table.cal td.c-open { background: #e6f4ea; box-shadow: inset 0 0 0 2px #137333; }
+  table.cal td.c-open .t { color: #0d652d; }
+  table.cal td.today .d { text-decoration: underline; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 6px 0 0; padding: 0; list-style: none; color: #3c4043; font-size: .875rem; }
+  .legend li { display: inline-flex; align-items: center; gap: 5px; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid #dadce0; }
+  .legend .l-weekend { background: #eceef1; } .legend .l-holiday { background: #fce8e6; } .legend .l-regular { background: #fef7e0; } .legend .l-temp { background: #f3e8fd; } .legend .l-open { background: #e6f4ea; border-color: #137333; }
+  .cal-list { margin: 8px 0 0; padding-left: 1.2em; color: #3c4043; font-size: .875rem; line-height: 1.55; }
+  .cal-list.none { padding-left: 0; list-style: none; color: var(--muted); }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    .status { min-height: 88px; }
+    .summary { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
+    table.res th, table.res td { padding: 6px 7px; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    header .more { display: none; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    .status { min-height: 110px; }
+    .summary { min-height: 110px; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .chip span { padding: 0 10px; }
+    .wd .chip span { padding: 0 9px; }
+    button.btn.copy { padding-left: 6px; padding-right: 6px; }
+    table.cal { border-spacing: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">営業日まとめて計算</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">BUSINESS DAYS</p>
+    <h1>営業日まとめて計算</h1>
+    <p>注文日の列を貼り付けて、土日祝と店の定休日を除いた「何営業日後」の発送日・納期をまとめて計算します。<span class="more">カレンダーを指で数えたり、WORKDAY関数や休日の表を用意したりする必要がなく、「第2火曜」のような定休日や臨時休業日も設定でき、結果はExcelに貼り戻せる列でコピーできます。</span></p>
+  </header>
+
+  <section class="card" aria-label="営業日まとめて計算">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>注文日などの日付の列（Excelの列や表）を貼り付けます。</li>
+        <li>「何営業日後か」と、休みの設定（定休日など）を確かめます。</li>
+        <li>「結果の列をコピー」を押し、Excelに貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-main">
+        <div class="field">
+          <label for="dates" id="datesLabel">日付の列 <small>（1行に1件。Excelの列や表をそのまま貼り付けられます）</small></label>
+          <textarea id="dates" spellcheck="false" placeholder="例：&#10;2026/10/26&#10;2026/10/30&#10;11月2日"></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+        <div class="cols" id="colsBox" hidden>
+            <div class="field" id="colAField"><label for="colA" id="colALabel">日付の列</label><select id="colA"></select></div>
+            <div class="field" id="colBField" hidden><label for="colB">終了日の列</label><select id="colB"></select></div>
+        </div>
+
+        <fieldset class="setting" id="modeSet">
+          <legend>計算の種類</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="mode" value="after" checked><span>営業日後</span></label>
+            <label class="chip"><input type="radio" name="mode" value="before"><span>営業日前</span></label>
+            <label class="chip"><input type="radio" name="mode" value="between"><span>2つの日付の間の営業日数</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field" id="daysField">
+          <label for="days">何営業日<span id="daysWord">後</span>か <small>（0〜3,650。当日は0日目として数えます）</small></label>
+          <div class="n-row"><input type="text" id="days" value="3" inputmode="numeric" autocomplete="off" aria-describedby="daysUnit"><span class="unit" id="daysUnit">営業日後</span></div>
+        </div>
+        <div class="field" id="inclField" hidden>
+          <span class="label">数え方</span>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="inclStart" checked><span>開始日も数える</span></label>
+          </div>
+          <p class="hint">オンのときは開始日と終了日の両方を含めて数えます。オフのときは開始日の翌日から終了日までを数えます。</p>
+        </div>
+
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <div class="actions">
+          <button type="button" class="btn primary copy" id="copyCol" disabled>結果の列をコピー</button>
+          <button type="button" class="btn copy" id="copyTable" disabled>表をコピー</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText" class="label" style="display:block;margin-bottom:4px;color:#3c4043;font-weight:600;font-size:.94rem;">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+        <div class="result-head" id="resultHead"><span class="label">結果</span><span class="count" id="resultCount"></span></div>
+        <div class="table-wrap" id="tableWrap" tabindex="0" aria-label="結果の表"></div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2>休みの設定</h2>
+        <p class="jump-row"><a class="jump" href="#resultHead">▲ 結果の表を見る</a></p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <fieldset class="setting">
+          <legend>休みにする曜日</legend>
+          <div class="chips wd" id="weekdays">
+            <label class="chip"><input type="checkbox" value="1"><span>月</span></label>
+            <label class="chip"><input type="checkbox" value="2"><span>火</span></label>
+            <label class="chip"><input type="checkbox" value="3"><span>水</span></label>
+            <label class="chip"><input type="checkbox" value="4"><span>木</span></label>
+            <label class="chip"><input type="checkbox" value="5"><span>金</span></label>
+            <label class="chip"><input type="checkbox" value="6" checked><span>土</span></label>
+            <label class="chip"><input type="checkbox" value="0" checked><span>日</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>祝日</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="useHoliday" checked><span>祝日を休みにする</span></label>
+          </div>
+          <p class="hint" id="holidayRange"></p>
+        </fieldset>
+        <div class="setting">
+          <span class="label" id="nthLabel">毎月の第何曜日の休み <small style="color:var(--muted);font-weight:400;font-size:.875rem;">（例：第2火曜）</small></span>
+          <div class="nth-row" role="group" aria-labelledby="nthLabel">
+            <select id="nthN" aria-label="第何">
+              <option value="1">第1</option><option value="2" selected>第2</option><option value="3">第3</option><option value="4">第4</option><option value="5">第5</option>
+            </select>
+            <select id="nthW" aria-label="曜日">
+              <option value="1">月曜</option><option value="2" selected>火曜</option><option value="3">水曜</option><option value="4">木曜</option><option value="5">金曜</option><option value="6">土曜</option><option value="0">日曜</option>
+            </select>
+            <button type="button" class="btn" id="nthAdd">追加</button>
+          </div>
+          <ul class="nth-list" id="nthList" aria-label="追加した毎月の第何曜日の休み"></ul>
+          <p class="nth-empty" id="nthEmpty">まだありません。</p>
+        </div>
+        <div class="field">
+          <label for="tempOff">臨時休業日 <small>（1行に1つ。期間は「2026/12/29〜2027/1/4」）</small></label>
+          <textarea id="tempOff" class="small" spellcheck="false" placeholder="例：&#10;2026/12/29〜2027/1/4&#10;2026/11/20"></textarea>
+        </div>
+        <div class="field">
+          <label for="tempOn">臨時営業日 <small>（休みの日でも営業する日）</small></label>
+          <textarea id="tempOn" class="small" spellcheck="false" placeholder="例：2026/11/3"></textarea>
+        </div>
+        <div class="field">
+          <label for="baseYear">年のない日付の年 <small>（「10月20日」「10/20」などに使います）</small></label>
+          <div class="n-row"><input type="text" id="baseYear" inputmode="numeric" autocomplete="off"><span class="unit">年</span></div>
+        </div>
+        <fieldset class="setting">
+          <legend>結果の日付の書き方</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="fmt" value="slash" checked><span>2026/10/23</span></label>
+            <label class="chip"><input type="radio" name="fmt" value="dash"><span>2026-10-23</span></label>
+            <label class="chip"><input type="radio" name="fmt" value="kanji"><span>2026年10月23日</span></label>
+            <label class="chip"><input type="checkbox" id="withWd"><span>曜日を付ける</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>設定の保存</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="saveSettings"><span>休みの設定をこのブラウザに保存する</span></label>
+          </div>
+          <p class="hint">保存するのは休みの設定と計算の設定だけで、貼り付けた日付は保存しません。</p>
+        </fieldset>
+
+        <h3 id="calTitle">休みのカレンダー</h3>
+        <div class="cal-head">
+          <button type="button" id="calPrev" aria-label="前の月">‹ 前</button>
+          <span class="month" id="calMonth" aria-live="polite"></span>
+          <button type="button" id="calNext" aria-label="次の月">次 ›</button>
+        </div>
+        <div id="calBox"></div>
+        <ul class="legend" aria-label="色の意味">
+          <li><i class="l-weekend"></i>土日</li><li><i class="l-holiday"></i>祝日</li><li><i class="l-regular"></i>定休日</li><li><i class="l-temp"></i>臨時休業</li><li><i class="l-open"></i>臨時営業</li>
+        </ul>
+        <ul class="cal-list" id="calList"></ul>
+      </div>
+    </div>
+
+    <p class="note">発送日・納期の目安を計算するツールです。法律で決められた期限（法定期間）の計算には使えません。祝日は内閣府「国民の祝日について」の一覧をもとにしています。</p>
+    <div class="privacy">日付と設定は、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません（「休みの設定をこのブラウザに保存する」をオンにしたときだけ、休みの設定をこのブラウザに保存します）。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>注文日の列から「3営業日後」の発送日をまとめて出す（土日祝が休み）</h3>
+      <dl>
+        <dt>入力</dt><dd>「例を入れる」の表（注文番号・注文日の2列、注文5件：2026/10/30、2026/10/31、2026/11/2、2026/11/20、2026/12/28）</dd>
+        <dt>設定</dt><dd>計算の種類：営業日後／何営業日後か：3／休み：土・日・祝日（はじめの設定のまま）</dd>
+        <dt>結果</dt><dd>「5件の3営業日後を計算しました。」と表示され、注文日の列（B列）が自動で選ばれます。結果は 2026/11/05(木)、2026/11/05(木)、2026/11/06(金)、2026/11/26(木)、2026/12/31(木) で、10月30日の行の「飛ばした休み」は「3日（土日2日・祝日1日）」です。「結果の列をコピー」で、1行目の見出し「3営業日後」と5件の日付の6行がコピーされます。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>定休日（毎週水曜・第2火曜）と年末年始の休みを除いて「5営業日後」の納期を出す</h3>
+      <dl>
+        <dt>入力</dt><dd>日付の列：2026/11/6、2026/12/7、2026/12/24（1行に1件）</dd>
+        <dt>設定</dt><dd>休みにする曜日：水・土・日／祝日を休みにする：オン／毎月の第何曜日の休み：第2火曜／臨時休業日：2026/12/29〜2027/1/4／何営業日後か：5</dd>
+        <dt>結果</dt><dd>2026/11/17(火)（飛ばした休み 6日：土日4日・定休日2日）、2026/12/17(木)（5日：土日2日・定休日3日）、2027/01/08(金)（10日：土日2日・定休日1日・臨時休業7日）になります。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>「3営業日後」は、注文した日を数えますか？</summary>
+      <p>いいえ。入力の日（注文日など）は0日目として数え、翌日から営業日を1、2、3と数えます。たとえば土日祝が休みのとき、2026年10月30日（金）の3営業日後は、土日と11月3日（火・文化の日）を飛ばして、11月5日（木）です。入力の日そのもの（休みなら次の営業日）にしたいときは、日数を0にします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>注文日が休みの日のときは、どう数えますか？</summary>
+      <p>休みの日の注文も、翌日から営業日を数えます。土日祝が休みのとき、2026年10月31日（土）の1営業日後は11月2日（月）、2営業日後は11月4日（水）です。結果の表の「飛ばした休み」に、途中で飛ばした休みの日数と内訳（土日・祝日・定休日・臨時休業）が出ます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「第2火曜」や年末年始の休みも入れられますか？</summary>
+      <p>はい。「毎月の第何曜日の休み」で「第2」「火曜」を選んで「追加」を押すと、毎月の第2火曜が休みになります（その月の1日から数えて2回目の火曜）。年末年始やお盆の休みは「臨時休業日」に「2026/12/29〜2027/1/4」のように期間で入れます。休みの日に営業するときは「臨時営業日」に入れると、ほかのどの休みよりも優先して営業日になります。設定の下のカレンダーで、休みになる日を確かめられます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>祝日はいつまで対応していますか？法律の期限の計算に使えますか？</summary>
+      <p>祝日は、内閣府「国民の祝日について」の一覧をもとに、2020年から2027年まで（振替休日・国民の休日を含む143日）を入れています。「祝日を休みにする」がオンのとき、この範囲の外の日を数える行は「祝日表の範囲外」として計算しません。このツールは発送日・納期の目安の計算用です。法律で決められた期限（法定期間）の計算には使えません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。計算はすべてお使いのブラウザの中で行い、貼り付けた日付や設定が外部に送信されることはありません。「休みの設定をこのブラウザに保存する」をオンにしたときだけ、休みの設定（日付の列は含みません）をこのブラウザに保存します。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../renban-ticket/"><strong>連番チケット印刷</strong><span>整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></a></li>
+      <li><a href="../shikomi-hachu/"><strong>仕込み発注計算</strong><span>レシピ表と販売予定数から、食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注数を出します。</span></a></li>
+      <li><a href="../shashin-satsueibi/"><strong>写真を撮影日で改名</strong><span>写真のファイル名を撮影日時＋連番にまとめて変えて、zipで保存します。時計のずれの補正、HEICからJPGへの変換、縮小も一度にできます。</span></a></li>
+      <li><a href="../nefuda-label/"><strong>値札・ラベル面付け印刷</strong><span>商品の表を貼り付けて、値札をラベル用紙にまとめて印刷します。用紙の寸法とずれの補正、税込・税抜の併記も選べます。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（16件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var TAB = String.fromCharCode(9);
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var QUOTE = String.fromCharCode(34);
+  var MAX_DAYS = 3650;
+  var MAX_ROWS = 5000;
+  var MAX_SHOW = 500;
+  var MAX_SCAN = 10000;          // 1行で調べる日の上限
+  var WD = ['日', '月', '火', '水', '木', '金', '土'];
+  var HOLIDAYS = {"2020-01-01":"元日","2020-01-13":"成人の日","2020-02-11":"建国記念の日","2020-02-23":"天皇誕生日","2020-02-24":"休日（振替休日）","2020-03-20":"春分の日","2020-04-29":"昭和の日","2020-05-03":"憲法記念日","2020-05-04":"みどりの日","2020-05-05":"こどもの日","2020-05-06":"休日（振替休日）","2020-07-23":"海の日","2020-07-24":"スポーツの日","2020-08-10":"山の日","2020-09-21":"敬老の日","2020-09-22":"秋分の日","2020-11-03":"文化の日","2020-11-23":"勤労感謝の日","2021-01-01":"元日","2021-01-11":"成人の日","2021-02-11":"建国記念の日","2021-02-23":"天皇誕生日","2021-03-20":"春分の日","2021-04-29":"昭和の日","2021-05-03":"憲法記念日","2021-05-04":"みどりの日","2021-05-05":"こどもの日","2021-07-22":"海の日","2021-07-23":"スポーツの日","2021-08-08":"山の日","2021-08-09":"休日（振替休日）","2021-09-20":"敬老の日","2021-09-23":"秋分の日","2021-11-03":"文化の日","2021-11-23":"勤労感謝の日","2022-01-01":"元日","2022-01-10":"成人の日","2022-02-11":"建国記念の日","2022-02-23":"天皇誕生日","2022-03-21":"春分の日","2022-04-29":"昭和の日","2022-05-03":"憲法記念日","2022-05-04":"みどりの日","2022-05-05":"こどもの日","2022-07-18":"海の日","2022-08-11":"山の日","2022-09-19":"敬老の日","2022-09-23":"秋分の日","2022-10-10":"スポーツの日","2022-11-03":"文化の日","2022-11-23":"勤労感謝の日","2023-01-01":"元日","2023-01-02":"休日（振替休日）","2023-01-09":"成人の日","2023-02-11":"建国記念の日","2023-02-23":"天皇誕生日","2023-03-21":"春分の日","2023-04-29":"昭和の日","2023-05-03":"憲法記念日","2023-05-04":"みどりの日","2023-05-05":"こどもの日","2023-07-17":"海の日","2023-08-11":"山の日","2023-09-18":"敬老の日","2023-09-23":"秋分の日","2023-10-09":"スポーツの日","2023-11-03":"文化の日","2023-11-23":"勤労感謝の日","2024-01-01":"元日","2024-01-08":"成人の日","2024-02-11":"建国記念の日","2024-02-12":"休日（振替休日）","2024-02-23":"天皇誕生日","2024-03-20":"春分の日","2024-04-29":"昭和の日","2024-05-03":"憲法記念日","2024-05-04":"みどりの日","2024-05-05":"こどもの日","2024-05-06":"休日（振替休日）","2024-07-15":"海の日","2024-08-11":"山の日","2024-08-12":"休日（振替休日）","2024-09-16":"敬老の日","2024-09-22":"秋分の日","2024-09-23":"休日（振替休日）","2024-10-14":"スポーツの日","2024-11-03":"文化の日","2024-11-04":"休日（振替休日）","2024-11-23":"勤労感謝の日","2025-01-01":"元日","2025-01-13":"成人の日","2025-02-11":"建国記念の日","2025-02-23":"天皇誕生日","2025-02-24":"休日（振替休日）","2025-03-20":"春分の日","2025-04-29":"昭和の日","2025-05-03":"憲法記念日","2025-05-04":"みどりの日","2025-05-05":"こどもの日","2025-05-06":"休日（振替休日）","2025-07-21":"海の日","2025-08-11":"山の日","2025-09-15":"敬老の日","2025-09-23":"秋分の日","2025-10-13":"スポーツの日","2025-11-03":"文化の日","2025-11-23":"勤労感謝の日","2025-11-24":"休日（振替休日）","2026-01-01":"元日","2026-01-12":"成人の日","2026-02-11":"建国記念の日","2026-02-23":"天皇誕生日","2026-03-20":"春分の日","2026-04-29":"昭和の日","2026-05-03":"憲法記念日","2026-05-04":"みどりの日","2026-05-05":"こどもの日","2026-05-06":"休日（振替休日）","2026-07-20":"海の日","2026-08-11":"山の日","2026-09-21":"敬老の日","2026-09-22":"休日（国民の休日）","2026-09-23":"秋分の日","2026-10-12":"スポーツの日","2026-11-03":"文化の日","2026-11-23":"勤労感謝の日","2027-01-01":"元日","2027-01-11":"成人の日","2027-02-11":"建国記念の日","2027-02-23":"天皇誕生日","2027-03-21":"春分の日","2027-03-22":"休日（振替休日）","2027-04-29":"昭和の日","2027-05-03":"憲法記念日","2027-05-04":"みどりの日","2027-05-05":"こどもの日","2027-07-19":"海の日","2027-08-11":"山の日","2027-09-20":"敬老の日","2027-09-23":"秋分の日","2027-10-11":"スポーツの日","2027-11-03":"文化の日","2027-11-23":"勤労感謝の日"};
+  var HOL_FIRST_YEAR = 2020, HOL_LAST_YEAR = 2027;
+  var STORE_KEY = 'eigyobi-keisan:v1';
+
+  // ---------- 日付（1970-01-01 からの日数で扱う。時差の影響を受けない） ----------
+  function dayNum(y, m, d) { return Math.round(Date.UTC(y, m - 1, d) / 86400000); }
+  function ymd(n) { var t = new Date(n * 86400000); return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate() }; }
+  function weekday(n) { return ((n + 4) % 7 + 7) % 7; }   // 0=日
+  function valid(y, m, d) {
+    if (y < 1900 || y > 2099 || m < 1 || m > 12 || d < 1) return false;
+    var last = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    return d <= last;
+  }
+  function pad2(v) { return (v < 10 ? '0' : '') + v; }
+  function isoKey(n) { var t = ymd(n); return t.y + '-' + pad2(t.m) + '-' + pad2(t.d); }
+  function fmtDate(n, style, withWd) {
+    var t = ymd(n), s;
+    if (style === 'dash') s = t.y + '-' + pad2(t.m) + '-' + pad2(t.d);
+    else if (style === 'kanji') s = t.y + '年' + t.m + '月' + t.d + '日';
+    else s = t.y + '/' + pad2(t.m) + '/' + pad2(t.d);
+    return withWd ? s + '(' + WD[weekday(n)] + ')' : s;
+  }
+  function screenDate(n) { var t = ymd(n); return t.y + '/' + pad2(t.m) + '/' + pad2(t.d) + '(' + WD[weekday(n)] + ')'; }
+  function fmtNum(v) { return String(v).replace(/[0-9](?=(?:[0-9]{3})+$)/g, '$&,'); }
+
+  // 全角の数字・記号を半角に、空白を除く
+  function normalize(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c >= 0xFF01 && c <= 0xFF5E) out += String.fromCharCode(c - 0xFEE0);
+      else if (c === 0x3000 || c === 0xA0 || c === 0x2009 || c === 0x202F) out += ' ';
+      else out += s.charAt(i);
+    }
+    return out;
+  }
+  // 前後の空白（半角・全角・改行しない空白・タブ）を除く
+  var SPACE_CODES = [32, 9, 0x3000, 0xA0];
+  function isSpace(ch) { return SPACE_CODES.indexOf(ch.charCodeAt(0)) >= 0; }
+  function trimSpaces(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charAt(a))) a++;
+    while (b > a && isSpace(s.charAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  function splitLines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF).split(LF); }
+  var RE_TIME = /[ ]*[0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?$/;
+  var RE_WD = /[ ]*[(]?[ ]*[日月火水木金土](?:曜日?)?[ ]*[)]?$/;
+  var RE_YMD = /^([0-9]{4})([/.-])([0-9]{1,2})[/.-]([0-9]{1,2})$/;
+  var RE_KANJI = /^([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日?$/;
+  var RE_8 = /^([0-9]{4})([0-9]{2})([0-9]{2})$/;
+  var RE_MD_KANJI = /^([0-9]{1,2})月([0-9]{1,2})日?$/;
+  var RE_MD = /^([0-9]{1,2})[/]([0-9]{1,2})$/;
+  var RE_ERA = /^(令和|平成|昭和)(元|[0-9]{1,2})年([0-9]{1,2})月([0-9]{1,2})日?$/;
+  var RE_ERA_ABBR = /^([RHSrhs])([0-9]{1,2})([/.-])([0-9]{1,2})[/.-]([0-9]{1,2})$/;
+  var ERA_BASE = { '令和': 2018, '平成': 1988, '昭和': 1925, R: 2018, H: 1988, S: 1925 };
+  var RE_TAIL = /[ ,、;]+$/;
+  var RE_NO_YEAR = /^[0-9]{1,2}(?:月|[/])/;
+  // 年を書いていない日付か（「12/29」「12月29日」）
+  function noYear(raw) { return RE_NO_YEAR.test(trimSpaces(normalize(raw))); }
+  // 日付のように見える部分を含むか（カンマ・空白で区切った行の案内に使う）
+  var RE_HAS_DATE = /[0-9]{4}[/.-][0-9]{1,2}[/.-][0-9]{1,2}|[0-9]{1,2}月[0-9]{1,2}日|[0-9]{4}年[0-9]{1,2}月|[0-9]{1,2}[/][0-9]{1,2}/;
+  var RE_DATE_LIKE = /[0-9]+ *[/.年月-] *[0-9]+/;
+  function dateWithOther(raw) {
+    var n = normalize(raw), m = RE_HAS_DATE.exec(n);
+    if (!m) return false;
+    return trimSpaces(n.replace(m[0], '')) !== '';
+  }
+  // 戻り値：日数（1970-01-01 から）、空なら 'empty'、読めなければ null
+  function parseDate(raw, baseYear) {
+    var s = normalize(raw);
+    s = trimSpaces(s);
+    if (s === '') return 'empty';
+    s = s.replace(RE_TAIL, '');
+    s = s.replace(RE_TIME, '');
+    s = s.replace(RE_WD, '');
+    s = s.replace(/[ ]*([/.年月日-])[ ]*/g, '$1');
+    if (s.indexOf(' ') >= 0) return null;
+    var m, y, mo, d;
+    if ((m = RE_YMD.exec(s))) {
+      // 区切りは同じ文字（2026/10-20 は読まない）
+      var sep2 = s.charAt(m[1].length + 1 + m[3].length);
+      if (sep2 !== m[2]) return null;
+      y = +m[1]; mo = +m[3]; d = +m[4];
+    } else if ((m = RE_KANJI.exec(s))) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+    else if ((m = RE_8.exec(s))) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+    else if ((m = RE_MD_KANJI.exec(s)) || (m = RE_MD.exec(s))) { if (baseYear == null) return null; y = baseYear; mo = +m[1]; d = +m[2]; }
+    else if ((m = RE_ERA.exec(s))) { y = ERA_BASE[m[1]] + (m[2] === '元' ? 1 : +m[2]); mo = +m[3]; d = +m[4]; if (m[2] === '0') return null; }
+    else if ((m = RE_ERA_ABBR.exec(s))) {
+      if (s.charAt(m[1].length + m[2].length + 1 + m[4].length) !== m[3] || m[2] === '0') return null;
+      y = ERA_BASE[m[1].toUpperCase()] + (+m[2]); mo = +m[4]; d = +m[5];
+    }
+    else return null;
+    if (!valid(y, mo, d)) return null;
+    return dayNum(y, mo, d);
+  }
+  // 日付に付いた曜日（「(月)」など）が日付と合わないか。合わなければ正しい曜日の番号、合えば -1
+  var RE_WD_ONLY = /[(]?[ ]*([日月火水木金土])(?:曜日?)?[ ]*[)]?$/;
+  function wdMismatch(raw, n) {
+    var s = trimSpaces(normalize(raw)).replace(RE_TAIL, '').replace(RE_TIME, '');
+    var m = RE_WD_ONLY.exec(s);
+    if (!m) return -1;
+    var before = s.slice(0, m.index);
+    if (!/[0-9]$|日$|[ ]$/.test(before)) return -1;
+    return WD.indexOf(m[1]) === weekday(n) ? -1 : weekday(n);
+  }
+  // 期間（臨時休業日・臨時営業日、期間の計算の1つのセル）：「A〜B」
+  var RANGE_MARKS = ['〜', '～', '~'];
+  function splitRange(s) {
+    var n = normalize(s);
+    for (var i = 0; i < RANGE_MARKS.length; i++) {
+      var k = n.indexOf(RANGE_MARKS[i]);
+      if (k > 0) return [n.slice(0, k), n.slice(k + RANGE_MARKS[i].length)];
+    }
+    return null;
+  }
+
+  // ---------- タブ区切りの表（Excel のコピー。セル内改行・タブ・" を含むセルは " で囲まれる） ----------
+  function parseTable(text) {
+    var rows = [], row = [], cell = '', i = 0, len = text.length, quoted = false, atStart = true;
+    while (i < len) {
+      var ch = text.charAt(i);
+      if (atStart && ch === QUOTE) {
+        // 閉じる " が、タブ・改行・終わりの直前にあるときだけ囲みとして扱う
+        var j = i + 1, buf = '', ok = false;
+        while (j < len) {
+          var cj = text.charAt(j);
+          if (cj === QUOTE) {
+            if (text.charAt(j + 1) === QUOTE) { buf += QUOTE; j += 2; continue; }
+            var nx = text.charAt(j + 1);
+            if (j + 1 >= len || nx === TAB || nx === LF || nx === CR) ok = true;
+            break;
+          }
+          buf += cj; j++;
+        }
+        if (ok) { cell = buf; i = j + 1; atStart = false; quoted = true; continue; }
+      }
+      atStart = false;
+      if (ch === TAB) { row.push({ v: cell, q: quoted }); cell = ''; quoted = false; atStart = true; i++; continue; }
+      if (ch === CR || ch === LF) {
+        row.push({ v: cell, q: quoted }); rows.push(row); row = []; cell = ''; quoted = false; atStart = true;
+        if (ch === CR && text.charAt(i + 1) === LF) i += 2; else i++;
+        continue;
+      }
+      cell += ch; i++;
+    }
+    if (cell !== '' || row.length || quoted) { row.push({ v: cell, q: quoted }); rows.push(row); }
+    // 末尾の空の行は数えない
+    while (rows.length && rows[rows.length - 1].length === 1 && !rows[rows.length - 1][0].q && trimSpaces(rows[rows.length - 1][0].v) === '') rows.pop();
+    return rows.map(function (r) { return r.map(function (c) { return c.v; }); });
+  }
+
+  // ---------- 要素 ----------
+  function $(id) { return document.getElementById(id); }
+  var datesEl = $('dates'), daysEl = $('days'), inclStart = $('inclStart'), colsBox = $('colsBox'), colA = $('colA'), colB = $('colB');
+  var summary = $('summary'), status = $('status'), setStatusEl = $('setStatus'), tableWrap = $('tableWrap'), resultCount = $('resultCount');
+  var copyCol = $('copyCol'), copyTable = $('copyTable'), manualBox = $('manualBox'), manualText = $('manualText');
+  var useHoliday = $('useHoliday'), tempOff = $('tempOff'), tempOn = $('tempOn'), baseYearEl = $('baseYear'), withWd = $('withWd'), saveSettings = $('saveSettings');
+  var nthN = $('nthN'), nthW = $('nthW'), nthList = $('nthList'), nthEmpty = $('nthEmpty');
+  var weekdayInputs = Array.prototype.slice.call(document.querySelectorAll('#weekdays input'));
+  var modeInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="mode"]'));
+  var fmtInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="fmt"]'));
+  var TODAY = (function () { var t = new Date(); return dayNum(t.getFullYear(), t.getMonth() + 1, t.getDate()); })();
+  baseYearEl.value = String(ymd(TODAY).y);
+  var nthRules = [];   // [{n:2, w:2}]
+  $('holidayRange').textContent = '祝日表は' + HOL_FIRST_YEAR + '年〜' + HOL_LAST_YEAR + '年（' + Object.keys(HOLIDAYS).length + '日。振替休日・国民の休日を含む）です。この範囲の外の日を数える行は計算しません。';
+
+  function mode() { for (var i = 0; i < modeInputs.length; i++) if (modeInputs[i].checked) return modeInputs[i].value; return 'after'; }
+  function fmtStyle() { for (var i = 0; i < fmtInputs.length; i++) if (fmtInputs[i].checked) return fmtInputs[i].value; return 'slash'; }
+
+  // ---------- 休みの設定を読む ----------
+  function readIntField(el, min, max) {
+    var s = trimSpaces(normalize(el.value));
+    if (/^[0-9]{1,3}(?:,[0-9]{3})+$/.test(s)) s = s.split(',').join('');
+    if (!/^[0-9]{1,5}$/.test(s)) return null;
+    var v = +s;
+    return v >= min && v <= max ? v : null;
+  }
+  function readDateList(text, baseYear) {
+    var set = {}, bad = [], count = 0;
+    var lines = splitLines(text);
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (trimSpaces(normalize(line)) === '') continue;
+      var rg = splitRange(line), a, b;
+      if (rg) {
+        a = parseDate(rg[0], baseYear); b = parseDate(rg[1], baseYear);
+        // 年を書いていない終わりの日が始めの日より前なら、翌年の日として読む（12/29〜1/4）
+        if (typeof a === 'number' && typeof b === 'number' && b < a && noYear(rg[1]) && baseYear != null) b = parseDate(rg[1], ymd(a).y + 1);
+        if (typeof a !== 'number' || typeof b !== 'number' || b < a || b - a > 3660) { bad.push({ line: i + 1, text: trimSpaces(line), why: (typeof a === 'number' && typeof b === 'number' && b < a) ? '終わりの日が始めの日より前' : (typeof a === 'number' && typeof b === 'number' ? '期間が10年を超える' : '日付が読めない') }); continue; }
+        for (var n = a; n <= b; n++) { if (!set[n]) count++; set[n] = true; }
+      } else {
+        a = parseDate(line, baseYear);
+        if (typeof a !== 'number') { bad.push({ line: i + 1, text: trimSpaces(line), why: '日付が読めない' }); continue; }
+        if (!set[a]) count++;
+        set[a] = true;
+      }
+    }
+    return { set: set, bad: bad, count: count };
+  }
+  function readRules() {
+    var r = { weekdays: {}, holiday: useHoliday.checked, nth: nthRules.slice(), errors: [] };
+    weekdayInputs.forEach(function (el) { if (el.checked) r.weekdays[+el.value] = true; });
+    var by = readIntField(baseYearEl, 1900, 2099);
+    r.baseYear = by;
+    baseYearEl.classList.toggle('bad', by == null);
+    if (by == null) r.errors.push(trimSpaces(baseYearEl.value) === '' ? '「年のない日付の年」を入れてください（例：2026）。' : '「年のない日付の年」には1900〜2099の年を入れてください（いまは「' + clip(trimSpaces(baseYearEl.value), 20) + '」）。');
+    r.off = readDateList(tempOff.value, by);
+    r.on = readDateList(tempOn.value, by);
+    tempOff.classList.toggle('bad', r.off.bad.length > 0);
+    tempOn.classList.toggle('bad', r.on.bad.length > 0);
+    r.cache = {};
+    return r;
+  }
+  // 休みの種類：'' は営業日。'open' は臨時営業日（営業日）
+  function closedKind(n, r) {
+    var c = r.cache[n];
+    if (c !== undefined) return c;
+    var k = '';
+    var w = weekday(n);
+    if (r.on.set[n]) k = 'open';
+    else if (r.off.set[n]) k = 'temp';
+    else if ((w === 0 || w === 6) && r.weekdays[w]) k = 'weekend';
+    else if (r.holiday && HOLIDAYS[isoKey(n)]) k = 'holiday';
+    else if (r.weekdays[w]) k = 'regular';
+    else {
+      var d = ymd(n).d, nth = Math.ceil(d / 7);
+      for (var i = 0; i < r.nth.length; i++) if (r.nth[i].w === w && r.nth[i].n === nth) { k = 'regular'; break; }
+    }
+    r.cache[n] = k;
+    return k;
+  }
+  function isOpen(k) { return k === '' || k === 'open'; }
+  function outOfTable(n, r) {
+    if (!r.holiday) return false;
+    var y = ymd(n).y;
+    return y < HOL_FIRST_YEAR || y > HOL_LAST_YEAR;
+  }
+  var KIND_NAMES = { weekend: '土日', holiday: '祝日', regular: '定休日', temp: '臨時休業' };
+  var KIND_ORDER = ['weekend', 'holiday', 'regular', 'temp'];
+  function breakdownText(b) {
+    var parts = [];
+    KIND_ORDER.forEach(function (k) { if (b[k]) parts.push(KIND_NAMES[k] + b[k] + '日'); });
+    return parts.length ? parts.join('・') : 'なし';
+  }
+
+  // ---------- 計算 ----------
+  // N営業日後（dir=1）／前（dir=-1）
+  function shift(start, nDays, dir, r) {
+    var b = { weekend: 0, holiday: 0, regular: 0, temp: 0 }, skipped = 0, steps = 0;
+    var cur = start;
+    if (outOfTable(cur, r)) return { error: 'range' };
+    if (nDays === 0) {
+      while (!isOpen(closedKind(cur, r))) {
+        b[closedKind(cur, r)]++; skipped++;
+        cur += dir; steps++;
+        if (steps > MAX_SCAN) return { error: 'none' };
+        if (outOfTable(cur, r)) return { error: 'range' };
+      }
+      return { n: cur, b: b, skipped: skipped };
+    }
+    var count = 0;
+    while (count < nDays) {
+      cur += dir; steps++;
+      if (steps > MAX_SCAN) return { error: 'none' };
+      if (outOfTable(cur, r)) return { error: 'range' };
+      var k = closedKind(cur, r);
+      if (isOpen(k)) count++;
+      else { b[k]++; skipped++; }
+    }
+    return { n: cur, b: b, skipped: skipped };
+  }
+  function between(a, z, incl, r) {
+    var first = incl ? a : a + 1;
+    var b = { weekend: 0, holiday: 0, regular: 0, temp: 0 }, open = 0, closed = 0;
+    if (z - first > 36600) return { error: 'long' };
+    for (var n = first; n <= z; n++) {
+      if (outOfTable(n, r)) return { error: 'range' };
+      var k = closedKind(n, r);
+      if (isOpen(k)) open++; else { b[k]++; closed++; }
+    }
+    return { open: open, days: open + closed, closed: closed, b: b };
+  }
+
+  // ---------- 列の選択 ----------
+  var colState = { count: 0, userA: null, userB: null };
+  function colName(i) {
+    var s = '', k = i;
+    do { s = String.fromCharCode(65 + (k % 26)) + s; k = Math.floor(k / 26) - 1; } while (k >= 0);
+    return s + '列';
+  }
+  function readableCounts(rows, ncol, baseYear, skipFirst) {
+    var counts = [];
+    for (var c = 0; c < ncol; c++) counts.push(0);
+    for (var i = skipFirst ? 1 : 0; i < rows.length; i++) {
+      for (var c2 = 0; c2 < ncol; c2++) {
+        var v = rows[i][c2];
+        if (v == null) continue;
+        if (mode() === 'between' && splitRange(v)) { var rr = splitRange(v); if (typeof parseDate(rr[0], baseYear) === 'number') counts[c2]++; continue; }
+        var p = parseDate(v, baseYear);
+        if (typeof p === 'number') counts[c2]++;
+      }
+    }
+    return counts;
+  }
+
+  // 期間の計算で、その列に「A〜B」のセルが1つでもあれば、期間の列として扱う
+  function rangeColumn(rows, c) {
+    for (var i = 0; i < rows.length; i++) if (rows[i][c] != null && splitRange(rows[i][c])) return true;
+    return false;
+  }
+  function rangeCounts(rows, ncol) {
+    var counts = [];
+    for (var c = 0; c < ncol; c++) { counts.push(0); for (var i = 0; i < rows.length; i++) if (rows[i][c] != null && splitRange(rows[i][c])) counts[c]++; }
+    return counts;
+  }
+
+  // ---------- 本体 ----------
+  var last = null;
+  function compute() {
+    var r = readRules();
+    var md = mode();
+    var res = { mode: md, rows: [], ok: 0, bad: [], mixed: [], single: [], range: [], none: [], order: [], long: [], wd: [], header: null, errors: r.errors.slice(), warns: [], rules: r, cols: null };
+    var nDays = null;
+    if (md !== 'between') {
+      nDays = readIntField(daysEl, 0, MAX_DAYS);
+      daysEl.classList.toggle('bad', nDays == null);
+      var dname = '「何営業日' + (md === 'after' ? '後' : '前') + 'か」';
+      if (nDays == null) res.errors.push(trimSpaces(daysEl.value) === '' ? dname + 'を入れてください（0〜3,650の整数）。' : dname + 'には0〜3,650の整数を入れてください（いまは「' + clip(trimSpaces(daysEl.value), 20) + '」）。');
+    } else daysEl.classList.remove('bad');
+    res.nDays = nDays;
+    if (Object.keys(r.weekdays).length === 7 && !r.on.count) res.errors.push('休みにする曜日が7つすべてオンのため、営業日が1日もありません。休みにする曜日を減らしてください（休みの日に営業するときは「臨時営業日」に入れます）。');
+    if (r.off.bad.length) res.warns.push('臨時休業日の' + listBad(r.off.bad) + 'は使っていません。');
+    if (r.on.bad.length) res.warns.push('臨時営業日の' + listBad(r.on.bad) + 'は使っていません。');
+
+    var text = datesEl.value;
+    var rows = parseTable(text);
+    if (rows.every(function (row) { return row.every(function (v) { return trimSpaces(normalize(v)) === ''; }); })) rows = [];
+    while (rows.length && rows[rows.length - 1].every(function (v) { return trimSpaces(normalize(v)) === ''; })) rows.pop();
+    if (rows.length > MAX_ROWS) { res.errors.push('日付の列は' + fmtNum(MAX_ROWS) + '行までです（いまは' + fmtNum(rows.length) + '行）。分けて貼り付けてください。'); rows = []; }
+    var ncol = 0;
+    rows.forEach(function (row) { if (row.length > ncol) ncol = row.length; });
+    res.ncol = ncol;
+    updateCols(rows, ncol, r.baseYear, md);
+    if (res.errors.length || !rows.length) { last = res; return res; }
+
+    if (md === 'between' && ncol > 1) {
+      var cnt = readableCounts(rows, ncol, r.baseYear, false), withDate = [], ranges = 0;
+      cnt.forEach(function (v, i) { if (v > 0) withDate.push(colName(i)); });
+      rows.forEach(function (row) { row.forEach(function (v) { if (splitRange(v)) ranges++; }); });
+      if (withDate.length === 1 && !ranges) {
+        res.errors.push('この表で日付が入っているのは' + withDate[0] + 'だけです。期間の計算には開始日と終了日の2つの日付が要ります。開始日と終了日の2列の表（または「2026/10/1〜2026/10/31」の形）を貼り付けるか、「例を入れる」を押してください。');
+        last = res; return res;
+      }
+    }
+    var ca = +colA.value || 0, cb = +colB.value || 0;
+    if (ncol <= 1) { ca = 0; cb = -1; }
+    res.cols = { a: ca, b: cb, range: false };
+    if (md === 'between' && ncol > 1) res.cols.range = rangeColumn(rows, ca);
+    // 1行目が見出しか：1行目が読めず、2行目以降に読める行がある
+    function cellsOf(row) {
+      if (md === 'between') {
+        if (ncol <= 1) { var v = row[0] == null ? '' : row[0]; var rg = splitRange(v); return rg ? { a: rg[0], b: rg[1], raw: v, single: true } : { a: v, b: null, raw: v, single: true }; }
+        var va = row[ca] == null ? '' : row[ca], vb = row[cb] == null ? '' : row[cb];
+        // 開始日の列のセルが「A〜B」のときは、そのセルを期間として読む（終了日の列は使わない）
+        if (res.cols.range) { var rg2 = splitRange(va); if (rg2) return { a: rg2[0], b: rg2[1], raw: va, single: true }; return { a: va, b: null, raw: va, single: true }; }
+        return { a: va, b: vb, raw: null };
+      }
+      return { a: row[ca] == null ? '' : row[ca] };
+    }
+    function readRow(c) {
+      var a = parseDate(c.a, r.baseYear);
+      if (md !== 'between') return { a: a };
+      if (c.b === null) return { a: a === 'empty' ? 'empty' : a, b: a === 'empty' ? 'empty' : null, single: true };
+      var b = parseDate(c.b, r.baseYear);
+      return { a: a, b: b };
+    }
+    var readList = rows.map(function (row) { return readRow(cellsOf(row)); });
+    function rowReadable(x) { return md === 'between' ? (typeof x.a === 'number' && typeof x.b === 'number') : typeof x.a === 'number'; }
+    function rowEmpty(x) { return md === 'between' ? (x.a === 'empty' && x.b === 'empty') : x.a === 'empty'; }
+    // 見出し：空でない最初の行が日付として読めず、その下に読める行がある。または、空でない行がその1行だけで、数字を含まない
+    var headIdx = -1, h0 = 0;
+    while (h0 < readList.length && rowEmpty(readList[h0])) h0++;
+    if (h0 < readList.length && !rowReadable(readList[h0]) && !RE_DATE_LIKE.test(normalize(rows[h0].join(' ')))) {
+      var others = 0, readableBelow = false;
+      for (var h = h0 + 1; h < readList.length; h++) { if (!rowEmpty(readList[h])) others++; if (rowReadable(readList[h])) { readableBelow = true; } }
+      if (readableBelow || (!others && !/[0-9]/.test(normalize(rows[h0].join(''))))) headIdx = h0;
+    }
+    var headerRow = headIdx >= 0;
+    res.header = headerRow ? rows[headIdx] : null;
+    res.headLine = headIdx + 1;
+    var incl = inclStart.checked;
+    for (var i = 0; i < rows.length; i++) {
+      var c = cellsOf(rows[i]), x = readList[i];
+      var item = { line: i + 1, input: c, kind: '' };
+      if (i === headIdx) { item.kind = 'head'; res.rows.push(item); continue; }
+      if (rowEmpty(x)) { item.kind = 'empty'; item.partial = rows[i].some(function (v) { return trimSpaces(normalize(v)) !== ''; }); res.rows.push(item); continue; }
+      if (md !== 'between') {
+        if (typeof x.a !== 'number') { item.kind = 'bad'; if (dateWithOther(c.a)) { item.why = 'mixed'; res.mixed.push(i + 1); } else res.bad.push(i + 1); res.rows.push(item); continue; }
+        var s = shift(x.a, nDays, md === 'after' ? 1 : -1, r);
+        item.start = x.a;
+        var wm = wdMismatch(c.a, x.a);
+        if (wm >= 0) res.wd.push({ line: i + 1, n: x.a, w: wm });
+        if (s.error === 'range') { item.kind = 'range'; res.range.push(i + 1); }
+        else if (s.error === 'none') { item.kind = 'none'; res.none.push(i + 1); }
+        else { item.kind = 'ok'; item.out = s.n; item.b = s.b; item.skipped = s.skipped; res.ok++; }
+      } else {
+        if (typeof x.a !== 'number' || typeof x.b !== 'number') {
+          item.kind = 'bad';
+          if (x.single && x.b === null && typeof x.a === 'number') { item.why = 'single'; res.single.push(i + 1); }
+          else if ((typeof x.a !== 'number' && x.a !== 'empty' && dateWithOther(c.a)) || (typeof x.b !== 'number' && x.b !== 'empty' && x.b !== null && dateWithOther(c.b))) { item.why = 'mixed'; res.mixed.push(i + 1); }
+          else res.bad.push(i + 1);
+          res.rows.push(item); continue;
+        }
+        item.start = x.a; item.end = x.b;
+        if (x.b < x.a) { item.kind = 'order'; res.order.push(i + 1); res.rows.push(item); continue; }
+        var bt = between(x.a, x.b, incl, r);
+        if (bt.error === 'long') { item.kind = 'long'; res.long.push(i + 1); }
+        else if (bt.error) { item.kind = 'range'; res.range.push(i + 1); }
+        else { item.kind = 'ok'; item.open = bt.open; item.days = bt.days; item.closed = bt.closed; item.b = bt.b; res.ok++; }
+      }
+      res.rows.push(item);
+    }
+    last = res;
+    return res;
+  }
+  function listBad(bad, max) {
+    max = max || 3;
+    var shown = bad.slice(0, max).map(function (b) { return b.line + '行目「' + clip(b.text, max === 1 ? 14 : 20) + '」（' + b.why + '）'; });
+    return shown.join('、') + (bad.length > max ? 'ほか' + (bad.length - max) + '行' : '');
+  }
+  function clip(s, n) { var a = Array.from(s); return a.length > n ? a.slice(0, n).join('') + '…' : s; }
+  function lineList(arr) {
+    var s = arr.slice(0, 5).map(function (v) { return fmtNum(v); }).join('・') + '行目';
+    return arr.length > 5 ? s + 'ほか' + fmtNum(arr.length - 5) + '件' : s;
+  }
+
+  function updateCols(rows, ncol, baseYear, md) {
+    if (ncol <= 1) { colsBox.hidden = true; colState.count = ncol; colState.userA = colState.userB = null; colA.innerHTML = ''; colB.innerHTML = ''; return; }
+    var counts = readableCounts(rows, ncol, baseYear, false);
+    // 見出しの名前（空でない最初の行が日付でなければ使う）
+    var firstRow = null;
+    for (var fr = 0; fr < rows.length && !firstRow; fr++) if (rows[fr].some(function (v) { return trimSpaces(normalize(v)) !== ''; })) firstRow = rows[fr];
+    var names = [];
+    for (var c = 0; c < ncol; c++) {
+      var h = firstRow && firstRow[c] != null ? trimSpaces(firstRow[c]) : '';
+      var isDate = typeof parseDate(h, baseYear) === 'number';
+      names.push(colName(c) + (h && !isDate ? '（' + clip(h, 12) + '）' : ''));
+    }
+    if (colState.count !== ncol) { colState.userA = colState.userB = null; }
+    colState.count = ncol;
+    var order = counts.map(function (v, i) { return { v: v, i: i }; }).sort(function (p, q) { return q.v - p.v || p.i - q.i; });
+    var autoA, autoB;
+    var rc = md === 'between' ? rangeCounts(rows, ncol) : [];
+    var bestRange = -1;
+    rc.forEach(function (v, i) { if (v > 0 && (bestRange < 0 || v > rc[bestRange])) bestRange = i; });
+    if (md === 'between' && bestRange >= 0) { autoA = bestRange; autoB = bestRange === 0 ? 1 : 0; }
+    else if (md === 'between') {
+      var two = [order[0].i, order[1].i].sort(function (p, q) { return p - q; });
+      autoA = two[0]; autoB = two[1];
+    } else { autoA = order[0].i; autoB = order.length > 1 ? order[1].i : 0; }
+    var a = colState.userA != null && colState.userA < ncol ? colState.userA : autoA;
+    var b = colState.userB != null && colState.userB < ncol ? colState.userB : autoB;
+    if (colState.userA != null && a !== colState.userA) colState.userA = null;
+    if (colState.userB != null && b !== colState.userB) colState.userB = null;
+    fillSelect(colA, names, counts, a);
+    fillSelect(colB, names, counts, b);
+    colsBox.hidden = false;
+    var rangeA = md === 'between' && rangeColumn(rows, a);
+    $('colBField').hidden = md !== 'between' || rangeA;
+    $('colALabel').textContent = md === 'between' ? (rangeA ? '期間の列' : '開始日の列') : '日付の列';
+  }
+  function fillSelect(sel, names, counts, value) {
+    var html = '';
+    for (var i = 0; i < names.length; i++) html += '<option value="' + i + '">' + esc(names[i]) + '（日付' + fmtNum(counts[i]) + '件）</option>';
+    if (sel.innerHTML !== html) sel.innerHTML = html;
+    sel.value = String(value);
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // ---------- 出力 ----------
+  function headTitle(res) { return res.mode === 'between' ? '営業日数' : fmtNum(res.nDays) + '営業日' + (res.mode === 'after' ? '後' : '前'); }
+  var ERR_TEXT = { bad: '読めない日付', range: '祝日表の範囲外', none: '営業日が見つからない', order: '終了日が開始日より前', long: '期間が長すぎる' };
+  function outCell(res, it) {
+    if (it.kind === 'head') return headTitle(res);
+    if (it.kind === 'empty') return '';
+    if (it.kind === 'ok') return res.mode === 'between' ? String(it.open) : fmtDate(it.out, fmtStyle(), withWd.checked);
+    return ERR_TEXT[it.kind];
+  }
+  function tsvCell(v) {
+    v = v == null ? '' : String(v);
+    if (v.indexOf(TAB) >= 0 || v.indexOf(LF) >= 0 || v.indexOf(CR) >= 0 || v.indexOf(QUOTE) >= 0) return QUOTE + v.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return v;
+  }
+  function columnText(res) { return res.rows.map(function (it) { return tsvCell(outCell(res, it)); }).join(LF); }
+  function tableRows(res) {
+    var out = [];
+    var style = fmtStyle(), wdOn = withWd.checked;
+    if (res.mode === 'between') {
+      out.push(['開始日', '終了日', '営業日数', '日数', '休みの日数', '休みの内訳']);
+      res.rows.forEach(function (it) {
+        if (it.kind === 'head') return;
+        var inA = it.input.single ? it.input.raw : it.input.a, inB = it.input.single ? '' : it.input.b;
+        if (it.kind === 'empty') { out.push(['', '', '', '', '', '']); return; }
+        if (it.kind === 'ok') out.push([fmtDate(it.start, style, wdOn), fmtDate(it.end, style, wdOn), String(it.open), String(it.days), String(it.closed), breakdownText(it.b)]);
+        else if (it.start != null) out.push([fmtDate(it.start, style, wdOn), fmtDate(it.end, style, wdOn), ERR_TEXT[it.kind], '', '', '']);
+        else out.push([trimSpaces(inA), trimSpaces(inB || ''), ERR_TEXT[it.kind], '', '', '']);
+      });
+    } else {
+      out.push(['入力の日付', headTitle(res), '飛ばした休みの日数', '休みの内訳']);
+      res.rows.forEach(function (it) {
+        if (it.kind === 'head') return;
+        if (it.kind === 'empty') { out.push(['', '', '', '']); return; }
+        if (it.kind === 'ok') out.push([fmtDate(it.start, style, wdOn), fmtDate(it.out, style, wdOn), String(it.skipped), breakdownText(it.b)]);
+        else if (it.start != null) out.push([fmtDate(it.start, style, wdOn), ERR_TEXT[it.kind], '', '']);
+        else out.push([trimSpaces(it.input.a), ERR_TEXT[it.kind], '', '']);
+      });
+    }
+    return out;
+  }
+
+  function rulesText(r) {
+    var parts = [];
+    var wds = [1, 2, 3, 4, 5, 6, 0].filter(function (w) { return r.weekdays[w]; }).map(function (w) { return WD[w]; });
+    if (wds.length) parts.push(wds.join('・') + '曜');
+    if (r.holiday) parts.push('祝日');
+    r.nth.forEach(function (x) { parts.push('第' + x.n + WD[x.w] + '曜'); });
+    if (r.off.count) parts.push('臨時休業日' + fmtNum(r.off.count) + '日');
+    var s = '休み：' + (parts.length ? parts.join('、') : 'なし（毎日が営業日）');
+    if (r.on.count) s += '／臨時営業日' + fmtNum(r.on.count) + '日';
+    return s;
+  }
+
+  // 押した部品（設定など）の位置を、計算し直す前と後で同じにする（狭い幅では結果が設定より上にあるため）
+  function anchorEl() {
+    var el = lastPressed;
+    if (!el || !el.getBoundingClientRect || el === document.body || el === document.documentElement) return null;
+    if (el === datesEl || (tableWrap.contains && tableWrap.contains(el))) return null;
+    if (el.tagName === 'INPUT' && el.type !== 'text' && el.nextElementSibling) el = el.nextElementSibling;
+    return document.contains(el) ? el : null;
+  }
+  function render() {
+    var anchor = anchorEl(), top0 = anchor ? anchor.getBoundingClientRect().top : 0;
+    renderBody();
+    if (anchor && document.contains(anchor)) {
+      var d = anchor.getBoundingClientRect().top - top0;
+      if (Math.abs(d) > 0.5) window.scrollBy(0, d);
+    }
+  }
+  function renderBody() {
+    var res = compute();
+    var r = res.rules;
+    summary.textContent = '';
+    summary.classList.remove('warn');
+    var rowsReal = res.rows.filter(function (it) { return it.kind !== 'head' && it.kind !== 'empty'; });
+    function addLine(text, cls) { var sp = document.createElement('span'); if (cls) sp.className = cls; sp.textContent = text; summary.appendChild(sp); }
+    if (res.errors.length) {
+      summary.classList.add('warn');
+      addLine(res.errors.join(''));
+    } else if (!rowsReal.length) {
+      if (res.header) { summary.classList.add('warn'); addLine(fmtNum(res.headLine) + '行目「' + clip(trimSpaces(res.header.join(' ')), 16) + '」は見出しとして扱いました。見出しの下に日付の行がありません。' + (res.headLine + 1) + '行目から下に日付を入れてください。'); }
+      else addLine(trimSpaces(normalize(datesEl.value.split(TAB).join(' ').split(LF).join(' ').split(CR).join(' '))) === '' ? '日付の列に日付を貼り付けると、ここに結果が出ます。' : '計算できる行がありません。日付の列に日付を入れてください。');
+      if (res.warns.length) addLine(res.warns.join(''), 'w');
+    } else {
+      var head = res.mode === 'between'
+        ? fmtNum(res.ok) + '件の営業日数を計算しました（' + (inclStart.checked ? '開始日も数える' : '開始日の翌日から数える') + '）。'
+        : fmtNum(res.ok) + '件の' + headTitle(res) + 'を計算しました。';
+      if (!res.ok) { head = '計算できた行はありません。'; summary.classList.add('warn'); }
+      addLine(head);
+      var w = [];
+      if (res.bad.length) w.push(lineList(res.bad) + 'は日付が読めません（例：2026/10/20、10月20日）。' + (res.mode === 'between' ? '期間は開始日と終了日の2列、または「2026/10/1〜2026/10/31」の形で入れてください。' : ''));
+      if (res.mixed.length) w.push(lineList(res.mixed) + 'は日付のほかに文字があるため読めません（カンマや空白で区切った番号など）。Excelから表をコピーして貼り付けるか（列はタブで区切られます）、日付だけの列にしてください。');
+      if (res.single.length) w.push(lineList(res.single) + 'は終了日がありません。開始日と終了日の2列にするか、「2026/10/1〜2026/10/31」のように「〜」でつないでください。');
+      if (res.range.length) w.push(lineList(res.range) + 'は祝日表（' + HOL_FIRST_YEAR + '〜' + HOL_LAST_YEAR + '年）の外の日を数えるため計算していません。範囲の中の日にするか、「祝日を休みにする」をオフにすると、祝日を除かずに数えます。');
+      if (res.none.length) w.push(lineList(res.none) + 'は営業日が見つかりません。休みにする曜日を見直してください。');
+      if (res.long.length) w.push(lineList(res.long) + 'は期間が100年を超えるため計算していません。');
+      if (res.wd.length) w.push(lineList(res.wd.map(function (x) { return x.line; })) + 'は曜日が日付と合いません（' + screenDate(res.wd[0].n).slice(0, 10) + ' は' + WD[res.wd[0].w] + '曜）。日付で計算しました。日付を確かめてください。');
+      if (res.order.length) w.push(lineList(res.order) + 'は終了日が開始日より前です。開始日と終了日の列を入れ替えるか、列の選択を確かめてください。');
+      if (res.header) w.push(fmtNum(res.headLine) + '行目「' + clip(trimSpaces(res.header.join(' ')), 16) + '」は見出しとして扱いました。');
+      if (res.ncol > 1 && res.cols.range) w.push('表の' + colName(res.cols.a) + 'の期間（〜でつないだ日付）を使っています。');
+      else if (res.ncol > 1) w.push(res.mode === 'between' ? '表の' + colName(res.cols.a) + 'を開始日、' + colName(res.cols.b) + 'を終了日として使っています。' : '表の' + colName(res.cols.a) + 'の日付を使っています。');
+      w = w.concat(res.warns);
+      if (w.length) addLine(w.join(''), 'w');
+    }
+    if (!res.errors.length) addLine(rulesText(r), 'sub');
+    renderTable(res);
+    var canCopy = !res.errors.length && rowsReal.length > 0;
+    copyCol.disabled = !canCopy;
+    copyTable.disabled = !canCopy;
+    renderCalendar();
+    saveIfOn();
+  }
+
+  function renderTable(res) {
+    var rowsReal = res.rows.filter(function (it) { return it.kind !== 'head' && it.kind !== 'empty'; });
+    if (res.errors.length || !rowsReal.length) {
+      tableWrap.innerHTML = '<p class="empty-result">' + (res.errors.length ? '上の案内に従って直すと、ここに結果が出ます。' : '結果はここに表で出ます。') + '</p>';
+      resultCount.textContent = '';
+      return;
+    }
+    var html = '<table class="res"><thead><tr><th scope="col">行</th>';
+    if (res.mode === 'between') html += '<th scope="col">開始日</th><th scope="col">終了日</th><th scope="col">営業日数</th><th scope="col">休みの内訳</th>';
+    else html += '<th scope="col">入力の日付</th><th scope="col">' + esc(headTitle(res)) + '</th><th scope="col">飛ばした休み</th>';
+    html += '</tr></thead><tbody>';
+    var shown = 0;
+    for (var i = 0; i < res.rows.length && shown < MAX_SHOW; i++) {
+      var it = res.rows[i];
+      shown++;
+      var cls = it.kind === 'ok' ? '' : (it.kind === 'head' ? 'head' : (it.kind === 'empty' ? '' : 'err'));
+      html += '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td class="num">' + it.line + '</td>';
+      if (it.kind === 'head') { html += '<td colspan="' + (res.mode === 'between' ? 4 : 3) + '">見出し（結果の列の1行目は「' + esc(headTitle(res)) + '」）</td></tr>'; continue; }
+      if (it.kind === 'empty') { html += '<td colspan="' + (res.mode === 'between' ? 4 : 3) + '" class="br">' + (it.partial ? '（日付の欄が空）' : '（空の行）') + '</td></tr>'; continue; }
+      if (res.mode === 'between') {
+        var aTxt = it.start != null ? screenDate(it.start) : esc(clip(trimSpaces(it.input.single ? it.input.raw : it.input.a), 30));
+        var bTxt = it.end != null ? screenDate(it.end) : (it.input.single ? '' : esc(clip(trimSpaces(it.input.b || ''), 30)));
+        if (it.kind === 'ok') html += '<td class="in">' + aTxt + '</td><td class="in">' + bTxt + '</td><td class="out">' + fmtNum(it.open) + '日</td><td class="br">' + fmtNum(it.days) + '日のうち休み' + fmtNum(it.closed) + '日（' + esc(breakdownText(it.b)) + '）</td>';
+        else html += '<td class="in">' + aTxt + '</td><td class="in">' + bTxt + '</td><td class="out" colspan="2">' + esc(rowError(res, it)) + '</td>';
+      } else {
+        var inTxt = it.start != null ? screenDate(it.start) : esc(clip(trimSpaces(it.input.a), 30));
+        if (it.kind === 'ok') html += '<td class="in">' + inTxt + '</td><td class="out">' + esc(fmtDate(it.out, fmtStyle(), true)) + '</td><td class="br">' + (it.skipped ? fmtNum(it.skipped) + '日（' + esc(breakdownText(it.b)) + '）' : 'なし') + '</td>';
+        else html += '<td class="in">' + inTxt + '</td><td class="out" colspan="2">' + esc(rowError(res, it)) + '</td>';
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+    if (res.rows.length > MAX_SHOW) html += '<p class="more-rows">表示は先頭の' + fmtNum(MAX_SHOW) + '行までです。コピーにはすべての行（' + fmtNum(res.rows.length) + '行）が入ります。</p>';
+    tableWrap.innerHTML = html;
+    resultCount.textContent = fmtNum(res.ok) + '件' + (res.rows.length - res.ok - (res.header ? 1 : 0) - countEmpty(res) > 0 ? '（計算できない行 ' + fmtNum(res.rows.length - res.ok - (res.header ? 1 : 0) - countEmpty(res)) + '件）' : '');
+  }
+  function countEmpty(res) { var c = 0; res.rows.forEach(function (it) { if (it.kind === 'empty') c++; }); return c; }
+  function rowError(res, it) {
+    if (it.kind === 'bad') {
+      if (res.mode === 'between' && it.why === 'single') return '読めない日付：終了日がありません（2列にするか「〜」でつないでください）';
+      if (it.why === 'mixed') return '読めない日付：日付のほかに文字があります';
+      return '読めない日付';
+    }
+    if (it.kind === 'range') return '祝日表の範囲外（' + HOL_FIRST_YEAR + '〜' + HOL_LAST_YEAR + '年）のため計算していません';
+    if (it.kind === 'none') return '営業日が見つかりません';
+    if (it.kind === 'order') return '終了日が開始日より前です';
+    if (it.kind === 'long') return '期間が100年を超えるため計算していません';
+    return '';
+  }
+
+  // ---------- カレンダー ----------
+  var calMonth = null;   // {y, m}
+  var calUser = false;
+  function firstDate() {
+    if (!last) return null;
+    for (var i = 0; i < last.rows.length; i++) if (last.rows[i].start != null) return last.rows[i].start;
+    return null;
+  }
+  function renderCalendar() {
+    var r = last ? last.rules : readRules();
+    if (!calUser || !calMonth) { var f = firstDate(); var t = ymd(f != null ? f : TODAY); calMonth = { y: t.y, m: t.m }; }
+    var y = calMonth.y, m = calMonth.m;
+    $('calMonth').textContent = y + '年' + m + '月';
+    var first = dayNum(y, m, 1), days = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    var html = '<table class="cal" aria-labelledby="calTitle calMonth"><thead><tr>';
+    for (var i = 0; i < 7; i++) html += '<th scope="col" abbr="' + WD[i] + '曜">' + WD[i] + '</th>';
+    html += '</tr></thead><tbody><tr>';
+    var lead = weekday(first);
+    for (var b = 0; b < lead; b++) html += '<td class="blank"></td>';
+    var list = [];
+    var labels = { weekend: '', holiday: '祝', regular: '定休', temp: '臨休', open: '営業' };
+    var anyOut = false;
+    for (var d = 1; d <= days; d++) {
+      var n = first + d - 1, k = closedKind(n, r);
+      var hol = HOLIDAYS[isoKey(n)];
+      if (outOfTable(n, r)) anyOut = true;
+      var cls = k ? 'c-' + k : '';
+      if (n === TODAY) cls += ' today';
+      var desc = m + '月' + d + '日 ' + WD[weekday(n)] + '曜 ' + (isOpen(k) ? '営業日' + (k === 'open' ? '（臨時営業）' : '') : '休み（' + KIND_NAMES[k] + (k === 'holiday' ? '：' + hol : '') + '）');
+      html += '<td' + (cls ? ' class="' + cls.trim() + '"' : '') + ' title="' + esc(desc) + '"><span class="d" aria-hidden="true">' + d + '</span><span class="t" aria-hidden="true">' + (labels[k] || '') + '</span><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">' + esc(desc) + '</span></td>';
+      if (weekday(n) === 6 && d < days) html += '</tr><tr>';
+      if (k && k !== 'weekend') list.push(d + '日（' + WD[weekday(n)] + '）' + (k === 'holiday' ? hol + '（祝日）' : k === 'open' ? '臨時営業日' + (hol ? '（' + hol + '）' : '') : k === 'temp' ? '臨時休業日' + (hol ? '（' + hol + '）' : '') : '定休日' + (hol ? '（' + hol + '）' : '')));
+      else if (k === 'weekend' && hol) list.push(d + '日（' + WD[weekday(n)] + '）' + hol + '（土日の休み）');
+    }
+    var tail = (7 - weekday(first + days - 1) - 1);
+    for (var e = 0; e < tail; e++) html += '<td class="blank"></td>';
+    html += '</tr></tbody></table>';
+    $('calBox').innerHTML = html;
+    var ul = $('calList');
+    ul.innerHTML = '';
+    ul.className = 'cal-list' + (list.length ? '' : ' none');
+    if (anyOut) list.unshift('この月は祝日表（' + HOL_FIRST_YEAR + '〜' + HOL_LAST_YEAR + '年）の外のため、祝日を表示していません。');
+    if (!list.length) list.push('この月は、土日のほかに休み・臨時営業日はありません。');
+    list.forEach(function (s) { var li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
+  }
+  $('calPrev').addEventListener('click', function () { calUser = true; calMonth.m--; if (calMonth.m < 1) { calMonth.m = 12; calMonth.y--; } if (calMonth.y < 1900) { calMonth.y = 1900; calMonth.m = 1; } renderCalendar(); setStatus(setStatusEl, 'カレンダーを' + calMonth.y + '年' + calMonth.m + '月にしました。'); });
+  $('calNext').addEventListener('click', function () { calUser = true; calMonth.m++; if (calMonth.m > 12) { calMonth.m = 1; calMonth.y++; } if (calMonth.y > 2099) { calMonth.y = 2099; calMonth.m = 12; } renderCalendar(); setStatus(setStatusEl, 'カレンダーを' + calMonth.y + '年' + calMonth.m + '月にしました。'); });
+
+  // ---------- 毎月の第何曜日 ----------
+  function renderNth() {
+    nthList.innerHTML = '';
+    nthRules.sort(function (p, q) { return p.n - q.n || ((p.w + 6) % 7) - ((q.w + 6) % 7); });
+    nthRules.forEach(function (x, i) {
+      var li = document.createElement('li');
+      li.appendChild(document.createTextNode('第' + x.n + WD[x.w] + '曜'));
+      var bt = document.createElement('button');
+      bt.type = 'button';
+      bt.textContent = '×';
+      bt.setAttribute('aria-label', '第' + x.n + WD[x.w] + '曜を外す');
+      bt.addEventListener('click', function () {
+        lastPressed = $('nthAdd');
+        nthRules.splice(nthRules.indexOf(x), 1);
+        renderNth();
+        render();
+        afterSetting('第' + x.n + WD[x.w] + '曜を休みから外しました。');
+        var btns = nthList.querySelectorAll('button');
+        if (btns.length) btns[Math.min(i, btns.length - 1)].focus({ preventScroll: true }); else $('nthAdd').focus({ preventScroll: true });
+      });
+      li.appendChild(bt);
+      nthList.appendChild(li);
+    });
+    nthEmpty.hidden = nthRules.length > 0;
+  }
+  $('nthAdd').addEventListener('click', function () {
+    var x = { n: +nthN.value, w: +nthW.value };
+    var name = '第' + x.n + WD[x.w] + '曜';
+    for (var i = 0; i < nthRules.length; i++) if (nthRules[i].n === x.n && nthRules[i].w === x.w) { setStatus(setStatusEl, name + 'はもう入っています。ほかの曜日にするときは、上の2つの欄を選び直してから「追加」を押してください。', true); return; }
+    nthRules.push(x);
+    renderNth();
+    render();
+    afterSetting(name + 'を休みに追加しました。');
+  });
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && el.type !== 'text' && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    [status, setStatusEl].forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    unpin();
+    [status, setStatusEl].forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  function resultWord() {
+    if (!last || last.errors.length) return '';
+    if (!last.ok) return '';
+    return '結果（' + fmtNum(last.ok) + '件）を計算し直しました。';
+  }
+  function afterSetting(prefix) {
+    resetCopyButtons();
+    if (last && last.errors.length) { setStatus(setStatusEl, prefix + (prefix ? '' : '') + '直すところがあります。日付の列の下のまとめを見てください。', true); return; }
+    setStatus(setStatusEl, prefix + resultWord());
+  }
+
+  // ---------- コピー ----------
+  var LABELS = { copyCol: '結果の列をコピー', copyTable: '表をコピー' };
+  var copyTimer = null;
+  function resetCopyButtons() { clearTimeout(copyTimer); manualBox.hidden = true; copyCol.textContent = LABELS.copyCol; copyTable.textContent = LABELS.copyTable; }
+  function flashButton(btn, label, ms) {
+    resetCopyButtons();
+    btn.textContent = label;
+    copyTimer = setTimeout(resetCopyButtons, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(btn, text) {
+    flashButton(btn, 'コピー失敗', 4000);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, btn.getBoundingClientRect().top - 8)));
+    setStatus(status, 'コピーできませんでした。コピーのボタンの下の「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message) {
+    var done = function () { manualBox.hidden = true; setStatus(status, message); flashButton(btn, '✓ コピー済み', 2500); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(btn, text); });
+        return;
+      }
+    } catch (e) { /* 下の方法で試す */ }
+    if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+  }
+  copyCol.addEventListener('click', function () {
+    render();
+    if (copyCol.disabled) return;
+    var n = last.rows.length;
+    doCopy(copyCol, columnText(last), '結果の列を' + fmtNum(n) + '行コピーしました' + (last.header ? '（' + last.headLine + '行目は見出し「' + headTitle(last) + '」）' : '') + '。Excelで、入力の日付と同じ行の結果を入れたい列の' + (last.header ? '見出しのセル' : '先頭のセル') + 'を選んで貼り付けてください。');
+  });
+  copyTable.addEventListener('click', function () {
+    render();
+    if (copyTable.disabled) return;
+    var rows = tableRows(last);
+    doCopy(copyTable, rows.map(function (r) { return r.map(tsvCell).join(TAB); }).join(LF), '表を' + fmtNum(rows.length) + '行×' + rows[0].length + '列コピーしました（1行目は見出し）。Excelやスプレッドシートで、左上にしたいセルを選んで貼り付けてください。');
+  });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE_AFTER = ['注文番号' + TAB + '注文日', 'A-1001' + TAB + '2026/10/30', 'A-1002' + TAB + '2026/10/31', 'A-1003' + TAB + '2026/11/2', 'A-1004' + TAB + '2026/11/20', 'A-1005' + TAB + '2026/12/28'].join(LF);
+  var SAMPLE_BETWEEN = ['案件' + TAB + '開始日' + TAB + '終了日', '見積もり' + TAB + '2026/11/2' + TAB + '2026/11/13', '制作' + TAB + '2026/11/16' + TAB + '2026/12/11', '納品準備' + TAB + '2026/12/14' + TAB + '2027/1/8'].join(LF);
+  $('sampleBtn').addEventListener('click', function () {
+    var had = datesEl.value.trim() !== '';
+    var md = mode();
+    datesEl.value = md === 'between' ? SAMPLE_BETWEEN : SAMPLE_AFTER;
+    colState.userA = colState.userB = null;
+    calUser = false;
+    resetCopyButtons();
+    manualBox.hidden = true;
+    render();
+    setStatus(status, (had ? fieldName() + 'を例に入れ替えました（前の内容は消えました）。' : fieldName() + 'に例を入れました。') + (md === 'between' ? '案件の開始日と終了日の表です。' : '注文番号と注文日の表で、注文日の列（B列）を使います。') + resultWord());
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = datesEl.value !== '';
+    datesEl.value = '';
+    colState.userA = colState.userB = null;
+    calUser = false;
+    resetCopyButtons();
+    manualBox.hidden = true;
+    render();
+    setStatus(status, had ? fieldName() + 'を空にしました（休みの設定はそのままです）。' : fieldName() + 'はもう空です。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  datesEl.addEventListener('input', function (e) {
+    if (e && e.inputType === 'insertFromPaste') { colState.userA = colState.userB = null; calUser = false; }
+    clearTimeout(inputTimer);
+    resetCopyButtons();
+    manualBox.hidden = true;
+    setStatus(status, '');
+    var pasted = e && e.inputType === 'insertFromPaste';
+    inputTimer = setTimeout(function () { render(); if (pasted) setStatus(status, pasteMessage()); }, 150);
+  });
+  colA.addEventListener('change', function () { colState.userA = +colA.value; resetCopyButtons(); render(); setStatus(status, (mode() === 'between' ? '開始日の列' : '日付の列') + 'を' + colName(+colA.value) + 'にしました。' + resultWord(), false); });
+  colB.addEventListener('change', function () { colState.userB = +colB.value; resetCopyButtons(); render(); setStatus(status, '終了日の列を' + colName(+colB.value) + 'にしました。' + resultWord()); });
+  function pasteMessage() {
+    if (!last) return '';
+    if (last.errors.length) return '貼り付けました。直すところがあります。上のまとめを見てください。';
+    var real = last.rows.filter(function (it) { return it.kind !== 'head' && it.kind !== 'empty'; }).length;
+    if (!real) return '貼り付けました。計算できる行がありません。上のまとめを見てください。';
+    var ng = real - last.ok;
+    return '貼り付けた' + fmtNum(real) + '件のうち' + fmtNum(last.ok) + '件を計算しました。' + (ng ? '計算できない行が' + fmtNum(ng) + '件あります。上のまとめと下の結果の表を見てください。' : '結果は下の表です。');
+  }
+  function fieldName() { return mode() === 'between' ? '期間の表' : '日付の列'; }
+  function updateModeUi() {
+    var md = mode();
+    $('daysField').hidden = md === 'between';
+    $('inclField').hidden = md !== 'between';
+    $('daysWord').textContent = md === 'before' ? '前' : '後';
+    $('daysUnit').textContent = md === 'before' ? '営業日前' : '営業日後';
+    $('datesLabel').firstChild.textContent = md === 'between' ? '期間の表 ' : '日付の列 ';
+  }
+  modeInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      updateModeUi();
+      colState.userA = colState.userB = null;
+      resetCopyButtons();
+      render();
+      var md = mode();
+      var name = md === 'after' ? '「営業日後」' : md === 'before' ? '「営業日前」' : '「2つの日付の間の営業日数」';
+      var hint = md === 'between' ? '開始日と終了日の2列の表（または「2026/10/1〜2026/10/31」）を貼り付けてください。' : '';
+      setStatus(status, '計算の種類を' + name + 'にしました。' + hint + resultWord());
+    });
+  });
+  daysEl.addEventListener('input', function () {
+    resetCopyButtons();
+    render();
+    if (last.errors.length) setStatus(status, '日数を読めません。0〜3,650の整数を入れてください。', true);
+    else setStatus(status, '日数を' + fmtNum(last.nDays) + '営業日' + (mode() === 'after' ? '後' : '前') + 'にしました。' + resultWord());
+  });
+  inclStart.addEventListener('change', function () { resetCopyButtons(); render(); setStatus(status, (inclStart.checked ? '開始日も数えるようにしました。' : '開始日の翌日から数えるようにしました。') + resultWord()); });
+  weekdayInputs.forEach(function (el) {
+    el.addEventListener('change', function () { render(); afterSetting(WD[+el.value] + '曜を' + (el.checked ? '休みにしました。' : '営業日にしました。')); });
+  });
+  useHoliday.addEventListener('change', function () { render(); afterSetting(useHoliday.checked ? '祝日を休みにしました。' : '祝日を営業日にしました。'); });
+  function listInput(el, name) {
+    var t = null;
+    el.addEventListener('input', function () {
+      clearTimeout(t);
+      t = setTimeout(function () {
+        render();
+        var info = el === tempOff ? last.rules.off : last.rules.on;
+        var msg = name + 'を' + fmtNum(info.count) + '日にしました。';
+        if (info.bad.length) { setStatus(setStatusEl, msg + listBad(info.bad, 1) + 'は使っていません。2026/11/20 や 2026/12/29〜2027/1/4 の形で入れてください。', true); resetCopyButtons(); return; }
+        afterSetting(msg);
+      }, 200);
+    });
+  }
+  listInput(tempOff, '臨時休業日');
+  listInput(tempOn, '臨時営業日');
+  baseYearEl.addEventListener('input', function () {
+    render();
+    if (last.rules.baseYear == null) { setStatus(setStatusEl, '「年のない日付の年」を読めません。1900〜2099の年を入れてください。', true); resetCopyButtons(); return; }
+    afterSetting('年のない日付を' + last.rules.baseYear + '年として読みます。');
+  });
+  fmtInputs.forEach(function (el) { el.addEventListener('change', function () { render(); afterSetting('結果の日付の書き方を「' + fmtDate(dayNum(2026, 10, 23), el.value, withWd.checked) + '」の形にしました（コピーする結果に使います）。'); }); });
+  withWd.addEventListener('change', function () { render(); afterSetting(withWd.checked ? 'コピーする結果の日付に曜日を付けます（例：' + fmtDate(dayNum(2026, 10, 23), fmtStyle(), true) + '）。曜日を付けると、Excelでは日付ではなく文字として扱われます。' : 'コピーする結果の日付に曜日を付けないようにしました。'); });
+  saveSettings.addEventListener('change', function () {
+    if (saveSettings.checked) {
+      if (store('set', JSON.stringify(collectSettings()))) setStatus(setStatusEl, '休みの設定をこのブラウザに保存しました。次に開いたときに、この設定から始まります（貼り付けた日付は保存しません）。');
+      else { saveSettings.checked = false; setStatus(setStatusEl, 'このブラウザでは設定を保存できませんでした（プライベートブラウズなど）。設定はこのページを開いている間だけ使えます。', true); }
+    } else { store('remove'); setStatus(setStatusEl, '保存していた休みの設定を、このブラウザから消しました。'); }
+  });
+
+  // ---------- 設定の保存（任意） ----------
+  function store(op, value) {
+    try {
+      if (op === 'set') { window.localStorage.setItem(STORE_KEY, value); return true; }
+      if (op === 'get') return window.localStorage.getItem(STORE_KEY);
+      if (op === 'remove') { window.localStorage.removeItem(STORE_KEY); return true; }
+    } catch (e) { return op === 'get' ? null : false; }
+    return null;
+  }
+  function collectSettings() {
+    return { v: 1, weekdays: weekdayInputs.filter(function (el) { return el.checked; }).map(function (el) { return +el.value; }), holiday: useHoliday.checked, nth: nthRules.slice(), off: tempOff.value, on: tempOn.value, mode: mode(), days: daysEl.value, incl: inclStart.checked, fmt: fmtStyle(), wd: withWd.checked };
+  }
+  function saveIfOn() { if (saveSettings.checked) store('set', JSON.stringify(collectSettings())); }
+  function loadSettings() {
+    var raw = store('get');
+    if (!raw) return false;
+    var s;
+    try { s = JSON.parse(raw); } catch (e) { return false; }
+    if (!s || s.v !== 1) return false;
+    weekdayInputs.forEach(function (el) { el.checked = Array.isArray(s.weekdays) && s.weekdays.indexOf(+el.value) >= 0; });
+    useHoliday.checked = !!s.holiday;
+    nthRules = Array.isArray(s.nth) ? s.nth.filter(function (x) { return x && x.n >= 1 && x.n <= 5 && x.w >= 0 && x.w <= 6; }).map(function (x) { return { n: +x.n, w: +x.w }; }) : [];
+    tempOff.value = typeof s.off === 'string' ? s.off : '';
+    tempOn.value = typeof s.on === 'string' ? s.on : '';
+    modeInputs.forEach(function (el) { el.checked = el.value === s.mode; });
+    if (!modeInputs.some(function (el) { return el.checked; })) modeInputs[0].checked = true;
+    if (typeof s.days === 'string') daysEl.value = s.days;
+    inclStart.checked = s.incl !== false;
+    fmtInputs.forEach(function (el) { el.checked = el.value === s.fmt; });
+    if (!fmtInputs.some(function (el) { return el.checked; })) fmtInputs[0].checked = true;
+    withWd.checked = !!s.wd;
+    saveSettings.checked = true;
+    return true;
+  }
+
+  var loaded = loadSettings();
+  updateModeUi();
+  renderNth();
+  render();
+  if (loaded) setStatus(setStatusEl, 'このブラウザに保存していた休みの設定を読み込みました。');
+
+  // テスト用（画面の動作には使わない）
+  window.__eigyobi = { parseDate: parseDate, dayNum: dayNum, ymd: ymd, holidays: HOLIDAYS, parseTable: parseTable };
+})();
+</script>
+</body>
+</html>
