@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>番号の欠番・重複チェック - 請求書番号の抜け・重複を一括確認｜AIツールひろば</title>
+  <meta name="description" content="請求書番号・受注番号・伝票番号の列を貼り付けるだけで、欠番（抜けた番号）・重複・桁数や接頭辞の違いをまとめてチェックできる無料ツールです。判定の列はExcelに貼り戻せます。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/bango-check/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="番号の欠番・重複チェック - 請求書番号の抜け・重複を一括確認｜AIツールひろば">
+  <meta property="og:description" content="請求書番号・受注番号・伝票番号の列を貼り付けるだけで、欠番（抜けた番号）・重複・桁数や接頭辞の違いをまとめてチェックできる無料ツールです。判定の列はExcelに貼り戻せます。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/bango-check/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/bango-check.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "番号の欠番・重複チェック",
+    "description": "請求書番号・受注番号・伝票番号の列を貼り付けるだけで、欠番（抜けた番号）・重複・桁数や接頭辞の違いをまとめてチェックできる無料ツールです。判定の列はExcelに貼り戻せます。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/bango-check/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "番号の欠番・重複チェック",
+        "item": "https://autotoolspublisher-ui.github.io/tools/bango-check/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "「INV-0012」や「2026-0012」のような番号も調べられますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。番号のいちばん後ろの数字の部分を番号の数、その前を接頭辞、後ろを接尾辞として読みます。「2026-0012」のように数字が2か所ある番号は、後ろの「0012」を番号の数として読み、そのことをまとめに出します。全角の数字・英字も半角として読み、3桁ごとのカンマ（1,998）は1つの数として読みます。接頭辞・接尾辞が違う番号（INV- と PO- など）は、はじめの設定では別々の連番として欠番と重複を調べ、多い書き方と違う行を「接頭辞違い」「接尾辞違い」として知らせます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「0012」と「12」は同じ番号として扱いますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。同じ連番の中で数の値が同じ番号は、重複として数えます。桁数は、多い書き方（4桁の0埋めなど）に合わせて、合わない行を「桁数違い」として知らせます。0埋めしない番号が多いときは、0埋めした「0012」のほうが桁数違いになります。9999の次の10000のように、桁が増えただけの番号は桁数違いにしません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "欠番は、どこからどこまでの範囲で探しますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はじめの設定では、連番ごとのいちばん小さい番号から大きい番号までの間で探します。「欠番を探す範囲」で「開始と終了を指定」を選ぶと、1〜2000のように決めた範囲で探し、最後の番号より後ろの欠番も見つけます。範囲の外の番号には「範囲外」と出します。欠番は「欠番をコピー」で1行に1つずつコピーできます（10,000個を超えるときは「〜」でまとめた形になります）。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "判定の列は、Excelにどう貼り戻せばよいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「判定の列をコピー」を押し、Excelで、番号の1行目（見出しがあれば見出しの行）と同じ行の、空いた列のセルを選んで貼り付けます。貼り付けた内容と同じ行数で、元の並び順のままです。見出しの行は「判定」、問題のない行と空の行は空欄、問題のある行は「重複（2回目／全2回）」「桁数違い（3桁、ほかは4桁）」などになるので、フィルターで問題のある行だけを表示できます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。調べる処理はすべてお使いのブラウザの中で行い、貼り付けた番号が外部に送信されることはありません。ブラウザに保存することもありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --bad: #b3261e; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に入力と設定、右に結果。狭い幅：入力 → 結果 → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "input result" "settings result"; gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-input { grid-area: input; }
+  .area-result { grid-area: result; padding-left: 30px; border-left: 1px solid #e8eaed; }
+  .area-settings { grid-area: settings; margin-top: 8px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .area-settings h2, .area-result h2 { margin: 0 0 10px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend, .setting > .label { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; max-width: 100%; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; line-height: 1.3; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .field { min-width: 0; margin: 0 0 14px; }
+  .field label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint, .label small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  input[type="text"], select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  select { max-width: 100%; }
+  input[type="text"]:focus, select:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  input.bad { border-color: var(--bad) !important; box-shadow: 0 0 0 1px var(--bad) !important; }
+  .sub-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 8px 0 0; }
+  .sub-row label { color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .sub-row input[type="text"] { width: 9em; }
+  .sub-row input.short { width: 5em; text-align: right; }
+  textarea { display: block; width: 100%; min-height: 220px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: .95rem/1.55 inherit; font-family: inherit; resize: vertical; tab-size: 8; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  button.btn.copy { min-width: 11.5em; }
+  .colrow { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 14px; margin: 0 0 10px; }
+  .colrow .field { margin: 0; flex: 1 1 12em; }
+  .colrow select { width: 100%; }
+  .jump-row { display: none; margin: -4px 0 6px; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* まとめ（数の枠） */
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; padding: 0; list-style: none; }
+  .stats li { display: flex; flex-direction: column; justify-content: center; min-height: 74px; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; }
+  .stats .v { color: #202124; font-size: 1.25rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
+  .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
+  .stats li.has .v { color: #7a4f01; }
+  .stats li.clear .v { color: var(--ok); }
+  /* 知らせ・まとめの文。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .summary { min-height: 110px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary .main { display: block; font-weight: 600; color: var(--ok); }
+  .summary .main.warn { color: var(--warn-ink); }
+  .summary .main.err { color: var(--bad); }
+  .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  #setStatus { min-height: 66px; }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .manual { margin: 0 0 12px; }
+  .manual textarea { min-height: 96px; }
+  .view { margin: 4px 0 8px; }
+  .table-wrap { height: 380px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .table-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  table.res { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.45; }
+  table.res th, table.res td { padding: 7px 10px; border-bottom: 1px solid #eceef1; text-align: left; vertical-align: top; }
+  table.res thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); color: #3c4043; font-weight: 600; white-space: nowrap; }
+  table.res td.num { color: var(--muted); text-align: right; white-space: nowrap; width: 1%; }
+  table.res td.num.note { white-space: normal; text-align: left; width: auto; min-width: 7em; color: #7a4f01; }
+  table.res td.no { font-weight: 600; overflow-wrap: anywhere; }
+  table.res td.txt { overflow-wrap: anywhere; }
+  table.res td.bad { color: #a50e0e; font-weight: 600; overflow-wrap: anywhere; }
+  table.res tr.muted td { color: var(--muted); font-weight: 400; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; }
+  .more-rows { margin: 0; padding: 8px 12px; color: var(--muted); font-size: .875rem; }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .area-result { margin-top: 18px; padding: 18px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    textarea { min-height: 168px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats li { min-height: 62px; }
+    .summary { min-height: 176px; }
+    .status, #setStatus { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
+    table.res th, table.res td { padding: 6px 7px; }
+    .table-wrap { height: 340px; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .summary { min-height: 220px; }
+    .status, #setStatus { min-height: 110px; }
+    .chip span { padding: 6px 10px; }
+    button.btn.copy { padding-left: 6px; padding-right: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">番号の欠番・重複チェック</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">NUMBER CHECK</p>
+    <h1>番号の欠番・重複チェック</h1>
+    <p>請求書番号・受注番号・伝票番号などの列を貼り付けると、抜けている番号（欠番）、重複、桁数や接頭辞の違いをまとめて一覧にします。<span class="more">並べ替えて目で追ったり、COUNTIF やマクロを組んだりしなくても、「INV-0012」のような接頭辞つきの番号をそのまま調べられ、行ごとの判定の列をExcelに貼り戻せます。</span></p>
+  </header>
+
+  <section class="card" aria-label="番号の欠番・重複チェック">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>番号の列（Excelの列や表）を貼り付けます。</li>
+        <li>欠番・重複・形式の違いの一覧を確かめます。</li>
+        <li>「判定の列をコピー」を押し、Excelの空いた列に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-input">
+        <div class="field">
+          <label for="nums">番号の列 <small>（1行に1件。Excelの列や表をそのまま貼り付けられます）</small></label>
+          <textarea id="nums" spellcheck="false" placeholder="例：&#10;請求書番号&#10;INV-0001&#10;INV-0002&#10;INV-0004"></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+        <div class="colrow">
+          <div class="field" id="colField" hidden><label for="colSel">番号の列</label><select id="colSel"></select></div>
+          <div class="chips"><label class="chip"><input type="checkbox" id="headChk"><span>1行目は見出し</span></label></div>
+        </div>
+      </div>
+
+      <div class="area-result" id="resultArea">
+        <h2 id="resultTitle">結果</h2>
+        <ul class="stats" id="stats" aria-label="まとめ">
+          <li id="stTotal"><span class="k">番号</span><span class="v">–</span></li>
+          <li id="stGap"><span class="k">欠番</span><span class="v">–</span></li>
+          <li id="stDup"><span class="k">重複</span><span class="v">–</span></li>
+          <li id="stFmt"><span class="k">形式の違い</span><span class="v">–</span></li>
+        </ul>
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <div class="actions">
+          <button type="button" class="btn primary copy" id="copyCol" disabled>判定の列をコピー</button>
+          <button type="button" class="btn copy" id="copyGap" disabled>欠番をコピー</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText" style="display:block;margin-bottom:4px;color:#3c4043;font-weight:600;font-size:.94rem;">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+        <fieldset class="setting view">
+          <legend>表示する一覧</legend>
+          <div class="chips" id="viewChips">
+            <label class="chip"><input type="radio" name="view" value="gap" checked><span>欠番</span></label>
+            <label class="chip"><input type="radio" name="view" value="dup"><span>重複</span></label>
+            <label class="chip"><input type="radio" name="view" value="fmt"><span>形式の違い</span></label>
+            <label class="chip"><input type="radio" name="view" value="all"><span>すべての行</span></label>
+          </div>
+        </fieldset>
+        <div class="table-wrap" id="tableWrap" tabindex="0" aria-label="一覧"></div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2>読み方の設定</h2>
+        <p class="jump-row"><a class="jump" href="#resultTitle">▲ 結果を見る</a></p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <fieldset class="setting">
+          <legend>接頭辞・接尾辞が違う番号</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="group" value="sep" checked><span>別々の連番として数える</span></label>
+            <label class="chip"><input type="radio" name="group" value="one"><span>まとめて1つの連番にする</span></label>
+          </div>
+          <p class="hint">接頭辞は番号の前の文字（INV-0012 の「INV-」）、接尾辞は後ろの文字です。番号の数は、いちばん後ろの数字の部分です。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>欠番を探す範囲</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="range" value="auto" checked><span>いちばん小さい番号〜大きい番号</span></label>
+            <label class="chip"><input type="radio" name="range" value="fixed"><span>開始と終了を指定</span></label>
+          </div>
+          <div class="sub-row" id="rangeRow" hidden>
+            <label for="rangeFrom">開始</label><input type="text" id="rangeFrom" autocomplete="off" spellcheck="false" placeholder="例：1">
+            <label for="rangeTo">終了</label><input type="text" id="rangeTo" autocomplete="off" spellcheck="false" placeholder="例：2000">
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>桁数（0埋め）の基準</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="width" value="auto" checked><span>多い書き方に合わせる</span></label>
+            <label class="chip"><input type="radio" name="width" value="fixed"><span>桁数を指定</span></label>
+          </div>
+          <div class="sub-row" id="widthRow" hidden>
+            <input type="text" id="widthN" class="short" inputmode="numeric" autocomplete="off" value="4" aria-label="桁数"><label for="widthN">桁（0001 なら4桁）</label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>形式の違い</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="affixChk" checked><span>接頭辞・接尾辞の違いを知らせる</span></label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <p class="note">番号の数はいちばん後ろの数字の部分で、全角の数字・英字も半角として読みます。番号は30桁まで調べられ、20桁を超える伝票番号でも誤差なく調べます。3桁ごとのカンマ（1,998）は1つの数として読みます。</p>
+    <div class="privacy">貼り付けた番号は、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>請求書番号の台帳から、欠番・重複・書き方の違いをまとめて見つける</h3>
+      <dl>
+        <dt>入力</dt><dd>「例を入れる」の表（請求書番号・金額の2列、17件：INV-0001〜INV-0006、INV-0008〜INV-0012、INV-0012（2回目）、INV-0016、INV-0017、INV-018、INV0019、INV-0020）</dd>
+        <dt>設定</dt><dd>はじめの設定のまま（見出しの「番号」から請求書番号の列（A列）が自動で選ばれ、1行目は見出しとして飛ばします）</dd>
+        <dt>結果</dt><dd>「欠番 5個・重複 1番号・形式の違い 2行が見つかりました。」と表示されます。欠番は INV-0007、INV-0013〜INV-0015、INV-0019、重複は INV-0012（12・13行目）、形式の違いは INV-018（桁数違い：3桁、ほかは4桁）と INV0019（接頭辞違い：「INV」、多いのは「INV-」）で、欠番の INV-0019 の行には「形式の違う「INV0019」が17行目にあります」と出ます。「判定の列をコピー」で、1行目の「判定」と17件の判定の18行がコピーされます。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>全角がまじった受注番号を、決めた範囲（1〜8）で調べる</h3>
+      <dl>
+        <dt>入力</dt><dd>2026-001、2026-002、2026-004、2026-002、2026-005、２０２６－００７（1行に1件、見出しなし）</dd>
+        <dt>設定</dt><dd>欠番を探す範囲：開始と終了を指定（開始 1、終了 8）</dd>
+        <dt>結果</dt><dd>欠番は 2026-003、2026-006、2026-008 の3個、重複は 2026-002（2・4行目）です。全角の「２０２６－００７」も 2026-007 として読みます。まとめに「6件は数字が2か所以上あり、後ろの数字を番号の数として読みました（例：2026-001 は 001）。」と出ます。判定の列は、2行目が「重複（1回目／全2回）」、4行目が「重複（2回目／全2回）」で、ほかの行は空欄です。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>「INV-0012」や「2026-0012」のような番号も調べられますか？</summary>
+      <p>はい。番号のいちばん後ろの数字の部分を番号の数、その前を接頭辞、後ろを接尾辞として読みます。「2026-0012」のように数字が2か所ある番号は、後ろの「0012」を番号の数として読み、そのことをまとめに出します。全角の数字・英字も半角として読み、3桁ごとのカンマ（1,998）は1つの数として読みます。接頭辞・接尾辞が違う番号（INV- と PO- など）は、はじめの設定では別々の連番として欠番と重複を調べ、多い書き方と違う行を「接頭辞違い」「接尾辞違い」として知らせます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「0012」と「12」は同じ番号として扱いますか？</summary>
+      <p>はい。同じ連番の中で数の値が同じ番号は、重複として数えます。桁数は、多い書き方（4桁の0埋めなど）に合わせて、合わない行を「桁数違い」として知らせます。0埋めしない番号が多いときは、0埋めした「0012」のほうが桁数違いになります。9999の次の10000のように、桁が増えただけの番号は桁数違いにしません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>欠番は、どこからどこまでの範囲で探しますか？</summary>
+      <p>はじめの設定では、連番ごとのいちばん小さい番号から大きい番号までの間で探します。「欠番を探す範囲」で「開始と終了を指定」を選ぶと、1〜2000のように決めた範囲で探し、最後の番号より後ろの欠番も見つけます。範囲の外の番号には「範囲外」と出します。欠番は「欠番をコピー」で1行に1つずつコピーできます（10,000個を超えるときは「〜」でまとめた形になります）。</p>
+    </details>
+    <details class="faq-item">
+      <summary>判定の列は、Excelにどう貼り戻せばよいですか？</summary>
+      <p>「判定の列をコピー」を押し、Excelで、番号の1行目（見出しがあれば見出しの行）と同じ行の、空いた列のセルを選んで貼り付けます。貼り付けた内容と同じ行数で、元の並び順のままです。見出しの行は「判定」、問題のない行と空の行は空欄、問題のある行は「重複（2回目／全2回）」「桁数違い（3桁、ほかは4桁）」などになるので、フィルターで問題のある行だけを表示できます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。調べる処理はすべてお使いのブラウザの中で行い、貼り付けた番号が外部に送信されることはありません。ブラウザに保存することもありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../list-hikaku/"><strong>リスト比較</strong><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></a></li>
+      <li><a href="../hyo-markdown/"><strong>表マークダウン変換</strong><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></a></li>
+      <li><a href="../gyo-bunkatsu/"><strong>セルを行に分割</strong><span>セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></a></li>
+      <li><a href="../kugiri-henkan/"><strong>区切り変換くん</strong><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（17件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var TAB = String.fromCharCode(9);
+  var LF = String.fromCharCode(10);
+  var QUOTE = String.fromCharCode(34);
+  var SEP = String.fromCharCode(1);
+  var SPACE_CODES = [32, 9, 10, 13, 160, 12288];   // 半角スペース・タブ・改行・U+00A0・全角スペース
+  var MAX_ROWS = 50000;
+  var MAX_DIGITS = 30;
+  var MAX_SHOW = 500;
+  var MAX_EXPAND = 10000;
+  var HEAD_WORDS = ['番号', 'コード', 'ID', 'Id', '伝票', '請求書', '受注', '注文', 'No', 'NO', 'no', '№'];
+  var ONE = BigInt(1);
+  var ZERO = BigInt(0);
+
+  function isSpace(c) { return SPACE_CODES.indexOf(c) >= 0; }
+  function isDigit(c) { return c >= 48 && c <= 57; }
+  function trimSp(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charCodeAt(a))) a++;
+    while (b > a && isSpace(s.charCodeAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  // 全角の英数字・記号（U+FF01〜U+FF5E）を半角に、全角スペースを半角スペースにする
+  function toHalf(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c >= 0xFF01 && c <= 0xFF5E) out += String.fromCharCode(c - 0xFEE0);
+      else if (c === 12288) out += ' ';
+      else out += s.charAt(i);
+    }
+    return out;
+  }
+  function hasDigit(s) {
+    var h = toHalf(s);
+    for (var i = 0; i < h.length; i++) if (isDigit(h.charCodeAt(i))) return true;
+    return false;
+  }
+  function fmtNum(v) { return String(v).replace(/[0-9](?=(?:[0-9]{3})+$)/g, '$&,'); }
+  function padTo(d, w) { while (d.length < w) d = '0' + d; return d; }
+  function cmpBig(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+  function clip(s, n) { var a = Array.from(s); return a.length > n ? a.slice(0, n).join('') + '…' : s; }
+
+  // ---------- 表の読み方（Excel のコピーの形。"" で囲んだセルの中の改行・"" を1つのセルとして読む） ----------
+  function quotedEnd(text, i) {
+    var j = i + 1, n = text.length;
+    while (j < n) {
+      if (text.charCodeAt(j) === 34) {
+        if (text.charCodeAt(j + 1) === 34) { j += 2; continue; }
+        var nx = j + 1 < n ? text.charCodeAt(j + 1) : -1;
+        if (nx === -1 || nx === 9 || nx === 10 || nx === 13) return j + 1;
+        return -1;
+      }
+      j++;
+    }
+    return -1;
+  }
+  function parseTable(text) {
+    var rows = [], row = [], cell = '', i = 0, n = text.length, start = true;
+    if (!n) return rows;
+    while (i < n) {
+      var c = text.charCodeAt(i);
+      if (start && c === 34) {
+        var e = quotedEnd(text, i);
+        if (e > 0) { cell = text.slice(i + 1, e - 1).split(QUOTE + QUOTE).join(QUOTE); i = e; start = false; continue; }
+      }
+      if (c === 9) { row.push(cell); cell = ''; start = true; i++; continue; }
+      if (c === 10 || c === 13) {
+        row.push(cell); rows.push(row); row = []; cell = ''; start = true;
+        i += (c === 13 && text.charCodeAt(i + 1) === 10) ? 2 : 1;
+        continue;
+      }
+      cell += text.charAt(i); start = false; i++;
+    }
+    row.push(cell); rows.push(row);
+    var lastRow = rows[rows.length - 1];
+    if (rows.length > 1 && lastRow.length === 1 && lastRow[0] === '') rows.pop();
+    return rows;
+  }
+
+  // ---------- 番号の分け方：いちばん後ろの数字の塊が数、その前が接頭辞、後ろが接尾辞 ----------
+  // 数字の塊：0〜9 の続き。3桁ごとのカンマ（1,998・12,000）は、1〜3桁の後に「,＋3桁」が続く形だけを1つの塊として読む
+  function digitRuns(h) {
+    var runs = [], i = 0, n = h.length;
+    while (i < n) {
+      if (!isDigit(h.charCodeAt(i))) { i++; continue; }
+      var st = i;
+      while (i < n && isDigit(h.charCodeAt(i))) i++;
+      var comma = false;
+      if (i - st <= 3) {
+        while (i + 3 < n + 0 && h.charCodeAt(i) === 44 && isDigit(h.charCodeAt(i + 1)) && isDigit(h.charCodeAt(i + 2)) && isDigit(h.charCodeAt(i + 3)) && !(i + 4 < n && isDigit(h.charCodeAt(i + 4)))) { i += 4; comma = true; }
+      }
+      runs.push({ st: st, end: i, comma: comma });
+    }
+    return runs;
+  }
+  function parseNo(raw) {
+    var t = trimSp(raw || '');
+    if (!t) return { kind: 'empty', text: '' };
+    var h = toHalf(t);
+    var runs = digitRuns(h);
+    if (!runs.length) return { kind: 'nodigit', text: t };
+    var r = runs[runs.length - 1];
+    var digits = h.slice(r.st, r.end).split(',').join('');
+    var it = { text: t, prefix: h.slice(0, r.st), suffix: h.slice(r.end), digits: digits, len: digits.length, multi: runs.length > 1, comma: r.comma };
+    if (digits.length > MAX_DIGITS) { it.kind = 'toolong'; return it; }
+    var z = 0;
+    while (z < digits.length - 1 && digits.charCodeAt(z) === 48) z++;
+    it.kind = 'num';
+    it.value = BigInt(digits);
+    it.nat = digits.length - z;
+    return it;
+  }
+
+  // ---------- 列の自動の選び方 ----------
+  function singleRun(s) {
+    var h = toHalf(trimSp(s || ''));
+    return digitRuns(h).length === 1;
+  }
+  // 見出しの語：「番号」を含む列をいちばんに選ぶ。日付・金額・数量の見出しは選ばない。「No」は最後
+  var AVOID_WORDS = ['日', '額', '数量', '単価'];
+  function chooseCol(rows, ncols, hi) {
+    var c, w, first = rows[hi] || [];
+    for (w = 0; w < HEAD_WORDS.length; w++) {
+      for (c = 0; c < ncols; c++) {
+        var h = toHalf(trimSp(first[c] || ''));
+        if (!h || hasDigit(h) || h.indexOf(HEAD_WORDS[w]) < 0) continue;
+        if (h.indexOf('番号') < 0 && AVOID_WORDS.some(function (x) { return h.indexOf(x) >= 0; })) continue;
+        return c;
+      }
+    }
+    var best = 0, bestN = -1;
+    for (c = 0; c < ncols; c++) {
+      var n = 0;
+      for (var r = hi + 1; r < rows.length; r++) if (singleRun(rows[r][c])) n++;
+      if (n > bestN) { best = c; bestN = n; }
+    }
+    return best;
+  }
+  function colLetter(c) { var s = ''; c += 1; while (c > 0) { var m = (c - 1) % 26; s = String.fromCharCode(65 + m) + s; c = Math.floor((c - 1) / 26); } return s; }
+
+  // ---------- 多いもの（同数なら先に出たもの） ----------
+  function majority(list) {
+    var cnt = {}, order = [], best = null, bestN = 0;
+    list.forEach(function (v) { var k = SEP + v; if (!(k in cnt)) { cnt[k] = 0; order.push(v); } cnt[k]++; });
+    order.forEach(function (v) { var n = cnt[SEP + v]; if (n > bestN) { best = v; bestN = n; } });
+    return best;
+  }
+
+  // ---------- 調べる ----------
+  function readWidth(text) {
+    var t = toHalf(trimSp(text || ''));
+    if (!/^[0-9]+$/.test(t)) return null;
+    var n = parseInt(t, 10);
+    return n >= 1 && n <= MAX_DIGITS ? n : null;
+  }
+  function analyze(text, opt) {
+    opt = opt || {};
+    var R = { rows: [], ncols: 0, col: 0, autoCol: 0, head: false, autoHead: false, items: [], groups: [], error: '' };
+    var rows = parseTable(text || '');
+    R.rows = rows;
+    if (rows.length > MAX_ROWS) { R.error = 'toomany'; return R; }
+    // 空白だけの行は、列の数・見出しの判定に使わない
+    var blank = rows.map(function (r) { return r.every(function (x) { return trimSp(x) === ''; }); });
+    var ncols = 0, hi = -1;
+    rows.forEach(function (r, i) { if (!blank[i]) { if (r.length > ncols) ncols = r.length; if (hi < 0) hi = i; } });
+    R.ncols = ncols;
+    R.headIndex = hi;
+    R.autoCol = ncols > 1 ? chooseCol(rows, ncols, hi) : 0;
+    R.col = (opt.col != null && opt.col >= 0 && opt.col < ncols) ? opt.col : R.autoCol;
+    var first = hi >= 0 ? trimSp(rows[hi][R.col] || '') : '';
+    R.autoHead = first !== '' && !hasDigit(first);
+    R.head = hi >= 0 ? (opt.head != null ? !!opt.head : R.autoHead) : false;
+    R.group = opt.group === 'one' ? 'one' : 'sep';
+    R.affix = opt.affix !== false;
+
+    // 範囲・桁数の指定
+    R.range = null;
+    R.rangeFixed = opt.range === 'fixed';
+    if (R.rangeFixed) {
+      // 空の欄は「いちばん小さい番号」「いちばん大きい番号」のまま
+      var a = parseNo(opt.rangeFrom || ''), b = parseNo(opt.rangeTo || '');
+      var badA = a.kind !== 'num' && a.kind !== 'empty', badB = b.kind !== 'num' && b.kind !== 'empty';
+      if (badA || badB) { R.error = 'range-read'; R.rangeBad = { from: badA, to: badB }; }
+      else if (a.kind === 'num' && b.kind === 'num' && a.value > b.value) { R.error = 'range-order'; R.rangeBad = { from: true, to: true }; }
+      else if (a.kind === 'num' || b.kind === 'num') R.range = { lo: a.kind === 'num' ? a.value : null, hi: b.kind === 'num' ? b.value : null };
+    }
+    R.width = null;
+    if (opt.width === 'fixed') {
+      R.width = readWidth(opt.widthText);
+      if (R.width == null && !R.error) R.error = 'width';
+    }
+
+    var items = [];
+    rows.forEach(function (r, i) {
+      var it;
+      if (R.head && i === hi) it = { kind: 'head', text: r[R.col] || '' };
+      else it = parseNo(r[R.col] || '');
+      it.row = i + 1;
+      it.flags = [];
+      items.push(it);
+    });
+    R.items = items;
+    if (R.error) return R;
+
+    var nums = items.filter(function (it) { return it.kind === 'num'; });
+    R.total = items.filter(function (it) { return it.kind !== 'head' && it.kind !== 'empty'; }).length;
+    R.numCount = nums.length;
+    R.multiCount = 0;
+    R.multiExample = null;
+    items.forEach(function (it) { if ((it.kind === 'num' || it.kind === 'toolong') && it.multi) { R.multiCount++; if (!R.multiExample) R.multiExample = it; } });
+
+    // 連番のまとまり
+    var groups = [], gmap = {};
+    nums.forEach(function (it) {
+      var key = R.group === 'one' ? '' : it.prefix + SEP + it.suffix;
+      var g = gmap[SEP + key];
+      if (!g) { g = gmap[SEP + key] = { key: key, items: [] }; groups.push(g); }
+      g.items.push(it);
+      it.group = g;
+    });
+    R.groups = groups;
+
+    // 接頭辞・接尾辞の多数派（数字のある行の中で）
+    R.majPrefix = majority(nums.map(function (it) { return it.prefix; }));
+    R.majSuffix = majority(nums.map(function (it) { return it.suffix; }));
+
+    R.gapCount = ZERO;
+    R.gapRanges = [];
+    R.dupList = [];
+    R.dupExtra = 0;
+    R.distinct = 0;
+
+    groups.forEach(function (g) {
+      g.dprefix = majority(g.items.map(function (it) { return it.prefix; }));
+      g.dsuffix = majority(g.items.map(function (it) { return it.suffix; }));
+      // 重複
+      var vmap = {}, vorder = [];
+      g.items.forEach(function (it) {
+        var k = SEP + it.value.toString();
+        if (!vmap[k]) { vmap[k] = []; vorder.push(k); }
+        vmap[k].push(it);
+      });
+      g.distinct = vorder.length;
+      R.distinct += vorder.length;
+      vorder.forEach(function (k) {
+        var list = vmap[k];
+        if (list.length > 1) {
+          list.forEach(function (it, idx) { it.flags.push({ t: 'dup', k: idx + 1, n: list.length }); });
+          R.dupList.push({ group: g, value: list[0].value, items: list });
+          R.dupExtra += list.length - 1;
+        }
+      });
+      // 桁数の基準
+      if (R.width != null) g.W = R.width;
+      else {
+        var cands = [null], seen = {};
+        g.items.forEach(function (it) { if (it.digits.charCodeAt(0) === 48 && it.len > 1 && !seen[it.len]) { seen[it.len] = 1; cands.push(it.len); } });
+        cands = [null].concat(cands.slice(1).sort(function (x, y) { return x - y; }));
+        var bestW = null, bestN = -1;
+        cands.forEach(function (W) {
+          var n = 0;
+          g.items.forEach(function (it) { if (it.len === (W == null ? it.nat : Math.max(W, it.nat))) n++; });
+          if (n > bestN) { bestN = n; bestW = W; }
+        });
+        g.W = bestW;
+      }
+      g.items.forEach(function (it) {
+        var expect = g.W == null ? it.nat : Math.max(g.W, it.nat);
+        if (it.len !== expect) it.flags.push({ t: 'width', W: g.W, len: it.len });
+      });
+      // 範囲と欠番
+      var lo, hi;
+      lo = hi = g.items[0].value;
+      g.items.forEach(function (it) { if (it.value < lo) lo = it.value; if (it.value > hi) hi = it.value; });
+      if (R.range && R.range.lo != null) lo = R.range.lo;
+      if (R.range && R.range.hi != null) hi = R.range.hi;
+      if (lo > hi) { if (R.range.lo != null && R.range.hi == null) hi = lo; else lo = hi; }
+      g.lo = lo; g.hi = hi;
+      // 3桁ごとのカンマで書いた番号が多い連番は、欠番もカンマ付きで書く
+      var big = g.items.filter(function (it) { return it.nat >= 4; });
+      g.comma = big.length > 0 && big.filter(function (it) { return it.comma; }).length * 2 > big.length;
+      var vals = [];
+      vorder.forEach(function (k) { var v = vmap[k][0].value; if (v >= lo && v <= hi) vals.push(v); });
+      vals.sort(cmpBig);
+      g.inRange = vals.length;
+      g.gapCount = ZERO;
+      var prev = lo - ONE;
+      vals.forEach(function (v) {
+        if (v > prev + ONE) { R.gapRanges.push({ group: g, a: prev + ONE, b: v - ONE }); g.gapCount += v - prev - ONE; }
+        prev = v;
+      });
+      if (hi > prev) { R.gapRanges.push({ group: g, a: prev + ONE, b: hi }); g.gapCount += hi - prev; }
+      R.gapCount += g.gapCount;
+    });
+
+    // 接頭辞・接尾辞・範囲外・数字なし
+    items.forEach(function (it) {
+      if (it.kind === 'num' || it.kind === 'toolong') {
+        if (R.affix && it.prefix !== R.majPrefix && R.majPrefix != null) it.flags.push({ t: 'prefix' });
+        if (R.affix && it.suffix !== R.majSuffix && R.majSuffix != null) it.flags.push({ t: 'suffix' });
+      }
+      if (it.kind === 'num' && R.range && (it.value < it.group.lo || it.value > it.group.hi)) it.flags.push({ t: 'out', lo: it.group.lo, hi: it.group.hi });
+      if (it.kind === 'nodigit') it.flags.push({ t: 'nodigit' });
+      if (it.kind === 'toolong') it.flags.push({ t: 'toolong' });
+    });
+    R.fmtItems = items.filter(function (it) { return it.flags.some(function (f) { return f.t !== 'dup'; }); });
+    R.toolong = items.filter(function (it) { return it.kind === 'toolong'; });
+
+    // 欠番と同じ数の番号が、別の書き方（別の連番）で入っていれば、欠番の一覧で知らせる
+    if (groups.length > 1 && R.gapRanges.length) {
+      var all = nums.slice().sort(function (x, y) { return cmpBig(x.value, y.value) || x.row - y.row; });
+      R.gapRanges.forEach(function (gr) {
+        var l = 0, r = all.length;
+        while (l < r) { var m = (l + r) >> 1; if (all[m].value < gr.a) l = m + 1; else r = m; }
+        var found = [];
+        for (var k = l; k < all.length && all[k].value <= gr.b && found.length < 21; k++) if (all[k].group !== gr.group) found.push(all[k]);
+        if (found.length) gr.others = found;
+      });
+    }
+    return R;
+  }
+
+  // ---------- 表示用の文字 ----------
+  function fmtNo(g, v) {
+    var d = v.toString();
+    if (g.W != null) d = padTo(d, g.W);
+    else if (g.comma) d = fmtNum(d);
+    return g.dprefix + d + g.dsuffix;
+  }
+  function gapText(gr) { return gr.a === gr.b ? fmtNo(gr.group, gr.a) : fmtNo(gr.group, gr.a) + '〜' + fmtNo(gr.group, gr.b); }
+  var ORDER = ['dup', 'width', 'prefix', 'suffix', 'out', 'nodigit', 'toolong'];
+  function flagShort(f) {
+    if (f.t === 'dup') return '重複（' + f.k + '回目／全' + f.n + '回）';
+    if (f.t === 'width') return '桁数違い（' + f.len + '桁、ほかは' + (f.W == null ? '0埋めなし' : f.W + '桁') + '）';
+    if (f.t === 'prefix') return '接頭辞違い';
+    if (f.t === 'suffix') return '接尾辞違い';
+    if (f.t === 'out') return '範囲外';
+    if (f.t === 'nodigit') return '数字なし';
+    return '桁が多すぎる';
+  }
+  function sortedFlags(it) { return it.flags.slice().sort(function (x, y) { return ORDER.indexOf(x.t) - ORDER.indexOf(y.t); }); }
+  function judge(it) {
+    if (it.kind === 'head') return '判定';
+    return sortedFlags(it).map(flagShort).join('・');
+  }
+  function affixName(s, word) { return s === '' ? word + 'なし' : '「' + s + '」'; }
+  function flagLong(R, it, f) {
+    if (f.t === 'dup') return '重複（' + f.k + '回目／全' + f.n + '回）';
+    if (f.t === 'width') return '桁数違い：' + it.len + '桁（ほかは' + (f.W == null ? '0埋めなし' : f.W + '桁') + '）';
+    if (f.t === 'prefix') return '接頭辞違い：' + affixName(it.prefix, '接頭辞') + '（多いのは' + affixName(R.majPrefix, '接頭辞') + '）';
+    if (f.t === 'suffix') return '接尾辞違い：' + affixName(it.suffix, '接尾辞') + '（多いのは' + affixName(R.majSuffix, '接尾辞') + '）';
+    if (f.t === 'out') return '範囲外：指定した範囲（' + fmtNum(f.lo) + '〜' + fmtNum(f.hi) + '）の外';
+    if (f.t === 'nodigit') return '数字なし：数字が1つもないため調べていません';
+    return '桁が多すぎる：' + it.len + '桁（30桁まで）のため調べていません';
+  }
+  function columnText(R) { return R.items.map(judge).join(LF); }
+  function gapCopy(R) {
+    if (R.gapCount <= BigInt(MAX_EXPAND)) {
+      var out = [];
+      R.gapRanges.forEach(function (gr) { for (var v = gr.a; v <= gr.b; v += ONE) out.push(fmtNo(gr.group, v)); });
+      return { text: out.join(LF), lines: out.length, expanded: true };
+    }
+    var lines = R.gapRanges.map(gapText);
+    return { text: lines.join(LF), lines: lines.length, expanded: false };
+  }
+
+
+  // ---------- 画面 ----------
+  if (typeof document === 'undefined') return;
+  function $(id) { return document.getElementById(id); }
+  var numsEl = $('nums'), colField = $('colField'), colSel = $('colSel'), headChk = $('headChk');
+  var summary = $('summary'), status = $('status'), setStatusEl = $('setStatus');
+  var copyCol = $('copyCol'), copyGap = $('copyGap'), manualBox = $('manualBox'), manualText = $('manualText');
+  var tableWrap = $('tableWrap'), rangeRow = $('rangeRow'), rangeFrom = $('rangeFrom'), rangeTo = $('rangeTo');
+  var widthRow = $('widthRow'), widthN = $('widthN'), affixChk = $('affixChk');
+  var viewInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="view"]'));
+  var groupInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="group"]'));
+  var rangeInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="range"]'));
+  var widthInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="width"]'));
+  function radio(list) { var v = ''; list.forEach(function (el) { if (el.checked) v = el.value; }); return v; }
+  function setRadio(list, v) { list.forEach(function (el) { el.checked = el.value === v; }); }
+
+  var user = { col: null, head: null };
+  var last = null;
+
+  function options() {
+    return {
+      col: user.col, head: user.head, group: radio(groupInputs),
+      range: radio(rangeInputs), rangeFrom: rangeFrom.value, rangeTo: rangeTo.value,
+      width: radio(widthInputs), widthText: widthN.value, affix: affixChk.checked
+    };
+  }
+  function colName(R, c) {
+    var h = R.head && R.headIndex >= 0 ? trimSp(R.rows[R.headIndex][c] || '') : '';
+    return colLetter(c) + '列' + (h ? '（' + clip(h, 12) + '）' : '');
+  }
+  function buildColSel(R) {
+    if (R.ncols <= 1) { colField.hidden = true; colSel.innerHTML = ''; colSel.removeAttribute('data-sig'); return; }
+    colField.hidden = false;
+    var sig = R.ncols + SEP + (R.rows[R.headIndex] || []).join(SEP) + SEP + R.head;
+    if (colSel.getAttribute('data-sig') !== sig || colSel.options.length !== R.ncols) {
+      colSel.innerHTML = '';
+      for (var c = 0; c < R.ncols; c++) {
+        var o = document.createElement('option');
+        o.value = String(c);
+        o.textContent = colName(R, c);
+        colSel.appendChild(o);
+      }
+      colSel.setAttribute('data-sig', sig);
+    }
+    colSel.value = String(R.col);
+  }
+  function setStat(id, value, unit, cls) {
+    var li = $(id), v = li.querySelector('.v');
+    li.className = cls || '';
+    v.textContent = '';
+    v.appendChild(document.createTextNode(value));
+    if (unit) { var s = document.createElement('small'); s.textContent = unit; v.appendChild(s); }
+  }
+  function line(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+  function resultWord(R) {
+    if (!R || R.error || !R.numCount) return '';
+    var parts = [];
+    if (R.gapCount > ZERO) parts.push('欠番 ' + fmtNum(R.gapCount) + '個');
+    if (R.dupList.length) parts.push('重複 ' + fmtNum(R.dupList.length) + '番号');
+    if (R.fmtItems.length) parts.push('形式の違い ' + fmtNum(R.fmtItems.length) + '行');
+    return parts.length ? parts.join('・') + 'が見つかりました。' : '欠番・重複・形式の違いはありませんでした。';
+  }
+  function errorMessage(R) {
+    if (R.error === 'toomany') return '行が多すぎます（' + fmtNum(R.rows.length) + '行）。' + fmtNum(MAX_ROWS) + '行までに分けて貼り付けてください。';
+    if (R.error === 'range-read') return '欠番を探す範囲の' + (R.rangeBad.from && R.rangeBad.to ? '開始と終了' : R.rangeBad.from ? '開始' : '終了') + 'を読めません。「1」「2000」のように数字を入れてください。';
+    if (R.error === 'range-order') return '欠番を探す範囲の開始が、終了より大きくなっています。開始に小さいほうの番号を入れてください。';
+    if (R.error === 'width') return '桁数を読めません。1〜30の数字を入れてください（0001 なら 4）。';
+    return '';
+  }
+
+  function rangeNo(g, v) {
+    var d = v.toString();
+    if (g.W != null) d = padTo(d, g.W); else if (g.comma) d = fmtNum(d);
+    return clip(g.dprefix, 10) + d + clip(g.dsuffix, 10);
+  }
+  function rowsText(list) {
+    var s = list.slice(0, 5).map(function (it) { return fmtNum(it.row); }).join('・') + '行目';
+    return list.length > 5 ? s + ' ほか' + fmtNum(list.length - 5) + '行' : s;
+  }
+  function headLine(R) {
+    return fmtNum(R.headIndex + 1) + '行目「' + clip(trimSp(R.items[R.headIndex].text), 12) + '」は見出しとして飛ばしました。';
+  }
+  function toolongLine(R) {
+    var lens = {}, n = 0;
+    R.toolong.forEach(function (it) { if (!lens[it.len]) { lens[it.len] = 1; n++; } });
+    return rowsText(R.toolong) + 'は' + (n === 1 ? R.toolong[0].len + '桁' : '31桁以上') + 'で、30桁までの番号しか調べられないため、調べていません。';
+  }
+  function renderSummary(R) {
+    summary.textContent = '';
+    var ids = ['stTotal', 'stGap', 'stDup', 'stFmt'];
+    if (!R.rows.length) {
+      ids.forEach(function (id) { setStat(id, '–', '', ''); });
+      summary.appendChild(line('sub', '番号の列を貼り付けると、ここに欠番・重複・形式の違いの数が出ます。'));
+      return;
+    }
+    if (R.error) {
+      ids.forEach(function (id) { setStat(id, '–', '', ''); });
+      summary.appendChild(line('main err', errorMessage(R)));
+      return;
+    }
+    setStat('stTotal', fmtNum(R.total), '件', '');
+    if (!R.numCount) {
+      setStat('stGap', '–', '', ''); setStat('stDup', '–', '', '');
+      if (R.total) setStat('stFmt', fmtNum(R.fmtItems.length), '行', R.fmtItems.length ? 'has' : '');
+      else setStat('stFmt', '–', '', '');
+      var msg;
+      if (R.toolong.length) msg = '30桁までの番号がないため、欠番と重複を調べられません。';
+      else if (R.total) msg = '番号として読める行がありません。数字を含む番号の列を貼り付けてください（数字のない行は「数字なし」として扱います）。';
+      else if (R.head) msg = '見出しの行だけです。番号の行も貼り付けてください。';
+      else msg = '空の行だけです。番号の列を貼り付けてください。';
+      summary.appendChild(line('main warn', msg));
+      if (R.toolong.length) summary.appendChild(line('w', toolongLine(R)));
+      if (R.head) summary.appendChild(line('sub', headLine(R)));
+      return;
+    }
+    setStat('stGap', fmtNum(R.gapCount), '個', R.gapCount > ZERO ? 'has' : 'clear');
+    setStat('stDup', fmtNum(R.dupList.length), '番号', R.dupList.length ? 'has' : 'clear');
+    setStat('stFmt', fmtNum(R.fmtItems.length), '行', R.fmtItems.length ? 'has' : 'clear');
+    var problems = R.gapCount > ZERO || R.dupList.length || R.fmtItems.length;
+    summary.appendChild(line('main' + (problems ? ' warn' : ''), problems ? resultWord(R) : '欠番・重複・形式の違いはありません。'));
+    // 範囲と件数
+    var text;
+    if (R.groups.length === 1) {
+      var g = R.groups[0];
+      text = (R.range ? '指定した範囲 ' : '範囲 ') + rangeNo(g, g.lo) + '〜' + rangeNo(g, g.hi) + '（' + fmtNum(g.hi - g.lo + ONE) + '個）。重複を除くと ' + fmtNum(R.distinct) + '件です。';
+    } else {
+      text = '接頭辞・接尾辞の違う連番が ' + fmtNum(R.groups.length) + 'つあり、別々に調べました。';
+    }
+    summary.appendChild(line('sub', text));
+    if (R.head) summary.appendChild(line('sub', headLine(R)));
+    if (R.multiCount) {
+      var ex = R.multiExample;
+      summary.appendChild(line('w', fmtNum(R.multiCount) + '件は数字が2か所以上あり、後ろの数字を番号の数として読みました（例：' + clip(ex.text, 12) + ' は ' + ex.digits + '）。'));
+    }
+    if (R.toolong.length) summary.appendChild(line('w', toolongLine(R)));
+  }
+
+  function cellTd(cls, text) { var td = document.createElement('td'); if (cls) td.className = cls; td.textContent = text; return td; }
+  function makeTable(heads) {
+    var t = document.createElement('table'); t.className = 'res';
+    var th = document.createElement('thead'), tr = document.createElement('tr');
+    heads.forEach(function (h) { var x = document.createElement('th'); x.textContent = h; tr.appendChild(x); });
+    th.appendChild(tr); t.appendChild(th);
+    var tb = document.createElement('tbody'); t.appendChild(tb);
+    return { table: t, body: tb };
+  }
+  function emptyMsg(text) { var p = document.createElement('p'); p.className = 'empty-result'; p.textContent = text; return p; }
+  function moreMsg(shown, total, unit) { var p = document.createElement('p'); p.className = 'more-rows'; p.textContent = '先頭の' + fmtNum(shown) + unit + 'を表示しています（全部で' + fmtNum(total) + unit + '）。コピーにはすべて入ります。'; return p; }
+  function rowList(items) {
+    var nums = items.map(function (it) { return it.row; });
+    var s = nums.slice(0, 20).map(fmtNum).join('・') + '行目';
+    if (nums.length > 20) s += ' ほか' + fmtNum(nums.length - 20) + '行';
+    return s;
+  }
+  function othersNote(list) {
+    if (list.length === 1) return '（形式の違う「' + clip(list[0].text, 20) + '」が' + fmtNum(list[0].row) + '行目にあります）';
+    var rows = list.slice(0, 20).map(function (it) { return it.row; }).sort(function (a, b) { return a - b; });
+    var consecutive = rows.every(function (r, k) { return k === 0 || r === rows[k - 1] + 1; });
+    var s = consecutive ? fmtNum(rows[0]) + '〜' + fmtNum(rows[rows.length - 1]) : rows.map(fmtNum).join('・');
+    return '（形式の違う行が' + s + '行目' + (list.length > 20 ? 'ほか' : '') + 'にあります）';
+  }
+  function renderList(R) {
+    tableWrap.textContent = '';
+    var view = radio(viewInputs);
+    if (!R.rows.length) { tableWrap.appendChild(emptyMsg('番号の列を貼り付けると、ここに一覧が出ます。')); return; }
+    if (R.error) { tableWrap.appendChild(emptyMsg('上の案内のとおりに直すと、一覧が出ます。')); return; }
+    var t;
+    if (view === 'gap') {
+      if (!R.numCount) { tableWrap.appendChild(emptyMsg('番号として読める行がありません。')); return; }
+      if (!R.gapRanges.length) { tableWrap.appendChild(emptyMsg('欠番はありません。')); return; }
+      t = makeTable(['欠番', '個数']);
+      R.gapRanges.slice(0, MAX_SHOW).forEach(function (gr) {
+        var tr = document.createElement('tr');
+        tr.appendChild(cellTd('no', gapText(gr)));
+        var cnt = cellTd('num', fmtNum(gr.b - gr.a + ONE) + '個');
+        if (gr.others) { cnt.className = 'num note'; cnt.textContent += othersNote(gr.others); }
+        tr.appendChild(cnt);
+        t.body.appendChild(tr);
+      });
+      tableWrap.appendChild(t.table);
+      if (R.gapRanges.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, R.gapRanges.length, '行'));
+    } else if (view === 'dup') {
+      if (!R.dupList.length) { tableWrap.appendChild(emptyMsg(R.numCount ? '重複はありません。' : '番号として読める行がありません。')); return; }
+      t = makeTable(['番号', '回数', '行']);
+      R.dupList.slice(0, MAX_SHOW).forEach(function (d) {
+        var tr = document.createElement('tr');
+        tr.appendChild(cellTd('no', d.items[0].text));
+        tr.appendChild(cellTd('num', fmtNum(d.items.length) + '回'));
+        tr.appendChild(cellTd('txt', rowList(d.items)));
+        t.body.appendChild(tr);
+      });
+      tableWrap.appendChild(t.table);
+      if (R.dupList.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, R.dupList.length, '件'));
+    } else if (view === 'fmt') {
+      if (!R.total) { tableWrap.appendChild(emptyMsg('番号として読める行がありません。')); return; }
+      if (!R.fmtItems.length) { tableWrap.appendChild(emptyMsg('形式の違う行はありません。')); return; }
+      t = makeTable(['行', '番号', '内容']);
+      R.fmtItems.slice(0, MAX_SHOW).forEach(function (it) {
+        var tr = document.createElement('tr');
+        tr.appendChild(cellTd('num', fmtNum(it.row)));
+        tr.appendChild(cellTd('no', it.text));
+        tr.appendChild(cellTd('bad', sortedFlags(it).filter(function (f) { return f.t !== 'dup'; }).map(function (f) { return flagLong(R, it, f); }).join('／')));
+        t.body.appendChild(tr);
+      });
+      tableWrap.appendChild(t.table);
+      if (R.fmtItems.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, R.fmtItems.length, '行'));
+    } else {
+      if (!R.total) { tableWrap.appendChild(emptyMsg('番号として読める行がありません。')); return; }
+      t = makeTable(['行', '番号', '判定']);
+      R.items.slice(0, MAX_SHOW).forEach(function (it) {
+        var tr = document.createElement('tr');
+        tr.appendChild(cellTd('num', fmtNum(it.row)));
+        if (it.kind === 'head') { tr.className = 'muted'; tr.appendChild(cellTd('txt', it.text)); tr.appendChild(cellTd('txt', '（見出し）')); }
+        else if (it.kind === 'empty') { tr.className = 'muted'; tr.appendChild(cellTd('txt', '')); tr.appendChild(cellTd('txt', '（空の行）')); }
+        else { var j = judge(it); tr.appendChild(cellTd('no', it.text)); tr.appendChild(cellTd(j ? 'bad' : 'txt', j)); }
+        t.body.appendChild(tr);
+      });
+      tableWrap.appendChild(t.table);
+      if (R.items.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, R.items.length, '行'));
+    }
+  }
+  function autoView(R) {
+    var v = 'gap';
+    if (R && !R.error && R.numCount) {
+      if (R.gapCount > ZERO) v = 'gap';
+      else if (R.dupList.length) v = 'dup';
+      else if (R.fmtItems.length) v = 'fmt';
+      else v = 'all';
+    } else if (R && !R.error && R.total) v = 'fmt';
+    setRadio(viewInputs, v);
+  }
+
+  function render() {
+    var R = analyze(numsEl.value, options());
+    last = R;
+    buildColSel(R);
+    headChk.checked = R.head;
+    headChk.disabled = R.headIndex == null || R.headIndex < 0;
+    rangeRow.hidden = radio(rangeInputs) !== 'fixed';
+    widthRow.hidden = radio(widthInputs) !== 'fixed';
+    rangeFrom.classList.toggle('bad', !!(R.rangeBad && R.rangeBad.from));
+    rangeTo.classList.toggle('bad', !!(R.rangeBad && R.rangeBad.to));
+    widthN.classList.toggle('bad', R.error === 'width');
+    renderSummary(R);
+    renderList(R);
+    var okData = R.rows.length && !R.error && R.total > 0;
+    copyCol.disabled = !okData;
+    copyGap.disabled = !(okData && R.numCount && R.gapCount > ZERO);
+    return R;
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && el.type !== 'text' && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    [status, setStatusEl].forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    unpin();
+    [status, setStatusEl].forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  function afterChange(el, prefix) {
+    resetCopyButtons();
+    var R = render();
+    if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
+    setStatus(el, prefix + resultWord(R));
+  }
+
+  // ---------- コピー ----------
+  var LABELS = { copyCol: '判定の列をコピー', copyGap: '欠番をコピー' };
+  var copyTimer = null;
+  function resetCopyButtons() { clearTimeout(copyTimer); manualBox.hidden = true; copyCol.textContent = LABELS.copyCol; copyGap.textContent = LABELS.copyGap; }
+  function flashButton(btn, label, ms) {
+    resetCopyButtons();
+    btn.textContent = label;
+    copyTimer = setTimeout(resetCopyButtons, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(btn, text) {
+    flashButton(btn, 'コピー失敗', 4000);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, btn.getBoundingClientRect().top - 8)));
+    setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message) {
+    var done = function () { manualBox.hidden = true; setStatus(status, message); flashButton(btn, '✓ コピー済み', 2500); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(btn, text); });
+        return;
+      }
+    } catch (e) { /* 下の方法で試す */ }
+    if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+  }
+  copyCol.addEventListener('click', function () {
+    var R = render();
+    if (copyCol.disabled) return;
+    doCopy(copyCol, columnText(R), '判定の列を' + fmtNum(R.items.length) + '行コピーしました' + (R.head ? '（' + fmtNum(R.headIndex + 1) + '行目は見出し「判定」）' : '') + '。Excelで、番号の1行目と同じ行の、空いた列のセルを選んで貼り付けてください。');
+  });
+  copyGap.addEventListener('click', function () {
+    var R = render();
+    if (copyGap.disabled) return;
+    var g = gapCopy(R);
+    doCopy(copyGap, g.text, g.expanded ? '欠番を' + fmtNum(g.lines) + '個、1行に1つずつコピーしました。' : '欠番が' + fmtNum(MAX_EXPAND) + '個を超えるため、「〜」でまとめた形で' + fmtNum(g.lines) + '行コピーしました。');
+  });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE = ['請求書番号' + TAB + '金額',
+    'INV-0001' + TAB + '12,000', 'INV-0002' + TAB + '8,500', 'INV-0003' + TAB + '30,000', 'INV-0004' + TAB + '4,200',
+    'INV-0005' + TAB + '15,800', 'INV-0006' + TAB + '9,900', 'INV-0008' + TAB + '22,000', 'INV-0009' + TAB + '6,600',
+    'INV-0010' + TAB + '11,000', 'INV-0011' + TAB + '3,300', 'INV-0012' + TAB + '18,700', 'INV-0012' + TAB + '18,700',
+    'INV-0016' + TAB + '7,700', 'INV-0017' + TAB + '25,300', 'INV-018' + TAB + '5,500', 'INV0019' + TAB + '13,200',
+    'INV-0020' + TAB + '8,800'].join(LF);
+  function freshInput() { user.col = null; user.head = null; resetCopyButtons(); }
+  $('sampleBtn').addEventListener('click', function () {
+    var had = numsEl.value.trim() !== '';
+    numsEl.value = SAMPLE;
+    freshInput();
+    var R = analyze(numsEl.value, options());
+    autoView(R);
+    R = render();
+    setStatus(status, (had ? '例の表に入れ替えました（前の内容は消えました）。' : '例の表（請求書番号と金額）を入れました。') + resultWord(R));
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = numsEl.value !== '';
+    numsEl.value = '';
+    freshInput();
+    setRadio(viewInputs, 'gap');
+    render();
+    setStatus(status, had ? '番号の列を空にしました（設定はそのままです）。' : '番号の列はもう空です。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  numsEl.addEventListener('input', function (e) {
+    var pasted = e && e.inputType === 'insertFromPaste';
+    if (pasted || numsEl.value === '') freshInput();
+    clearTimeout(inputTimer);
+    resetCopyButtons();
+    setStatus(status, '');
+    inputTimer = setTimeout(function () {
+      if (pasted) autoView(analyze(numsEl.value, options()));
+      var R = render();
+      if (pasted) setStatus(status, pasteMessage(R), !!R.error);
+    }, 150);
+  });
+  function pasteMessage(R) {
+    if (R.error) return '貼り付けました。' + errorMessage(R);
+    if (!R.total) return '貼り付けましたが、番号の行がありません。';
+    if (!R.numCount && R.toolong.length) return '貼り付けた番号は30桁を超えるため、調べられません。まとめを見てください。';
+    if (!R.numCount) return '貼り付けた' + fmtNum(R.total) + '行に、番号として読める行がありません。数字を含む番号の列を貼り付けてください。';
+    return '貼り付けた番号 ' + fmtNum(R.total) + '件を調べました。' + resultWord(R);
+  }
+  colSel.addEventListener('change', function () {
+    user.col = +colSel.value;
+    user.head = null;
+    resetCopyButtons();
+    var R = analyze(numsEl.value, options());
+    autoView(R);
+    R = render();
+    setStatus(status, colLetter(R.col) + '列を番号の列にしました。' + (R.error ? errorMessage(R) : resultWord(R)), !!R.error);
+  });
+  headChk.addEventListener('change', function () {
+    user.head = headChk.checked;
+    afterChange(status, headChk.checked ? '1行目を見出しとして飛ばすようにしました。' : '1行目も番号として調べるようにしました。');
+  });
+  viewInputs.forEach(function (el) { el.addEventListener('change', function () { if (last) renderList(last); }); });
+  groupInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      afterChange(setStatusEl, radio(groupInputs) === 'one' ? '接頭辞・接尾辞が違っても1つの連番として数えるようにしました。' : '接頭辞・接尾辞が違う番号を別々の連番として数えるようにしました。');
+    });
+  });
+  function rangeWord(R) {
+    if (!R.groups || !R.groups.length) return clip(trimSp(rangeFrom.value), 12) + '〜' + clip(trimSp(rangeTo.value), 12);
+    var lo = null, hi = null;
+    R.groups.forEach(function (g) { if (lo === null || g.lo < lo) lo = g.lo; if (hi === null || g.hi > hi) hi = g.hi; });
+    return fmtNum(lo) + '〜' + fmtNum(hi);
+  }
+  rangeInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      var fixed = radio(rangeInputs) === 'fixed';
+      if (fixed && !trimSp(rangeFrom.value) && !trimSp(rangeTo.value)) {
+        resetCopyButtons();
+        render();
+        setStatus(setStatusEl, '欠番を探す範囲を「開始と終了を指定」にしました。開始と終了の番号を入れてください。');
+        return;
+      }
+      afterChange(setStatusEl, fixed ? '欠番を探す範囲を「開始と終了を指定」にしました。' : '欠番を探す範囲を「いちばん小さい番号〜大きい番号」にしました。');
+    });
+  });
+  [rangeFrom, rangeTo].forEach(function (el) {
+    el.addEventListener('input', function () {
+      resetCopyButtons();
+      var R = render();
+      if (R.error) { setStatus(setStatusEl, errorMessage(R), true); return; }
+      if (!trimSp(rangeFrom.value) && !trimSp(rangeTo.value)) { setStatus(setStatusEl, '開始と終了が空のため、いちばん小さい番号〜大きい番号で探しています。' + resultWord(R)); return; }
+      setStatus(setStatusEl, '範囲を ' + rangeWord(R) + ' にしました。' + resultWord(R));
+    });
+  });
+  widthInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      afterChange(setStatusEl, radio(widthInputs) === 'fixed' ? '桁数の基準を、指定した桁数にしました。' : '桁数の基準を、多い書き方に合わせるようにしました。');
+    });
+  });
+  widthN.addEventListener('input', function () {
+    resetCopyButtons();
+    var R = render();
+    if (R.error === 'width') setStatus(setStatusEl, errorMessage(R), true);
+    else setStatus(setStatusEl, '桁数の基準を ' + R.width + '桁にしました。' + (R.error ? errorMessage(R) : resultWord(R)), !!R.error);
+  });
+  affixChk.addEventListener('change', function () {
+    afterChange(setStatusEl, affixChk.checked ? '接頭辞・接尾辞の違いを知らせるようにしました。' : '接頭辞・接尾辞の違いは知らせないようにしました。');
+  });
+
+  window.BangoCheck = { gapText: gapText, analyze: analyze, parseTable: parseTable, parseNo: parseNo, columnText: columnText, gapCopy: gapCopy, judge: judge };
+  render();
+})();
+</script>
+</body>
+</html>
