@@ -538,7 +538,8 @@
   }
   function splitLines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF).split(LF); }
   var RE_TIME = /[ ]*[0-9]{1,2}:[0-9]{2}(?::[0-9]{2})?$/;
-  var RE_WD = /[ ]*[(]?[ ]*[日月火水木金土](?:曜日?)?[ ]*[)]?$/;
+  // 曜日は「(火)」「（火曜）」のような括弧つき、空白の後ろ、「火曜」の形だけを読む（「30日」の「日」を曜日にしない）
+  var RE_WD = /(?:[ ]*[(][ ]*([日月火水木金土])(?:曜日?)?[ ]*[)]|[ ]+([日月火水木金土])(?:曜日?)?|([日月火水木金土])曜日?)$/;
   var RE_YMD = /^([0-9]{4})([/.-])([0-9]{1,2})[/.-]([0-9]{1,2})$/;
   var RE_KANJI = /^([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日?$/;
   var RE_8 = /^([0-9]{4})([0-9]{2})([0-9]{2})$/;
@@ -588,14 +589,12 @@
     return dayNum(y, mo, d);
   }
   // 日付に付いた曜日（「(月)」など）が日付と合わないか。合わなければ正しい曜日の番号、合えば -1
-  var RE_WD_ONLY = /[(]?[ ]*([日月火水木金土])(?:曜日?)?[ ]*[)]?$/;
   function wdMismatch(raw, n) {
     var s = trimSpaces(normalize(raw)).replace(RE_TAIL, '').replace(RE_TIME, '');
-    var m = RE_WD_ONLY.exec(s);
+    var m = RE_WD.exec(s);
     if (!m) return -1;
-    var before = s.slice(0, m.index);
-    if (!/[0-9]$|日$|[ ]$/.test(before)) return -1;
-    return WD.indexOf(m[1]) === weekday(n) ? -1 : weekday(n);
+    var w = m[1] || m[2] || m[3];
+    return WD.indexOf(w) === weekday(n) ? -1 : weekday(n);
   }
   // 期間（臨時休業日・臨時営業日、期間の計算の1つのセル）：「A〜B」
   var RANGE_MARKS = ['〜', '～', '~'];
@@ -1067,7 +1066,7 @@
       if (res.range.length) w.push(lineList(res.range) + 'は祝日表（' + HOL_FIRST_YEAR + '〜' + HOL_LAST_YEAR + '年）の外の日を数えるため計算していません。範囲の中の日にするか、「祝日を休みにする」をオフにすると、祝日を除かずに数えます。');
       if (res.none.length) w.push(lineList(res.none) + 'は営業日が見つかりません。休みにする曜日を見直してください。');
       if (res.long.length) w.push(lineList(res.long) + 'は期間が100年を超えるため計算していません。');
-      if (res.wd.length) w.push(lineList(res.wd.map(function (x) { return x.line; })) + 'は曜日が日付と合いません（' + screenDate(res.wd[0].n).slice(0, 10) + ' は' + WD[res.wd[0].w] + '曜）。日付で計算しました。日付を確かめてください。');
+      if (res.wd.length) w.push(res.wd.slice(0, 3).map(function (x) { return fmtNum(x.line) + '行目（' + screenDate(x.n).slice(0, 10) + ' は' + WD[x.w] + '曜）'; }).join('・') + (res.wd.length > 3 ? 'ほか' + fmtNum(res.wd.length - 3) + '件' : '') + 'は、書かれた曜日が日付と合いません。日付で計算しました。日付を確かめてください。');
       if (res.order.length) w.push(lineList(res.order) + 'は終了日が開始日より前です。開始日と終了日の列を入れ替えるか、列の選択を確かめてください。');
       if (res.header) w.push(fmtNum(res.headLine) + '行目「' + clip(trimSpaces(res.header.join(' ')), 16) + '」は見出しとして扱いました。');
       if (res.ncol > 1 && res.cols.range) w.push('表の' + colName(res.cols.a) + 'の期間（〜でつないだ日付）を使っています。');
