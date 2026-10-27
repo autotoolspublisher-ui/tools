@@ -133,6 +133,7 @@
   .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
   .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
   .chip span:hover { background: #f6fafe; }
+  .chips.keepw .chip input:checked + span { font-weight: 400; }
   .wd .chip span { padding: 0 11px; }
   .field { min-width: 0; margin: 0 0 14px; }
   .field label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
@@ -169,6 +170,7 @@
   /* 知らせ。高さを先に確保して、出ても消えても下の部品が動かないようにする */
   .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
   .status.error { color: var(--warn-ink); }
+  #setStatus { min-height: 110px; }
   /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
   .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
   .summary { margin: 4px 0 6px; font-size: .9rem; line-height: 1.5; color: var(--ok); font-weight: 600; min-height: 66px; overflow-wrap: anywhere; }
@@ -295,7 +297,7 @@
 
         <fieldset class="setting" id="modeSet">
           <legend>計算の種類</legend>
-          <div class="chips">
+          <div class="chips keepw">
             <label class="chip"><input type="radio" name="mode" value="after" checked><span>営業日後</span></label>
             <label class="chip"><input type="radio" name="mode" value="before"><span>営業日前</span></label>
             <label class="chip"><input type="radio" name="mode" value="between"><span>2つの日付の間の営業日数</span></label>
@@ -379,7 +381,7 @@
         </div>
         <fieldset class="setting">
           <legend>結果の日付の書き方</legend>
-          <div class="chips">
+          <div class="chips keepw">
             <label class="chip"><input type="radio" name="fmt" value="slash" checked><span>2026/10/23</span></label>
             <label class="chip"><input type="radio" name="fmt" value="dash"><span>2026-10-23</span></label>
             <label class="chip"><input type="radio" name="fmt" value="kanji"><span>2026年10月23日</span></label>
@@ -554,7 +556,8 @@
   function noYear(raw) { return RE_NO_YEAR.test(trimSpaces(normalize(raw))); }
   // 日付のように見える部分を含むか（カンマ・空白で区切った行の案内に使う）
   var RE_HAS_DATE = /[0-9]{4}[/.-][0-9]{1,2}[/.-][0-9]{1,2}|[0-9]{1,2}月[0-9]{1,2}日|[0-9]{4}年[0-9]{1,2}月|[0-9]{1,2}[/][0-9]{1,2}/;
-  var RE_DATE_LIKE = /[0-9]+ *[/.年月-] *[0-9]+/;
+  // セル全体が日付の形（存在しない日付を含む）か：2026/2/30、10/32、2026年2月30日、2月30日
+  var RE_DATE_SHAPE = /^[0-9]{1,4} *[/.-] *[0-9]{1,2}(?: *[/.-] *[0-9]{1,2})?$|^(?:[0-9]{4}年)?[0-9]{1,2}月[0-9]{1,2}日?$|^[0-9]{8}$/;
   function dateWithOther(raw) {
     var n = normalize(raw), m = RE_HAS_DATE.exec(n);
     if (!m) return false;
@@ -568,7 +571,7 @@
     s = s.replace(RE_TAIL, '');
     s = s.replace(RE_TIME, '');
     s = s.replace(RE_WD, '');
-    s = s.replace(/[ ]*([/.年月日-])[ ]*/g, '$1');
+    s = s.replace(/[ ]*([/.年月日-])[ ]*/g, '$1').replace(/(令和|平成|昭和)[ ]+/, '$1');
     if (s.indexOf(' ') >= 0) return null;
     var m, y, mo, d;
     if ((m = RE_YMD.exec(s))) {
@@ -788,7 +791,6 @@
       for (var c2 = 0; c2 < ncol; c2++) {
         var v = rows[i][c2];
         if (v == null) continue;
-        if (mode() === 'between' && splitRange(v)) { var rr = splitRange(v); if (typeof parseDate(rr[0], baseYear) === 'number') counts[c2]++; continue; }
         var p = parseDate(v, baseYear);
         if (typeof p === 'number') counts[c2]++;
       }
@@ -797,14 +799,23 @@
   }
 
   // 期間の計算で、その列に「A〜B」のセルが1つでもあれば、期間の列として扱う
-  function rangeColumn(rows, c) {
-    for (var i = 0; i < rows.length; i++) if (rows[i][c] != null && splitRange(rows[i][c])) return true;
-    return false;
+  // 「A〜B」の両方が日付として読めるセルか（「午前〜午後」「1〜2」は期間にしない）
+  function validRange(v, baseYear) {
+    if (v == null) return false;
+    var rg = splitRange(v);
+    return !!rg && typeof parseDate(rg[0], baseYear) === 'number' && typeof parseDate(rg[1], baseYear) === 'number';
   }
-  function rangeCounts(rows, ncol) {
+  function rangeCounts(rows, ncol, baseYear) {
     var counts = [];
-    for (var c = 0; c < ncol; c++) { counts.push(0); for (var i = 0; i < rows.length; i++) if (rows[i][c] != null && splitRange(rows[i][c])) counts[c]++; }
+    for (var c = 0; c < ncol; c++) { counts.push(0); for (var i = 0; i < rows.length; i++) if (validRange(rows[i][c], baseYear)) counts[c]++; }
     return counts;
+  }
+  // 期間の列として扱うか：その列の期間のセルの数が、2番目に多い日付の列の日付の数以上のとき
+  // （開始日・終了日の2列の表に期間のセルが少し混ざっただけなら、2列の表として読む）
+  function isRangeCol(c, counts, rc) {
+    if (!rc[c]) return false;
+    var sorted = counts.slice().sort(function (p, q) { return q - p; });
+    return rc[c] >= (sorted.length > 1 ? sorted[1] : 0);
   }
 
   // ---------- 本体 ----------
@@ -839,7 +850,7 @@
     if (md === 'between' && ncol > 1) {
       var cnt = readableCounts(rows, ncol, r.baseYear, false), withDate = [], ranges = 0;
       cnt.forEach(function (v, i) { if (v > 0) withDate.push(colName(i)); });
-      rows.forEach(function (row) { row.forEach(function (v) { if (splitRange(v)) ranges++; }); });
+      rangeCounts(rows, ncol, r.baseYear).forEach(function (v) { ranges += v; });
       if (withDate.length === 1 && !ranges) {
         res.errors.push('この表で日付が入っているのは' + withDate[0] + 'だけです。期間の計算には開始日と終了日の2つの日付が要ります。開始日と終了日の2列の表（または「2026/10/1〜2026/10/31」の形）を貼り付けるか、「例を入れる」を押してください。');
         last = res; return res;
@@ -848,14 +859,17 @@
     var ca = +colA.value || 0, cb = +colB.value || 0;
     if (ncol <= 1) { ca = 0; cb = -1; }
     res.cols = { a: ca, b: cb, range: false };
-    if (md === 'between' && ncol > 1) res.cols.range = rangeColumn(rows, ca);
+    if (md === 'between' && ncol > 1) res.cols.range = isRangeCol(ca, readableCounts(rows, ncol, r.baseYear, false), rangeCounts(rows, ncol, r.baseYear));
     // 1行目が見出しか：1行目が読めず、2行目以降に読める行がある
     function cellsOf(row) {
       if (md === 'between') {
         if (ncol <= 1) { var v = row[0] == null ? '' : row[0]; var rg = splitRange(v); return rg ? { a: rg[0], b: rg[1], raw: v, single: true } : { a: v, b: null, raw: v, single: true }; }
         var va = row[ca] == null ? '' : row[ca], vb = row[cb] == null ? '' : row[cb];
         // 開始日の列のセルが「A〜B」のときは、そのセルを期間として読む（終了日の列は使わない）
-        if (res.cols.range) { var rg2 = splitRange(va); if (rg2) return { a: rg2[0], b: rg2[1], raw: va, single: true }; return { a: va, b: null, raw: va, single: true }; }
+        var rg2 = splitRange(va);
+        if (res.cols.range) { if (rg2) return { a: rg2[0], b: rg2[1], raw: va, single: true }; return { a: va, b: null, raw: va, single: true }; }
+        // 2列の表でも、終了日の列が空で、開始日のセルが「A〜B」なら期間として読む
+        if (rg2 && trimSpaces(normalize(vb)) === '') return { a: rg2[0], b: rg2[1], raw: va, single: true };
         return { a: va, b: vb, raw: null };
       }
       return { a: row[ca] == null ? '' : row[ca] };
@@ -873,7 +887,7 @@
     // 見出し：空でない最初の行が日付として読めず、その下に読める行がある。または、空でない行がその1行だけで、数字を含まない
     var headIdx = -1, h0 = 0;
     while (h0 < readList.length && rowEmpty(readList[h0])) h0++;
-    if (h0 < readList.length && !rowReadable(readList[h0]) && !RE_DATE_LIKE.test(normalize(rows[h0].join(' ')))) {
+    if (h0 < readList.length && !rowReadable(readList[h0]) && !rows[h0].some(function (v) { var t = trimSpaces(normalize(v)); return RE_DATE_SHAPE.test(t) || RE_HAS_DATE.test(t); })) {
       var others = 0, readableBelow = false;
       for (var h = h0 + 1; h < readList.length; h++) { if (!rowEmpty(readList[h])) others++; if (rowReadable(readList[h])) { readableBelow = true; } }
       if (readableBelow || (!others && !/[0-9]/.test(normalize(rows[h0].join(''))))) headIdx = h0;
@@ -918,7 +932,7 @@
   }
   function listBad(bad, max) {
     max = max || 3;
-    var shown = bad.slice(0, max).map(function (b) { return b.line + '行目「' + clip(b.text, max === 1 ? 14 : 20) + '」（' + b.why + '）'; });
+    var shown = bad.slice(0, max).map(function (b) { return b.line + '行目「' + clip(b.text, 24) + '」（' + b.why + '）'; });
     return shown.join('、') + (bad.length > max ? 'ほか' + (bad.length - max) + '行' : '');
   }
   function clip(s, n) { var a = Array.from(s); return a.length > n ? a.slice(0, n).join('') + '…' : s; }
@@ -943,10 +957,10 @@
     colState.count = ncol;
     var order = counts.map(function (v, i) { return { v: v, i: i }; }).sort(function (p, q) { return q.v - p.v || p.i - q.i; });
     var autoA, autoB;
-    var rc = md === 'between' ? rangeCounts(rows, ncol) : [];
+    var rc = md === 'between' ? rangeCounts(rows, ncol, baseYear) : [];
     var bestRange = -1;
     rc.forEach(function (v, i) { if (v > 0 && (bestRange < 0 || v > rc[bestRange])) bestRange = i; });
-    if (md === 'between' && bestRange >= 0) { autoA = bestRange; autoB = bestRange === 0 ? 1 : 0; }
+    if (md === 'between' && bestRange >= 0 && isRangeCol(bestRange, counts, rc)) { autoA = bestRange; autoB = bestRange === 0 ? 1 : 0; }
     else if (md === 'between') {
       var two = [order[0].i, order[1].i].sort(function (p, q) { return p - q; });
       autoA = two[0]; autoB = two[1];
@@ -955,10 +969,11 @@
     var b = colState.userB != null && colState.userB < ncol ? colState.userB : autoB;
     if (colState.userA != null && a !== colState.userA) colState.userA = null;
     if (colState.userB != null && b !== colState.userB) colState.userB = null;
-    fillSelect(colA, names, counts, a);
-    fillSelect(colB, names, counts, b);
+    var shown = counts.map(function (v, i) { return v + (rc[i] || 0); });
+    fillSelect(colA, names, shown, a);
+    fillSelect(colB, names, shown, b);
     colsBox.hidden = false;
-    var rangeA = md === 'between' && rangeColumn(rows, a);
+    var rangeA = md === 'between' && isRangeCol(a, counts, rc);
     $('colBField').hidden = md !== 'between' || rangeA;
     $('colALabel').textContent = md === 'between' ? (rangeA ? '期間の列' : '開始日の列') : '日付の列';
   }
@@ -1369,11 +1384,11 @@
   colB.addEventListener('change', function () { colState.userB = +colB.value; resetCopyButtons(); render(); setStatus(status, '終了日の列を' + colName(+colB.value) + 'にしました。' + resultWord()); });
   function pasteMessage() {
     if (!last) return '';
-    if (last.errors.length) return '貼り付けました。直すところがあります。上のまとめを見てください。';
+    if (last.errors.length) return '貼り付けました。直すところがあります。まとめの案内を見てください。';
     var real = last.rows.filter(function (it) { return it.kind !== 'head' && it.kind !== 'empty'; }).length;
-    if (!real) return '貼り付けました。計算できる行がありません。上のまとめを見てください。';
+    if (!real) return '貼り付けました。計算できる行がありません。まとめの案内を見てください。';
     var ng = real - last.ok;
-    return '貼り付けた' + fmtNum(real) + '件のうち' + fmtNum(last.ok) + '件を計算しました。' + (ng ? '計算できない行が' + fmtNum(ng) + '件あります。上のまとめと下の結果の表を見てください。' : '結果は下の表です。');
+    return '貼り付けた' + fmtNum(real) + '件のうち' + fmtNum(last.ok) + '件を計算しました。' + (ng ? '計算できない行が' + fmtNum(ng) + '件あります。まとめと結果の表で理由を確かめてください。' : '結果は「結果」の表に出ています。');
   }
   function fieldName() { return mode() === 'between' ? '期間の表' : '日付の列'; }
   function updateModeUi() {
