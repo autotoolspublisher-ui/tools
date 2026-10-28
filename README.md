@@ -17,6 +17,7 @@
 - `<meta name="description">` に、何ができるか、無料・登録不要であること、入力した内容が送信されないことを、80〜120文字で書く
 - `<link rel="canonical">` に、そのページの絶対URL（`https://autotoolspublisher-ui.github.io/tools/フォルダ名/`）を書く
 - `<link rel="icon" href="../favicon.svg">` を付ける
+- `<meta charset="utf-8">` の直後に Google アナリティクスのタグ（測定ID `G-VCRH8J95WL`、gtag.js）を入れる。中身はトップページと同じものをコピーする。入力内容を URL（クエリや `#`）に入れない（ページの URL はアナリティクスに送られるため）
 - OGP（`og:type`、`og:site_name`、`og:locale`、`og:title`、`og:description`、`og:url`、`og:image`）と `twitter:card` を付ける。`og:image` は `ogp/フォルダ名.png`（1200×630）を用意する。既存の画像と同じ見た目で作る
 - 構造化データ（JSON-LD）として、`WebApplication`、`BreadcrumbList`、`FAQPage` を入れる。内容は画面に表示している文章と一致させる
 
