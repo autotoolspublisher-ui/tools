@@ -134,6 +134,10 @@
   .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
   .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
   .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  .chip input:disabled + span::before { border-color: #bdc1c6; }
+  #resultTitle:focus { outline: 0; }
+  #resultTitle:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
   .field { min-width: 0; margin: 0 0 14px; }
   .field label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
   .field label small, .hint, .label small { color: var(--muted); font-weight: 400; font-size: .875rem; }
@@ -274,7 +278,7 @@
       </div>
 
       <div class="area-result" id="resultArea">
-        <h2 id="resultTitle">結果</h2>
+        <h2 id="resultTitle" tabindex="-1">結果</h2>
         <ul class="stats" id="stats" aria-label="まとめ">
           <li id="stTotal"><span class="k">番号</span><span class="v">–</span></li>
           <li id="stGap"><span class="k">欠番</span><span class="v">–</span></li>
@@ -559,6 +563,20 @@
   }
   function colLetter(c) { var s = ''; c += 1; while (c > 0) { var m = (c - 1) % 26; s = String.fromCharCode(65 + m) + s; c = Math.floor((c - 1) / 26); } return s; }
 
+  // 書き方の揺れ：英字の大小、記号（ASCII の英数字以外）、ハイフンの仲間・長音・中黒・空白だけが違う接頭辞・接尾辞は、同じものの揺れとみなす
+  var LOOSE_CODES = [0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015, 0x2212, 0x30FC, 0xFF70, 0x30FB, 0x00A0, 0x3000];
+  function looseKey(s) {
+    var out = '';
+    s = s.toLowerCase();
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c < 128 && !(isDigit(c) || (c >= 97 && c <= 122))) continue;
+      if (LOOSE_CODES.indexOf(c) >= 0) continue;
+      out += s.charAt(i);
+    }
+    return out;
+  }
+
   // ---------- 多いもの（同数なら先に出たもの） ----------
   function majority(list) {
     var cnt = {}, order = [], best = null, bestN = 0;
@@ -695,8 +713,8 @@
       g.items.forEach(function (it) { if (it.value < lo) lo = it.value; if (it.value > hi) hi = it.value; });
       if (R.range && R.range.lo != null) lo = R.range.lo;
       if (R.range && R.range.hi != null) hi = R.range.hi;
-      if (lo > hi) { if (R.range.lo != null && R.range.hi == null) hi = lo; else lo = hi; }
       g.lo = lo; g.hi = hi;
+      g.empty = lo > hi;   // 開始だけ（終了だけ）を指定し、その連番の番号が1つも範囲に入らない
       // 3桁ごとのカンマで書いた番号が多い連番は、欠番もカンマ付きで書く
       var big = g.items.filter(function (it) { return it.nat >= 4; });
       g.comma = big.length > 0 && big.filter(function (it) { return it.comma; }).length * 2 > big.length;
@@ -705,6 +723,7 @@
       vals.sort(cmpBig);
       g.inRange = vals.length;
       g.gapCount = ZERO;
+      if (g.empty) return;
       var prev = lo - ONE;
       vals.forEach(function (v) {
         if (v > prev + ONE) { R.gapRanges.push({ group: g, a: prev + ONE, b: v - ONE }); g.gapCount += v - prev - ONE; }
@@ -720,7 +739,7 @@
         if (R.affix && it.prefix !== R.majPrefix && R.majPrefix != null) it.flags.push({ t: 'prefix' });
         if (R.affix && it.suffix !== R.majSuffix && R.majSuffix != null) it.flags.push({ t: 'suffix' });
       }
-      if (it.kind === 'num' && R.range && (it.value < it.group.lo || it.value > it.group.hi)) it.flags.push({ t: 'out', lo: it.group.lo, hi: it.group.hi });
+      if (it.kind === 'num' && R.range && (it.value < it.group.lo || it.value > it.group.hi)) it.flags.push({ t: 'out', lo: R.range.lo, hi: R.range.hi, glo: it.group.lo, ghi: it.group.hi });
       if (it.kind === 'nodigit') it.flags.push({ t: 'nodigit' });
       if (it.kind === 'toolong') it.flags.push({ t: 'toolong' });
     });
@@ -734,7 +753,11 @@
         var l = 0, r = all.length;
         while (l < r) { var m = (l + r) >> 1; if (all[m].value < gr.a) l = m + 1; else r = m; }
         var found = [];
-        for (var k = l; k < all.length && all[k].value <= gr.b && found.length < 21; k++) if (all[k].group !== gr.group) found.push(all[k]);
+        var gk = looseKey(gr.group.dprefix) + SEP + looseKey(gr.group.dsuffix);
+        for (var k = l; k < all.length && all[k].value <= gr.b && found.length < 21; k++) {
+          var o = all[k];
+          if (o.group !== gr.group && looseKey(o.prefix) + SEP + looseKey(o.suffix) === gk) found.push(o);
+        }
         if (found.length) gr.others = found;
       });
     }
@@ -770,7 +793,7 @@
     if (f.t === 'width') return '桁数違い：' + it.len + '桁（ほかは' + (f.W == null ? '0埋めなし' : f.W + '桁') + '）';
     if (f.t === 'prefix') return '接頭辞違い：' + affixName(it.prefix, '接頭辞') + '（多いのは' + affixName(R.majPrefix, '接頭辞') + '）';
     if (f.t === 'suffix') return '接尾辞違い：' + affixName(it.suffix, '接尾辞') + '（多いのは' + affixName(R.majSuffix, '接尾辞') + '）';
-    if (f.t === 'out') return '範囲外：指定した範囲（' + fmtNum(f.lo) + '〜' + fmtNum(f.hi) + '）の外';
+    if (f.t === 'out') return '範囲外：指定した範囲（' + (f.lo != null ? fmtNum(f.lo) : fmtNum(f.glo)) + '〜' + (f.hi != null ? fmtNum(f.hi) : fmtNum(f.ghi)) + '）の外';
     if (f.t === 'nodigit') return '数字なし：数字が1つもないため調べていません';
     return '桁が多すぎる：' + it.len + '桁（30桁まで）のため調べていません';
   }
@@ -868,9 +891,10 @@
     return fmtNum(R.headIndex + 1) + '行目「' + clip(trimSp(R.items[R.headIndex].text), 12) + '」は見出しとして飛ばしました。';
   }
   function toolongLine(R) {
+    var rows = R.toolong.slice(0, 3).map(function (it) { return fmtNum(it.row); }).join('・') + '行目' + (R.toolong.length > 3 ? 'ほか' : '');
     var lens = {}, n = 0;
     R.toolong.forEach(function (it) { if (!lens[it.len]) { lens[it.len] = 1; n++; } });
-    return rowsText(R.toolong) + 'は' + (n === 1 ? R.toolong[0].len + '桁' : '31桁以上') + 'で、30桁までの番号しか調べられないため、調べていません。';
+    return rows + 'は' + (n === 1 ? R.toolong[0].len + '桁' : '31桁以上') + 'で、30桁までの番号しか調べられないため、調べていません。';
   }
   function renderSummary(R) {
     summary.textContent = '';
@@ -909,15 +933,16 @@
     var text;
     if (R.groups.length === 1) {
       var g = R.groups[0];
-      text = (R.range ? '指定した範囲 ' : '範囲 ') + rangeNo(g, g.lo) + '〜' + rangeNo(g, g.hi) + '（' + fmtNum(g.hi - g.lo + ONE) + '個）。重複を除くと ' + fmtNum(R.distinct) + '件です。';
+      if (g.empty) text = '指定した範囲（' + (R.range.lo != null ? fmtNum(R.range.lo) : '') + '〜' + (R.range.hi != null ? fmtNum(R.range.hi) : '') + '）に入る番号がありません。開始・終了を見直してください。';
+      else text = (R.range ? '指定した範囲 ' : '範囲 ') + rangeNo(g, g.lo) + '〜' + rangeNo(g, g.hi) + '（' + fmtNum(g.hi - g.lo + ONE) + '個）。' + (g.inRange === g.distinct ? '重複を除くと ' : '範囲の中は重複を除くと ') + fmtNum(g.inRange) + '件です。';
     } else {
-      text = '接頭辞・接尾辞の違う連番が ' + fmtNum(R.groups.length) + 'つあり、別々に調べました。';
+      text = '接頭辞・接尾辞の違う連番が ' + fmtNum(R.groups.length) + (R.groups.length < 10 ? 'つ' : '個') + 'あり、別々に調べました。';
     }
     summary.appendChild(line('sub', text));
     if (R.head) summary.appendChild(line('sub', headLine(R)));
     if (R.multiCount) {
       var ex = R.multiExample;
-      summary.appendChild(line('w', fmtNum(R.multiCount) + '件は数字が2か所以上あり、後ろの数字を番号の数として読みました（例：' + clip(ex.text, 12) + ' は ' + ex.digits + '）。'));
+      summary.appendChild(line('w', fmtNum(R.multiCount) + '件は数字が2か所以上あり、後ろの数字を番号の数として読みました（例：' + clip(ex.text, 10) + ' は ' + clip(ex.digits, 8) + '）。'));
     }
     if (R.toolong.length) summary.appendChild(line('w', toolongLine(R)));
   }
@@ -1081,9 +1106,17 @@
     if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
   }, { passive: true });
   window.addEventListener('resize', unpin);
+  // 設定を変えて上の結果の高さが変わっても、押した部品が画面の同じ位置に残るようにスクロールを合わせる
+  function renderKeep() {
+    var r0 = pressedRect();
+    var R = render();
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    return R;
+  }
   function afterChange(el, prefix) {
     resetCopyButtons();
-    var R = render();
+    var R = renderKeep();
     if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
     setStatus(el, prefix + resultWord(R));
   }
@@ -1197,7 +1230,7 @@
     resetCopyButtons();
     var R = analyze(numsEl.value, options());
     autoView(R);
-    R = render();
+    R = renderKeep();
     setStatus(status, colLetter(R.col) + '列を番号の列にしました。' + (R.error ? errorMessage(R) : resultWord(R)), !!R.error);
   });
   headChk.addEventListener('change', function () {
@@ -1211,9 +1244,13 @@
     });
   });
   function rangeWord(R) {
-    if (!R.groups || !R.groups.length) return clip(trimSp(rangeFrom.value), 12) + '〜' + clip(trimSp(rangeTo.value), 12);
+    var gs = (R.groups || []).filter(function (g) { return !g.empty; });
+    if (!gs.length) {
+      var a = parseNo(rangeFrom.value), b = parseNo(rangeTo.value);
+      return '「' + (a.kind === 'num' ? fmtNum(a.value) : 'いちばん小さい番号') + '〜' + (b.kind === 'num' ? fmtNum(b.value) : 'いちばん大きい番号') + '」';
+    }
     var lo = null, hi = null;
-    R.groups.forEach(function (g) { if (lo === null || g.lo < lo) lo = g.lo; if (hi === null || g.hi > hi) hi = g.hi; });
+    gs.forEach(function (g) { if (lo === null || g.lo < lo) lo = g.lo; if (hi === null || g.hi > hi) hi = g.hi; });
     return fmtNum(lo) + '〜' + fmtNum(hi);
   }
   rangeInputs.forEach(function (el) {
@@ -1221,7 +1258,7 @@
       var fixed = radio(rangeInputs) === 'fixed';
       if (fixed && !trimSp(rangeFrom.value) && !trimSp(rangeTo.value)) {
         resetCopyButtons();
-        render();
+        renderKeep();
         setStatus(setStatusEl, '欠番を探す範囲を「開始と終了を指定」にしました。開始と終了の番号を入れてください。');
         return;
       }
@@ -1231,10 +1268,11 @@
   [rangeFrom, rangeTo].forEach(function (el) {
     el.addEventListener('input', function () {
       resetCopyButtons();
-      var R = render();
+      var R = renderKeep();
       if (R.error) { setStatus(setStatusEl, errorMessage(R), true); return; }
       if (!trimSp(rangeFrom.value) && !trimSp(rangeTo.value)) { setStatus(setStatusEl, '開始と終了が空のため、いちばん小さい番号〜大きい番号で探しています。' + resultWord(R)); return; }
-      setStatus(setStatusEl, '範囲を ' + rangeWord(R) + ' にしました。' + resultWord(R));
+      var w = rangeWord(R);
+      setStatus(setStatusEl, '範囲を' + (w.charAt(0) === '「' ? w : ' ' + w + ' ') + 'にしました。' + (R.numCount ? resultWord(R) : '番号の列を貼り付けると調べます。'));
     });
   });
   widthInputs.forEach(function (el) {
@@ -1244,7 +1282,7 @@
   });
   widthN.addEventListener('input', function () {
     resetCopyButtons();
-    var R = render();
+    var R = renderKeep();
     if (R.error === 'width') setStatus(setStatusEl, errorMessage(R), true);
     else setStatus(setStatusEl, '桁数の基準を ' + R.width + '桁にしました。' + (R.error ? errorMessage(R) : resultWord(R)), !!R.error);
   });
@@ -1252,6 +1290,12 @@
     afterChange(setStatusEl, affixChk.checked ? '接頭辞・接尾辞の違いを知らせるようにしました。' : '接頭辞・接尾辞の違いは知らせないようにしました。');
   });
 
+  document.querySelector('.jump').addEventListener('click', function (e) {
+    e.preventDefault();
+    var h = $('resultTitle');
+    h.scrollIntoView({ block: 'start' });
+    h.focus({ preventScroll: true });
+  });
   window.BangoCheck = { gapText: gapText, analyze: analyze, parseTable: parseTable, parseNo: parseNo, columnText: columnText, gapCopy: gapCopy, judge: judge };
   render();
 })();
