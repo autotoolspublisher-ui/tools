@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCRH8J95WL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VCRH8J95WL');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>タイムスタンプ清書 - 秒ずらし・並べ替え・コメント分割｜AIツールひろば</title>
+  <meta name="description" content="配信のタイムスタンプを貼り付けるだけで、押し遅れの秒ずらし、表記の統一と時刻順の並べ替え、YouTubeコメントの上限での分割、時刻付きURLの一覧まで清書できる無料ツールです。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/timestamp-seisho/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="タイムスタンプ清書 - 秒ずらし・並べ替え・コメント分割｜AIツールひろば">
+  <meta property="og:description" content="配信のタイムスタンプを貼り付けるだけで、押し遅れの秒ずらし、表記の統一と時刻順の並べ替え、YouTubeコメントの上限での分割、時刻付きURLの一覧まで清書できる無料ツールです。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/timestamp-seisho/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/timestamp-seisho.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "タイムスタンプ清書",
+    "description": "配信のタイムスタンプを貼り付けるだけで、押し遅れの秒ずらし、表記の統一と時刻順の並べ替え、YouTubeコメントの上限での分割、時刻付きURLの一覧まで清書できる無料ツールです。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/timestamp-seisho/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "タイムスタンプ清書",
+        "item": "https://autotoolspublisher-ui.github.io/tools/timestamp-seisho/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "どんな書き方の時刻を読めますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "行の先頭にある「1:23」「01:23」「123:45」（分:秒）と「1:23:45」「01:23:45」（時:分:秒）を読みます。全角の数字・全角のコロン（：）も読みます。時刻で始まらない行（【前半】などの見出しや空の行）は、そのまま残します。「1:75」のように秒が60以上の行や「12:3」のような形は時刻として読まず、そのまま残して行番号を知らせます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "一部の行だけ秒をずらせますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。結果の「時刻の一覧とURL」で、ずらしたくない行のチェックを外します。はじめは、すべての時刻の行にチェックが付いています。また「0:00 の行はずらさない」がオンのときは、0:00 の行はずらしません。ずらした結果が 0:00 より前になる行は 0:00 にして、そのことを知らせます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "コメントの上限は、どう決めればよいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "YouTube のコメントの上限は公式に決まった数が公表されていないため、はじめの設定は、余裕を持たせて1件あたり 9,500バイト・タイムスタンプ190個にしています（日本語は1文字3バイト、英数字は1バイトで、UTF-8 の数え方です）。投稿できなかったときは、上限を小さくしてください。行の途中では切らず、2件目からは先頭に「（続き）」の行を付けます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "時刻付きURLの表をExcelに貼ると、時刻が変わってしまいませんか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「表をコピー（Excel）」は、時刻と見出しを「文字列」の書式にした表も一緒にコピーするため、Excel や Google スプレッドシートに貼っても「12:34」が12時34分の時刻に変わりません。URL は https://youtu.be/動画ID?t=秒 の形で、秒の列も付きます。メモ帳など文字だけの貼り付け先では、タブ区切りの文字として貼られます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。清書の処理はすべてお使いのブラウザの中で行い、貼り付けたタイムスタンプや動画のURLが外部に送信されることはありません。ブラウザに保存することもありません。YouTube への投稿もしないので、コピーしてご自分で貼り付けてください。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --bad: #b3261e; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に入力と設定、右に結果。狭い幅：入力 → 結果 → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "input result" "settings result"; gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-input { grid-area: input; }
+  .area-result { grid-area: result; padding-left: 30px; border-left: 1px solid #e8eaed; }
+  .area-settings { grid-area: settings; margin-top: 8px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .area-settings h2, .area-result h2 { margin: 0 0 10px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend, .setting > .label { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; max-width: 100%; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; line-height: 1.3; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  #resultTitle:focus { outline: 0; }
+  #resultTitle:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .field { min-width: 0; margin: 0 0 14px; }
+  .field label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint, .label small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  input[type="text"], input[type="url"] { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  .field input[type="url"] { width: 100%; }
+  input[type="text"]:focus, input[type="url"]:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  input.bad { border-color: var(--bad) !important; box-shadow: 0 0 0 1px var(--bad) !important; }
+  .sub-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 8px 0 0; }
+  .sub-row label { color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .sub-row input.short { width: 6.5em; text-align: right; }
+  .sub-row input.mid { width: 11em; }
+  textarea { display: block; width: 100%; min-height: 240px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: .95rem/1.55 inherit; font-family: inherit; resize: vertical; tab-size: 8; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  button.btn.copy { min-width: 9.5em; }
+  .jump-row { display: none; margin: -4px 0 6px; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* まとめ（数の枠） */
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; padding: 0; list-style: none; }
+  .stats li { display: flex; flex-direction: column; justify-content: center; min-height: 74px; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; }
+  .stats .v { color: #202124; font-size: 1.25rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
+  .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
+  .stats li.has .v { color: #7a4f01; }
+  /* まとめの文 */
+  .summary { min-height: 110px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary .main { display: block; font-weight: 600; color: var(--ok); }
+  .summary .main.warn { color: var(--warn-ink); }
+  .summary .main.err { color: var(--bad); }
+  .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .manual { margin: 0 0 12px; }
+  .manual label { display: block; margin-bottom: 4px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { min-height: 96px; }
+  .view { margin: 4px 0 8px; }
+  /* 清書した本文（コメントごと） */
+  .parts { display: grid; gap: 12px; }
+  .part { border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .part-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; padding: 8px 10px 8px 14px; border-bottom: 1px solid #eceef1; }
+  .part-title { color: #3c4043; font-size: .9rem; font-weight: 600; line-height: 1.4; }
+  .part-title small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .part-title.over small { color: var(--bad); font-weight: 600; }
+  button.btn.part-copy { min-width: 9.5em !important; }
+  .part pre { max-height: 300px; margin: 0; padding: 10px 14px; overflow: auto; font: .9rem/1.6 ui-monospace, Consolas, "Hiragino Kaku Gothic ProN", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .part pre:focus-visible { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .list-tools { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 8px; }
+  .table-wrap { max-height: 380px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .table-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  table.res { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.45; }
+  table.res th, table.res td { padding: 7px 10px; border-bottom: 1px solid #eceef1; text-align: left; vertical-align: top; }
+  table.res thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); color: #3c4043; font-weight: 600; white-space: nowrap; }
+  table.res td.num { color: var(--muted); text-align: right; white-space: nowrap; width: 1%; }
+  table.res td.chk { width: 1%; padding: 0 4px 0 6px; }
+  table.res td.chk label { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; cursor: pointer; }
+  table.res td.chk input { width: 20px; height: 20px; margin: 0; accent-color: var(--green); cursor: pointer; }
+  table.res td.time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.res td.time .old { color: var(--muted); }
+  table.res td.time .new { font-weight: 600; }
+  table.res td.txt { min-width: 7em; overflow-wrap: anywhere; }
+  table.res td.bad { min-width: 7em; color: #a50e0e; overflow-wrap: anywhere; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; border: 1px dashed var(--line); border-radius: 12px; }
+  .url-note { margin: 8px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.5; overflow-wrap: anywhere; }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .area-result { margin-top: 18px; padding: 18px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    textarea { min-height: 150px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats li { min-height: 62px; }
+    .summary { min-height: 154px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
+    table.res th, table.res td { padding: 6px 7px; }
+    table.res td.time .old { display: block; }
+    .table-wrap { max-height: 340px; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .summary { min-height: 198px; }
+    .status { min-height: 110px; }
+    .chip span { padding: 6px 10px; }
+    button.btn.copy { padding-left: 6px; padding-right: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">タイムスタンプ清書</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">TIMESTAMP</p>
+    <h1>タイムスタンプ清書</h1>
+    <p>配信中に打ったタイムスタンプのメモを貼り付けると、押し遅れの秒をまとめてずらし、時刻の書き方をそろえて時刻順に並べ、YouTube のコメントの上限に合わせて分けます。<span class="more">1行ずつ秒を直したり、文字数を数えて手で分けたり、Excel の数式で時刻付きURLを作ったりしなくても、チャプターの決まりの確認と時刻付きURLの一覧まで1ページで終わります。</span></p>
+  </header>
+
+  <section class="card" aria-label="タイムスタンプ清書">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>タイムスタンプ（1行に「時刻 見出し」）を貼り付けます。</li>
+        <li>押し遅れがあれば「ずらす秒数」に -5 のように入れます。</li>
+        <li>「清書した本文」の「コピー」を押し、YouTube のコメント・概要欄に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-input">
+        <div class="field">
+          <label for="src">タイムスタンプ <small>（1行に「時刻 見出し」）</small></label>
+          <textarea id="src" spellcheck="false" placeholder="例：&#10;0:00 開始&#10;3:15 1曲目 夜明けの歌&#10;12:40 2曲目 星のワルツ"></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+        <div class="field">
+          <label for="url">動画のURL <small>（任意。時刻付きURLを作るときに入れます）</small></label>
+          <input type="url" id="url" autocomplete="off" spellcheck="false" placeholder="例：https://youtu.be/XXXXXXXXXXX">
+        </div>
+      </div>
+
+      <div class="area-result" id="resultArea">
+        <h2 id="resultTitle" tabindex="-1">結果</h2>
+        <ul class="stats" id="stats" aria-label="まとめ">
+          <li id="stTs"><span class="k">時刻の行</span><span class="v">–</span></li>
+          <li id="stChars"><span class="k">文字数</span><span class="v">–</span></li>
+          <li id="stBytes"><span class="k">バイト数</span><span class="v">–</span></li>
+          <li id="stParts"><span class="k">コメント</span><span class="v">–</span></li>
+        </ul>
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <fieldset class="setting view">
+          <legend>表示する結果</legend>
+          <div class="chips" id="viewChips">
+            <label class="chip"><input type="radio" name="view" value="text" checked><span>清書した本文</span></label>
+            <label class="chip"><input type="radio" name="view" value="list"><span>時刻の一覧とURL</span></label>
+          </div>
+        </fieldset>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+        <div id="viewText">
+          <div class="actions" style="margin-top:0">
+            <button type="button" class="btn copy" id="copyAll" disabled>全文をコピー</button>
+          </div>
+          <div class="parts" id="parts"></div>
+        </div>
+        <div id="viewList" hidden>
+          <div class="list-tools">
+            <button type="button" class="btn" id="checkAll" disabled>すべて選ぶ</button>
+            <button type="button" class="btn" id="checkNone" disabled>すべて外す</button>
+          </div>
+          <div class="table-wrap" id="tableWrap" tabindex="0" aria-label="時刻の一覧"></div>
+          <p class="url-note" id="urlNote"></p>
+          <div class="actions">
+            <button type="button" class="btn primary copy" id="copyTsv" disabled>表をコピー（Excel）</button>
+            <button type="button" class="btn copy" id="copyMd" disabled>Markdownをコピー</button>
+            <button type="button" class="btn copy" id="copyTxt" disabled>テキストをコピー</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2>清書の設定</h2>
+        <p class="jump-row"><a class="jump" href="#resultTitle">▲ 結果を見る</a></p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <fieldset class="setting">
+          <legend>押し遅れの直し</legend>
+          <div class="sub-row" style="margin-top:0">
+            <label for="shift">ずらす秒数</label><input type="text" id="shift" class="short" inputmode="text" autocomplete="off" spellcheck="false" value="0">
+          </div>
+          <p class="hint">-5 で5秒前に、+3 で3秒後ろにずらします（-1:30 のように分:秒でも入れられます）。ずらさない行は「時刻の一覧とURL」でチェックを外します。</p>
+          <div class="chips" style="margin-top:8px">
+            <label class="chip"><input type="checkbox" id="keepZero" checked><span>0:00 の行はずらさない</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>時刻の書き方</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="fmt" value="auto" checked><span>自動（0:00／1時間以上は 0:00:00）</span></label>
+            <label class="chip"><input type="radio" name="fmt" value="auto2"><span>自動・2桁（00:00／00:00:00）</span></label>
+            <label class="chip"><input type="radio" name="fmt" value="h"><span>0:00:00 にそろえる</span></label>
+            <label class="chip"><input type="radio" name="fmt" value="hh"><span>00:00:00 にそろえる</span></label>
+          </div>
+          <p class="hint">「自動」は、いちばん遅い時刻が1時間以上なら、すべての行を時:分:秒にします。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>時刻と見出しの間</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="gap" value="half" checked><span>半角スペース</span></label>
+            <label class="chip"><input type="radio" name="gap" value="full"><span>全角スペース</span></label>
+            <label class="chip"><input type="radio" name="gap" value="keep"><span>元のまま</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>並べ替え</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="sort" value="time" checked><span>時刻順に並べる</span></label>
+            <label class="chip"><input type="radio" name="sort" value="none"><span>元の順のまま</span></label>
+          </div>
+          <p class="hint">【前半】のような見出しの行があるときは、見出しで区切ったまとまりの中で並べます。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>1件のコメントの上限</legend>
+          <div class="sub-row" style="margin-top:0">
+            <input type="text" id="maxBytes" class="short" inputmode="numeric" autocomplete="off" value="9500" aria-label="バイト数の上限"><label for="maxBytes">バイトまで</label>
+            <input type="text" id="maxCount" class="short" inputmode="numeric" autocomplete="off" value="190" aria-label="タイムスタンプの数の上限"><label for="maxCount">個まで</label>
+          </div>
+          <p class="hint">超えるときは、行の途中で切らずに次のコメントに分けます。日本語は1文字3バイト、英数字は1バイトです。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>2件目からの先頭の行</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="contOn" checked><span>先頭に付ける</span></label>
+          </div>
+          <div class="sub-row" id="contRow">
+            <label for="contText">付ける文</label><input type="text" id="contText" class="mid" autocomplete="off" value="（続き）">
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <p class="note">行の先頭の「1:23」「01:23」（分:秒）と「1:23:45」（時:分:秒）を時刻として読みます。全角の数字・コロンも読みます。時刻で始まらない行（見出し・空の行）はそのまま残します。バイト数は UTF-8 で数え、改行は1バイトです。文字数は文字コード1つを1文字として数えます。</p>
+    <div class="privacy">貼り付けたタイムスタンプと動画のURLは、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>歌枠のタイムスタンプを5秒前にずらして、時刻順に清書する</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>【歌枠】
+0:00 開始
+3:15 1曲目 夜明けの歌
+12:40 2曲目 星のワルツ
+25:02 3曲目 雨上がりの道
+18:55 雑談
+1:02:30 4曲目 また明日</pre></dd>
+        <dt>設定</dt><dd>ずらす秒数：-5（ほかははじめの設定のまま）</dd>
+        <dt>結果</dt><dd><pre>【歌枠】
+0:00:00 開始
+0:03:10 1曲目 夜明けの歌
+0:12:35 2曲目 星のワルツ
+0:18:50 雑談
+0:24:57 3曲目 雨上がりの道
+1:02:25 4曲目 また明日</pre>まとめに「タイムスタンプ 6件を清書しました。」「5行を5秒前にずらしました（0:00 の行はずらしていません）。」「時刻順に並べ替えて、2行の順番を入れ替えました。」「チャプターの決まりに合っています。」と出ます。いちばん遅い時刻が1時間以上なので、すべての行が時:分:秒になります。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>長いタイムスタンプを、上限ごとのコメントに分ける</h3>
+      <dl>
+        <dt>入力</dt><dd>「0:00 開始」から 10秒ごとに「0:10 場面1」…「4:00 場面24」と続く25行</dd>
+        <dt>設定</dt><dd>1件のコメントの上限：10個まで（バイト数は 9500 のまま）</dd>
+        <dt>結果</dt><dd>コメントが3件に分かれます。1件目は 0:00〜1:30 の10行、2件目は「（続き）」の行と 1:40〜3:10 の10行、3件目は「（続き）」の行と 3:20〜4:00 の5行で、それぞれに「コピー」のボタンが付きます。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>どんな書き方の時刻を読めますか？</summary>
+      <p>行の先頭にある「1:23」「01:23」「123:45」（分:秒）と「1:23:45」「01:23:45」（時:分:秒）を読みます。全角の数字・全角のコロン（：）も読みます。時刻で始まらない行（【前半】などの見出しや空の行）は、そのまま残します。「1:75」のように秒が60以上の行や「12:3」のような形は時刻として読まず、そのまま残して行番号を知らせます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>一部の行だけ秒をずらせますか？</summary>
+      <p>はい。結果の「時刻の一覧とURL」で、ずらしたくない行のチェックを外します。はじめは、すべての時刻の行にチェックが付いています。また「0:00 の行はずらさない」がオンのときは、0:00 の行はずらしません。ずらした結果が 0:00 より前になる行は 0:00 にして、そのことを知らせます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>コメントの上限は、どう決めればよいですか？</summary>
+      <p>YouTube のコメントの上限は公式に決まった数が公表されていないため、はじめの設定は、余裕を持たせて1件あたり 9,500バイト・タイムスタンプ190個にしています（日本語は1文字3バイト、英数字は1バイトで、UTF-8 の数え方です）。投稿できなかったときは、上限を小さくしてください。行の途中では切らず、2件目からは先頭に「（続き）」の行を付けます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>時刻付きURLの表をExcelに貼ると、時刻が変わってしまいませんか？</summary>
+      <p>「表をコピー（Excel）」は、時刻と見出しを「文字列」の書式にした表も一緒にコピーするため、Excel や Google スプレッドシートに貼っても「12:34」が12時34分の時刻に変わりません。URL は https://youtu.be/動画ID?t=秒 の形で、秒の列も付きます。メモ帳など文字だけの貼り付け先では、タブ区切りの文字として貼られます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。清書の処理はすべてお使いのブラウザの中で行い、貼り付けたタイムスタンプや動画のURLが外部に送信されることはありません。ブラウザに保存することもありません。YouTube への投稿もしないので、コピーしてご自分で貼り付けてください。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/"><strong>区切り変換くん</strong><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></a></li>
+      <li><a href="../matomete-chikan/"><strong>まとめて置換</strong><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></a></li>
+      <li><a href="../zenkaku-hankaku/"><strong>全角半角そろえ</strong><span>全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></a></li>
+      <li><a href="../kaigyo-sakujo/"><strong>改行削除</strong><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（18件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var TAB = String.fromCharCode(9);
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var QUOTE = String.fromCharCode(34);
+  var BSL = String.fromCharCode(92);
+  var SPACE_CODES = [32, 9, 160, 12288];   // 半角スペース・タブ・U+00A0・全角スペース
+  var MINUS_CODES = [0x2212, 0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015, 0x30FC, 0xFF70];
+  var MAX_LINES = 5000;
+  var BYTES_MIN = 100, BYTES_MAX = 100000, COUNT_MIN = 1, COUNT_MAX = 10000;
+  var ID_RE = /^[A-Za-z0-9_-]{11}$/;
+  var encoder = new TextEncoder();
+
+  function isSpace(c) { return SPACE_CODES.indexOf(c) >= 0; }
+  function trimSp(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charCodeAt(a))) a++;
+    while (b > a && isSpace(s.charCodeAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  // 全角の英数字・記号（U+FF01〜U+FF5E）を半角に、全角スペースを半角スペースにする（1文字を1文字にするので、位置は変わらない）
+  function toHalf(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c >= 0xFF01 && c <= 0xFF5E) out += String.fromCharCode(c - 0xFEE0);
+      else if (c === 12288) out += ' ';
+      else out += s.charAt(i);
+    }
+    return out;
+  }
+  function fmtNum(v) { return String(v).replace(/[0-9](?=(?:[0-9]{3})+$)/g, '$&,'); }
+  function p2(n) { return n < 10 ? '0' + n : String(n); }
+  function byteLen(s) { return encoder.encode(s).length; }
+  function charLen(s) { return Array.from(s).length; }
+  function clip(s, n) { var a = Array.from(s); return a.length > n ? a.slice(0, n).join('') + '…' : s; }
+  function splitLines(text) { return text.split(CR + LF).join(LF).split(CR).join(LF).split(LF); }
+
+  // ---------- 時刻の読み方 ----------
+  // 行の先頭（前の空白は飛ばす）の h:mm:ss（時は1〜2桁）か m:ss（分は1〜3桁）。直後に数字・コロンが続く形は読まない
+  var RE_HMS = /^([0-9]{1,2}):([0-9]{2}):([0-9]{2})(?![0-9:])/;
+  var RE_MS = /^([0-9]{1,3}):([0-9]{2})(?![0-9:])/;
+  var RE_LOOKS = /^[0-9]+:[0-9]/;
+  var RE_INSIDE = /[0-9]:[0-5][0-9]/;
+  function parseLine(line) {
+    if (trimSp(line) === '') return { kind: 'empty' };
+    var h = toHalf(line);
+    var i = 0;
+    while (i < h.length && isSpace(h.charCodeAt(i))) i++;
+    var rest = h.slice(i);
+    var m = RE_HMS.exec(rest), sec = -1, len = 0;
+    if (m) {
+      if (+m[2] < 60 && +m[3] < 60) { sec = (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]); len = m[0].length; }
+    } else {
+      m = RE_MS.exec(rest);
+      if (m && +m[2] < 60) { sec = (+m[1]) * 60 + (+m[2]); len = m[0].length; }
+    }
+    if (sec < 0) return { kind: RE_LOOKS.test(rest) ? 'bad' : RE_INSIDE.test(rest) ? 'mid' : 'text' };
+    var after = line.slice(i + len);
+    return { kind: 'ts', sec: sec, orig: line.slice(i, i + len), after: after, title: trimSp(after) };
+  }
+  function secToStr(sec, mode, big) {
+    var h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+    var two = mode === 'auto2' || mode === 'hh';
+    if (mode === 'h' || mode === 'hh' || big) return (two ? p2(h) : String(h)) + ':' + p2(m) + ':' + p2(s);
+    var mm = Math.floor(sec / 60);
+    return (two ? p2(mm) : String(mm)) + ':' + p2(s);
+  }
+  // 時刻の表示（秒の数から、0:00 か 0:00:00 の形）
+  function plainTime(sec) { return sec >= 3600 ? secToStr(sec, 'h', true) : secToStr(sec, 'auto', false); }
+
+  // ---------- ずらす秒数・上限の読み方 ----------
+  function parseShift(text) {
+    var t = '';
+    var h = toHalf(text || '');
+    for (var i = 0; i < h.length; i++) {
+      var c = h.charCodeAt(i);
+      if (MINUS_CODES.indexOf(c) >= 0) t += '-';
+      else if (!isSpace(c)) t += h.charAt(i);
+    }
+    t = t.replace(/(秒|s|sec)$/i, '');
+    if (t === '' || t === '+' || t === '-') return 0;
+    var m = /^([+-]?)([0-9]{1,6})$/.exec(t);
+    var v = null;
+    if (m) v = +m[2];
+    else if ((m = /^([+-]?)([0-9]{1,4}):([0-9]{2})$/.exec(t)) && +m[3] < 60) v = (+m[2]) * 60 + (+m[3]);
+    else if ((m = /^([+-]?)([0-9]{1,2}):([0-9]{2}):([0-9]{2})$/.exec(t)) && +m[3] < 60 && +m[4] < 60) v = (+m[2]) * 3600 + (+m[3]) * 60 + (+m[4]);
+    if (v === null) return null;
+    return m[1] === '-' ? -v : v;
+  }
+  function parseLimit(text, lo, hi) {
+    var t = toHalf(trimSp(text || '')).split(',').join('');
+    if (!/^[0-9]{1,7}$/.test(t)) return null;
+    var v = +t;
+    return v >= lo && v <= hi ? v : null;
+  }
+
+  // ---------- 動画のURL ----------
+  function parseVideo(text) {
+    var t = trimSp(text || '');
+    if (!t) return { id: null };
+    if (ID_RE.test(t)) return { id: t };
+    var u = null;
+    try { u = new URL(/^https?:/i.test(t) ? t : 'https://' + t); } catch (e) { u = null; }
+    if (!u) return { id: null, bad: true };
+    var host = u.hostname.toLowerCase().replace(/^(www|m)[.]/, '');
+    var id = null, seg = u.pathname.split('/');
+    if (host === 'youtu.be') id = seg[1] || null;
+    else if (host === 'youtube.com') {
+      if (u.pathname === '/watch' || u.pathname === '/watch/') id = u.searchParams.get('v');
+      else if (seg[1] === 'live') id = seg[2] || null;
+    }
+    if (id && ID_RE.test(id)) return { id: id };
+    return { id: null, bad: true };
+  }
+  function urlFor(id, sec) { return 'https://youtu.be/' + id + '?t=' + sec; }
+
+  // ---------- 清書 ----------
+  // checks：入力の行番号 → false（ずらさない）。書いていない行はずらす
+  function analyze(text, opt, checks) {
+    var R = { error: null, items: [], ts: [], out: [], parts: [], warn: {} };
+    var lines = text === '' ? [] : splitLines(text);
+    while (lines.length && trimSp(lines[lines.length - 1]) === '') lines.pop();
+    while (lines.length && trimSp(lines[0]) === '') lines.shift();
+    R.lineCount = lines.length;
+    if (lines.length > MAX_LINES) { R.error = 'toomany'; return R; }
+    R.items = lines.map(function (line, k) { var it = parseLine(line); it.row = k + 1; it.src = line; return it; });
+    R.ts = R.items.filter(function (it) { return it.kind === 'ts'; });
+    R.bad = R.items.filter(function (it) { return it.kind === 'bad'; });
+    R.mid = R.items.filter(function (it) { return it.kind === 'mid'; });
+    R.video = parseVideo(opt.url);
+    if (opt.shift === null) { R.error = 'shift'; return R; }
+    if (opt.maxBytes === null || opt.maxCount === null) { R.error = 'limit'; return R; }
+    if (!R.ts.length) return R;
+
+    // ずらす
+    R.shiftedCount = 0; R.zeroKept = 0; R.clamped = [];
+    R.ts.forEach(function (it) {
+      it.checked = checks[it.row] !== false;
+      var sh = it.checked ? opt.shift : 0;
+      if (sh !== 0 && opt.keepZero && it.sec === 0) { sh = 0; R.zeroKept++; }
+      var v = it.sec + sh;
+      it.clamp = v < 0;
+      if (it.clamp) R.clamped.push(it);
+      it.newSec = v < 0 ? 0 : v;
+      if (sh !== 0) R.shiftedCount++;
+    });
+    R.unchecked = R.ts.filter(function (it) { return !it.checked; }).length;
+
+    // 書き方
+    var maxSec = 0;
+    R.ts.forEach(function (it) { if (it.newSec > maxSec) maxSec = it.newSec; });
+    var big = maxSec >= 3600;
+    R.items.forEach(function (it) {
+      if (it.kind !== 'ts') { it.out = it.src; return; }
+      it.time = secToStr(it.newSec, opt.fmt, big);
+      if (opt.gap === 'keep') it.out = it.time + it.after;
+      else it.out = it.title ? it.time + (opt.gap === 'full' ? '　' : ' ') + it.title : it.time;
+    });
+
+    // 並べ替え（見出し・区切りの行（空でない、時刻で始まらない行）で区切ったまとまりの中で、時刻の行どうしを並べる）
+    var order = R.items.slice();
+    if (opt.sort === 'time') {
+      var start = 0;
+      var flush = function (end) {
+        var slots = [], list = [];
+        for (var k = start; k < end; k++) if (order[k].kind === 'ts') { slots.push(k); list.push(order[k]); }
+        var sorted = list.slice().sort(function (a, b) { return a.newSec - b.newSec || a.row - b.row; });
+        slots.forEach(function (pos, j) { order[pos] = sorted[j]; });
+      };
+      for (var k = 0; k < order.length; k++) {
+        if (order[k].kind === 'text' || order[k].kind === 'bad' || order[k].kind === 'mid') { flush(k); start = k + 1; }
+      }
+      flush(order.length);
+    }
+    R.out = order;
+    R.moved = 0;
+    order.forEach(function (it, k) { it.outRow = k + 1; if (it.kind === 'ts' && it.outRow !== it.row) R.moved++; });
+
+    // チャプターの決まり
+    var tl = order.filter(function (it) { return it.kind === 'ts'; });
+    R.tsOut = tl;
+    R.chap = [];
+    tl.forEach(function (it) { it.chap = null; });
+    if (tl[0].newSec !== 0) { tl[0].chap = { t: 'first' }; R.chap.push(tl[0]); }
+    for (var j = 1; j < tl.length; j++) {
+      var d = tl[j].newSec - tl[j - 1].newSec;
+      if (d <= 0) { tl[j].chap = { t: 'order', prev: tl[j - 1] }; R.chap.push(tl[j]); }
+      else if (d < 10) { tl[j].chap = { t: 'short', prev: tl[j - 1], d: d }; R.chap.push(tl[j]); }
+    }
+    R.chapFew = tl.length < 3;
+
+    // 全文とまとめ
+    R.text = order.map(function (it) { return it.out; }).join(LF);
+    R.chars = charLen(R.text);
+    R.bytes = byteLen(R.text);
+
+    // 分割（行の途中では切らない。次の行を入れると上限を超えるとき、その行の前で区切る。
+    // 区切る所の直前にある見出しの行（時刻で始まらない、空でない行）は、続く時刻の行と同じ次のコメントに入れる）
+    var cont = opt.contOn ? opt.contText : '';
+    var head = function (first) { return !first && cont ? [cont] : []; };
+    var measure = function (p) {
+      var lines = head(p.first).concat(p.items.map(function (x) { return x.out; }));
+      var b = 0;
+      lines.forEach(function (l, k) { b += (k ? 1 : 0) + byteLen(l); });
+      return { bytes: b, ts: p.items.filter(function (x) { return x.kind === 'ts'; }).length, lines: lines };
+    };
+    var parts = [], cur = { first: true, items: [] };
+    order.forEach(function (it) {
+      var trial = measure({ first: cur.first, items: cur.items.concat([it]) });
+      if (cur.items.length && (trial.bytes > opt.maxBytes || trial.ts > opt.maxCount)) {
+        var carry = [];
+        var k = cur.items.length;
+        while (k > 0 && cur.items[k - 1].kind !== 'ts') k--;
+        while (k < cur.items.length && cur.items[k].kind === 'empty') k++;
+        if (k > 0 && k < cur.items.length) {
+          var moved = cur.items.slice(k);
+          var t2 = measure({ first: false, items: moved.concat([it]) });
+          if (t2.bytes <= opt.maxBytes && t2.ts <= opt.maxCount) { carry = moved; cur.items = cur.items.slice(0, k); }
+        }
+        parts.push(cur);
+        cur = { first: false, items: carry };
+      }
+      cur.items.push(it);
+    });
+    parts.push(cur);
+    parts.forEach(function (p) {
+      var m = measure(p);
+      p.lines = m.lines; p.bytes = m.bytes; p.ts = m.ts; p.body = p.items.length; p.text = m.lines.join(LF);
+      p.over = m.bytes > opt.maxBytes || m.ts > opt.maxCount;
+    });
+    R.parts = parts;
+    R.overParts = parts.filter(function (p) { return p.over; });
+    return R;
+  }
+
+  // ---------- 出力の形 ----------
+  function rowsForCopy(R) {
+    var id = R.video && R.video.id;
+    return R.tsOut.map(function (it) { return { time: it.time, sec: it.newSec, title: it.title, url: id ? urlFor(id, it.newSec) : '' }; });
+  }
+  function sheetCell(s) {
+    s = s.split(TAB).join(' ');
+    if (s.indexOf(QUOTE) >= 0) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  function toTsv(R) {
+    var head = ['時刻', '秒', '見出し', 'URL'];
+    return [head.join(TAB)].concat(rowsForCopy(R).map(function (r) { return [sheetCell(r.time), String(r.sec), sheetCell(r.title), r.url].join(TAB); })).join(LF);
+  }
+  function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  // HTML の表：時刻・見出し・URL は「文字列」の書式（12:34 が時刻に変わらないように）、秒は数のまま
+  var TEXT_ATTR = ' style="mso-number-format:' + String.fromCharCode(39) + BSL + '@' + String.fromCharCode(39) + '" sdnum="1041;0;@"';
+  function toHtml(R) {
+    var td = function (v, text) { return '<td' + (text ? TEXT_ATTR : '') + '>' + escapeHtml(v) + '</td>'; };
+    var html = '<meta charset="utf-8"><table><tr>' + ['時刻', '秒', '見出し', 'URL'].map(function (h) { return td(h, true); }).join('') + '</tr>';
+    rowsForCopy(R).forEach(function (r) { html += '<tr>' + td(r.time, true) + td(String(r.sec), false) + td(r.title, true) + td(r.url, true) + '</tr>'; });
+    return html + '</table>';
+  }
+  function mdCell(s) { return s.split(BSL).join(BSL + BSL).split('|').join(BSL + '|'); }
+  function toMarkdown(R) {
+    var out = ['| 時刻 | 見出し |', '| --- | --- |'];
+    rowsForCopy(R).forEach(function (r) {
+      var t = r.url ? '[' + r.time + '](' + r.url + ')' : r.time;
+      out.push('| ' + t + ' | ' + mdCell(r.title) + ' |');
+    });
+    return out.join(LF);
+  }
+  function toText(R) {
+    return rowsForCopy(R).map(function (r) { return [r.time, r.title, r.url].filter(function (x) { return x !== ''; }).join(' '); }).join(LF);
+  }
+
+  // ---------- 画面 ----------
+  function $(id) { return document.getElementById(id); }
+  var srcEl = $('src'), urlEl = $('url'), shiftEl = $('shift'), keepZero = $('keepZero');
+  var maxBytesEl = $('maxBytes'), maxCountEl = $('maxCount'), contOn = $('contOn'), contText = $('contText'), contRow = $('contRow');
+  var summary = $('summary'), status = $('status'), setStatusEl = $('setStatus');
+  var manualBox = $('manualBox'), manualText = $('manualText');
+  var partsEl = $('parts'), tableWrap = $('tableWrap'), urlNote = $('urlNote');
+  var copyAll = $('copyAll'), copyTsv = $('copyTsv'), copyMd = $('copyMd'), copyTxt = $('copyTxt'), checkAll = $('checkAll'), checkNone = $('checkNone');
+  var viewInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="view"]'));
+  var fmtInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="fmt"]'));
+  var gapInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="gap"]'));
+  var sortInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="sort"]'));
+  var checks = {};
+  var last = null;
+
+  function radio(list) { var v = ''; list.forEach(function (el) { if (el.checked) v = el.value; }); return v; }
+  function options() {
+    return {
+      shift: parseShift(shiftEl.value), keepZero: keepZero.checked,
+      fmt: radio(fmtInputs), gap: radio(gapInputs), sort: radio(sortInputs),
+      maxBytes: parseLimit(maxBytesEl.value, BYTES_MIN, BYTES_MAX), maxCount: parseLimit(maxCountEl.value, COUNT_MIN, COUNT_MAX),
+      contOn: contOn.checked, contText: trimSp(contText.value), url: urlEl.value
+    };
+  }
+  function setStat(id, value, unit, has) {
+    var li = $(id), v = li.querySelector('.v');
+    v.textContent = value;
+    if (unit) { var s = document.createElement('small'); s.textContent = unit; v.appendChild(s); }
+    li.classList.toggle('has', !!has);
+  }
+  function line(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+  function rowsText(list, max) {
+    var s = list.slice(0, max || 5).map(function (it) { return fmtNum(it.row); }).join('・') + '行目';
+    return list.length > (max || 5) ? s + 'ほか' : s;
+  }
+  function shiftWord(v) {
+    var a = Math.abs(v);
+    var h = Math.floor(a / 3600), m = Math.floor((a % 3600) / 60), sec = a % 60;
+    var w = (h ? h + '時間' : '') + (m ? m + '分' : '') + (sec || !a ? sec + '秒' : '');
+    return w + (v < 0 ? '前' : '後ろ');
+  }
+  function errorMessage(R) {
+    if (R.error === 'toomany') return '行が' + fmtNum(R.lineCount) + '行あります。一度に清書できるのは' + fmtNum(MAX_LINES) + '行までです。何回かに分けて貼り付けてください。';
+    if (R.error === 'shift') return 'ずらす秒数「' + clip(trimSp(shiftEl.value), 12) + '」が読めません。-5 や +3、-1:30 のように入れてください。';
+    if (R.error === 'limit') {
+      var which = parseLimit(maxBytesEl.value, BYTES_MIN, BYTES_MAX) === null ? maxBytesEl : maxCountEl;
+      var v = trimSp(which.value);
+      var what = which === maxBytesEl ? '1件のコメントの上限の「バイトまで」' : '1件のコメントの上限の「個まで」';
+      var range = which === maxBytesEl ? fmtNum(BYTES_MIN) + '〜' + fmtNum(BYTES_MAX) + ' の数で入れてください（はじめは 9,500）。' : fmtNum(COUNT_MIN) + '〜' + fmtNum(COUNT_MAX) + ' の数で入れてください（はじめは 190）。';
+      return what + (v ? 'の「' + clip(v, 12) + '」は使えません。' : 'が空です。') + range;
+    }
+    return '';
+  }
+  function chapText(it) {
+    var c = it.chap;
+    if (!c) return '';
+    if (c.t === 'first') return '最初の時刻が 0:00 ではありません';
+    if (c.t === 'order') return c.prev.newSec === it.newSec ? '上の時刻（' + c.prev.time + '）と同じです' : '上の時刻（' + c.prev.time + '）より前です';
+    return '上の時刻（' + c.prev.time + '）との差が' + c.d + '秒です（10秒以上必要）';
+  }
+  function chapFix(it, sort) {
+    var c = it.chap;
+    if (c.t === 'first') return '先頭に「0:00 」で始まる行を足してください';
+    if (c.t === 'order' && c.prev.newSec !== it.newSec && sort !== 'time') return '時刻を直すか、並べ替えを「時刻順に並べる」にしてください';
+    if (c.t === 'order') return '時刻を直すか、どちらかの行を消してください';
+    return 'どちらかの行を消すか、時刻を直してください';
+  }
+  function itemLabel(it) { return it.time + (it.title ? ' ' + clip(it.title, 12) : ''); }
+  function resultWord(R) {
+    if (R.error) return errorMessage(R);
+    if (!R.lineCount) return '';
+    if (!R.ts.length) return '時刻で始まる行がありません。';
+    return 'タイムスタンプ ' + fmtNum(R.ts.length) + '件を清書しました（コメント ' + R.parts.length + '件）。';
+  }
+  function renderSummary(R) {
+    summary.textContent = '';
+    var ids = ['stTs', 'stChars', 'stBytes', 'stParts'];
+    if (R.error) {
+      ids.forEach(function (id) { setStat(id, '–', '', false); });
+      summary.appendChild(line('main err', errorMessage(R)));
+      return;
+    }
+    if (!R.lineCount) {
+      ids.forEach(function (id) { setStat(id, '–', '', false); });
+      summary.appendChild(line('sub', 'タイムスタンプを貼り付けると、ここに清書の結果が出ます。'));
+      return;
+    }
+    if (!R.ts.length) {
+      setStat('stTs', '0', '件', true); setStat('stChars', '–', '', false); setStat('stBytes', '–', '', false); setStat('stParts', '–', '', false);
+      summary.appendChild(line('main err', '時刻で始まる行がありません。「0:00 開始」のように、行の先頭に時刻を書いてください。'));
+      if (R.bad.length) summary.appendChild(line('w', rowsText(R.bad) + 'は時刻の形が違うため、読めませんでした（分:秒の秒は2桁で 00〜59）。'));
+      if (R.mid.length) summary.appendChild(line('w', rowsText(R.mid) + 'は時刻が行の先頭にないため、時刻として読んでいません（例：「[1:00] 歌」→「1:00 歌」）。'));
+      return;
+    }
+    setStat('stTs', fmtNum(R.ts.length), '件', false);
+    setStat('stChars', fmtNum(R.chars), '文字', false);
+    setStat('stBytes', fmtNum(R.bytes), 'バイト', false);
+    setStat('stParts', fmtNum(R.parts.length), '件', R.parts.length > 1);
+    var warn = R.bad.length || R.mid.length || R.clamped.length || R.overParts.length || R.chap.length || R.chapFew || (R.video && R.video.bad);
+    summary.appendChild(line('main' + (warn ? ' warn' : ''), 'タイムスタンプ ' + fmtNum(R.ts.length) + '件を清書しました。'));
+    var opt = options();
+    if (opt.shift !== 0) {
+      var s = R.shiftedCount ? fmtNum(R.shiftedCount) + '行を' + shiftWord(opt.shift) + 'にずらしました' : 'ずらした行はありません';
+      var notes = [];
+      if (R.zeroKept) notes.push('0:00 の行はずらしていません');
+      if (R.unchecked) notes.push('チェックを外した' + fmtNum(R.unchecked) + '行はそのまま');
+      summary.appendChild(line('sub', s + (notes.length ? '（' + notes.join('、') + '）' : '') + '。'));
+    } else if (R.unchecked) {
+      summary.appendChild(line('sub', 'ずらす秒数が 0 のため、時刻はずらしていません。'));
+    }
+    if (opt.sort === 'time') summary.appendChild(line('sub', R.moved ? '時刻順に並べ替えて、' + fmtNum(R.moved) + '行の順番を入れ替えました。' : '時刻順に並んでいます。'));
+    if (R.parts.length > 1) summary.appendChild(line('sub', '上限（' + fmtNum(opt.maxBytes) + 'バイト・' + fmtNum(opt.maxCount) + '個）に合わせて、コメント ' + R.parts.length + '件に分けました。'));
+    if (R.clamped.length) summary.appendChild(line('w', rowsText(R.clamped) + 'は、ずらすと 0:00 より前になるため 0:00 にしました。'));
+    if (R.bad.length) summary.appendChild(line('w', rowsText(R.bad) + 'は時刻の形が違うため、時刻として読まずにそのまま残しました（分:秒の秒は2桁で 00〜59）。'));
+    if (R.mid.length) summary.appendChild(line('w', rowsText(R.mid) + 'は時刻が行の先頭にないため、見出しの行としてそのまま残しました。時刻として使うときは、行の先頭に時刻を書いてください（例：「[1:00] 歌」→「1:00 歌」）。'));
+    if (R.overParts.length) summary.appendChild(line('w', R.overParts.map(function (p) { return R.parts.indexOf(p) + 1; }).join('・') + '件目は、1行だけで上限を超えています。その行を短くするか、上限を大きくしてください。'));
+    if (R.video && R.video.bad) summary.appendChild(line('w', '動画のURLが読めないため、時刻付きURLは作っていません。youtube.com/watch?v=… か youtu.be/… の形で入れてください。'));
+    if (R.chapFew || R.chap.length) {
+      var list = [];
+      if (R.chapFew) list.push('時刻の行が' + R.tsOut.length + '件です。チャプターには3件以上必要です（時刻の行を足してください。コメントに貼るだけなら、このままで使えます）');
+      R.chap.slice(0, 2).forEach(function (it) { list.push('「' + itemLabel(it) + '」' + chapText(it) + '。' + chapFix(it, opt.sort)); });
+      summary.appendChild(line('w', 'チャプターの決まりに合わない所があります：' + list.join('／') + (R.chap.length > 2 ? '／ほか' + (R.chap.length - 2) + 'か所（「時刻の一覧とURL」の「確認」の列）' : '') + '。'));
+    } else {
+      summary.appendChild(line('sub', 'チャプターの決まりに合っています。'));
+    }
+  }
+  function renderParts(R) {
+    if (typeof restoreManual === 'function') restoreManual();
+    partsEl.textContent = '';
+    if (R.error || !R.ts.length) {
+      var p = document.createElement('p'); p.className = 'empty-result';
+      p.textContent = R.error ? '入力か設定を直すと、清書した本文が出ます。' : 'タイムスタンプを貼り付けると、清書した本文がここに出ます。';
+      partsEl.appendChild(p);
+      return;
+    }
+    R.parts.forEach(function (part, k) {
+      var box = document.createElement('div'); box.className = 'part';
+      var head = document.createElement('div'); head.className = 'part-head';
+      var title = document.createElement('span'); title.className = 'part-title' + (part.over ? ' over' : '');
+      title.textContent = R.parts.length > 1 ? (k + 1) + '件目 ' : '本文 ';
+      var small = document.createElement('small');
+      small.textContent = fmtNum(part.bytes) + 'バイト・' + fmtNum(part.ts) + '個' + (part.over ? '（上限を超えています）' : '');
+      title.appendChild(small);
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn copy part-copy';
+      btn.textContent = R.parts.length > 1 ? (k + 1) + '件目をコピー' : 'コピー';
+      btn.setAttribute('data-label', btn.textContent);
+      btn.setAttribute('data-part', String(k));
+      head.appendChild(title); head.appendChild(btn);
+      var pre = document.createElement('pre'); pre.tabIndex = 0; pre.textContent = part.text;
+      pre.setAttribute('aria-label', (R.parts.length > 1 ? (k + 1) + '件目' : '本文') + 'の内容');
+      box.appendChild(head); box.appendChild(pre);
+      partsEl.appendChild(box);
+    });
+  }
+  function renderList(R) {
+    tableWrap.textContent = '';
+    if (R.error || !R.ts.length) {
+      var p = document.createElement('p'); p.className = 'empty-result';
+      p.textContent = R.error ? '入力か設定を直すと、時刻の一覧が出ます。' : 'タイムスタンプを貼り付けると、時刻の一覧がここに出ます。';
+      tableWrap.appendChild(p);
+      urlNote.textContent = '';
+      return;
+    }
+    var table = document.createElement('table'); table.className = 'res';
+    var thead = document.createElement('thead'), tr = document.createElement('tr');
+    ['ずらす', '行', '時刻', '見出し', '確認'].forEach(function (h) { var th = document.createElement('th'); th.textContent = h; tr.appendChild(th); });
+    thead.appendChild(tr); table.appendChild(thead);
+    var tbody = document.createElement('tbody');
+    R.ts.forEach(function (it) {
+      var row = document.createElement('tr');
+      var td0 = document.createElement('td'); td0.className = 'chk';
+      var lab = document.createElement('label');
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = it.checked; cb.setAttribute('data-row', String(it.row));
+      cb.setAttribute('aria-label', fmtNum(it.row) + '行目（' + it.orig + '）をずらす');
+      lab.appendChild(cb); td0.appendChild(lab); row.appendChild(td0);
+      var td1 = document.createElement('td'); td1.className = 'num'; td1.textContent = fmtNum(it.row); row.appendChild(td1);
+      var td2 = document.createElement('td'); td2.className = 'time';
+      if (it.time !== it.orig) {
+        var o = document.createElement('span'); o.className = 'old'; o.textContent = it.orig + ' → ';
+        td2.appendChild(o);
+      }
+      var n = document.createElement('span'); n.className = 'new'; n.textContent = it.time; td2.appendChild(n);
+      row.appendChild(td2);
+      var td3 = document.createElement('td'); td3.className = 'txt'; td3.textContent = it.title; row.appendChild(td3);
+      var notes = [];
+      if (it.clamp) notes.push('0:00 より前になるため 0:00 に');
+      if (it.chap) notes.push(chapText(it));
+      if (it.outRow !== it.row) notes.push('清書後は' + fmtNum(it.outRow) + '行目');
+      var td4 = document.createElement('td'); td4.className = (it.clamp || it.chap) ? 'bad' : 'txt'; td4.textContent = notes.join('／'); row.appendChild(td4);
+      tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    if (R.video && R.video.id) urlNote.textContent = '時刻付きURLは https://youtu.be/' + R.video.id + '?t=秒 の形です（例：' + urlFor(R.video.id, R.tsOut[R.tsOut.length - 1].newSec) + '）。';
+    else if (R.video && R.video.bad) urlNote.textContent = '動画のURLが読めないため、URLの列は空になります。';
+    else urlNote.textContent = '動画のURLを入れると、コピーする表に時刻付きURLが入ります。';
+  }
+  function render() {
+    var R = analyze(srcEl.value, options(), checks);
+    last = R;
+    shiftEl.classList.toggle('bad', R.error === 'shift');
+    maxBytesEl.classList.toggle('bad', parseLimit(maxBytesEl.value, BYTES_MIN, BYTES_MAX) === null);
+    maxCountEl.classList.toggle('bad', parseLimit(maxCountEl.value, COUNT_MIN, COUNT_MAX) === null);
+    urlEl.classList.toggle('bad', !!(R.video && R.video.bad));
+    contRow.hidden = !contOn.checked;
+    renderSummary(R);
+    renderParts(R);
+    renderList(R);
+    var ok = !R.error && R.ts.length > 0;
+    [copyAll, copyTsv, copyMd, copyTxt, checkAll, checkNone].forEach(function (b) { b.disabled = !ok; });
+    return R;
+  }
+  function showView() {
+    var v = radio(viewInputs);
+    $('viewText').hidden = v !== 'text';
+    $('viewList').hidden = v !== 'list';
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio') && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect || !document.body.contains(el)) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    [status, setStatusEl].forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    unpin();
+    [status, setStatusEl].forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  // 設定を変えて上の結果の高さが変わっても、押した部品が画面の同じ位置に残るようにスクロールを合わせる
+  function renderKeep() {
+    var r0 = pressedRect();
+    var R = render();
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    return R;
+  }
+  function afterChange(el, prefix) {
+    resetCopyButtons();
+    var R = renderKeep();
+    if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
+    setStatus(el, prefix + resultWord(R));
+  }
+
+  // ---------- コピー ----------
+  var copyTimer = null;
+  function allCopyButtons() { return [copyAll, copyTsv, copyMd, copyTxt].concat(Array.prototype.slice.call(partsEl.querySelectorAll('.part-copy'))); }
+  var manualHome = manualBox.nextSibling;
+  function restoreManual() {
+    manualBox.hidden = true;
+    if (manualBox.parentNode !== manualHome.parentNode || manualBox.nextSibling !== manualHome) manualHome.parentNode.insertBefore(manualBox, manualHome);
+  }
+  function resetCopyButtons() {
+    clearTimeout(copyTimer);
+    restoreManual();
+    allCopyButtons().forEach(function (b) { var l = b.getAttribute('data-label'); if (l) b.textContent = l; });
+  }
+  function flashButton(btn, label, ms) {
+    resetCopyButtons();
+    btn.textContent = label;
+    copyTimer = setTimeout(resetCopyButtons, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(btn, text) {
+    flashButton(btn, 'コピー失敗', 4000);
+    var before = btn.getBoundingClientRect().top;
+    var anchor = btn.closest('.part') || btn.closest('.actions');
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(manualBox, anchor);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var moved = btn.getBoundingClientRect().top - before;
+    if (Math.abs(moved) > 0.5) window.scrollBy(0, moved);
+    var rect = manualBox.getBoundingClientRect();
+    if (rect.top < 0) window.scrollBy(0, rect.top - 8);
+    setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message, html) {
+    var done = function () { setStatus(status, message); flashButton(btn, '✓ コピー済み', 2500); };
+    var plain = function () {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(btn, text); });
+          return;
+        }
+      } catch (e) { /* 下の方法で試す */ }
+      if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+    };
+    try {
+      if (html && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+        var item = new window.ClipboardItem({
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' })
+        });
+        navigator.clipboard.write([item]).then(done, plain);
+        return;
+      }
+    } catch (e) { /* テキストだけでコピーする */ }
+    plain();
+  }
+  [copyAll, copyTsv, copyMd, copyTxt].forEach(function (b) { b.setAttribute('data-label', b.textContent); });
+  copyAll.addEventListener('click', function () {
+    var R = last;
+    if (copyAll.disabled || !R) return;
+    doCopy(copyAll, R.text, '全文（' + fmtNum(R.out.length) + '行・' + fmtNum(R.bytes) + 'バイト）をコピーしました。概要欄など、上限のない所に貼り付けてください。');
+  });
+  partsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.part-copy') : null;
+    if (!btn || !last) return;
+    var k = +btn.getAttribute('data-part');
+    var p = last.parts[k];
+    if (!p) return;
+    var n = last.parts.length;
+    doCopy(btn, p.text, (n > 1 ? (k + 1) + '件目（全' + n + '件）' : '本文') + 'をコピーしました（' + fmtNum(p.bytes) + 'バイト・タイムスタンプ ' + fmtNum(p.ts) + '個）。YouTube のコメント欄に貼り付けてください。' + (n > 1 && k + 1 < n ? '次は' + (k + 2) + '件目です。' : ''));
+  });
+  copyTsv.addEventListener('click', function () {
+    var R = last;
+    if (copyTsv.disabled || !R) return;
+    doCopy(copyTsv, toTsv(R), '時刻の表を' + fmtNum(R.tsOut.length + 1) + '行×4列（時刻・秒・見出し・URL。1行目は見出し）コピーしました。Excelやスプレッドシートで、左上にしたいセルを選んで貼り付けてください。' + (R.video && R.video.id ? '' : '動画のURLがないため、URLの列は空です。'), toHtml(R));
+  });
+  copyMd.addEventListener('click', function () {
+    var R = last;
+    if (copyMd.disabled || !R) return;
+    doCopy(copyMd, toMarkdown(R), 'Markdownの表（' + fmtNum(R.tsOut.length) + '行）をコピーしました。' + (R.video && R.video.id ? '時刻は時刻付きURLへのリンクです。' : '動画のURLを入れると、時刻がリンクになります。'));
+  });
+  copyTxt.addEventListener('click', function () {
+    var R = last;
+    if (copyTxt.disabled || !R) return;
+    doCopy(copyTxt, toText(R), '「時刻 見出し' + (R.video && R.video.id ? ' URL' : '') + '」の形で' + fmtNum(R.tsOut.length) + '行コピーしました。');
+  });
+
+  // ---------- ずらす行のチェック ----------
+  tableWrap.addEventListener('change', function (e) {
+    var cb = e.target;
+    if (!cb || cb.type !== 'checkbox') return;
+    var row = +cb.getAttribute('data-row');
+    if (cb.checked) delete checks[row]; else checks[row] = false;
+    var top = tableWrap.scrollTop;
+    resetCopyButtons();
+    var R = renderKeep();
+    tableWrap.scrollTop = top;
+    var again = tableWrap.querySelector('input[data-row="' + row + '"]');
+    if (again) { again.focus({ preventScroll: true }); lastPressed = again; }
+    var opt = options();
+    setStatus(status, fmtNum(row) + '行目を' + (cb.checked ? 'ずらす行に入れました。' : 'ずらす行から外しました。') + (opt.shift === 0 ? 'ずらす秒数が 0 のため、時刻は変わりません。' : resultWord(R)));
+  });
+  function setAll(on) {
+    if (!last || !last.ts.length) return;
+    checks = {};
+    if (!on) last.ts.forEach(function (it) { checks[it.row] = false; });
+    resetCopyButtons();
+    var top = tableWrap.scrollTop;
+    var R = renderKeep();
+    tableWrap.scrollTop = top;
+    var opt = options();
+    setStatus(status, (on ? 'すべての時刻の行（' + fmtNum(R.ts.length) + '行）をずらす行にしました。' : 'すべての行のチェックを外しました。時刻はずらしません。') + (on && opt.shift === 0 ? 'ずらす秒数が 0 のため、時刻は変わりません。' : ''));
+  }
+  checkAll.addEventListener('click', function () { setAll(true); });
+  checkNone.addEventListener('click', function () { setAll(false); });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE = ['【歌枠】', '0:00 開始', '3:15 1曲目 夜明けの歌', '12:40 2曲目 星のワルツ', '25:02 3曲目 雨上がりの道', '18:55 雑談', '1:02:30 4曲目 また明日'].join(LF);
+  $('sampleBtn').addEventListener('click', function () {
+    var had = srcEl.value.trim() !== '';
+    srcEl.value = SAMPLE;
+    checks = {};
+    resetCopyButtons();
+    var R = render();
+    setStatus(status, (had ? '例のタイムスタンプに入れ替えました（前の内容は消えました）。' : '例のタイムスタンプ（歌枠）を入れました。') + resultWord(R) + (options().shift === 0 ? '「ずらす秒数」に -5 と入れると、5秒前にずらせます。' : ''));
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = srcEl.value !== '';
+    srcEl.value = '';
+    checks = {};
+    resetCopyButtons();
+    render();
+    setStatus(status, had ? 'タイムスタンプの欄を空にしました（動画のURLと設定はそのままです）。' : 'タイムスタンプの欄はもう空です。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  srcEl.addEventListener('input', function (e) {
+    var pasted = e && e.inputType === 'insertFromPaste';
+    if (pasted || srcEl.value === '') checks = {};
+    clearTimeout(inputTimer);
+    resetCopyButtons();
+    setStatus(status, '');
+    inputTimer = setTimeout(function () {
+      var R = render();
+      if (pasted) setStatus(status, pasteMessage(R), !!R.error || !R.ts.length);
+    }, 150);
+  });
+  function pasteMessage(R) {
+    if (R.error) return '貼り付けました。' + errorMessage(R);
+    if (!R.lineCount) return '貼り付けましたが、文字がありません。';
+    if (!R.ts.length) return '貼り付けた' + fmtNum(R.lineCount) + '行に、時刻で始まる行がありません。「0:00 開始」のように、行の先頭に時刻を書いてください。';
+    return '貼り付けた' + fmtNum(R.lineCount) + '行のうち、' + resultWord(R) + 'まとめを確かめてください。';
+  }
+  urlEl.addEventListener('input', function () {
+    resetCopyButtons();
+    var R = render();
+    if (!R.video || R.error) return;
+    if (R.video.bad) setStatus(status, '動画のURLが読めません。youtube.com/watch?v=… か youtu.be/… の形で入れてください。', true);
+    else if (R.video.id) setStatus(status, '動画のURLを読みました（動画ID：' + R.video.id + '）。' + (R.ts.length ? '「時刻の一覧とURL」の表に時刻付きURLが入ります。' : ''));
+    else setStatus(status, '動画のURLを空にしました。時刻付きURLは作りません。');
+  });
+  viewInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      resetCopyButtons();
+      showView();
+      var has = last && !last.error && last.ts.length;
+      if (!has) setStatus(status, (radio(viewInputs) === 'list' ? '時刻の一覧に切り替えました。' : '清書した本文に切り替えました。') + (last && last.error ? '入力か設定を直すと、ここに結果が出ます。' : '時刻で始まる行を貼り付けると、ここに結果が出ます。'));
+      else setStatus(status, radio(viewInputs) === 'list' ? '時刻の一覧を表示しました。チェックを外した行はずらしません。下のボタンで、表・Markdown・テキストをコピーできます。' : '清書した本文を表示しました。' + (last.parts.length > 1 ? 'コメントごとに「1件目をコピー」などを押してください。' : '「コピー」を押してください。'));
+    });
+  });
+  shiftEl.addEventListener('input', function () {
+    resetCopyButtons();
+    var R = renderKeep();
+    if (R.error) { setStatus(setStatusEl, errorMessage(R), true); return; }
+    var v = parseShift(shiftEl.value);
+    if (v === 0) { setStatus(setStatusEl, '時刻はずらしていません。' + resultWord(R)); return; }
+    setStatus(setStatusEl, 'ずらす秒数を' + shiftWord(v) + 'にしました。' + (R.ts.length ? (R.shiftedCount ? fmtNum(R.shiftedCount) + '行をずらしました。' : 'ずらした行はありません。') + (R.clamped.length ? fmtNum(R.clamped.length) + '行は 0:00 で止めました。' : '') : resultWord(R)));
+  });
+  keepZero.addEventListener('change', function () {
+    afterChange(setStatusEl, keepZero.checked ? '0:00 の行はずらさないようにしました。' : '0:00 の行もずらすようにしました（前にずらす分は 0:00 で止まります）。');
+  });
+  fmtInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      var names = { auto: '自動（0:00／1時間以上は 0:00:00）', auto2: '自動・2桁（00:00／00:00:00）', h: '0:00:00', hh: '00:00:00' };
+      afterChange(setStatusEl, '時刻の書き方を「' + names[radio(fmtInputs)] + '」にしました。');
+    });
+  });
+  gapInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      var names = { half: '半角スペース', full: '全角スペース', keep: '元のまま' };
+      afterChange(setStatusEl, '時刻と見出しの間を「' + names[radio(gapInputs)] + '」にしました。');
+    });
+  });
+  sortInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      afterChange(setStatusEl, radio(sortInputs) === 'time' ? '時刻順に並べるようにしました。' : '元の順のままにしました。');
+    });
+  });
+  [maxBytesEl, maxCountEl].forEach(function (el) {
+    el.addEventListener('input', function () {
+      resetCopyButtons();
+      var R = renderKeep();
+      if (R.error) { setStatus(setStatusEl, errorMessage(R), true); return; }
+      var opt = options();
+      setStatus(setStatusEl, '1件の上限を ' + fmtNum(opt.maxBytes) + 'バイト・' + fmtNum(opt.maxCount) + '個にしました。' + (R.ts.length ? 'コメントは ' + R.parts.length + '件です。' : ''));
+    });
+  });
+  contOn.addEventListener('change', function () {
+    afterChange(setStatusEl, contOn.checked ? '2件目からの先頭に「' + (trimSp(contText.value) || '（空）') + '」の行を付けるようにしました。' : '2件目からの先頭の行を付けないようにしました。');
+  });
+  contText.addEventListener('input', function () {
+    resetCopyButtons();
+    var R = renderKeep();
+    var t = trimSp(contText.value);
+    setStatus(setStatusEl, t ? '2件目からの先頭の行を「' + clip(t, 20) + '」にしました。' + (R.parts.length > 1 ? '' : '今はコメントが1件なので、付く所はありません。') : '先頭の行の文が空なので、何も付けません。');
+  });
+
+  document.querySelector('.jump').addEventListener('click', function (e) {
+    e.preventDefault();
+    var h = $('resultTitle');
+    h.scrollIntoView({ block: 'start' });
+    h.focus({ preventScroll: true });
+  });
+  window.TimestampSeisho = { analyze: analyze, parseLine: parseLine, parseShift: parseShift, parseVideo: parseVideo, secToStr: secToStr, toTsv: toTsv, toMarkdown: toMarkdown, toText: toText, toHtml: toHtml, plainTime: plainTime };
+  showView();
+  render();
+})();
+</script>
+</body>
+</html>
