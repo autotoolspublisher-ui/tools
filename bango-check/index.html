@@ -756,7 +756,8 @@
         var gk = looseKey(gr.group.dprefix) + SEP + looseKey(gr.group.dsuffix);
         for (var k = l; k < all.length && all[k].value <= gr.b && found.length < 21; k++) {
           var o = all[k];
-          if (o.group !== gr.group && looseKey(o.prefix) + SEP + looseKey(o.suffix) === gk) found.push(o);
+          // 書き方の揺れか、1行だけの連番（打ち間違いと考えられる行）のとき
+          if (o.group !== gr.group && (looseKey(o.prefix) + SEP + looseKey(o.suffix) === gk || (o.group.items.length === 1 && gr.group.items.length >= 2))) found.push(o);
         }
         if (found.length) gr.others = found;
       });
@@ -793,7 +794,7 @@
     if (f.t === 'width') return '桁数違い：' + it.len + '桁（ほかは' + (f.W == null ? '0埋めなし' : f.W + '桁') + '）';
     if (f.t === 'prefix') return '接頭辞違い：' + affixName(it.prefix, '接頭辞') + '（多いのは' + affixName(R.majPrefix, '接頭辞') + '）';
     if (f.t === 'suffix') return '接尾辞違い：' + affixName(it.suffix, '接尾辞') + '（多いのは' + affixName(R.majSuffix, '接尾辞') + '）';
-    if (f.t === 'out') return '範囲外：指定した範囲（' + (f.lo != null ? fmtNum(f.lo) : fmtNum(f.glo)) + '〜' + (f.hi != null ? fmtNum(f.hi) : fmtNum(f.ghi)) + '）の外';
+    if (f.t === 'out') return '範囲外：指定した範囲（' + (f.lo != null ? fmtNum(f.lo) : '') + '〜' + (f.hi != null ? fmtNum(f.hi) : '') + '）の外';
     if (f.t === 'nodigit') return '数字なし：数字が1つもないため調べていません';
     return '桁が多すぎる：' + it.len + '桁（30桁まで）のため調べていません';
   }
@@ -1272,7 +1273,7 @@
       if (R.error) { setStatus(setStatusEl, errorMessage(R), true); return; }
       if (!trimSp(rangeFrom.value) && !trimSp(rangeTo.value)) { setStatus(setStatusEl, '開始と終了が空のため、いちばん小さい番号〜大きい番号で探しています。' + resultWord(R)); return; }
       var w = rangeWord(R);
-      setStatus(setStatusEl, '範囲を' + (w.charAt(0) === '「' ? w : ' ' + w + ' ') + 'にしました。' + (R.numCount ? resultWord(R) : '番号の列を貼り付けると調べます。'));
+      setStatus(setStatusEl, '範囲を' + (w.charAt(0) === '「' ? w : ' ' + w + ' ') + 'にしました。' + (R.numCount ? resultWord(R) : R.rows.length ? '番号として読める行がないため、欠番は調べていません。' : '番号の列を貼り付けると調べます。'));
     });
   });
   widthInputs.forEach(function (el) {
