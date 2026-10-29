@@ -1,0 +1,1421 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCRH8J95WL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VCRH8J95WL');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>原文と訳文の照合 - 翻訳の数字・日付・用語チェック｜AIツールひろば</title>
+  <meta name="description" content="Excelの原文と訳文の2列を貼り付けるだけで、数字・桁区切り・年月日（和暦も）・製品名などの英大文字の語の食い違い、用語表の訳語の使い忘れ、訳抜けを行ごとに一覧にする無料の翻訳チェックツールです。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/honyaku-shogo/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="原文と訳文の照合 - 翻訳の数字・日付・用語チェック｜AIツールひろば">
+  <meta property="og:description" content="Excelの原文と訳文の2列を貼り付けるだけで、数字・桁区切り・年月日（和暦も）・製品名などの英大文字の語の食い違い、用語表の訳語の使い忘れ、訳抜けを行ごとに一覧にする無料の翻訳チェックツールです。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/honyaku-shogo/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/honyaku-shogo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "原文と訳文の照合",
+    "description": "Excelの原文と訳文の2列を貼り付けるだけで、数字・桁区切り・年月日（和暦も）・製品名などの英大文字の語の食い違い、用語表の訳語の使い忘れ、訳抜けを行ごとに一覧にする無料の翻訳チェックツールです。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/honyaku-shogo/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "原文と訳文の照合",
+        "item": "https://autotoolspublisher-ui.github.io/tools/honyaku-shogo/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "どんな書き方の数字や年月日を、同じものとして比べますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "全角の数字は半角として読み、「1,250」のような3桁ごとのカンマは1つの数として読みます。「007」と「7」、「1.50」と「1.5」は同じ数です。はじめの設定では、「1万9800」と「19,800」、「2.5 million」と「250万」のように、万・億・兆・千と thousand・million・billion・trillion を数に直して比べます（one・two のような英語の数詞や「12M」のような略記は数に直しません）。年月日は「2026/10/25」「2026-10-25」「2026年10月25日」「令和8年10月25日」「October 25, 2026」「25 Oct 2026」を同じ日として比べ、「10月25日」と「October 25」のような年のない形、「2026年10月」と「October 2026」のような日のない形も読みます。「10/25/2026」のように年が後ろにある数字だけの形は、月と日の順が決まらないため年月日としては読まず、数字として比べます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「英大文字の語」では、何を調べますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "原文にある、大文字を1つ以上含む英語の語（Acme・OS・iPhone・Wi-Fi など）が、訳文に同じつづり（大文字・小文字も同じ）であるかを調べます。製品名・会社名・略語の写し間違いや訳し落としを見つけるためのもので、訳文にだけある語は知らせません。はじめの設定では、文頭にある先頭だけ大文字の語（The・Select など）は除きます。「I」と、月・曜日の名（October・Mon など）も調べません。「X200」「A4」のように英字に続く数字は、語の一部として扱います。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "用語表は、どう書けばよいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Excelの2列（1列目に原語、2列目に訳語）をコピーして貼り付けます。訳語が複数あるときは「warranty period／warranty」のように全角の「／」で区切るか、3列目・4列目に書きます。原文に原語が含まれる行で、訳文に訳語のどれも含まれなければ「用語：「クラウド」の訳語「cloud」なし」と知らせます。英字の大文字・小文字は区別せず、英語の語は語の途中には当たりません（「app」は「application」に当たりません）。1行目が「原語」「訳語」などの見出しなら飛ばします。「用語表をこのブラウザに保存する」を選ぶと、次に開いたときも用語表が入っています。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "判定の列は、Excelにどう貼り戻せばよいですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「判定の列をコピー」を押し、Excelで、原文の1行目（見出しがあれば見出しの行）と同じ行の、空いた列のセルを選んで貼り付けます。貼り付けた表と同じ行数で、元の並び順のままです。見出しの行は「判定」、食い違いのない行と空の行は空欄、食い違いのある行は「数字：原文だけ「12」、訳文だけ「21」」「訳抜け（訳文が空）」などになるので、フィルターで食い違いのある行だけを表示できます。「食い違いの行をコピー」では、食い違いのある行だけを、行の番号・原文・訳文・判定の表としてコピーします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。照合する処理はすべてお使いのブラウザの中で行い、貼り付けた原文・訳文・用語表が外部に送信されることはありません。原文と訳文は保存しません。用語表は、「用語表をこのブラウザに保存する」を選んだときだけ、お使いのブラウザの中に保存します（選ぶのをやめると消します）。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --bad: #b3261e; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に入力と設定、右に結果。狭い幅：入力 → 結果 → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "input result" "settings result"; gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-input { grid-area: input; }
+  .area-result { grid-area: result; padding-left: 30px; border-left: 1px solid #e8eaed; }
+  .area-settings { grid-area: settings; margin-top: 8px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .area-settings h2, .area-result h2 { margin: 0 0 10px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; max-width: 100%; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; line-height: 1.3; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  .chip input:disabled + span::before { border-color: #bdc1c6; }
+  #resultTitle:focus { outline: 0; }
+  #resultTitle:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .field { min-width: 0; margin: 0 0 14px; }
+  .field label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  select { min-height: 44px; max-width: 100%; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  select:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  textarea { display: block; width: 100%; min-height: 220px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font-size: .94rem; line-height: 1.55; font-family: inherit; resize: vertical; tab-size: 8; }
+  .sep-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 12px; }
+  .sep-grid textarea { min-height: 200px; }
+  #termText { min-height: 120px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  button.btn.copy { min-width: 11.5em; }
+  .colrow { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 14px; margin: 0 0 10px; }
+  .colrow .field { margin: 0; flex: 1 1 9em; }
+  .colrow select { width: 100%; }
+  .jump-row { display: none; margin: -4px 0 6px; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* まとめ（数の枠） */
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; padding: 0; list-style: none; }
+  .stats li { display: flex; flex-direction: column; justify-content: center; min-height: 74px; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; }
+  .stats .v { color: #202124; font-size: 1.25rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
+  .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
+  .stats li.has .v { color: #7a4f01; }
+  .stats li.clear .v { color: var(--ok); }
+  /* 知らせ・まとめの文。高さを先に確保して、出ても消えても下の部品が動かないようにする */
+  .summary { min-height: 110px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary .main { display: block; font-weight: 600; color: var(--ok); }
+  .summary .main.warn { color: var(--warn-ink); }
+  .summary .main.err { color: var(--bad); }
+  .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  #setStatus { min-height: 66px; }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .manual { margin: 0 0 12px; }
+  .manual label { display: block; margin-bottom: 4px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { min-height: 96px; }
+  .view { margin: 4px 0 8px; }
+  .legend { margin: 0 0 8px; color: #3c4043; font-size: .875rem; line-height: 1.5; }
+  /* 一覧（行ごとのカード） */
+  .list-wrap { height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .list-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .item { padding: 10px 12px; border-bottom: 1px solid #eceef1; }
+  .item-head { display: flex; flex-wrap: wrap; gap: 2px 10px; margin: 0 0 6px; font-size: .9rem; line-height: 1.5; }
+  .item-head .no { flex: none; color: var(--muted); font-weight: 600; }
+  .item-head .judge { min-width: 0; color: #7a4f01; font-weight: 600; overflow-wrap: anywhere; }
+  .item-head .judge.ok { color: var(--ok); }
+  .item-head .judge.head { color: var(--muted); font-weight: 400; }
+  .side { display: grid; grid-template-columns: 3.2em minmax(0, 1fr); gap: 0 8px; margin: 2px 0 0; font-size: .9rem; line-height: 1.6; }
+  .side .lab { color: var(--muted); font-size: .875rem; font-weight: 600; }
+  .side .txt { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .side .txt.none { color: var(--muted); }
+  mark { padding: 0 1px; border-radius: 2px; background: #fde293; color: #202124; box-shadow: inset 0 -2px 0 #b06000; }
+  .legend mark { white-space: nowrap; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; }
+  .more-rows { margin: 0; padding: 8px 12px; color: var(--muted); font-size: .875rem; }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .area-result { margin-top: 18px; padding: 18px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    textarea { min-height: 168px; }
+    .sep-grid { grid-template-columns: 1fr; }
+    .sep-grid textarea { min-height: 140px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats li { min-height: 62px; }
+    .summary { min-height: 176px; }
+    .status, #setStatus { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
+    .list-wrap { height: 380px; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .summary { min-height: 220px; }
+    .status, #setStatus { min-height: 110px; }
+    .chip span { padding: 6px 10px; }
+    button.btn.copy { padding-left: 6px; padding-right: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">原文と訳文の照合</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">TRANSLATION CHECK</p>
+    <h1>原文と訳文の照合</h1>
+    <p>翻訳の原文と訳文を1行ずつ突き合わせ、数字・年月日・英大文字の語（製品名・略語）の食い違い、用語表の訳語の使い忘れ、訳抜けを一覧にします。<span class="more">1文ずつ目で見比べたり、マクロを組んだりしなくても、全角・半角や桁区切り、「2026年10月25日」と「October 25, 2026」、「1万9800」と「19,800」のような書き方の違いをそろえてから比べ、行ごとの判定の列をExcelに貼り戻せます。</span></p>
+  </header>
+
+  <section class="card" aria-label="原文と訳文の照合">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>Excelの原文と訳文の2列を選んでコピーし、貼り付けます。</li>
+        <li>食い違いのある行の一覧を確かめます（用語表は任意）。</li>
+        <li>「判定の列をコピー」を押し、Excelの空いた列に貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-input">
+        <div class="field" id="pairField">
+          <label for="pairText">原文と訳文 <small>（Excelの2列をそのまま貼り付け。1行に1文）</small></label>
+          <textarea id="pairText" spellcheck="false" placeholder="例：&#10;原文&#9;訳文&#10;重量は1,250gです。&#9;It weighs 1,250 g.&#10;最大12時間持続します。&#9;It lasts up to 12 hours."></textarea>
+        </div>
+        <div class="sep-grid" id="sepBox" hidden>
+          <div class="field"><label for="srcText">原文 <small>（1行に1文）</small></label><textarea id="srcText" spellcheck="false" placeholder="例：&#10;重量は1,250gです。&#10;最大12時間持続します。"></textarea></div>
+          <div class="field"><label for="tgtText">訳文 <small>（原文と同じ順に）</small></label><textarea id="tgtText" spellcheck="false" placeholder="例：&#10;It weighs 1,250 g.&#10;It lasts up to 12 hours."></textarea></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+        <fieldset class="setting">
+          <legend>入れ方</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="mode" value="pair" checked><span>Excelの2列をまとめて貼る</span></label>
+            <label class="chip"><input type="radio" name="mode" value="sep"><span>原文と訳文を別々の欄に貼る</span></label>
+          </div>
+        </fieldset>
+        <div class="colrow">
+          <div class="field" id="srcColField" hidden><label for="srcCol">原文の列</label><select id="srcCol"></select></div>
+          <div class="field" id="tgtColField" hidden><label for="tgtCol">訳文の列</label><select id="tgtCol"></select></div>
+          <div class="chips"><label class="chip"><input type="checkbox" id="headChk"><span>1行目は見出し</span></label></div>
+        </div>
+      </div>
+
+      <div class="area-result" id="resultArea">
+        <h2 id="resultTitle" tabindex="-1">結果</h2>
+        <ul class="stats" id="stats" aria-label="まとめ">
+          <li id="stRows"><span class="k">照合した行</span><span class="v">–</span></li>
+          <li id="stBad"><span class="k">食い違いのある行</span><span class="v">–</span></li>
+          <li id="stEmpty"><span class="k">訳抜け</span><span class="v">–</span></li>
+          <li id="stTerm"><span class="k">用語の訳語なし</span><span class="v">–</span></li>
+        </ul>
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <div class="actions">
+          <button type="button" class="btn primary copy" id="copyCol" disabled>判定の列をコピー</button>
+          <button type="button" class="btn copy" id="copyBad" disabled>食い違いの行をコピー</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+        <fieldset class="setting view">
+          <legend>表示する行</legend>
+          <div class="chips" id="viewChips">
+            <label class="chip"><input type="radio" name="view" value="bad" checked><span>食い違いのある行だけ</span></label>
+            <label class="chip"><input type="radio" name="view" value="all"><span>すべての行</span></label>
+          </div>
+        </fieldset>
+        <p class="legend"><mark>印</mark>：相手の文にない数字・年月日・語と、訳語が見つからない用語</p>
+        <div class="list-wrap" id="listWrap" tabindex="0" aria-label="行の一覧"></div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2>用語表と照合の設定</h2>
+        <p class="jump-row"><a class="jump" href="#resultTitle">▲ 結果を見る</a></p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <div class="field">
+          <label for="termText">用語表 <small>（任意。原語と訳語の2列。訳語が複数あるときは「／」で区切るか3列目以降に）</small></label>
+          <textarea id="termText" spellcheck="false" placeholder="例：&#10;クラウド&#9;cloud&#10;保証期間&#9;warranty period／warranty"></textarea>
+          <div class="chips" style="margin-top:8px"><label class="chip"><input type="checkbox" id="saveTerms"><span>用語表をこのブラウザに保存する</span></label></div>
+        </div>
+        <fieldset class="setting">
+          <legend>照合する項目</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="chkNum" checked><span>数字</span></label>
+            <label class="chip"><input type="checkbox" id="chkDate" checked><span>年月日</span></label>
+            <label class="chip"><input type="checkbox" id="chkWord" checked><span>英大文字の語</span></label>
+            <label class="chip"><input type="checkbox" id="chkTerm" checked><span>用語表</span></label>
+            <label class="chip"><input type="checkbox" id="chkEmpty" checked><span>訳抜け</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>数字の読み方</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="chkUnit" checked><span>万・億・million などを数に直して比べる</span></label>
+          </div>
+          <p class="hint">オンのとき、「1万9800」と「19,800」、「1億2000万」と「120 million」を同じ数として比べます。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>英大文字の語</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="chkInitial" checked><span>文頭の語（The・Select など）は除く</span></label>
+          </div>
+          <p class="hint">原文にある、大文字を含む英語の語（Acme・OS・iPhone など）が、訳文に同じつづりであるかを見ます。</p>
+        </fieldset>
+      </div>
+    </div>
+
+    <p class="note">全角の数字・英字は半角として読み、3桁ごとのカンマ（1,250）は1つの数として読みます。年月日として読んだ部分の数字は、数字の照合には含めません。文の意味や訳し方は比べません。</p>
+    <div class="privacy">貼り付けた原文・訳文・用語表は、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません（用語表は「このブラウザに保存する」を選んだときだけ、お使いのブラウザに保存します）。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>製品の説明文の英訳を、用語表と一緒にまとめてチェックする</h3>
+      <dl>
+        <dt>入力</dt><dd>「例を入れる」の表（原文・訳文の2列、見出しと9行。日本語の製品の説明文と英訳）と用語表（クラウド → cloud、保証期間 → warranty period）</dd>
+        <dt>設定</dt><dd>はじめの設定のまま（1行目は見出しとして照合しません）</dd>
+        <dt>結果</dt><dd>「9行のうち6行に食い違いがあります。」と表示されます。3行目は「数字：原文だけ「12」、訳文だけ「21」」、5行目は「数字：原文だけ「15」、訳文だけ「14」」、7行目は「英大文字の語：原文だけ「Acme」「Cloud」」、8行目は「訳抜け（訳文が空）」、9行目は「用語：「クラウド」の訳語「cloud」なし」、10行目は「年月日：原文だけ「2026年12月28日」、訳文だけ「December 26, 2026」」です。「1万9800円」と「19,800 yen」、「2026年11月1日」と「November 1, 2026」は同じとみなします。「判定の列をコピー」で、1行目の「判定」と9行の判定の10行がコピーされます。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>英語の原文と日本語の訳文を、別々の欄に貼って照合する</h3>
+      <dl>
+        <dt>入力</dt><dd>原文の欄：「Acme X200 ships on March 3, 2027.」「The tank holds 2.5 million liters.」「Contact ACME Support for details.」、訳文の欄：「Acme X200は2027年3月3日に出荷されます。」「タンクの容量は250万リットルです。」「詳しくはAcmeサポートまでお問い合わせください。」（それぞれ1行に1文）</dd>
+        <dt>設定</dt><dd>入れ方：原文と訳文を別々の欄に貼る（ほかははじめの設定のまま）</dd>
+        <dt>結果</dt><dd>「3行のうち1行に食い違いがあります。」と表示され、3行目が「英大文字の語：原文だけ「ACME」「Support」」になります（訳文の「Acme」はつづりの大文字・小文字が違い、Support はカタカナで訳されているため）。「March 3, 2027」と「2027年3月3日」、「2.5 million」と「250万」は同じとみなし、「X200」は語として両方にあるので知らせません。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>どんな書き方の数字や年月日を、同じものとして比べますか？</summary>
+      <p>全角の数字は半角として読み、「1,250」のような3桁ごとのカンマは1つの数として読みます。「007」と「7」、「1.50」と「1.5」は同じ数です。はじめの設定では、「1万9800」と「19,800」、「2.5 million」と「250万」のように、万・億・兆・千と thousand・million・billion・trillion を数に直して比べます（one・two のような英語の数詞や「12M」のような略記は数に直しません）。年月日は「2026/10/25」「2026-10-25」「2026年10月25日」「令和8年10月25日」「October 25, 2026」「25 Oct 2026」を同じ日として比べ、「10月25日」と「October 25」のような年のない形、「2026年10月」と「October 2026」のような日のない形も読みます。「10/25/2026」のように年が後ろにある数字だけの形は、月と日の順が決まらないため年月日としては読まず、数字として比べます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「英大文字の語」では、何を調べますか？</summary>
+      <p>原文にある、大文字を1つ以上含む英語の語（Acme・OS・iPhone・Wi-Fi など）が、訳文に同じつづり（大文字・小文字も同じ）であるかを調べます。製品名・会社名・略語の写し間違いや訳し落としを見つけるためのもので、訳文にだけある語は知らせません。はじめの設定では、文頭にある先頭だけ大文字の語（The・Select など）は除きます。「I」と、月・曜日の名（October・Mon など）も調べません。「X200」「A4」のように英字に続く数字は、語の一部として扱います。</p>
+    </details>
+    <details class="faq-item">
+      <summary>用語表は、どう書けばよいですか？</summary>
+      <p>Excelの2列（1列目に原語、2列目に訳語）をコピーして貼り付けます。訳語が複数あるときは「warranty period／warranty」のように全角の「／」で区切るか、3列目・4列目に書きます。原文に原語が含まれる行で、訳文に訳語のどれも含まれなければ「用語：「クラウド」の訳語「cloud」なし」と知らせます。英字の大文字・小文字は区別せず、英語の語は語の途中には当たりません（「app」は「application」に当たりません）。1行目が「原語」「訳語」などの見出しなら飛ばします。「用語表をこのブラウザに保存する」を選ぶと、次に開いたときも用語表が入っています。</p>
+    </details>
+    <details class="faq-item">
+      <summary>判定の列は、Excelにどう貼り戻せばよいですか？</summary>
+      <p>「判定の列をコピー」を押し、Excelで、原文の1行目（見出しがあれば見出しの行）と同じ行の、空いた列のセルを選んで貼り付けます。貼り付けた表と同じ行数で、元の並び順のままです。見出しの行は「判定」、食い違いのない行と空の行は空欄、食い違いのある行は「数字：原文だけ「12」、訳文だけ「21」」「訳抜け（訳文が空）」などになるので、フィルターで食い違いのある行だけを表示できます。「食い違いの行をコピー」では、食い違いのある行だけを、行の番号・原文・訳文・判定の表としてコピーします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。照合する処理はすべてお使いのブラウザの中で行い、貼り付けた原文・訳文・用語表が外部に送信されることはありません。原文と訳文は保存しません。用語表は、「用語表をこのブラウザに保存する」を選んだときだけ、お使いのブラウザの中に保存します（選ぶのをやめると消します）。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/"><strong>区切り変換くん</strong><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></a></li>
+      <li><a href="../matomete-chikan/"><strong>まとめて置換</strong><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></a></li>
+      <li><a href="../zenkaku-hankaku/"><strong>全角半角そろえ</strong><span>全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></a></li>
+      <li><a href="../kaigyo-sakujo/"><strong>改行削除</strong><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（19件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  function fc(c) { return String.fromCharCode(c); }
+  var TAB = fc(9), LF = fc(10), CR = fc(13), QUOTE = fc(34);
+  var MAX_ROWS = 5000;
+  var MAX_TERMS = 1000;
+  var MAX_SHOW = 300;
+  var STORE_KEY = 'honyaku-shogo-terms';
+  var B10 = BigInt(10);
+  var B0 = BigInt(0);
+
+  function isDigit(c) { return c >= 48 && c <= 57; }
+  function isUpper(c) { return c >= 65 && c <= 90; }
+  function isLower(c) { return c >= 97 && c <= 122; }
+  function isAlpha(c) { return isUpper(c) || isLower(c); }
+  function isAlnum(c) { return isAlpha(c) || isDigit(c); }
+  var SPACE_CODES = [32, 9, 10, 13, 160, 12288];
+  function isSpace(c) { return SPACE_CODES.indexOf(c) >= 0; }
+  function trimSp(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charCodeAt(a))) a++;
+    while (b > a && isSpace(s.charCodeAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  function fmtNum(v) { return String(v).replace(/[0-9](?=(?:[0-9]{3})+$)/g, '$&,'); }
+  function clip(s, n) { var a = Array.from(s); return a.length > n ? a.slice(0, n).join('') + '…' : s; }
+
+  // 照合の前のそろえ方：全角の英数字・記号（U+FF01〜U+FF5E）を半角、全角スペース・U+00A0 を半角スペース、
+  // 結合用の濁点・半濁点（U+3099・U+309A）は前の文字と1文字にまとめる。m[i] は、そろえた文字 i の元の位置
+  function norm(s) {
+    var out = [], m = [];
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      var nx = i + 1 < s.length ? s.charCodeAt(i + 1) : -1;
+      if (nx === 0x3099 || nx === 0x309A) {
+        var comp = (s.charAt(i) + s.charAt(i + 1)).normalize('NFC');
+        if (comp.length === 1) { out.push(comp); m.push(i); i++; continue; }
+      }
+      if (c >= 0xFF01 && c <= 0xFF5E) out.push(fc(c - 0xFEE0));
+      else if (c === 12288 || c === 160) out.push(' ');
+      else out.push(s.charAt(i));
+      m.push(i);
+    }
+    m.push(s.length);
+    return { t: out.join(''), m: m };
+  }
+  function lowerAscii(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) { var c = s.charCodeAt(i); out += isUpper(c) ? fc(c + 32) : s.charAt(i); }
+    return out;
+  }
+
+  // ---------- 表の読み方（Excel のコピーの形。"" で囲んだセルの中の改行・"" を1つのセルとして読む） ----------
+  function quotedEnd(text, i) {
+    var j = i + 1, n = text.length;
+    while (j < n) {
+      if (text.charCodeAt(j) === 34) {
+        if (text.charCodeAt(j + 1) === 34) { j += 2; continue; }
+        var nx = j + 1 < n ? text.charCodeAt(j + 1) : -1;
+        if (nx === -1 || nx === 9 || nx === 10 || nx === 13) return j + 1;
+        return -1;
+      }
+      j++;
+    }
+    return -1;
+  }
+  function parseTable(text) {
+    var rows = [], row = [], cell = '', i = 0, n = text.length, start = true;
+    if (!n) return rows;
+    while (i < n) {
+      var c = text.charCodeAt(i);
+      if (start && c === 34) {
+        var e = quotedEnd(text, i);
+        if (e > 0) { cell = text.slice(i + 1, e - 1).split(QUOTE + QUOTE).join(QUOTE); i = e; start = false; continue; }
+      }
+      if (c === 9) { row.push(cell); cell = ''; start = true; i++; continue; }
+      if (c === 10 || c === 13) {
+        row.push(cell); rows.push(row); row = []; cell = ''; start = true;
+        i += (c === 13 && text.charCodeAt(i + 1) === 10) ? 2 : 1;
+        continue;
+      }
+      cell += text.charAt(i); start = false; i++;
+    }
+    row.push(cell); rows.push(row);
+    var lastRow = rows[rows.length - 1];
+    if (rows.length > 1 && lastRow.length === 1 && lastRow[0] === '') rows.pop();
+    return rows;
+  }
+
+  // ---------- 見出しの語 ----------
+  var SRC_HEAD = ['原文', '原語', 'source', 'src', '英文', '原稿'];
+  var TGT_HEAD = ['訳文', '翻訳', '訳', 'target', 'tgt', '和文', '翻訳文'];
+  var OTHER_HEAD = ['英語', '日本語', 'english', 'japanese', 'en', 'ja', 'ja-jp', 'en-us'];
+  var TERM_HEAD = ['原語', '訳語', '用語', '対訳', 'source', 'target', 'term', '英語', '日本語', 'english', 'japanese', 'en', 'ja', '原文', '訳文'];
+  function headKey(s) { return lowerAscii(norm(trimSp(s || '')).t); }
+  function inList(s, list) { return list.indexOf(headKey(s)) >= 0; }
+  function isHeadCell(s) { return inList(s, SRC_HEAD) || inList(s, TGT_HEAD) || inList(s, OTHER_HEAD); }
+
+  // ---------- 小数（BigInt で誤差なく） ----------
+  function decOf(str) {
+    var s = str.split(',').join('');
+    var dot = s.indexOf('.');
+    if (dot < 0) return { n: BigInt(s), k: 0 };
+    return { n: BigInt(s.slice(0, dot) + s.slice(dot + 1)), k: s.length - dot - 1 };
+  }
+  function pow10(k) { var r = BigInt(1); for (var i = 0; i < k; i++) r *= B10; return r; }
+  function decMul(d, m) { return { n: d.n * m, k: d.k }; }
+  function decAdd(x, y) {
+    if (x.k === y.k) return { n: x.n + y.n, k: x.k };
+    if (x.k < y.k) return { n: x.n * pow10(y.k - x.k) + y.n, k: y.k };
+    return { n: x.n + y.n * pow10(x.k - y.k), k: x.k };
+  }
+  function decKey(d) {
+    var n = d.n, k = d.k;
+    while (k > 0 && n % B10 === B0) { n = n / B10; k--; }
+    var s = n.toString();
+    if (k > 0) { while (s.length <= k) s = '0' + s; s = s.slice(0, s.length - k) + '.' + s.slice(s.length - k); }
+    return s;
+  }
+
+  // ---------- 年月日 ----------
+  var MONTH_LIST = [
+    ['january', 1], ['february', 2], ['march', 3], ['april', 4], ['may', 5], ['june', 6], ['july', 7], ['august', 8],
+    ['september', 9], ['october', 10], ['november', 11], ['december', 12],
+    ['jan', 1], ['feb', 2], ['mar', 3], ['apr', 4], ['jun', 6], ['jul', 7], ['aug', 8], ['sept', 9], ['sep', 9],
+    ['oct', 10], ['nov', 11], ['dec', 12]
+  ];
+  var MONTHS = {};
+  MONTH_LIST.forEach(function (p) { MONTHS[p[0]] = p[1]; });
+  var MON = MONTH_LIST.map(function (p) { return p[0]; }).join('|');
+  var DAY_NAMES = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'mon', 'tue', 'tues', 'wed', 'thu', 'thur', 'thurs', 'fri', 'sat', 'sun'];
+  // 月の名は、先頭だけ大文字（October）か、全部大文字（OCT）だけを読む
+  function monthOf(word) {
+    var low = lowerAscii(word);
+    if (!(low in MONTHS)) return 0;
+    var title = word.charAt(0).toUpperCase() + low.slice(1);
+    if (word !== title && word !== word.toUpperCase()) return 0;
+    return MONTHS[low];
+  }
+  function daysIn(y, mo) {
+    if (mo === 2) return y == null ? 29 : ((y % 4 === 0 && y % 100 !== 0) || y % 400 === 0) ? 29 : 28;
+    return [4, 6, 9, 11].indexOf(mo) >= 0 ? 30 : 31;
+  }
+  function validDate(y, mo, d) {
+    if (!(mo >= 1 && mo <= 12)) return false;
+    if (d == null) return true;
+    return d >= 1 && d <= daysIn(y, mo);
+  }
+  function dateKey(y, mo, d) {
+    return (y == null ? '????' : String(y)) + '-' + (mo < 10 ? '0' : '') + mo + '-' + (d == null ? '??' : (d < 10 ? '0' : '') + d);
+  }
+  var ERA = { '令和': 2018, '平成': 1988, '昭和': 1925 };
+  // 読む順に並べる（先に当たった長い形を優先し、重なる短い形は読まない）
+  var DATE_RULES = [
+    { re: /(令和|平成|昭和)[ ]*(元|[0-9]{1,2})[ ]*年[ ]*([0-9]{1,2})[ ]*月(?:[ ]*([0-9]{1,2})[ ]*日)?/g, f: function (m) { return [ERA[m[1]] + (m[2] === '元' ? 1 : +m[2]), +m[3], m[4] == null ? null : +m[4]]; } },
+    { re: /([0-9]{4})[ ]*年[ ]*([0-9]{1,2})[ ]*月(?:[ ]*([0-9]{1,2})[ ]*日)?/g, f: function (m) { return [+m[1], +m[2], m[3] == null ? null : +m[3]]; } },
+    { re: /([0-9]{4})([/.-])([0-9]{1,2})([/.-])([0-9]{1,2})/g, f: function (m) { return m[2] === m[4] ? [+m[1], +m[3], +m[5]] : null; }, num: true },
+    { re: /([0-9]{1,2})[ ]*月[ ]*([0-9]{1,2})[ ]*日/g, f: function (m) { return [null, +m[1], +m[2]]; } },
+    { re: new RegExp('(' + MON + ')[.]?[ ]+([0-9]{1,2})(?:st|nd|rd|th)?(?:,[ ]*|[ ]+)([0-9]{4})', 'gi'), f: function (m) { return [+m[3], monthOf(m[1]), +m[2]]; }, en: true },
+    { re: new RegExp('([0-9]{1,2})(?:st|nd|rd|th)?[ ]+(' + MON + ')[.]?,?[ ]+([0-9]{4})', 'gi'), f: function (m) { return [+m[3], monthOf(m[2]), +m[1]]; }, en: true },
+    { re: new RegExp('(' + MON + ')[.]?,?[ ]+([0-9]{4})', 'gi'), f: function (m) { return [+m[2], monthOf(m[1]), null]; }, en: true },
+    { re: new RegExp('(' + MON + ')[.]?[ ]+([0-9]{1,2})(?:st|nd|rd|th)?', 'gi'), f: function (m) { return [null, monthOf(m[1]), +m[2]]; }, en: true },
+    { re: new RegExp('([0-9]{1,2})(?:st|nd|rd|th)?[ ]+(' + MON + ')', 'gi'), f: function (m) { return [null, monthOf(m[2]), +m[1]]; }, en: true }
+  ];
+  function overlaps(spans, a, b) { for (var i = 0; i < spans.length; i++) if (a < spans[i].b && spans[i].a < b) return true; return false; }
+  function inSpans(spans, i) { for (var k = 0; k < spans.length; k++) if (i >= spans[k].a && i < spans[k].b) return true; return false; }
+  function findDates(t) {
+    var out = [];
+    DATE_RULES.forEach(function (rule) {
+      rule.re.lastIndex = 0;
+      var m;
+      while ((m = rule.re.exec(t))) {
+        var a = m.index, b = a + m[0].length;
+        if (!m[0].length) { rule.re.lastIndex++; continue; }
+        var prev = a > 0 ? t.charCodeAt(a - 1) : -1;
+        var next = b < t.length ? t.charCodeAt(b) : -1;
+        var ok = true;
+        // 前後の文字：数字や英字の途中では読まない
+        if (isDigit(prev) || isDigit(next)) ok = false;
+        if (rule.en && (isAlpha(prev) || isAlpha(next))) ok = false;
+        if (rule.num) {
+          // 2026/10/25/1 や 1.2026.10.25 のように、区切りと数字がさらに続く形は読まない
+          var p2 = a > 1 ? t.charCodeAt(a - 2) : -1;
+          if ((prev === 47 || prev === 46 || prev === 45) && isDigit(p2)) ok = false;
+          var n2 = b + 1 < t.length ? t.charCodeAt(b + 1) : -1;
+          if ((next === 47 || next === 46 || next === 45) && isDigit(n2)) ok = false;
+        }
+        if (ok) {
+          var v = rule.f(m);
+          if (!v || (rule.en && !v[1]) || !validDate(v[0], v[1], v[2])) ok = false;
+          if (ok && !overlaps(out, a, b)) out.push({ a: a, b: b, key: dateKey(v[0], v[1], v[2]) });
+        }
+        rule.re.lastIndex = a + 1;
+      }
+    });
+    out.sort(function (x, y) { return x.a - y.a; });
+    return out;
+  }
+
+  // ---------- 語（英字で始まる英数字の塊。- & . をはさんでつながる） ----------
+  function findTokens(t, dateSpans) {
+    var out = [], i = 0, n = t.length;
+    while (i < n) {
+      var c = t.charCodeAt(i);
+      if (!isAlpha(c) || (i > 0 && isAlnum(t.charCodeAt(i - 1))) || inSpans(dateSpans, i)) { i++; continue; }
+      var st = i;
+      while (i < n && isAlnum(t.charCodeAt(i))) i++;
+      // - と & は英数字の前で、. は英字の前でつなぐ（Wi-Fi・AT&T・U.S・Acme.com。No.5 の 5 は数字として読む）
+      while (i + 1 < n && (((t.charCodeAt(i) === 45 || t.charCodeAt(i) === 38) && isAlnum(t.charCodeAt(i + 1))) || (t.charCodeAt(i) === 46 && isAlpha(t.charCodeAt(i + 1))))) {
+        i++;
+        while (i < n && isAlnum(t.charCodeAt(i))) i++;
+      }
+      out.push({ a: st, b: i, w: t.slice(st, i) });
+    }
+    return out;
+  }
+  // 文頭：セルの先頭か、. ! ? 。 の後で、間に空白・引用符・括弧しかない位置
+  var LEAD_SKIP = ' ' + TAB + LF + CR + QUOTE + fc(39) + '“‘「『（(【［[〈《';
+  var SENT_END = '.!?。';
+  function atSentenceStart(t, a) {
+    var i = a - 1;
+    while (i >= 0 && LEAD_SKIP.indexOf(t.charAt(i)) >= 0) i--;
+    return i < 0 || SENT_END.indexOf(t.charAt(i)) >= 0;
+  }
+  function hasUpperIn(w, from) { for (var i = from; i < w.length; i++) if (isUpper(w.charCodeAt(i))) return true; return false; }
+
+  // ---------- 数字 ----------
+  var NUM_RE = /[0-9]{1,3}(?:,[0-9]{3}(?![0-9]))+(?:[.][0-9]+)?|[0-9]+(?:[.][0-9]+)?/g;
+  var JA_UNIT = { '万': BigInt(10000), '億': pow10(8), '兆': pow10(12) };
+  var EN_UNIT = { thousand: pow10(3), million: pow10(6), billion: pow10(9), trillion: pow10(12) };
+  var B1000 = BigInt(1000);
+  // t の i から始まる数字の塊（3桁ごとのカンマ・小数点を含む）を読む。なければ null
+  function numAt(t, i) {
+    NUM_RE.lastIndex = i;
+    var m = NUM_RE.exec(t);
+    if (!m || m.index !== i) return null;
+    return { a: i, b: i + m[0].length, s: m[0] };
+  }
+  // 数字の直後の 千・万・億・兆（大きい単位から順に続く 1億2000万・1万9800・3千万）と、空白1つまでをはさんだ thousand・million・billion・trillion
+  function withUnits(t, first) {
+    var total = null, pos = first.b, cur = decOf(first.s), last = null, end = first.b;
+    for (;;) {
+      var p = pos, mult = BigInt(1), sen = false;
+      if (t.charAt(p) === '千') { mult = B1000; sen = true; p++; }
+      var u = JA_UNIT[t.charAt(p)];
+      if (u && (last === null || u < last)) {
+        total = total ? decAdd(total, decMul(cur, mult * u)) : decMul(cur, mult * u);
+        last = u; p++; end = p;
+      } else if (sen) {
+        total = total ? decAdd(total, decMul(cur, mult)) : decMul(cur, mult);
+        end = p;
+        break;
+      } else {
+        if (total) { total = decAdd(total, cur); }
+        break;
+      }
+      var nx = numAt(t, p);
+      if (!nx) break;
+      cur = decOf(nx.s); pos = nx.b; end = nx.b;
+      // 続く数字に単位がなければ、ここで足して終わる（1万9800）
+      if (t.charAt(pos) !== '千' && !(JA_UNIT[t.charAt(pos)] && JA_UNIT[t.charAt(pos)] < last)) { total = decAdd(total, cur); break; }
+    }
+    if (total) return { b: end, d: total };
+    // 英語の単位
+    var j = first.b;
+    if (t.charAt(j) === ' ') j++;
+    var k = j;
+    while (k < t.length && isAlpha(t.charCodeAt(k))) k++;
+    var word = lowerAscii(t.slice(j, k));
+    if (k > j && EN_UNIT[word]) return { b: k, d: decMul(decOf(first.s), EN_UNIT[word]) };
+    return { b: first.b, d: decOf(first.s) };
+  }
+  function findNumbers(t, dates, tokens, units) {
+    var blocked = dates.concat(tokens);
+    var out = [];
+    NUM_RE.lastIndex = 0;
+    var m;
+    while ((m = NUM_RE.exec(t))) {
+      var a = m.index;
+      if (inSpans(blocked, a)) continue;
+      var first = { a: a, b: a + m[0].length, s: m[0] };
+      var r = units ? withUnits(t, first) : { b: first.b, d: decOf(first.s) };
+      // 単位の後に続けて読んだ部分が年月日に入るときは、単位を使わない
+      if (r.b > first.b && overlaps(dates, first.b, r.b)) r = { b: first.b, d: decOf(first.s) };
+      out.push({ a: a, b: r.b, key: decKey(r.d) });
+      NUM_RE.lastIndex = r.b;
+    }
+    return out;
+  }
+
+  // ---------- 1つの文から取り出す ----------
+  function extract(raw, opt) {
+    var N = norm(raw);
+    var t = N.t;
+    var dates = findDates(t);
+    var tokens = findTokens(t, dates);
+    var nums = findNumbers(t, dates, tokens, opt.units);
+    // 数字の単位として読んだ語（Million など）は語として扱わない
+    tokens = tokens.filter(function (tk) { return !overlaps(nums, tk.a, tk.b); });
+    var all = {};
+    tokens.forEach(function (tk) { all['_' + tk.w] = true; });
+    var words = tokens.filter(function (tk) {
+      var w = tk.w;
+      if (!hasUpperIn(w, 0) || w === 'I') return false;
+      var low = lowerAscii(w);
+      if (monthOf(w) || (DAY_NAMES.indexOf(low) >= 0 && (w === w.toUpperCase() || w.charAt(0) + low.slice(1) === w))) return false;
+      // 文頭の語は、先頭だけが大文字で小文字を含む語（The・Select）と、1文字の語（A）だけを除く
+      if (opt.initial && isUpper(w.charCodeAt(0)) && !hasUpperIn(w, 1) && (/[a-z]/.test(w) || w.length === 1) && atSentenceStart(t, tk.a)) return false;
+      return true;
+    });
+    return { raw: raw, N: N, dates: dates, nums: nums, words: words, all: all, low: lowerAscii(t) };
+  }
+  function orig(E, sp) { return trimSp(E.raw.slice(E.N.m[sp.a], E.N.m[sp.b])); }
+  function origSpan(E, sp) { return { a: E.N.m[sp.a], b: E.N.m[sp.b] }; }
+
+  // 数字・年月日：同じ値の出てくる回数を比べ、多いほうの側の余った分（後ろのもの）を「だけ」にする
+  function multiDiff(A, B) {
+    var cntB = {};
+    B.forEach(function (x) { cntB['_' + x.key] = (cntB['_' + x.key] || 0) + 1; });
+    var cntA = {};
+    A.forEach(function (x) { cntA['_' + x.key] = (cntA['_' + x.key] || 0) + 1; });
+    var seen = {};
+    return A.filter(function (x) {
+      var k = '_' + x.key;
+      seen[k] = (seen[k] || 0) + 1;
+      return seen[k] > (cntB[k] || 0);
+    });
+  }
+
+  // ---------- 用語表 ----------
+  function termKey(s) { return lowerAscii(norm(trimSp(s)).t); }
+  function parseTerms(text) {
+    var rows = parseTable(text || '');
+    var list = [], map = {}, bad = [], head = false, count = 0;
+    rows.forEach(function (r, i) {
+      var cells = r.map(function (x) { return trimSp(x); });
+      if (cells.every(function (x) { return x === ''; })) return;
+      if (!count && !head && (inList(cells[0], TERM_HEAD) || inList(cells[1] || '', TERM_HEAD))) { head = true; return; }
+      count++;
+      var src = cells[0];
+      var tg = [];
+      cells.slice(1).forEach(function (c) { c.split('／').forEach(function (x) { x = trimSp(x); if (x) tg.push(x); }); });
+      if (!src || !tg.length) { bad.push(i + 1); return; }
+      var k = termKey(src);
+      if (!map['_' + k]) { map['_' + k] = { src: src, key: k, tgts: [], tkeys: [] }; list.push(map['_' + k]); }
+      var e = map['_' + k];
+      tg.forEach(function (x) { var tk = termKey(x); if (e.tkeys.indexOf(tk) < 0) { e.tkeys.push(tk); e.tgts.push(x); } });
+    });
+    return { list: list, bad: bad, head: head, count: count };
+  }
+  // text（そろえて小文字にした文）の中で key が当たる位置。端が英数字なら隣が英数字でない位置だけ
+  function findTerm(text, key, from) {
+    var i = text.indexOf(key, from || 0);
+    var aEdge = isAlnum(key.charCodeAt(0)), bEdge = isAlnum(key.charCodeAt(key.length - 1));
+    while (i >= 0) {
+      var okA = !aEdge || i === 0 || !isAlnum(text.charCodeAt(i - 1));
+      var j = i + key.length;
+      var okB = !bEdge || j >= text.length || !isAlnum(text.charCodeAt(j));
+      if (okA && okB) return i;
+      i = text.indexOf(key, i + 1);
+    }
+    return -1;
+  }
+
+  // ---------- 1行の照合 ----------
+  function quoteList(list) { return list.map(function (x) { return '「' + x + '」'; }).join(''); }
+  function sideText(srcOnly, tgtOnly) {
+    var parts = [];
+    if (srcOnly.length) parts.push('原文だけ' + quoteList(srcOnly));
+    if (tgtOnly.length) parts.push('訳文だけ' + quoteList(tgtOnly));
+    return parts.join('、');
+  }
+  function compareRow(src, tgt, opt, terms) {
+    var res = { flags: [], srcMarks: [], tgtMarks: [], judge: '' };
+    var sEmpty = trimSp(src) === '', tEmpty = trimSp(tgt) === '';
+    if (sEmpty && tEmpty) return null;
+    if (opt.empty && (sEmpty || tEmpty)) {
+      res.flags.push(tEmpty ? 'empty' : 'nosrc');
+      res.judge = tEmpty ? '訳抜け（訳文が空）' : '原文が空';
+      return res;
+    }
+    var S = extract(src, opt), T = extract(tgt, opt);
+    var parts = [];
+    if (opt.num) {
+      var a = multiDiff(S.nums, T.nums), b = multiDiff(T.nums, S.nums);
+      if (a.length || b.length) {
+        res.flags.push('num');
+        parts.push('数字：' + sideText(a.map(function (x) { return orig(S, x); }), b.map(function (x) { return orig(T, x); })));
+        a.forEach(function (x) { res.srcMarks.push(origSpan(S, x)); });
+        b.forEach(function (x) { res.tgtMarks.push(origSpan(T, x)); });
+      }
+    }
+    if (opt.date) {
+      var da = multiDiff(S.dates, T.dates), db = multiDiff(T.dates, S.dates);
+      if (da.length || db.length) {
+        res.flags.push('date');
+        parts.push('年月日：' + sideText(da.map(function (x) { return orig(S, x); }), db.map(function (x) { return orig(T, x); })));
+        da.forEach(function (x) { res.srcMarks.push(origSpan(S, x)); });
+        db.forEach(function (x) { res.tgtMarks.push(origSpan(T, x)); });
+      }
+    }
+    if (opt.word) {
+      var miss = [], seenW = {};
+      S.words.forEach(function (tk) {
+        if (T.all['_' + tk.w]) return;
+        res.srcMarks.push(origSpan(S, tk));
+        if (!seenW['_' + tk.w]) { seenW['_' + tk.w] = true; miss.push(tk.w); }
+      });
+      if (miss.length) { res.flags.push('word'); parts.push('英大文字の語：原文だけ' + quoteList(miss)); }
+    }
+    if (opt.term && terms.length) {
+      var tm = [];
+      terms.forEach(function (e) {
+        var p = findTerm(S.low, e.key, 0);
+        if (p < 0) return;
+        for (var k = 0; k < e.tkeys.length; k++) if (findTerm(T.low, e.tkeys[k], 0) >= 0) return;
+        tm.push('「' + e.src + '」の訳語' + quoteList(e.tgts) + 'なし');
+        while (p >= 0) {
+          res.srcMarks.push({ a: S.N.m[p], b: S.N.m[p + e.key.length] });
+          p = findTerm(S.low, e.key, p + e.key.length);
+        }
+      });
+      if (tm.length) { res.flags.push('term'); res.termCount = tm.length; parts.push('用語：' + tm.join('、')); }
+    }
+    res.judge = parts.join(' ／ ');
+    return res;
+  }
+
+  // ---------- 入力の読み方 ----------
+  function hasLetter(s) { return /[A-Za-zぁ-んァ-ヶ一-龠々]/.test(norm(s).t); }
+  function colLetter(c) { var s = ''; c += 1; while (c > 0) { var m = (c - 1) % 26; s = String.fromCharCode(65 + m) + s; c = Math.floor((c - 1) / 26); } return s; }
+  function chooseCols(rows, ncols, hi) {
+    var first = hi >= 0 ? rows[hi] : [];
+    var s = -1, t = -1, c;
+    for (c = 0; c < ncols; c++) {
+      if (s < 0 && inList(first[c], SRC_HEAD)) s = c;
+      else if (t < 0 && inList(first[c], TGT_HEAD)) t = c;
+    }
+    var textCols = [];
+    for (c = 0; c < ncols; c++) {
+      for (var r = 0; r < rows.length; r++) { if (r === hi && isHeadCell(rows[r][c])) continue; if (hasLetter(rows[r][c] || '')) { textCols.push(c); break; } }
+    }
+    if (textCols.length < 2) textCols = [0, 1];
+    if (s < 0) s = textCols.filter(function (x) { return x !== t; })[0];
+    if (t < 0) t = textCols.filter(function (x) { return x !== s && x > s; })[0];
+    if (t == null) t = textCols.filter(function (x) { return x !== s; })[0];
+    return [s, t];
+  }
+  function trimTail(rows) { while (rows.length && rows[rows.length - 1].every(function (x) { return trimSp(x) === ''; })) rows.pop(); return rows; }
+
+  function analyze(inp, opt) {
+    var R = { rows: [], mode: inp.mode, error: null, head: false, headIndex: -1, ncols: 0, items: [], counts: { num: 0, date: 0, word: 0, term: 0, empty: 0, nosrc: 0 }, bad: 0, checked: 0, termRows: 0 };
+    var pairs = [];
+    var T = parseTerms(inp.terms);
+    R.terms = T;
+    if (inp.mode === 'pair') {
+      var rows = parseTable(inp.pair);
+      if (!trimSp(inp.pair)) { R.blank = true; return R; }
+      rows.forEach(function (r) { if (r.length > R.ncols) R.ncols = r.length; });
+      R.lineCount = rows.length;
+      if (R.ncols < 2) { R.error = 'nocol'; return R; }
+      if (rows.length > MAX_ROWS) { R.error = 'toomany'; R.tooMany = rows.length; return R; }
+      var hi = -1;
+      for (var i = 0; i < rows.length; i++) if (!rows[i].every(function (x) { return trimSp(x) === ''; })) { hi = i; break; }
+      var auto = chooseCols(rows, R.ncols, hi);
+      R.autoCols = auto;
+      R.srcCol = inp.srcCol != null && inp.srcCol < R.ncols ? inp.srcCol : auto[0];
+      R.tgtCol = inp.tgtCol != null && inp.tgtCol < R.ncols ? inp.tgtCol : auto[1];
+      if (R.srcCol === R.tgtCol) { R.error = 'samecol'; return R; }
+      R.headIndex = hi;
+      R.autoHead = hi >= 0 && (isHeadCell(rows[hi][R.srcCol]) || isHeadCell(rows[hi][R.tgtCol]));
+      R.head = hi >= 0 && (inp.head == null ? R.autoHead : inp.head);
+      rows.forEach(function (r) { pairs.push([r[R.srcCol] || '', r[R.tgtCol] || '']); });
+    } else {
+      var sr = parseTable(inp.src), tr = parseTable(inp.tgt);
+      if (!trimSp(inp.src) && !trimSp(inp.tgt)) { R.blank = true; return R; }
+      var sl = trimTail(sr.map(function (r) { return [r.join(TAB)]; })), tl = trimTail(tr.map(function (r) { return [r.join(TAB)]; }));
+      R.srcLines = sl.length; R.tgtLines = tl.length;
+      if (sl.length !== tl.length) { R.error = 'rowsdiff'; return R; }
+      if (sl.length > MAX_ROWS) { R.error = 'toomany'; R.tooMany = sl.length; return R; }
+      R.lineCount = sl.length;
+      var h2 = -1;
+      for (var j = 0; j < sl.length; j++) if (trimSp(sl[j][0]) !== '' || trimSp(tl[j][0]) !== '') { h2 = j; break; }
+      R.headIndex = h2;
+      R.autoHead = h2 >= 0 && (isHeadCell(sl[h2][0]) || isHeadCell(tl[h2][0]));
+      R.head = h2 >= 0 && (inp.head == null ? R.autoHead : inp.head);
+      sl.forEach(function (r, k) { pairs.push([r[0], tl[k][0]]); });
+    }
+    if (opt.term && T.count > MAX_TERMS) { R.error = 'termsmany'; return R; }
+    pairs.forEach(function (p, k) {
+      var it = { row: k + 1, src: p[0], tgt: p[1] };
+      if (R.head && k === R.headIndex) { it.kind = 'head'; it.judge = '判定'; R.items.push(it); return; }
+      var res = compareRow(p[0], p[1], opt, opt.term ? T.list : []);
+      if (!res) { it.kind = 'empty'; it.judge = ''; R.items.push(it); return; }
+      R.checked++;
+      it.res = res;
+      it.judge = res.judge;
+      it.kind = res.judge ? 'bad' : 'ok';
+      if (res.judge) {
+        R.bad++;
+        res.flags.forEach(function (f) { R.counts[f]++; });
+      }
+      R.items.push(it);
+    });
+    return R;
+  }
+
+  function columnText(R) { return R.items.map(function (it) { return it.judge; }).join(LF); }
+  function toSheetCell(s) {
+    if (s.indexOf(LF) >= 0 || s.indexOf(TAB) >= 0 || s.indexOf(QUOTE) >= 0 || s.indexOf(CR) >= 0) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  function badRows(R) {
+    var rows = [['行', '原文', '訳文', '判定']];
+    R.items.forEach(function (it) { if (it.kind === 'bad') rows.push([String(it.row), it.src, it.tgt, it.judge]); });
+    return rows;
+  }
+  function badText(R) { return badRows(R).map(function (r) { return r.map(toSheetCell).join(TAB); }).join(LF); }
+  function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  // HTML の表：原文・訳文・判定は「文字列」の書式（数や日付に変わらないように）。行の番号は数のまま
+  var TEXT_ATTR = ' style="mso-number-format:' + fc(39) + fc(92) + '@' + fc(39) + '" sdnum="1041;0;@"';
+  function badHtml(R) {
+    var rows = badRows(R);
+    if (rows.some(function (r) { return r.some(function (v) { return v.indexOf(LF) >= 0 || v.indexOf(CR) >= 0; }); })) return null;
+    var html = '<meta charset="utf-8"><table>';
+    rows.forEach(function (r, i) {
+      html += '<tr>' + r.map(function (v, j) { return '<td' + (i > 0 && j === 0 ? '' : TEXT_ATTR) + '>' + escapeHtml(v) + '</td>'; }).join('') + '</tr>';
+    });
+    return html + '</table>';
+  }
+
+  // ---------- 画面 ----------
+  function $(id) { return document.getElementById(id); }
+  var pairEl = $('pairText'), srcEl = $('srcText'), tgtEl = $('tgtText'), termEl = $('termText');
+  var pairField = $('pairField'), sepBox = $('sepBox');
+  var srcColSel = $('srcCol'), tgtColSel = $('tgtCol'), srcColField = $('srcColField'), tgtColField = $('tgtColField');
+  var headChk = $('headChk'), saveTerms = $('saveTerms');
+  var summaryEl = $('summary'), status = $('status'), setStatusEl = $('setStatus');
+  var copyCol = $('copyCol'), copyBad = $('copyBad'), manualBox = $('manualBox'), manualText = $('manualText');
+  var listWrap = $('listWrap');
+  var modeInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="mode"]'));
+  var viewInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="view"]'));
+  var CHK = { num: $('chkNum'), date: $('chkDate'), word: $('chkWord'), term: $('chkTerm'), empty: $('chkEmpty'), units: $('chkUnit'), initial: $('chkInitial') };
+  var user = { srcCol: null, tgtCol: null, head: null };
+  var last = null;
+
+  function radio(list) { var v = ''; list.forEach(function (el) { if (el.checked) v = el.value; }); return v; }
+  function setRadio(list, v) { list.forEach(function (el) { el.checked = el.value === v; }); }
+  function options() {
+    var o = {};
+    Object.keys(CHK).forEach(function (k) { o[k] = CHK[k].checked; });
+    return o;
+  }
+  function inputs() {
+    return { mode: radio(modeInputs), pair: pairEl.value, src: srcEl.value, tgt: tgtEl.value, terms: termEl.value, srcCol: user.srcCol, tgtCol: user.tgtCol, head: user.head };
+  }
+  function anyCheck() { return CHK.num.checked || CHK.date.checked || CHK.word.checked || CHK.term.checked || CHK.empty.checked; }
+
+  function setStat(id, value, unit, cls) {
+    var li = $(id), v = li.querySelector('.v');
+    v.textContent = value;
+    if (unit) { var s = document.createElement('small'); s.textContent = unit; v.appendChild(s); }
+    li.classList.remove('has', 'clear');
+    if (cls) li.classList.add(cls);
+  }
+  function line(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+  function errorMessage(R) {
+    if (R.error === 'nocol') return 'タブで区切られた2列が見つかりません。Excelで原文と訳文の2列を選んでコピーし、貼り付けてください。1列ずつ貼るときは、入れ方の「原文と訳文を別々の欄に貼る」を選んでください。';
+    if (R.error === 'samecol') return '原文の列と訳文の列に、同じ' + colLetter(R.srcCol) + '列が選ばれています。別の列を選んでください。';
+    if (R.error === 'rowsdiff') return '原文は' + fmtNum(R.srcLines) + '行、訳文は' + fmtNum(R.tgtLines) + '行で、行数が違うため照合していません。1行に1文ずつ、同じ順番で入れてください（Excelのセル内改行のセルは1行と数えます）。';
+    if (R.error === 'toomany') return '行が' + fmtNum(R.tooMany) + '行あります。一度に照合できるのは' + fmtNum(MAX_ROWS) + '行までです。分けて貼り付けてください。';
+    if (R.error === 'termsmany') return '用語表が' + fmtNum(R.terms.count) + '行あります。用語表は' + fmtNum(MAX_TERMS) + '行までです。この文書で使う用語だけにしてください。';
+    return '';
+  }
+  var ITEM_NAMES = [['num', '数字'], ['date', '年月日'], ['word', '英大文字の語'], ['term', '用語'], ['empty', '訳抜け'], ['nosrc', '原文が空']];
+  function resultWord(R) {
+    if (R.error) return errorMessage(R);
+    if (R.blank) return '';
+    if (!R.checked) return '照合する行がありません。';
+    if (!anyCheck()) return '照合する項目がすべてオフのため、何も照合していません。';
+    if (!R.bad) return fmtNum(R.checked) + '行を照合し、食い違いは見つかりませんでした。';
+    return fmtNum(R.checked) + '行のうち' + fmtNum(R.bad) + '行に食い違いがあります。';
+  }
+  function renderSummary(R) {
+    summaryEl.textContent = '';
+    var ids = ['stRows', 'stBad', 'stEmpty', 'stTerm'];
+    if (R.blank || R.error) {
+      ids.forEach(function (id) { setStat(id, '–', '', ''); });
+      if (R.error) summaryEl.appendChild(line('main err', errorMessage(R)));
+      else summaryEl.appendChild(line('sub', R.mode === 'pair' ? '原文と訳文の2列を貼り付けると、照合します。' : '原文と訳文を、それぞれの欄に1行1文ずつ入れると、照合します。'));
+      return;
+    }
+    setStat('stRows', fmtNum(R.checked), '行', '');
+    setStat('stBad', fmtNum(R.bad), '行', R.bad ? 'has' : (R.checked && anyCheck() ? 'clear' : ''));
+    setStat('stEmpty', CHK.empty.checked ? fmtNum(R.counts.empty) : 'オフ', CHK.empty.checked ? '行' : '', CHK.empty.checked && R.counts.empty ? 'has' : '');
+    var termOn = CHK.term.checked && R.terms.list.length;
+    setStat('stTerm', termOn ? fmtNum(R.counts.term) : (CHK.term.checked ? '用語表なし' : 'オフ'), termOn ? '行' : '', termOn && R.counts.term ? 'has' : '');
+    var cls = !R.checked || !anyCheck() ? 'main warn' : R.bad ? 'main warn' : 'main';
+    summaryEl.appendChild(line(cls, resultWord(R)));
+    if (R.bad) {
+      var parts = [];
+      ITEM_NAMES.forEach(function (p) { if (R.counts[p[0]]) parts.push(p[1] + ' ' + fmtNum(R.counts[p[0]]) + '行'); });
+      summaryEl.appendChild(line('sub', '内訳：' + parts.join('、') + '（1行に複数の食い違いがあると、それぞれに数えます）'));
+    }
+    var notes = [];
+    if (R.mode === 'pair' && R.ncols > 2) notes.push('原文は' + colLetter(R.srcCol) + '列、訳文は' + colLetter(R.tgtCol) + '列を照合しています（列は左の欄で変えられます）。');
+    if (R.head) notes.push(fmtNum(R.headIndex + 1) + '行目は見出しとして照合していません。');
+    if (CHK.term.checked && R.terms.bad.length) notes.push('用語表の' + R.terms.bad.slice(0, 5).map(fmtNum).join('・') + '行目' + (R.terms.bad.length > 5 ? 'ほか' : '') + 'は、原語か訳語が空のため使っていません。');
+    notes.forEach(function (n) { summaryEl.appendChild(line('w', n)); });
+  }
+
+  // 文に印を付けて表示する
+  function markedText(text, marks) {
+    var p = document.createElement('p');
+    p.className = 'txt';
+    if (trimSp(text) === '') { p.classList.add('none'); p.textContent = '（空）'; return p; }
+    var ms = marks.slice().sort(function (x, y) { return x.a - y.a || y.b - x.b; });
+    var merged = [];
+    ms.forEach(function (m) {
+      if (m.b <= m.a) return;
+      var lastM = merged[merged.length - 1];
+      if (lastM && m.a <= lastM.b) { if (m.b > lastM.b) lastM.b = m.b; return; }
+      merged.push({ a: m.a, b: m.b });
+    });
+    var pos = 0;
+    merged.forEach(function (m) {
+      if (m.a > pos) p.appendChild(document.createTextNode(text.slice(pos, m.a)));
+      var mk = document.createElement('mark');
+      mk.textContent = text.slice(m.a, m.b);
+      p.appendChild(mk);
+      pos = m.b;
+    });
+    if (pos < text.length) p.appendChild(document.createTextNode(text.slice(pos)));
+    return p;
+  }
+  function sideEl(label, text, marks) {
+    var d = document.createElement('div');
+    d.className = 'side';
+    var l = document.createElement('span');
+    l.className = 'lab';
+    l.textContent = label;
+    d.appendChild(l);
+    d.appendChild(markedText(text, marks));
+    return d;
+  }
+  function emptyMsg(text) { var p = document.createElement('p'); p.className = 'empty-result'; p.textContent = text; return p; }
+  function renderList(R) {
+    listWrap.textContent = '';
+    if (R.blank || R.error) { listWrap.appendChild(emptyMsg(R.error ? '照合できませんでした。上の文を見てください。' : 'ここに、食い違いのある行が表示されます。')); return; }
+    var all = radio(viewInputs) === 'all';
+    var list = R.items.filter(function (it) { return all ? true : it.kind === 'bad'; });
+    if (!list.length) { listWrap.appendChild(emptyMsg(R.checked ? (anyCheck() ? '食い違いのある行はありません。' : '照合する項目がすべてオフです。') : '照合する行がありません。')); return; }
+    var frag = document.createDocumentFragment();
+    list.slice(0, MAX_SHOW).forEach(function (it) {
+      var d = document.createElement('div');
+      d.className = 'item';
+      var h = document.createElement('p');
+      h.className = 'item-head';
+      h.appendChild(line('no', fmtNum(it.row) + '行目'));
+      var jt = it.kind === 'head' ? '見出し（照合しない）' : it.kind === 'empty' ? '空の行' : it.kind === 'ok' ? '一致' : it.judge;
+      h.appendChild(line('judge' + (it.kind === 'ok' ? ' ok' : it.kind === 'bad' ? '' : ' head'), jt));
+      d.appendChild(h);
+      var res = it.res || { srcMarks: [], tgtMarks: [] };
+      d.appendChild(sideEl('原文', it.src, res.srcMarks));
+      d.appendChild(sideEl('訳文', it.tgt, res.tgtMarks));
+      frag.appendChild(d);
+    });
+    listWrap.appendChild(frag);
+    if (list.length > MAX_SHOW) {
+      var p = document.createElement('p');
+      p.className = 'more-rows';
+      p.textContent = '先頭の' + fmtNum(MAX_SHOW) + '行を表示しています（全部で' + fmtNum(list.length) + '行）。コピーにはすべて入ります。';
+      listWrap.appendChild(p);
+    }
+  }
+  function buildColSel(R) {
+    var show = R.mode === 'pair' && !R.blank && R.ncols > 2 && R.error !== 'nocol' && R.error !== 'toomany';
+    srcColField.hidden = !show;
+    tgtColField.hidden = !show;
+    if (!show) return;
+    [srcColSel, tgtColSel].forEach(function (sel, k) {
+      var cur = k === 0 ? R.srcCol : R.tgtCol;
+      if (sel.options.length !== R.ncols) {
+        sel.textContent = '';
+        for (var c = 0; c < R.ncols; c++) { var o = document.createElement('option'); o.value = String(c); o.textContent = colLetter(c) + '列'; sel.appendChild(o); }
+      }
+      sel.value = String(cur);
+    });
+  }
+  function render() {
+    var mode = radio(modeInputs);
+    pairField.hidden = mode !== 'pair';
+    sepBox.hidden = mode !== 'sep';
+    var R = analyze(inputs(), options());
+    last = R;
+    buildColSel(R);
+    headChk.checked = !!R.head;
+    headChk.disabled = R.blank || !!R.error || R.headIndex == null || R.headIndex < 0;
+    renderSummary(R);
+    renderList(R);
+    var okData = !R.blank && !R.error && R.items.length > 0 && R.checked > 0;
+    copyCol.disabled = !okData;
+    copyBad.disabled = !(okData && R.bad > 0);
+    return R;
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio') && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect || !document.body.contains(el)) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    [status, setStatusEl].forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    unpin();
+    [status, setStatusEl].forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  // 設定を変えて上の結果の高さが変わっても、押した部品が画面の同じ位置に残るようにスクロールを合わせる
+  function renderKeep() {
+    var r0 = pressedRect();
+    var R = render();
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    return R;
+  }
+  function afterChange(el, prefix) {
+    resetCopyButtons();
+    var R = renderKeep();
+    if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
+    setStatus(el, prefix + (R.blank ? '原文と訳文を入れると照合します。' : resultWord(R)));
+  }
+
+  // ---------- コピー ----------
+  var LABELS = { copyCol: '判定の列をコピー', copyBad: '食い違いの行をコピー' };
+  var copyTimer = null;
+  function resetCopyButtons() { clearTimeout(copyTimer); manualBox.hidden = true; copyCol.textContent = LABELS.copyCol; copyBad.textContent = LABELS.copyBad; }
+  function flashButton(btn, label, ms) {
+    resetCopyButtons();
+    btn.textContent = label;
+    copyTimer = setTimeout(resetCopyButtons, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(btn, text) {
+    flashButton(btn, 'コピー失敗', 4000);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, btn.getBoundingClientRect().top - 8)));
+    setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message, html) {
+    var done = function () { manualBox.hidden = true; setStatus(status, message); flashButton(btn, '✓ コピー済み', 2500); };
+    var plain = function () {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(btn, text); });
+          return;
+        }
+      } catch (e) { /* 下の方法で試す */ }
+      if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+    };
+    try {
+      if (html && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+        var item = new window.ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }), 'text/html': new Blob([html], { type: 'text/html' }) });
+        navigator.clipboard.write([item]).then(done, plain);
+        return;
+      }
+    } catch (e) { /* テキストだけでコピーする */ }
+    plain();
+  }
+  copyCol.addEventListener('click', function () {
+    var R = render();
+    if (copyCol.disabled) return;
+    doCopy(copyCol, columnText(R), '判定の列を' + fmtNum(R.items.length) + '行コピーしました' + (R.head ? '（' + fmtNum(R.headIndex + 1) + '行目は見出し「判定」）' : '') + '。Excelで、原文の1行目と同じ行の、空いた列のセルを選んで貼り付けてください。');
+  });
+  copyBad.addEventListener('click', function () {
+    var R = render();
+    if (copyBad.disabled) return;
+    doCopy(copyBad, badText(R), '食い違いのある' + fmtNum(R.bad) + '行を、見出し「行・原文・訳文・判定」をつけてコピーしました。Excelやスプレッドシートで、左上にしたいセルを選んで貼り付けてください。', badHtml(R));
+  });
+
+  // ---------- 用語表の保存（選んだときだけ） ----------
+  function storeGet() { try { return window.localStorage.getItem(STORE_KEY); } catch (e) { return null; } }
+  function storeSet(v) { try { window.localStorage.setItem(STORE_KEY, v); return true; } catch (e) { return false; } }
+  function storeDel() { try { window.localStorage.removeItem(STORE_KEY); return true; } catch (e) { return false; } }
+  var saved = storeGet();
+  if (saved !== null) { termEl.value = saved; saveTerms.checked = true; }
+  var saveTimer = null;
+  function saveNow() { if (saveTerms.checked) storeSet(termEl.value); }
+  saveTerms.addEventListener('change', function () {
+    if (saveTerms.checked) {
+      if (storeSet(termEl.value)) setStatus(setStatusEl, '用語表をこのブラウザに保存しました。次にこのページを開いたときも入っています（直すたびに保存します）。');
+      else { saveTerms.checked = false; setStatus(setStatusEl, 'このブラウザでは保存できませんでした（プライベートブラウズなどで保存が止められています）。用語表は、使うたびに貼り付けてください。', true); }
+    } else {
+      storeDel();
+      setStatus(setStatusEl, '保存していた用語表を消しました（欄の用語表はそのまま使えます）。');
+    }
+  });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE = [
+    ['原文', '訳文'],
+    ['本製品の重量は1,250gです。', 'This product weighs 1,250 g.'],
+    ['バッテリーは最大12時間持続します。', 'The battery lasts up to 21 hours.'],
+    ['2026年11月1日より出荷を開始します。', 'Shipping begins on November 1, 2026.'],
+    ['対応OSはWindows 11とmacOS 15です。', 'Supported OS: Windows 11 and macOS 14.'],
+    ['価格は1万9800円（税込）です。', 'The price is 19,800 yen including tax.'],
+    ['詳しくはAcme Cloudのヘルプをご覧ください。', 'For details, see the help page.'],
+    ['保証期間は購入日から1年間です。', ''],
+    ['データはクラウドに自動で保存されます。', 'Data is saved automatically to the server.'],
+    ['ご注文は2026年12月28日まで受け付けます。', 'Orders are accepted until December 26, 2026.']
+  ].map(function (r) { return r.join(TAB); }).join(LF);
+  var SAMPLE_TERMS = ['クラウド' + TAB + 'cloud', '保証期間' + TAB + 'warranty period'].join(LF);
+  function freshInput() { user.srcCol = null; user.tgtCol = null; user.head = null; resetCopyButtons(); }
+  $('sampleBtn').addEventListener('click', function () {
+    var had = trimSp(pairEl.value) !== '' || trimSp(srcEl.value) !== '' || trimSp(tgtEl.value) !== '';
+    var termsHad = trimSp(termEl.value) !== '';
+    setRadio(modeInputs, 'pair');
+    pairEl.value = SAMPLE;
+    srcEl.value = '';
+    tgtEl.value = '';
+    if (!termsHad) { termEl.value = SAMPLE_TERMS; saveNow(); }
+    setRadio(viewInputs, 'bad');
+    freshInput();
+    var R = render();
+    var msg = (had ? '例の原文と訳文（見出しと9行）に入れ替えました（前の内容は消えました）。' : '例の原文と訳文（見出しと9行）を入れました。');
+    msg += termsHad ? '用語表は入力済みのため、そのままにしています。' : '用語表にも例（2行）を入れました。';
+    setStatus(status, msg + resultWord(R));
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = pairEl.value !== '' || srcEl.value !== '' || tgtEl.value !== '';
+    pairEl.value = '';
+    srcEl.value = '';
+    tgtEl.value = '';
+    freshInput();
+    setRadio(viewInputs, 'bad');
+    render();
+    setStatus(status, had ? '原文と訳文を空にしました（用語表と設定はそのままです）。' : '原文と訳文はもう空です（用語表は「用語表」の欄で消せます）。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  function onTextInput(e, isTerms) {
+    var pasted = e && e.inputType === 'insertFromPaste';
+    if (!isTerms && (pasted || e.target.value === '')) freshInput();
+    clearTimeout(inputTimer);
+    resetCopyButtons();
+    if (!isTerms) setStatus(status, '');
+    inputTimer = setTimeout(function () {
+      var R = render();
+      if (isTerms) {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(saveNow, 300);
+        if (pasted) setStatus(setStatusEl, termMessage(R), !!R.error);
+        return;
+      }
+      if (pasted) setStatus(status, pasteMessage(R), !!R.error);
+    }, 150);
+  }
+  function termMessage(R) {
+    if (R.error) return '用語表を貼り付けました。' + errorMessage(R);
+    var n = R.terms.list.length;
+    if (!n) return '用語表を貼り付けましたが、原語と訳語の2列の行がありません。Excelの2列（原語、訳語）をコピーして貼り付けてください。';
+    var s = '用語表の' + fmtNum(n) + '語を読みました。';
+    if (!CHK.term.checked) return s + '照合する項目の「用語表」がオフのため、まだ使っていません。';
+    return s + (R.blank ? '原文と訳文を入れると照合します。' : resultWord(R));
+  }
+  function pasteMessage(R) {
+    if (R.error) return '貼り付けました。' + errorMessage(R);
+    if (R.blank) return '';
+    if (R.mode === 'sep' && (!trimSp(srcEl.value) || !trimSp(tgtEl.value))) return '貼り付けました。' + (trimSp(srcEl.value) ? '訳文' : '原文') + 'の欄にも、同じ順番で1行1文ずつ入れてください。';
+    if (!R.checked) return '貼り付けましたが、照合する行がありません。原文と訳文の2列を貼り付けてください。';
+    if (!anyCheck()) return '貼り付けました。' + resultWord(R);
+    return '貼り付けた' + fmtNum(R.checked) + '行を照合しました。' + (R.bad ? fmtNum(R.bad) + '行に食い違いがあります。' : '食い違いは見つかりませんでした。');
+  }
+  [pairEl, srcEl, tgtEl].forEach(function (el) { el.addEventListener('input', function (e) { onTextInput(e, false); }); });
+  termEl.addEventListener('input', function (e) { onTextInput(e, true); });
+  modeInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      freshInput();
+      var sep = radio(modeInputs) === 'sep';
+      afterChange(status, sep ? '入れ方を「原文と訳文を別々の欄に貼る」にしました。' : '入れ方を「Excelの2列をまとめて貼る」にしました。');
+    });
+  });
+  [srcColSel, tgtColSel].forEach(function (sel, k) {
+    sel.addEventListener('change', function () {
+      if (k === 0) user.srcCol = +sel.value; else user.tgtCol = +sel.value;
+      if (user.srcCol == null && last) user.srcCol = last.srcCol;
+      if (user.tgtCol == null && last) user.tgtCol = last.tgtCol;
+      user.head = null;
+      afterChange(status, (k === 0 ? '原文' : '訳文') + 'の列を' + colLetter(+sel.value) + '列にしました。');
+    });
+  });
+  headChk.addEventListener('change', function () {
+    user.head = headChk.checked;
+    afterChange(status, headChk.checked ? '1行目を見出しとして照合しないようにしました。' : '1行目も照合するようにしました。');
+  });
+  viewInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      if (!last) return;
+      renderList(last);
+      setStatus(status, radio(viewInputs) === 'all' ? 'すべての行を表示しました。' : '食い違いのある行だけを表示しました。');
+    });
+  });
+  var CHK_NAMES = { num: '数字', date: '年月日', word: '英大文字の語', term: '用語表', empty: '訳抜け' };
+  Object.keys(CHK_NAMES).forEach(function (k) {
+    CHK[k].addEventListener('change', function () {
+      var pre = '「' + CHK_NAMES[k] + '」を' + (CHK[k].checked ? '照合するようにしました。' : '照合しないようにしました。');
+      if (k === 'term' && CHK.term.checked && !trimSp(termEl.value)) pre += '用語表の欄に、原語と訳語の2列を貼り付けてください。';
+      afterChange(setStatusEl, pre);
+    });
+  });
+  CHK.units.addEventListener('change', function () {
+    afterChange(setStatusEl, CHK.units.checked ? '万・億・million などを数に直して比べるようにしました。' : '万・億・million などは数に直さず、書かれた数字のまま比べるようにしました。');
+  });
+  CHK.initial.addEventListener('change', function () {
+    afterChange(setStatusEl, CHK.initial.checked ? '文頭の語（The・Select など）は、英大文字の語として照合しないようにしました。' : '文頭の語も、英大文字の語として照合するようにしました。');
+  });
+
+  document.querySelector('.jump').addEventListener('click', function (e) {
+    e.preventDefault();
+    var h = $('resultTitle');
+    h.scrollIntoView({ block: 'start' });
+    h.focus({ preventScroll: true });
+  });
+  window.HonyakuShogo = { analyze: analyze, compareRow: compareRow, extract: extract, parseTable: parseTable, parseTerms: parseTerms, columnText: columnText, badText: badText, badHtml: badHtml, findDates: findDates, norm: norm };
+  render();
+})();
+</script>
+</body>
+</html>
