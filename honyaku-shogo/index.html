@@ -476,6 +476,17 @@
         var comp = (s.charAt(i) + s.charAt(i + 1)).normalize('NFC');
         if (comp.length === 1) { out.push(comp); m.push(i); i++; continue; }
       }
+      if (c >= 0xFF61 && c <= 0xFF9F) {
+        // 半角カタカナは全角にする（後ろの半角の濁点・半濁点もまとめる）
+        if ((nx === 0xFF9E || nx === 0xFF9F) && c !== 0xFF9E && c !== 0xFF9F) {
+          var hk = (s.charAt(i) + s.charAt(i + 1)).normalize('NFKC');
+          if (hk.length === 1) { out.push(hk); m.push(i); i++; continue; }
+        }
+        var k1 = s.charAt(i).normalize('NFKC');
+        out.push(k1.length === 1 ? k1 : s.charAt(i));
+        m.push(i);
+        continue;
+      }
       if (c >= 0xFF01 && c <= 0xFF5E) out.push(fc(c - 0xFEE0));
       else if (c === 12288 || c === 160) out.push(' ');
       else out.push(s.charAt(i));
@@ -539,6 +550,7 @@
   // ---------- 小数（BigInt で誤差なく） ----------
   function decOf(str) {
     var s = str.split(',').join('');
+    if (s.charAt(0) === '.') s = '0' + s;
     var dot = s.indexOf('.');
     if (dot < 0) return { n: BigInt(s), k: 0 };
     return { n: BigInt(s.slice(0, dot) + s.slice(dot + 1)), k: s.length - dot - 1 };
@@ -591,7 +603,11 @@
   }
   var ERA = { '令和': 2018, '平成': 1988, '昭和': 1925 };
   // 読む順に並べる（先に当たった長い形を優先し、重なる短い形は読まない）
+  var RANGE_SEP = '[-–~〜～]';
   var DATE_RULES = [
+    { re: new RegExp('([0-9]{4})[ ]*年[ ]*([0-9]{1,2})[ ]*月[ ]*([0-9]{1,2})[ ]*日[ ]*' + RANGE_SEP + '[ ]*(?:([0-9]{1,2})[ ]*月[ ]*)?([0-9]{1,2})[ ]*日', 'g'), f: function (m) { return [[+m[1], +m[2], +m[3]], [+m[1], m[4] == null ? +m[2] : +m[4], +m[5]]]; }, multi: true },
+    { re: new RegExp('([0-9]{1,2})[ ]*月[ ]*([0-9]{1,2})[ ]*日[ ]*' + RANGE_SEP + '[ ]*(?:([0-9]{1,2})[ ]*月[ ]*)?([0-9]{1,2})[ ]*日', 'g'), f: function (m) { return [[null, +m[1], +m[2]], [null, m[3] == null ? +m[1] : +m[3], +m[4]]]; }, multi: true },
+    { re: new RegExp('(' + MON + ')[.]?[ ]+([0-9]{1,2})(?:st|nd|rd|th)?[ ]*' + RANGE_SEP + '[ ]*([0-9]{1,2})(?:st|nd|rd|th)?(?:(?:,[ ]*|[ ]+)([0-9]{4}))?', 'gi'), f: function (m) { var y = m[4] == null ? null : +m[4], mo = monthOf(m[1]); return [[y, mo, +m[2]], [y, mo, +m[3]]]; }, en: true, multi: true },
     { re: /(令和|平成|昭和)[ ]*(元|[0-9]{1,2})[ ]*年[ ]*([0-9]{1,2})[ ]*月(?:[ ]*([0-9]{1,2})[ ]*日)?/g, f: function (m) { return [ERA[m[1]] + (m[2] === '元' ? 1 : +m[2]), +m[3], m[4] == null ? null : +m[4]]; } },
     { re: /([0-9]{4})[ ]*年[ ]*([0-9]{1,2})[ ]*月(?:[ ]*([0-9]{1,2})[ ]*日)?/g, f: function (m) { return [+m[1], +m[2], m[3] == null ? null : +m[3]]; } },
     { re: /([0-9]{4})([/.-])([0-9]{1,2})([/.-])([0-9]{1,2})/g, f: function (m) { return m[2] === m[4] ? [+m[1], +m[3], +m[5]] : null; }, num: true },
@@ -600,12 +616,15 @@
     { re: new RegExp('([0-9]{1,2})(?:st|nd|rd|th)?[ ]+(' + MON + ')[.]?,?[ ]+([0-9]{4})', 'gi'), f: function (m) { return [+m[3], monthOf(m[2]), +m[1]]; }, en: true },
     { re: new RegExp('(' + MON + ')[.]?,?[ ]+([0-9]{4})', 'gi'), f: function (m) { return [+m[2], monthOf(m[1]), null]; }, en: true },
     { re: new RegExp('(' + MON + ')[.]?[ ]+([0-9]{1,2})(?:st|nd|rd|th)?', 'gi'), f: function (m) { return [null, monthOf(m[1]), +m[2]]; }, en: true },
-    { re: new RegExp('([0-9]{1,2})(?:st|nd|rd|th)?[ ]+(' + MON + ')', 'gi'), f: function (m) { return [null, monthOf(m[2]), +m[1]]; }, en: true }
+    { re: new RegExp('([0-9]{1,2})(?:st|nd|rd|th)?[ ]+(' + MON + ')', 'gi'), f: function (m) { return [null, monthOf(m[2]), +m[1]]; }, en: true },
+    // 月だけ：1月 と January（文頭の May・March は助動詞・動詞のことがあるため読まない）
+    { re: /([0-9]{1,2})[ ]*月/g, f: function (m) { return [null, +m[1], null]; } },
+    { re: new RegExp('(' + MON + ')', 'gi'), f: function (m) { return [null, monthOf(m[1]), null]; }, en: true, alone: true }
   ];
   function overlaps(spans, a, b) { for (var i = 0; i < spans.length; i++) if (a < spans[i].b && spans[i].a < b) return true; return false; }
   function inSpans(spans, i) { for (var k = 0; k < spans.length; k++) if (i >= spans[k].a && i < spans[k].b) return true; return false; }
   function findDates(t) {
-    var out = [];
+    var out = [], rejected = [];
     DATE_RULES.forEach(function (rule) {
       rule.re.lastIndex = 0;
       var m;
@@ -625,10 +644,17 @@
           var n2 = b + 1 < t.length ? t.charCodeAt(b + 1) : -1;
           if ((next === 47 || next === 46 || next === 45) && isDigit(n2)) ok = false;
         }
-        if (ok) {
+        if (ok && rule.alone) {
+          var low = lowerAscii(m[1]);
+          if ((low === 'may' || low === 'march') && atSentenceStart(t, a)) ok = false;
+        }
+        if (ok && !overlaps(out, a, b) && !overlaps(rejected, a, b)) {
           var v = rule.f(m);
-          if (!v || (rule.en && !v[1]) || !validDate(v[0], v[1], v[2])) ok = false;
-          if (ok && !overlaps(out, a, b)) out.push({ a: a, b: b, key: dateKey(v[0], v[1], v[2]) });
+          var list = !v ? null : rule.multi ? v : [v];
+          var good = !!list && list.every(function (x) { return (!rule.en || x[1]) && validDate(x[0], x[1], x[2]); });
+          if (good) list.forEach(function (x) { out.push({ a: a, b: b, key: dateKey(x[0], x[1], x[2]) }); });
+          // 年月日の形だが、ない日（2026年2月29日など）は、短い形（2月29日）でも読まず、数字として比べる
+          else if (!(rule.en && list && list.some(function (x) { return !x[1]; }))) rejected.push({ a: a, b: b });
         }
         rule.re.lastIndex = a + 1;
       }
@@ -665,7 +691,7 @@
   function hasUpperIn(w, from) { for (var i = from; i < w.length; i++) if (isUpper(w.charCodeAt(i))) return true; return false; }
 
   // ---------- 数字 ----------
-  var NUM_RE = /[0-9]{1,3}(?:,[0-9]{3}(?![0-9]))+(?:[.][0-9]+)?|[0-9]+(?:[.][0-9]+)?/g;
+  var NUM_RE = /[0-9]{1,3}(?:,[0-9]{3}(?![0-9]))+(?:[.][0-9]+)?|[0-9]+(?:[.][0-9]+)?|[.][0-9]+/g;
   var JA_UNIT = { '万': BigInt(10000), '億': pow10(8), '兆': pow10(12) };
   var EN_UNIT = { thousand: pow10(3), million: pow10(6), billion: pow10(9), trillion: pow10(12) };
   var B1000 = BigInt(1000);
@@ -710,20 +736,36 @@
     if (k > j && EN_UNIT[word]) return { b: k, d: decMul(decOf(first.s), EN_UNIT[word]) };
     return { b: first.b, d: decOf(first.s) };
   }
+  // 返す値：out は照合して知らせる数字、inWord は英字で始まる語の中の数字（FY2026 の 2026、Q3 の 3）。
+  // 語の中の数字は知らせないが、相手の側の数字が「ある」とみなすのに使う
   function findNumbers(t, dates, tokens, units) {
-    var blocked = dates.concat(tokens);
-    var out = [];
+    var out = [], inWord = [];
     NUM_RE.lastIndex = 0;
     var m;
     while ((m = NUM_RE.exec(t))) {
-      var a = m.index;
-      if (inSpans(blocked, a)) continue;
-      var first = { a: a, b: a + m[0].length, s: m[0] };
+      var a = m.index, str = m[0];
+      if (inSpans(dates, a)) continue;
+      // .5 は 0.5。ただし 2.0.5 や v1.5 のように前が英数字なら . を含めない
+      if (str.charAt(0) === '.' && a > 0 && isAlnum(t.charCodeAt(a - 1))) { a++; str = str.slice(1); }
+      if (inSpans(tokens, a)) { inWord.push({ a: a, b: a + str.length, key: decKey(decOf(str)) }); continue; }
+      var first = { a: a, b: a + str.length, s: str };
       var r = units ? withUnits(t, first) : { b: first.b, d: decOf(first.s) };
       // 単位の後に続けて読んだ部分が年月日に入るときは、単位を使わない
       if (r.b > first.b && overlaps(dates, first.b, r.b)) r = { b: first.b, d: decOf(first.s) };
       out.push({ a: a, b: r.b, key: decKey(r.d) });
       NUM_RE.lastIndex = r.b;
+    }
+    return { out: out, inWord: inWord };
+  }
+  // 和暦の年だけ（令和8年・平成元年度）は、西暦の年の数字として比べる
+  var WAREKI_YEAR = /(令和|平成|昭和)[ ]*(元|[0-9]{1,2})[ ]*年/g;
+  function findWarekiYears(t, dates) {
+    var out = [];
+    WAREKI_YEAR.lastIndex = 0;
+    var m;
+    while ((m = WAREKI_YEAR.exec(t))) {
+      if (overlaps(dates, m.index, m.index + m[0].length)) continue;
+      out.push({ a: m.index, b: m.index + m[0].length, key: String(ERA[m[1]] + (m[2] === '元' ? 1 : +m[2])) });
     }
     return out;
   }
@@ -734,7 +776,9 @@
     var t = N.t;
     var dates = findDates(t);
     var tokens = findTokens(t, dates);
-    var nums = findNumbers(t, dates, tokens, opt.units);
+    var wy = findWarekiYears(t, dates);
+    var fnum = findNumbers(t, dates.concat(wy), tokens, opt.units);
+    var nums = fnum.out.concat(wy).sort(function (x, y) { return x.a - y.a; });
     // 数字の単位として読んだ語（Million など）は語として扱わない
     tokens = tokens.filter(function (tk) { return !overlaps(nums, tk.a, tk.b); });
     var all = {};
@@ -745,18 +789,21 @@
       var low = lowerAscii(w);
       if (monthOf(w) || (DAY_NAMES.indexOf(low) >= 0 && (w === w.toUpperCase() || w.charAt(0) + low.slice(1) === w))) return false;
       // 文頭の語は、先頭だけが大文字で小文字を含む語（The・Select）と、1文字の語（A）だけを除く
-      if (opt.initial && isUpper(w.charCodeAt(0)) && !hasUpperIn(w, 1) && (/[a-z]/.test(w) || w.length === 1) && atSentenceStart(t, tk.a)) return false;
+      // 英文の文頭だけ：語の直後が空白・英語の句読点・文の終わりのとき（「Acmeの製品」のように日本語が続く語は除かない）
+      var after = tk.b < t.length ? t.charAt(tk.b) : '';
+      var enNext = after === '' || ' ,.!?:;)' .indexOf(after) >= 0 || after === TAB || after === LF || after === CR || after === QUOTE || after === fc(39);
+      if (opt.initial && enNext && isUpper(w.charCodeAt(0)) && !hasUpperIn(w, 1) && (/[a-z]/.test(w) || w.length === 1) && atSentenceStart(t, tk.a)) return false;
       return true;
     });
-    return { raw: raw, N: N, dates: dates, nums: nums, words: words, all: all, low: lowerAscii(t) };
+    return { raw: raw, N: N, dates: dates, nums: nums, inWord: fnum.inWord, words: words, all: all, low: lowerAscii(t) };
   }
   function orig(E, sp) { return trimSp(E.raw.slice(E.N.m[sp.a], E.N.m[sp.b])); }
   function origSpan(E, sp) { return { a: E.N.m[sp.a], b: E.N.m[sp.b] }; }
 
   // 数字・年月日：同じ値の出てくる回数を比べ、多いほうの側の余った分（後ろのもの）を「だけ」にする
-  function multiDiff(A, B) {
+  function multiDiff(A, B, extra) {
     var cntB = {};
-    B.forEach(function (x) { cntB['_' + x.key] = (cntB['_' + x.key] || 0) + 1; });
+    B.concat(extra || []).forEach(function (x) { cntB['_' + x.key] = (cntB['_' + x.key] || 0) + 1; });
     var cntA = {};
     A.forEach(function (x) { cntA['_' + x.key] = (cntA['_' + x.key] || 0) + 1; });
     var seen = {};
@@ -771,7 +818,7 @@
   function termKey(s) { return lowerAscii(norm(trimSp(s)).t); }
   function parseTerms(text) {
     var rows = parseTable(text || '');
-    var list = [], map = {}, bad = [], head = false, count = 0;
+    var list = [], map = {}, bad = [], notab = [], head = false, count = 0;
     rows.forEach(function (r, i) {
       var cells = r.map(function (x) { return trimSp(x); });
       if (cells.every(function (x) { return x === ''; })) return;
@@ -780,13 +827,14 @@
       var src = cells[0];
       var tg = [];
       cells.slice(1).forEach(function (c) { c.split('／').forEach(function (x) { x = trimSp(x); if (x) tg.push(x); }); });
+      if (r.length < 2 && src) { notab.push(i + 1); return; }
       if (!src || !tg.length) { bad.push(i + 1); return; }
       var k = termKey(src);
       if (!map['_' + k]) { map['_' + k] = { src: src, key: k, tgts: [], tkeys: [] }; list.push(map['_' + k]); }
       var e = map['_' + k];
       tg.forEach(function (x) { var tk = termKey(x); if (e.tkeys.indexOf(tk) < 0) { e.tkeys.push(tk); e.tgts.push(x); } });
     });
-    return { list: list, bad: bad, head: head, count: count };
+    return { list: list, bad: bad, notab: notab, head: head, count: count };
   }
   // text（そろえて小文字にした文）の中で key が当たる位置。端が英数字なら隣が英数字でない位置だけ
   function findTerm(text, key, from) {
@@ -814,15 +862,18 @@
     var res = { flags: [], srcMarks: [], tgtMarks: [], judge: '' };
     var sEmpty = trimSp(src) === '', tEmpty = trimSp(tgt) === '';
     if (sEmpty && tEmpty) return null;
-    if (opt.empty && (sEmpty || tEmpty)) {
-      res.flags.push(tEmpty ? 'empty' : 'nosrc');
-      res.judge = tEmpty ? '訳抜け（訳文が空）' : '原文が空';
+    if (sEmpty || tEmpty) {
+      // 片方が空の行は、ほかの項目を照合しない（訳抜けがオフなら一致として扱う）
+      if (opt.empty) {
+        res.flags.push(tEmpty ? 'empty' : 'nosrc');
+        res.judge = tEmpty ? '訳抜け（訳文が空）' : '原文が空';
+      }
       return res;
     }
     var S = extract(src, opt), T = extract(tgt, opt);
     var parts = [];
     if (opt.num) {
-      var a = multiDiff(S.nums, T.nums), b = multiDiff(T.nums, S.nums);
+      var a = multiDiff(S.nums, T.nums, T.inWord), b = multiDiff(T.nums, S.nums, S.inWord);
       if (a.length || b.length) {
         res.flags.push('num');
         parts.push('数字：' + sideText(a.map(function (x) { return orig(S, x); }), b.map(function (x) { return orig(T, x); })));
@@ -844,7 +895,7 @@
       S.words.forEach(function (tk) {
         if (T.all['_' + tk.w]) return;
         res.srcMarks.push(origSpan(S, tk));
-        if (!seenW['_' + tk.w]) { seenW['_' + tk.w] = true; miss.push(tk.w); }
+        if (!seenW['_' + tk.w]) { seenW['_' + tk.w] = true; miss.push(orig(S, tk)); }
       });
       if (miss.length) { res.flags.push('word'); parts.push('英大文字の語：原文だけ' + quoteList(miss)); }
     }
@@ -876,9 +927,16 @@
       if (s < 0 && inList(first[c], SRC_HEAD)) s = c;
       else if (t < 0 && inList(first[c], TGT_HEAD)) t = c;
     }
+    // 見出しが「日本語」「英語」など向きの分からない語なら、その列を左から原文・訳文にする
+    var other = [];
+    for (c = 0; c < ncols; c++) if (c !== s && c !== t && inList(first[c], OTHER_HEAD)) other.push(c);
+    if (s < 0 && other.length) s = other.shift();
+    if (t < 0 && other.length) t = other.filter(function (x) { return x !== s; })[0];
+    if (t == null) t = -1;
+    var headRow = hi >= 0 && first.some(function (x) { return isHeadCell(x); });
     var textCols = [];
     for (c = 0; c < ncols; c++) {
-      for (var r = 0; r < rows.length; r++) { if (r === hi && isHeadCell(rows[r][c])) continue; if (hasLetter(rows[r][c] || '')) { textCols.push(c); break; } }
+      for (var r = 0; r < rows.length; r++) { if (headRow && r === hi) continue; if (hasLetter(rows[r][c] || '')) { textCols.push(c); break; } }
     }
     if (textCols.length < 2) textCols = [0, 1];
     if (s < 0) s = textCols.filter(function (x) { return x !== t; })[0];
@@ -899,7 +957,7 @@
       rows.forEach(function (r) { if (r.length > R.ncols) R.ncols = r.length; });
       R.lineCount = rows.length;
       if (R.ncols < 2) { R.error = 'nocol'; return R; }
-      if (rows.length > MAX_ROWS) { R.error = 'toomany'; R.tooMany = rows.length; return R; }
+      if (rows.length > MAX_ROWS + 1) { R.error = 'toomany'; R.tooMany = rows.length; return R; }
       var hi = -1;
       for (var i = 0; i < rows.length; i++) if (!rows[i].every(function (x) { return trimSp(x) === ''; })) { hi = i; break; }
       var auto = chooseCols(rows, R.ncols, hi);
@@ -910,27 +968,32 @@
       R.headIndex = hi;
       R.autoHead = hi >= 0 && (isHeadCell(rows[hi][R.srcCol]) || isHeadCell(rows[hi][R.tgtCol]));
       R.head = hi >= 0 && (inp.head == null ? R.autoHead : inp.head);
+      if (rows.length - (R.head ? 1 : 0) > MAX_ROWS) { R.error = 'toomany'; R.tooMany = rows.length - (R.head ? 1 : 0); return R; }
+      R.colNames = [];
+      for (var cc = 0; cc < R.ncols; cc++) R.colNames.push(hi >= 0 && R.head ? trimSp(rows[hi][cc] || '') : '');
       rows.forEach(function (r) { pairs.push([r[R.srcCol] || '', r[R.tgtCol] || '']); });
     } else {
       var sr = parseTable(inp.src), tr = parseTable(inp.tgt);
       if (!trimSp(inp.src) && !trimSp(inp.tgt)) { R.blank = true; return R; }
       var sl = trimTail(sr.map(function (r) { return [r.join(TAB)]; })), tl = trimTail(tr.map(function (r) { return [r.join(TAB)]; }));
       R.srcLines = sl.length; R.tgtLines = tl.length;
+      if (!sl.length || !tl.length) { R.waitSide = sl.length ? 'tgt' : 'src'; return R; }
       if (sl.length !== tl.length) { R.error = 'rowsdiff'; return R; }
-      if (sl.length > MAX_ROWS) { R.error = 'toomany'; R.tooMany = sl.length; return R; }
       R.lineCount = sl.length;
       var h2 = -1;
       for (var j = 0; j < sl.length; j++) if (trimSp(sl[j][0]) !== '' || trimSp(tl[j][0]) !== '') { h2 = j; break; }
       R.headIndex = h2;
       R.autoHead = h2 >= 0 && (isHeadCell(sl[h2][0]) || isHeadCell(tl[h2][0]));
       R.head = h2 >= 0 && (inp.head == null ? R.autoHead : inp.head);
+      if (sl.length - (R.head ? 1 : 0) > MAX_ROWS) { R.error = 'toomany'; R.tooMany = sl.length - (R.head ? 1 : 0); return R; }
       sl.forEach(function (r, k) { pairs.push([r[0], tl[k][0]]); });
     }
-    if (opt.term && T.count > MAX_TERMS) { R.error = 'termsmany'; return R; }
+    R.termsOver = T.count > MAX_TERMS;
+    var useTerms = opt.term && !R.termsOver ? T.list : [];
     pairs.forEach(function (p, k) {
       var it = { row: k + 1, src: p[0], tgt: p[1] };
       if (R.head && k === R.headIndex) { it.kind = 'head'; it.judge = '判定'; R.items.push(it); return; }
-      var res = compareRow(p[0], p[1], opt, opt.term ? T.list : []);
+      var res = compareRow(p[0], p[1], opt, useTerms);
       if (!res) { it.kind = 'empty'; it.judge = ''; R.items.push(it); return; }
       R.checked++;
       it.res = res;
@@ -1009,32 +1072,36 @@
     if (R.error === 'samecol') return '原文の列と訳文の列に、同じ' + colLetter(R.srcCol) + '列が選ばれています。別の列を選んでください。';
     if (R.error === 'rowsdiff') return '原文は' + fmtNum(R.srcLines) + '行、訳文は' + fmtNum(R.tgtLines) + '行で、行数が違うため照合していません。1行に1文ずつ、同じ順番で入れてください（Excelのセル内改行のセルは1行と数えます）。';
     if (R.error === 'toomany') return '行が' + fmtNum(R.tooMany) + '行あります。一度に照合できるのは' + fmtNum(MAX_ROWS) + '行までです。分けて貼り付けてください。';
-    if (R.error === 'termsmany') return '用語表が' + fmtNum(R.terms.count) + '行あります。用語表は' + fmtNum(MAX_TERMS) + '行までです。この文書で使う用語だけにしてください。';
     return '';
   }
   var ITEM_NAMES = [['num', '数字'], ['date', '年月日'], ['word', '英大文字の語'], ['term', '用語'], ['empty', '訳抜け'], ['nosrc', '原文が空']];
+  function waitWord(R) {
+    return R.waitSide === 'tgt' ? '訳文の欄が空です。訳文を、原文と同じ順に1行1文ずつ入れてください。' : '原文の欄が空です。原文を、訳文と同じ順に1行1文ずつ入れてください。';
+  }
   function resultWord(R) {
     if (R.error) return errorMessage(R);
+    if (R.waitSide) return waitWord(R);
     if (R.blank) return '';
-    if (!R.checked) return '照合する行がありません。';
-    if (!anyCheck()) return '照合する項目がすべてオフのため、何も照合していません。';
+    if (!R.checked) return R.head && R.items.length && R.items.every(function (it) { return it.kind !== 'ok' && it.kind !== 'bad'; }) ? '見出しの行だけです。原文と訳文の行も貼り付けてください。' : '照合する行がありません。原文と訳文の行を貼り付けてください。';
+    if (!anyCheck()) return '照合する項目がすべてオフのため、何も照合していません。「照合する項目」のどれかをオンにしてください。';
     if (!R.bad) return fmtNum(R.checked) + '行を照合し、食い違いは見つかりませんでした。';
     return fmtNum(R.checked) + '行のうち' + fmtNum(R.bad) + '行に食い違いがあります。';
   }
   function renderSummary(R) {
     summaryEl.textContent = '';
     var ids = ['stRows', 'stBad', 'stEmpty', 'stTerm'];
-    if (R.blank || R.error) {
+    if (R.blank || R.error || R.waitSide) {
       ids.forEach(function (id) { setStat(id, '–', '', ''); });
       if (R.error) summaryEl.appendChild(line('main err', errorMessage(R)));
+      else if (R.waitSide) summaryEl.appendChild(line('main warn', waitWord(R)));
       else summaryEl.appendChild(line('sub', R.mode === 'pair' ? '原文と訳文の2列を貼り付けると、照合します。' : '原文と訳文を、それぞれの欄に1行1文ずつ入れると、照合します。'));
       return;
     }
     setStat('stRows', fmtNum(R.checked), '行', '');
     setStat('stBad', fmtNum(R.bad), '行', R.bad ? 'has' : (R.checked && anyCheck() ? 'clear' : ''));
     setStat('stEmpty', CHK.empty.checked ? fmtNum(R.counts.empty) : 'オフ', CHK.empty.checked ? '行' : '', CHK.empty.checked && R.counts.empty ? 'has' : '');
-    var termOn = CHK.term.checked && R.terms.list.length;
-    setStat('stTerm', termOn ? fmtNum(R.counts.term) : (CHK.term.checked ? '用語表なし' : 'オフ'), termOn ? '行' : '', termOn && R.counts.term ? 'has' : '');
+    var termOn = CHK.term.checked && R.terms.list.length && !R.termsOver;
+    setStat('stTerm', termOn ? fmtNum(R.counts.term) : (!CHK.term.checked ? 'オフ' : R.termsOver ? '–' : '用語表なし'), termOn ? '行' : '', termOn && R.counts.term ? 'has' : '');
     var cls = !R.checked || !anyCheck() ? 'main warn' : R.bad ? 'main warn' : 'main';
     summaryEl.appendChild(line(cls, resultWord(R)));
     if (R.bad) {
@@ -1043,9 +1110,14 @@
       summaryEl.appendChild(line('sub', '内訳：' + parts.join('、') + '（1行に複数の食い違いがあると、それぞれに数えます）'));
     }
     var notes = [];
-    if (R.mode === 'pair' && R.ncols > 2) notes.push('原文は' + colLetter(R.srcCol) + '列、訳文は' + colLetter(R.tgtCol) + '列を照合しています（列は左の欄で変えられます）。');
+    if (R.mode === 'pair' && R.ncols > 2) notes.push('原文は' + colLetter(R.srcCol) + '列、訳文は' + colLetter(R.tgtCol) + '列を照合しています（列は「原文の列」「訳文の列」で変えられます）。');
     if (R.head) notes.push(fmtNum(R.headIndex + 1) + '行目は見出しとして照合していません。');
-    if (CHK.term.checked && R.terms.bad.length) notes.push('用語表の' + R.terms.bad.slice(0, 5).map(fmtNum).join('・') + '行目' + (R.terms.bad.length > 5 ? 'ほか' : '') + 'は、原語か訳語が空のため使っていません。');
+    function rowsOf(list) { return '用語表の' + list.slice(0, 5).map(fmtNum).join('・') + '行目' + (list.length > 5 ? 'ほか' : ''); }
+    if (CHK.term.checked && R.termsOver) notes.push('用語表が' + fmtNum(R.terms.count) + '行あります。用語表は' + fmtNum(MAX_TERMS) + '行までです。この文書で使う用語だけにしてください（用語表は使わずに、ほかの項目を照合しています）。');
+    else if (CHK.term.checked) {
+      if (R.terms.notab.length) notes.push(rowsOf(R.terms.notab) + 'は、原語と訳語がタブで区切られていないため使っていません。Excelの2列（原語、訳語）をコピーして貼り付けてください。');
+      if (R.terms.bad.length) notes.push(rowsOf(R.terms.bad) + 'は、原語か訳語が空のため使っていません。');
+    }
     notes.forEach(function (n) { summaryEl.appendChild(line('w', n)); });
   }
 
@@ -1086,7 +1158,7 @@
   function emptyMsg(text) { var p = document.createElement('p'); p.className = 'empty-result'; p.textContent = text; return p; }
   function renderList(R) {
     listWrap.textContent = '';
-    if (R.blank || R.error) { listWrap.appendChild(emptyMsg(R.error ? '照合できませんでした。上の文を見てください。' : 'ここに、食い違いのある行が表示されます。')); return; }
+    if (R.blank || R.error || R.waitSide) { listWrap.appendChild(emptyMsg(R.error ? '照合できませんでした。「結果」のまとめの文を見てください。' : 'ここに、食い違いのある行が表示されます。')); return; }
     var all = radio(viewInputs) === 'all';
     var list = R.items.filter(function (it) { return all ? true : it.kind === 'bad'; });
     if (!list.length) { listWrap.appendChild(emptyMsg(R.checked ? (anyCheck() ? '食い違いのある行はありません。' : '照合する項目がすべてオフです。') : '照合する行がありません。')); return; }
@@ -1114,15 +1186,19 @@
     }
   }
   function buildColSel(R) {
-    var show = R.mode === 'pair' && !R.blank && R.ncols > 2 && R.error !== 'nocol' && R.error !== 'toomany';
+    var show = R.mode === 'pair' && !R.blank && R.ncols > 2 && R.error !== 'nocol' && R.error !== 'toomany' && R.srcCol != null;
     srcColField.hidden = !show;
     tgtColField.hidden = !show;
     if (!show) return;
     [srcColSel, tgtColSel].forEach(function (sel, k) {
       var cur = k === 0 ? R.srcCol : R.tgtCol;
-      if (sel.options.length !== R.ncols) {
-        sel.textContent = '';
-        for (var c = 0; c < R.ncols; c++) { var o = document.createElement('option'); o.value = String(c); o.textContent = colLetter(c) + '列'; sel.appendChild(o); }
+      sel.textContent = '';
+      for (var c = 0; c < R.ncols; c++) {
+        var o = document.createElement('option');
+        o.value = String(c);
+        var nm = R.colNames && R.colNames[c] ? clip(R.colNames[c].split(LF).join(' '), 12) : '';
+        o.textContent = colLetter(c) + '列' + (nm ? '（' + nm + '）' : '');
+        sel.appendChild(o);
       }
       sel.value = String(cur);
     });
@@ -1135,10 +1211,10 @@
     last = R;
     buildColSel(R);
     headChk.checked = !!R.head;
-    headChk.disabled = R.blank || !!R.error || R.headIndex == null || R.headIndex < 0;
+    headChk.disabled = R.blank || !!R.waitSide || (!!R.error && R.error !== 'samecol') || R.headIndex == null || R.headIndex < 0;
     renderSummary(R);
     renderList(R);
-    var okData = !R.blank && !R.error && R.items.length > 0 && R.checked > 0;
+    var okData = !R.blank && !R.error && !R.waitSide && R.items.length > 0 && R.checked > 0;
     copyCol.disabled = !okData;
     copyBad.disabled = !(okData && R.bad > 0);
     return R;
@@ -1201,7 +1277,7 @@
     resetCopyButtons();
     var R = renderKeep();
     if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
-    setStatus(el, prefix + (R.blank ? '原文と訳文を入れると照合します。' : resultWord(R)));
+    setStatus(el, prefix + (R.blank ? '原文と訳文を入れると照合します。' : resultWord(R)), !!R.waitSide);
   }
 
   // ---------- コピー ----------
@@ -1305,6 +1381,7 @@
   $('sampleBtn').addEventListener('click', function () {
     var had = trimSp(pairEl.value) !== '' || trimSp(srcEl.value) !== '' || trimSp(tgtEl.value) !== '';
     var termsHad = trimSp(termEl.value) !== '';
+    var wasSep = radio(modeInputs) === 'sep';
     setRadio(modeInputs, 'pair');
     pairEl.value = SAMPLE;
     srcEl.value = '';
@@ -1313,7 +1390,7 @@
     setRadio(viewInputs, 'bad');
     freshInput();
     var R = render();
-    var msg = (had ? '例の原文と訳文（見出しと9行）に入れ替えました（前の内容は消えました）。' : '例の原文と訳文（見出しと9行）を入れました。');
+    var msg = (wasSep ? '入れ方を「Excelの2列をまとめて貼る」にして、' : '') + (had ? '例の原文と訳文（見出しと9行）に入れ替えました（前の内容は消えました）。' : '例の原文と訳文（見出しと9行）を入れました。');
     msg += termsHad ? '用語表は入力済みのため、そのままにしています。' : '用語表にも例（2行）を入れました。';
     setStatus(status, msg + resultWord(R));
   });
@@ -1330,36 +1407,51 @@
 
   // ---------- 入力と設定の変更 ----------
   var inputTimer = null;
+  // 表の形（列の数と1行目）が変わったら、前の表で選んだ列・見出しの設定をやめて、新しい表から選び直す
+  var lastShape = '';
+  function shapeOf() {
+    if (radio(modeInputs) !== 'pair') return 'sep|' + (srcEl.value.split(LF)[0] || '') + '|' + (tgtEl.value.split(LF)[0] || '');
+    var rows = parseTable(pairEl.value.slice(0, 20000));
+    var n = 0;
+    rows.forEach(function (r) { if (r.length > n) n = r.length; });
+    var first = rows.filter(function (r) { return r.some(function (x) { return trimSp(x) !== ''; }); })[0] || [];
+    return n + '|' + first.join(TAB);
+  }
   function onTextInput(e, isTerms) {
     var pasted = e && e.inputType === 'insertFromPaste';
-    if (!isTerms && (pasted || e.target.value === '')) freshInput();
+    if (!isTerms) {
+      var shape = shapeOf();
+      if (pasted || e.target.value === '' || shape !== lastShape) freshInput();
+      lastShape = shape;
+    }
     clearTimeout(inputTimer);
     resetCopyButtons();
-    if (!isTerms) setStatus(status, '');
+    setStatus(isTerms ? setStatusEl : status, '');
     inputTimer = setTimeout(function () {
       var R = render();
       if (isTerms) {
         clearTimeout(saveTimer);
         saveTimer = setTimeout(saveNow, 300);
-        if (pasted) setStatus(setStatusEl, termMessage(R), !!R.error);
+        setStatus(setStatusEl, termMessage(R), !!R.termsOver);
         return;
       }
-      if (pasted) setStatus(status, pasteMessage(R), !!R.error);
+      if (pasted) setStatus(status, pasteMessage(R), !!(R.error || R.blank || R.waitSide || !R.checked));
     }, 150);
   }
   function termMessage(R) {
-    if (R.error) return '用語表を貼り付けました。' + errorMessage(R);
+    if (!trimSp(termEl.value)) return '用語表を空にしました。';
+    if (R.termsOver) return '用語表が' + fmtNum(R.terms.count) + '行あります。用語表は' + fmtNum(MAX_TERMS) + '行までです。この文書で使う用語だけにしてください（用語表は使わずに、ほかの項目を照合しています）。';
     var n = R.terms.list.length;
-    if (!n) return '用語表を貼り付けましたが、原語と訳語の2列の行がありません。Excelの2列（原語、訳語）をコピーして貼り付けてください。';
+    if (!n) return '用語表に、原語と訳語の2列の行がありません。Excelの2列（原語、訳語）をコピーして貼り付けてください。';
     var s = '用語表の' + fmtNum(n) + '語を読みました。';
     if (!CHK.term.checked) return s + '照合する項目の「用語表」がオフのため、まだ使っていません。';
-    return s + (R.blank ? '原文と訳文を入れると照合します。' : resultWord(R));
+    return s + (R.blank ? '原文と訳文を入れると照合します。' : R.error ? '' : resultWord(R));
   }
   function pasteMessage(R) {
     if (R.error) return '貼り付けました。' + errorMessage(R);
-    if (R.blank) return '';
-    if (R.mode === 'sep' && (!trimSp(srcEl.value) || !trimSp(tgtEl.value))) return '貼り付けました。' + (trimSp(srcEl.value) ? '訳文' : '原文') + 'の欄にも、同じ順番で1行1文ずつ入れてください。';
-    if (!R.checked) return '貼り付けましたが、照合する行がありません。原文と訳文の2列を貼り付けてください。';
+    if (R.blank) return '貼り付けましたが、空白だけです。' + (R.mode === 'pair' ? '原文と訳文の2列を貼り付けてください。' : '原文と訳文を1行1文ずつ入れてください。');
+    if (R.waitSide) return '貼り付けました。' + waitWord(R);
+    if (!R.checked) return '貼り付けましたが、' + resultWord(R);
     if (!anyCheck()) return '貼り付けました。' + resultWord(R);
     return '貼り付けた' + fmtNum(R.checked) + '行を照合しました。' + (R.bad ? fmtNum(R.bad) + '行に食い違いがあります。' : '食い違いは見つかりませんでした。');
   }
