@@ -157,7 +157,7 @@
   .sub-row label { color: #3c4043; font-size: .9rem; font-weight: 600; }
   .sub-row input.short { width: 6.5em; text-align: right; }
   .sub-row input.mid { width: 11em; }
-  textarea { display: block; width: 100%; min-height: 240px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font: .95rem/1.55 inherit; font-family: inherit; resize: vertical; tab-size: 8; }
+  textarea { display: block; width: 100%; min-height: 240px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font-size: .94rem; line-height: 1.55; font-family: inherit; resize: vertical; tab-size: 8; }
   .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
   button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
   button.btn:hover { background: #f6fafe; }
@@ -488,12 +488,14 @@
   var CR = String.fromCharCode(13);
   var QUOTE = String.fromCharCode(34);
   var BSL = String.fromCharCode(92);
-  var SPACE_CODES = [32, 9, 160, 12288];   // 半角スペース・タブ・U+00A0・全角スペース
+  // 空白として扱う文字：半角スペース・タブ・U+00A0・全角スペース・U+2000〜U+200B（幅の違う空白とゼロ幅スペース）・U+202F・U+205F・U+2060・U+FEFF（コピーで行の先頭に入りやすい見えない文字）
+  var SPACE_CODES = [32, 9, 160, 12288, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x200B, 0x202F, 0x205F, 0x2060, 0xFEFF];
   var MINUS_CODES = [0x2212, 0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015, 0x30FC, 0xFF70];
   var MAX_LINES = 5000;
   var BYTES_MIN = 100, BYTES_MAX = 100000, COUNT_MIN = 1, COUNT_MAX = 10000;
   var ID_RE = /^[A-Za-z0-9_-]{11}$/;
   var encoder = new TextEncoder();
+  var KEY_SEP = String.fromCharCode(1);
 
   function isSpace(c) { return SPACE_CODES.indexOf(c) >= 0; }
   function trimSp(s) {
@@ -608,7 +610,13 @@
     while (lines.length && trimSp(lines[0]) === '') lines.shift();
     R.lineCount = lines.length;
     if (lines.length > MAX_LINES) { R.error = 'toomany'; return R; }
-    R.items = lines.map(function (line, k) { var it = parseLine(line); it.row = k + 1; it.src = line; return it; });
+    var seen = {};
+    R.items = lines.map(function (line, k) {
+      var it = parseLine(line); it.row = k + 1; it.src = line;
+      var base = trimSp(line); seen[base] = (seen[base] || 0) + 1;
+      it.key = base + KEY_SEP + seen[base];
+      return it;
+    });
     R.ts = R.items.filter(function (it) { return it.kind === 'ts'; });
     R.bad = R.items.filter(function (it) { return it.kind === 'bad'; });
     R.mid = R.items.filter(function (it) { return it.kind === 'mid'; });
@@ -620,7 +628,7 @@
     // ずらす
     R.shiftedCount = 0; R.zeroKept = 0; R.clamped = [];
     R.ts.forEach(function (it) {
-      it.checked = checks[it.row] !== false;
+      it.checked = checks[it.key] !== false;
       var sh = it.checked ? opt.shift : 0;
       if (sh !== 0 && opt.keepZero && it.sec === 0) { sh = 0; R.zeroKept++; }
       var v = it.sec + sh;
@@ -636,7 +644,7 @@
     R.ts.forEach(function (it) { if (it.newSec > maxSec) maxSec = it.newSec; });
     var big = maxSec >= 3600;
     R.items.forEach(function (it) {
-      if (it.kind !== 'ts') { it.out = it.src; return; }
+      if (it.kind !== 'ts') { it.out = trimSp(it.src); return; }
       it.time = secToStr(it.newSec, opt.fmt, big);
       if (opt.gap === 'keep') it.out = it.time + it.after;
       else it.out = it.title ? it.time + (opt.gap === 'full' ? '　' : ' ') + it.title : it.time;
@@ -683,29 +691,39 @@
     // 区切る所の直前にある見出しの行（時刻で始まらない、空でない行）は、続く時刻の行と同じ次のコメントに入れる）
     var cont = opt.contOn ? opt.contText : '';
     var head = function (first) { return !first && cont ? [cont] : []; };
+    order.forEach(function (x) { x.ob = byteLen(x.out); });
+    var contB = cont ? byteLen(cont) : 0;
     var measure = function (p) {
       var lines = head(p.first).concat(p.items.map(function (x) { return x.out; }));
-      var b = 0;
-      lines.forEach(function (l, k) { b += (k ? 1 : 0) + byteLen(l); });
-      return { bytes: b, ts: p.items.filter(function (x) { return x.kind === 'ts'; }).length, lines: lines };
+      var b = !p.first && cont ? contB : 0, n = !p.first && cont ? 1 : 0, ts = 0;
+      p.items.forEach(function (x) { b += (n ? 1 : 0) + x.ob; n++; if (x.kind === 'ts') ts++; });
+      return { bytes: b, ts: ts, lines: lines };
     };
-    var parts = [], cur = { first: true, items: [] };
+    var start = function (first, items) { var p = { first: first, items: [], bytes: !first && cont ? contB : 0, n: !first && cont ? 1 : 0, ts: 0 }; items.forEach(function (x) { push(p, x); }); return p; };
+    var push = function (p, x) { p.bytes += (p.n ? 1 : 0) + x.ob; p.n++; if (x.kind === 'ts') p.ts++; p.items.push(x); };
+    var parts = [], cur = start(true, []);
+    R.dropped = 0;
     order.forEach(function (it) {
-      var trial = measure({ first: cur.first, items: cur.items.concat([it]) });
-      if (cur.items.length && (trial.bytes > opt.maxBytes || trial.ts > opt.maxCount)) {
+      if (it.kind === 'empty' && cur.items.length === 0) { R.dropped++; return; }
+      var nb = cur.bytes + (cur.n ? 1 : 0) + it.ob, nt = cur.ts + (it.kind === 'ts' ? 1 : 0);
+      if (cur.items.length && (nb > opt.maxBytes || nt > opt.maxCount)) {
         var carry = [];
         var k = cur.items.length;
         while (k > 0 && cur.items[k - 1].kind !== 'ts') k--;
-        while (k < cur.items.length && cur.items[k].kind === 'empty') k++;
-        if (k > 0 && k < cur.items.length) {
-          var moved = cur.items.slice(k);
-          var t2 = measure({ first: false, items: moved.concat([it]) });
-          if (t2.bytes <= opt.maxBytes && t2.ts <= opt.maxCount) { carry = moved; cur.items = cur.items.slice(0, k); }
+        var e = k;
+        while (e < cur.items.length && cur.items[e].kind === 'empty') e++;
+        if (k > 0 && e < cur.items.length) {
+          var movedItems = cur.items.slice(e);
+          var t2 = measure({ first: false, items: movedItems.concat([it]) });
+          if (t2.bytes <= opt.maxBytes && t2.ts <= opt.maxCount) { carry = movedItems; cur.items = cur.items.slice(0, e); }
         }
+        // 区切る所（前のコメントの末尾）の空の行は、どちらのコメントにも入れない
+        while (cur.items.length > 1 && cur.items[cur.items.length - 1].kind === 'empty') { cur.items.pop(); R.dropped++; }
         parts.push(cur);
-        cur = { first: false, items: carry };
+        cur = start(false, carry);
+        if (it.kind === 'empty') { R.dropped++; return; }
       }
-      cur.items.push(it);
+      push(cur, it);
     });
     parts.push(cur);
     parts.forEach(function (p) {
@@ -741,7 +759,7 @@
     rowsForCopy(R).forEach(function (r) { html += '<tr>' + td(r.time, true) + td(String(r.sec), false) + td(r.title, true) + td(r.url, true) + '</tr>'; });
     return html + '</table>';
   }
-  function mdCell(s) { return s.split(BSL).join(BSL + BSL).split('|').join(BSL + '|'); }
+  function mdCell(s) { return s.split(TAB).join(' ').split(BSL).join(BSL + BSL).split('|').join(BSL + '|'); }
   function toMarkdown(R) {
     var out = ['| 時刻 | 見出し |', '| --- | --- |'];
     rowsForCopy(R).forEach(function (r) {
@@ -768,6 +786,7 @@
   var sortInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="sort"]'));
   var checks = {};
   var last = null;
+  var listDirty = true;
 
   function radio(list) { var v = ''; list.forEach(function (el) { if (el.checked) v = el.value; }); return v; }
   function options() {
@@ -926,7 +945,7 @@
       var row = document.createElement('tr');
       var td0 = document.createElement('td'); td0.className = 'chk';
       var lab = document.createElement('label');
-      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = it.checked; cb.setAttribute('data-row', String(it.row));
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = it.checked; cb.setAttribute('data-row', String(it.row)); cb.setAttribute('data-key', it.key);
       cb.setAttribute('aria-label', fmtNum(it.row) + '行目（' + it.orig + '）をずらす');
       lab.appendChild(cb); td0.appendChild(lab); row.appendChild(td0);
       var td1 = document.createElement('td'); td1.className = 'num'; td1.textContent = fmtNum(it.row); row.appendChild(td1);
@@ -961,7 +980,8 @@
     contRow.hidden = !contOn.checked;
     renderSummary(R);
     renderParts(R);
-    renderList(R);
+    // 一覧は表示しているときだけ作る（5,000行の表を作る時間を、本文を見ているときにかけない）
+    if (radio(viewInputs) === 'list') { renderList(R); listDirty = false; } else listDirty = true;
     var ok = !R.error && R.ts.length > 0;
     [copyAll, copyTsv, copyMd, copyTxt, checkAll, checkNone].forEach(function (b) { b.disabled = !ok; });
     return R;
@@ -970,6 +990,7 @@
     var v = radio(viewInputs);
     $('viewText').hidden = v !== 'text';
     $('viewList').hidden = v !== 'list';
+    if (v === 'list' && listDirty && last) { renderList(last); listDirty = false; }
   }
 
   // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
@@ -1040,15 +1061,19 @@
     manualBox.hidden = true;
     if (manualBox.parentNode !== manualHome.parentNode || manualBox.nextSibling !== manualHome) manualHome.parentNode.insertBefore(manualBox, manualHome);
   }
-  function resetCopyButtons() {
+  function resetLabels() {
     clearTimeout(copyTimer);
+    allCopyButtons().forEach(function (b) { var l = b.getAttribute('data-label'); if (l) b.textContent = l; b.style.minWidth = ''; });
+  }
+  function resetCopyButtons() {
+    resetLabels();
     restoreManual();
-    allCopyButtons().forEach(function (b) { var l = b.getAttribute('data-label'); if (l) b.textContent = l; });
   }
   function flashButton(btn, label, ms) {
-    resetCopyButtons();
+    resetLabels();
+    btn.style.minWidth = btn.getBoundingClientRect().width + 'px';
     btn.textContent = label;
-    copyTimer = setTimeout(resetCopyButtons, ms);
+    copyTimer = setTimeout(resetLabels, ms);
   }
   function fallbackCopy(text) {
     var ta = document.createElement('textarea');
@@ -1065,8 +1090,9 @@
     return ok;
   }
   function copyFailed(btn, text) {
-    flashButton(btn, 'コピー失敗', 4000);
     var before = btn.getBoundingClientRect().top;
+    restoreManual();
+    flashButton(btn, 'コピー失敗', 4000);
     var anchor = btn.closest('.part') || btn.closest('.actions');
     if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(manualBox, anchor);
     manualText.value = text;
@@ -1080,7 +1106,14 @@
     setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
   }
   function doCopy(btn, text, message, html) {
-    var done = function () { setStatus(status, message); flashButton(btn, '✓ コピー済み', 2500); };
+    var done = function () {
+      var before = btn.getBoundingClientRect().top;
+      restoreManual();
+      var moved = btn.getBoundingClientRect().top - before;
+      if (Math.abs(moved) > 0.5) window.scrollBy(0, moved);
+      setStatus(status, message);
+      flashButton(btn, '✓ コピー済み', 2500);
+    };
     var plain = function () {
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1120,7 +1153,7 @@
   copyTsv.addEventListener('click', function () {
     var R = last;
     if (copyTsv.disabled || !R) return;
-    doCopy(copyTsv, toTsv(R), '時刻の表を' + fmtNum(R.tsOut.length + 1) + '行×4列（時刻・秒・見出し・URL。1行目は見出し）コピーしました。Excelやスプレッドシートで、左上にしたいセルを選んで貼り付けてください。' + (R.video && R.video.id ? '' : '動画のURLがないため、URLの列は空です。'), toHtml(R));
+    doCopy(copyTsv, toTsv(R), '時刻の表（' + fmtNum(R.tsOut.length + 1) + '行×4列）をコピーしました。Excelなどで、左上にしたいセルを選んで貼り付けてください。', toHtml(R));
   });
   copyMd.addEventListener('click', function () {
     var R = last;
@@ -1138,7 +1171,8 @@
     var cb = e.target;
     if (!cb || cb.type !== 'checkbox') return;
     var row = +cb.getAttribute('data-row');
-    if (cb.checked) delete checks[row]; else checks[row] = false;
+    var key = cb.getAttribute('data-key');
+    if (cb.checked) delete checks[key]; else checks[key] = false;
     var top = tableWrap.scrollTop;
     resetCopyButtons();
     var R = renderKeep();
@@ -1151,7 +1185,7 @@
   function setAll(on) {
     if (!last || !last.ts.length) return;
     checks = {};
-    if (!on) last.ts.forEach(function (it) { checks[it.row] = false; });
+    if (!on) last.ts.forEach(function (it) { checks[it.key] = false; });
     resetCopyButtons();
     var top = tableWrap.scrollTop;
     var R = renderKeep();
