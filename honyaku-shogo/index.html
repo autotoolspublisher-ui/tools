@@ -179,15 +179,15 @@
   .stats li.has .v { color: #7a4f01; }
   .stats li.clear .v { color: var(--ok); }
   /* 知らせ・まとめの文。高さを先に確保して、出ても消えても下の部品が動かないようにする */
-  .summary { min-height: 110px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary { min-height: 210px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
   .summary .main { display: block; font-weight: 600; color: var(--ok); }
   .summary .main.warn { color: var(--warn-ink); }
   .summary .main.err { color: var(--bad); }
   .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); }
   .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
-  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status { min-height: 88px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
   .status.error { color: var(--warn-ink); }
-  #setStatus { min-height: 66px; }
+  #setStatus { min-height: 88px; }
   /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
   .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
   .manual { margin: 0 0 12px; }
@@ -233,8 +233,8 @@
     .sep-grid textarea { min-height: 140px; }
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .stats li { min-height: 62px; }
-    .summary { min-height: 176px; }
-    .status, #setStatus { min-height: 88px; }
+    .summary { min-height: 232px; }
+    .status, #setStatus { min-height: 110px; }
     .actions .btn { flex: 1 1 40%; }
     button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
     .list-wrap { height: 380px; }
@@ -244,10 +244,12 @@
     .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
     main { padding-top: 24px; }
     header { margin-bottom: 20px; }
-    .summary { min-height: 220px; }
-    .status, #setStatus { min-height: 110px; }
+    .summary { min-height: 276px; }
+    .status, #setStatus { min-height: 132px; }
     .chip span { padding: 6px 10px; }
     button.btn.copy { padding-left: 6px; padding-right: 6px; }
+    /* 320px でも「食い違いの行をコピー」の文字がボタンに収まるよう、コピーのボタンは1つずつ全幅にする */
+    .area-result .actions .btn.copy { flex: 1 1 100%; }
   }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
 </style>
@@ -822,7 +824,7 @@
     rows.forEach(function (r, i) {
       var cells = r.map(function (x) { return trimSp(x); });
       if (cells.every(function (x) { return x === ''; })) return;
-      if (!count && !head && (inList(cells[0], TERM_HEAD) || inList(cells[1] || '', TERM_HEAD))) { head = true; return; }
+      if (!count && !head && inList(cells[0], TERM_HEAD) && inList(cells[1] || '', TERM_HEAD)) { head = true; return; }
       count++;
       var src = cells[0];
       var tg = [];
@@ -890,10 +892,24 @@
         db.forEach(function (x) { res.tgtMarks.push(origSpan(T, x)); });
       }
     }
+    // 用語表の原語に当たり、訳文に訳語がある部分（Save → 保存 など）は、英大文字の語としては知らせない
+    var termOk = [];
+    if (opt.term && terms.length) {
+      terms.forEach(function (e) {
+        var p0 = findTerm(S.low, e.key, 0);
+        if (p0 < 0) return;
+        for (var k = 0; k < e.tkeys.length; k++) {
+          if (findTerm(T.low, e.tkeys[k], 0) >= 0) {
+            while (p0 >= 0) { termOk.push({ a: p0, b: p0 + e.key.length }); p0 = findTerm(S.low, e.key, p0 + e.key.length); }
+            return;
+          }
+        }
+      });
+    }
     if (opt.word) {
       var miss = [], seenW = {};
       S.words.forEach(function (tk) {
-        if (T.all['_' + tk.w]) return;
+        if (T.all['_' + tk.w] || overlaps(termOk, tk.a, tk.b)) return;
         res.srcMarks.push(origSpan(S, tk));
         if (!seenW['_' + tk.w]) { seenW['_' + tk.w] = true; miss.push(orig(S, tk)); }
       });
@@ -905,7 +921,7 @@
         var p = findTerm(S.low, e.key, 0);
         if (p < 0) return;
         for (var k = 0; k < e.tkeys.length; k++) if (findTerm(T.low, e.tkeys[k], 0) >= 0) return;
-        tm.push('「' + e.src + '」の訳語' + quoteList(e.tgts) + 'なし');
+        tm.push('「' + e.src.normalize('NFC') + '」の訳語' + quoteList(e.tgts.map(function (x) { return x.normalize('NFC'); })) + 'なし');
         while (p >= 0) {
           res.srcMarks.push({ a: S.N.m[p], b: S.N.m[p + e.key.length] });
           p = findTerm(S.low, e.key, p + e.key.length);
@@ -964,13 +980,13 @@
       R.autoCols = auto;
       R.srcCol = inp.srcCol != null && inp.srcCol < R.ncols ? inp.srcCol : auto[0];
       R.tgtCol = inp.tgtCol != null && inp.tgtCol < R.ncols ? inp.tgtCol : auto[1];
-      if (R.srcCol === R.tgtCol) { R.error = 'samecol'; return R; }
       R.headIndex = hi;
       R.autoHead = hi >= 0 && (isHeadCell(rows[hi][R.srcCol]) || isHeadCell(rows[hi][R.tgtCol]));
       R.head = hi >= 0 && (inp.head == null ? R.autoHead : inp.head);
-      if (rows.length - (R.head ? 1 : 0) > MAX_ROWS) { R.error = 'toomany'; R.tooMany = rows.length - (R.head ? 1 : 0); return R; }
       R.colNames = [];
       for (var cc = 0; cc < R.ncols; cc++) R.colNames.push(hi >= 0 && R.head ? trimSp(rows[hi][cc] || '') : '');
+      if (R.srcCol === R.tgtCol) { R.error = 'samecol'; return R; }
+      if (rows.length - (R.head ? 1 : 0) > MAX_ROWS) { R.error = 'toomany'; R.tooMany = rows.length - (R.head ? 1 : 0); return R; }
       rows.forEach(function (r) { pairs.push([r[R.srcCol] || '', r[R.tgtCol] || '']); });
     } else {
       var sr = parseTable(inp.src), tr = parseTable(inp.tgt);
@@ -1107,16 +1123,18 @@
     if (R.bad) {
       var parts = [];
       ITEM_NAMES.forEach(function (p) { if (R.counts[p[0]]) parts.push(p[1] + ' ' + fmtNum(R.counts[p[0]]) + '行'); });
-      summaryEl.appendChild(line('sub', '内訳：' + parts.join('、') + '（1行に複数の食い違いがあると、それぞれに数えます）'));
+      summaryEl.appendChild(line('sub', '内訳：' + parts.join('、')));
     }
     var notes = [];
-    if (R.mode === 'pair' && R.ncols > 2) notes.push('原文は' + colLetter(R.srcCol) + '列、訳文は' + colLetter(R.tgtCol) + '列を照合しています（列は「原文の列」「訳文の列」で変えられます）。');
+    if (R.mode === 'pair' && R.ncols > 2) notes.push('原文は' + colLetter(R.srcCol) + '列、訳文は' + colLetter(R.tgtCol) + '列です（「原文の列」「訳文の列」で変えられます）。');
     if (R.head) notes.push(fmtNum(R.headIndex + 1) + '行目は見出しとして照合していません。');
-    function rowsOf(list) { return '用語表の' + list.slice(0, 5).map(fmtNum).join('・') + '行目' + (list.length > 5 ? 'ほか' : ''); }
-    if (CHK.term.checked && R.termsOver) notes.push('用語表が' + fmtNum(R.terms.count) + '行あります。用語表は' + fmtNum(MAX_TERMS) + '行までです。この文書で使う用語だけにしてください（用語表は使わずに、ほかの項目を照合しています）。');
-    else if (CHK.term.checked) {
-      if (R.terms.notab.length) notes.push(rowsOf(R.terms.notab) + 'は、原語と訳語がタブで区切られていないため使っていません。Excelの2列（原語、訳語）をコピーして貼り付けてください。');
-      if (R.terms.bad.length) notes.push(rowsOf(R.terms.bad) + 'は、原語か訳語が空のため使っていません。');
+    function rowsOf(list) { return list.slice(0, 3).map(fmtNum).join('・') + '行目' + (list.length > 3 ? 'ほか' : ''); }
+    if (CHK.term.checked && R.termsOver) notes.push('用語表が' + fmtNum(R.terms.count) + '行あります。用語表は' + fmtNum(MAX_TERMS) + '行までです。この文書で使う用語だけにしてください。');
+    else if (CHK.term.checked && (R.terms.notab.length || R.terms.bad.length)) {
+      var nt = R.terms.notab.length, nb = R.terms.bad.length;
+      if (nt && !nb) notes.push('用語表の' + rowsOf(R.terms.notab) + 'は、原語と訳語がタブで区切られていないため使っていません。Excelの2列（原語、訳語）をコピーして貼り付けてください。');
+      else if (nb && !nt) notes.push('用語表の' + rowsOf(R.terms.bad) + 'は、原語か訳語が空のため使っていません。');
+      else notes.push('用語表の' + rowsOf(R.terms.notab) + '（タブで区切られていない）と' + rowsOf(R.terms.bad) + '（原語か訳語が空）は使っていません。Excelの2列（原語、訳語）を貼り付けてください。');
     }
     notes.forEach(function (n) { summaryEl.appendChild(line('w', n)); });
   }
@@ -1158,7 +1176,7 @@
   function emptyMsg(text) { var p = document.createElement('p'); p.className = 'empty-result'; p.textContent = text; return p; }
   function renderList(R) {
     listWrap.textContent = '';
-    if (R.blank || R.error || R.waitSide) { listWrap.appendChild(emptyMsg(R.error ? '照合できませんでした。「結果」のまとめの文を見てください。' : 'ここに、食い違いのある行が表示されます。')); return; }
+    if (R.blank || R.error || R.waitSide) { listWrap.appendChild(emptyMsg(R.error ? '照合できませんでした。上の文を見てください。' : 'ここに、食い違いのある行が表示されます。')); return; }
     var all = radio(viewInputs) === 'all';
     var list = R.items.filter(function (it) { return all ? true : it.kind === 'bad'; });
     if (!list.length) { listWrap.appendChild(emptyMsg(R.checked ? (anyCheck() ? '食い違いのある行はありません。' : '照合する項目がすべてオフです。') : '照合する行がありません。')); return; }
