@@ -174,6 +174,7 @@
   .stats li { display: flex; flex-direction: column; justify-content: center; min-height: 64px; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
   .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; }
   .stats .v { color: #202124; font-size: 1.25rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .stats .v.word { font-size: 1rem; line-height: 1.5; white-space: nowrap; }
   .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
   .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
   .stats li.has .v { color: #7a4f01; }
@@ -544,7 +545,7 @@
   var SRC_HEAD = ['原文', '原語', 'source', 'src', '英文', '原稿'];
   var TGT_HEAD = ['訳文', '翻訳', '訳', 'target', 'tgt', '和文', '翻訳文'];
   var OTHER_HEAD = ['英語', '日本語', 'english', 'japanese', 'en', 'ja', 'ja-jp', 'en-us'];
-  var TERM_HEAD = ['原語', '訳語', '用語', '対訳', 'source', 'target', 'term', '英語', '日本語', 'english', 'japanese', 'en', 'ja', '原文', '訳文'];
+  var TERM_HEAD = ['原語', '訳語', '用語', '対訳', 'source', 'target', 'term', 'terms', 'translation', 'translations', 'glossary', '英語', '日本語', 'english', 'japanese', 'en', 'ja', '原文', '訳文', '訳', '翻訳', '和訳', '英訳', '日本語訳', '英語訳'];
   function headKey(s) { return lowerAscii(norm(trimSp(s || '')).t); }
   function inList(s, list) { return list.indexOf(headKey(s)) >= 0; }
   function isHeadCell(s) { return inList(s, SRC_HEAD) || inList(s, TGT_HEAD) || inList(s, OTHER_HEAD); }
@@ -1078,6 +1079,8 @@
   function setStat(id, value, unit, cls) {
     var li = $(id), v = li.querySelector('.v');
     v.textContent = value;
+    // 「用語表なし」「オフ」などの文字の値は、数より小さい文字にして1行に収める
+    v.classList.toggle('word', !/^[0-9,–]+$/.test(value));
     if (unit) { var s = document.createElement('small'); s.textContent = unit; v.appendChild(s); }
     li.classList.remove('has', 'clear');
     if (cls) li.classList.add(cls);
@@ -1301,9 +1304,11 @@
   // ---------- コピー ----------
   var LABELS = { copyCol: '判定の列をコピー', copyBad: '食い違いの行をコピー' };
   var copyTimer = null;
-  function resetCopyButtons() { clearTimeout(copyTimer); manualBox.hidden = true; copyCol.textContent = LABELS.copyCol; copyBad.textContent = LABELS.copyBad; }
+  function resetCopyButtons() { clearTimeout(copyTimer); manualBox.hidden = true; copyCol.textContent = LABELS.copyCol; copyBad.textContent = LABELS.copyBad; copyCol.style.minWidth = ''; copyBad.style.minWidth = ''; }
   function flashButton(btn, label, ms) {
     resetCopyButtons();
+    // 一時的な文字に変えても、ボタンの幅が変わらない（隣の部品が動かない）ように、今の幅を最小の幅にする
+    btn.style.minWidth = btn.getBoundingClientRect().width + 'px';
     btn.textContent = label;
     copyTimer = setTimeout(resetCopyButtons, ms);
   }
