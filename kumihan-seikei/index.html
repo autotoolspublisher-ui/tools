@@ -1,0 +1,1527 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCRH8J95WL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VCRH8J95WL');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>組版前テキスト整形 - 三点リーダー・括弧・数字を一括で｜AIツールひろば</title>
+  <meta name="description" content="原稿を貼り付けるだけで、三点リーダー・ダーシ・波ダッシュの字形の統一、括弧の閉じ忘れチェック、数字の1桁全角・2桁以上半角、億・万の単位字まで入稿前に一括で整形できる無料ツールです。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/kumihan-seikei/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="組版前テキスト整形 - 三点リーダー・括弧・数字を一括で｜AIツールひろば">
+  <meta property="og:description" content="原稿を貼り付けるだけで、三点リーダー・ダーシ・波ダッシュの字形の統一、括弧の閉じ忘れチェック、数字の1桁全角・2桁以上半角、億・万の単位字まで入稿前に一括で整形できる無料ツールです。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/kumihan-seikei/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/kumihan-seikei.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "組版前テキスト整形",
+    "description": "原稿を貼り付けるだけで、三点リーダー・ダーシ・波ダッシュの字形の統一、括弧の閉じ忘れチェック、数字の1桁全角・2桁以上半角、億・万の単位字まで入稿前に一括で整形できる無料ツールです。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/kumihan-seikei/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "組版前テキスト整形",
+        "item": "https://autotoolspublisher-ui.github.io/tools/kumihan-seikei/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "どんなルールを、どの順にかけますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はじめは「約物の字形」→「括弧の対応」→「！？の後ろの全角スペース」→「数字の桁」の順にかけます（「億・万の単位字」は、はじめはオフです）。ルールの横の↑↓で順番を変えられ、後のルールは、前のルールで変えた後の文章にかけます。たとえば「！ーー」は、字形を先にかけると「！――」に、空白を先にかけると「！　――」になります（ダーシの前には全角スペースを入れないため）。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「ーー」がダーシにならず、印が付くのはなぜですか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "長音の「ー」が2つ以上続く所は、すぐ前が片仮名ならのばす音として残し、すぐ前がひらがなの所（すごーーい、言ってーー）は、のばす音かダーシか決められないため、変えずに印を付けます。ダーシにしたいときは、「ひらがなの後ろの「ーー」」を「ダーシにする」に切り替えてください。漢字・句読点の後ろや行の先頭の「ーー」と、「−−」「——」「──」「－－」、日本語にはさまれた半角の「--」は、2文字のダーシ（はじめは ――）にします（英文の a--b や --option は変えません）。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "括弧のチェックは、何を調べますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「」『』（）()［］[]〈〉《》【】〔〕〝〟について、文章の先頭から起こしと閉じを順に対応させ、閉じのない起こし、起こしのない閉じ、全角と半角が違う組（「（」を「)」で閉じた所）に印を付けます。文章は変えません。会話が段落をまたぐときに段落ごとに「「」を書く書き方では、閉じのない「「」として印が付きます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「1桁は全角・2桁以上は半角」は、どう数えますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "数字にはさまれた「,」「.」「:」「/」を含めて1つの数として数えます（1,000 は4桁、3.5 は2桁、10:30 や 2026/10/30 も1つ）。ハイフンでつながった番号（03-1234-5678、1-2-3）も、まとめて1つの番号として数えます。数字が1つだけのものを全角に、2つ以上のものを半角にします。英字とつながった数字（A4、No.5、5kg）と、半角スペース1つをはさんで英字と並ぶ数字（5 kg、Page 3）、URLの中の数字は変えません。全角と半角が混ざった数（1２0）と、カンマの位置が3桁ごとでない数（1,2）は、変えずに印を付けます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した原稿は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。整形の処理はすべてお使いのブラウザの中で行い、貼り付けた原稿が外部に送信されることはありません。ブラウザに保存することもありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --bad: #b3261e; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に入力と設定、右に結果。狭い幅：入力 → 結果 → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "input result" "settings result"; gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-input { grid-area: input; }
+  .area-result { grid-area: result; align-self: stretch; padding-left: 30px; border-left: 1px solid #e8eaed; }
+  /* PC幅：左の設定を変えたときも結果が見えるように、結果の列を画面に留める */
+  .result-inner { position: sticky; top: 12px; }
+  .area-settings { grid-area: settings; margin-top: 8px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .area-settings h2, .area-result h2 { margin: 0 0 10px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend, .setting > .label { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; max-width: 100%; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; line-height: 1.3; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  .chip input:disabled + span::before { border-color: #9aa0a6; }
+  .chip input:disabled:checked + span::before { border-color: #9aa0a6; background-color: #9aa0a6; }
+  #resultTitle:focus, #settingsTitle:focus { outline: 0; }
+  #resultTitle:focus-visible, #settingsTitle:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .field { min-width: 0; margin: 0 0 14px; }
+  .field label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  textarea { display: block; width: 100%; min-height: 220px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font-size: .94rem; line-height: 1.55; font-family: inherit; resize: vertical; }
+  textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  .actions.copy-row { margin: 0 0 6px; }
+  .jump-row { display: none; margin: -4px 0 6px; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* まとめ（数の枠） */
+  .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; padding: 0; list-style: none; }
+  .stats li { display: flex; flex-direction: column; justify-content: center; height: 62px; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; }
+  .stats .v { color: #202124; font-size: 1.25rem; font-weight: 600; line-height: 1.25; white-space: nowrap; }
+  .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
+  .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
+  .stats li.has .v { color: #7a4f01; }
+  /* ルールごとの件数（いつも5行） */
+  .counts-title { margin: 16px 0 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  table.counts { width: 100%; margin: 0 0 8px; border-collapse: collapse; font-size: .875rem; line-height: 1.4; }
+  table.counts th, table.counts td { padding: 4px 8px; border-bottom: 1px solid #eceef1; text-align: left; white-space: nowrap; }
+  table.counts thead th { color: var(--muted); font-weight: 600; }
+  table.counts td.n { text-align: right; font-variant-numeric: tabular-nums; width: 1%; }
+  table.counts td.name { white-space: normal; }
+  table.counts td.name i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 3px; vertical-align: -1px; }
+  table.counts tr.off td { color: var(--muted); }
+  table.counts td.mk-has { color: #7a4f01; font-weight: 600; }
+  /* まとめの文 */
+  .summary { min-height: 92px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary .main { display: block; font-weight: 600; color: var(--ok); }
+  .summary .main.warn { color: var(--warn-ink); }
+  .summary .main.err { color: var(--bad); }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .manual { margin: 0 0 12px; }
+  .manual label { display: block; margin-bottom: 4px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { min-height: 96px; }
+  .view { margin: 4px 0 8px; }
+  /* 整形後のテキスト */
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 6px; padding: 0; list-style: none; color: #3c4043; font-size: .875rem; line-height: 1.5; }
+  .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 5px; border-radius: 3px; vertical-align: -1px; }
+  .out { max-height: 460px; margin: 0; padding: 10px 14px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; font-size: .94rem; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .out:focus-visible, .table-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .c-glyph, i.c-glyph { background: #d2e3fc; }
+  .c-space, i.c-space { background: #ceead6; }
+  .c-digit, i.c-digit { background: #e9d2fd; }
+  .c-unit, i.c-unit { background: #c4eed0; outline: 1px solid #81c995; }
+  .out .mk, i.mk { background: #feefc3; text-decoration: underline wavy #b06000; text-decoration-skip-ink: none; text-underline-offset: 3px; }
+  i.c-bracket { background: #feefc3; }
+  .out .del { display: inline-block; width: 2px; height: 1.1em; margin: 0 1px; vertical-align: -2px; background: #c5221f; }
+  i.del { background: #c5221f; width: 3px; }
+  .table-wrap { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  table.res { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.45; }
+  table.res th, table.res td { padding: 7px 10px; border-bottom: 1px solid #eceef1; text-align: left; vertical-align: top; }
+  table.res thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); color: #3c4043; font-weight: 600; white-space: nowrap; }
+  table.res td.num { color: var(--muted); text-align: right; white-space: nowrap; width: 1%; }
+  table.res td.ctx { min-width: 8em; overflow-wrap: anywhere; }
+  table.res td.ctx b { background: #feefc3; font-weight: 600; text-decoration: underline wavy #b06000; text-underline-offset: 3px; }
+  table.res td.rule { white-space: nowrap; width: 1%; }
+  table.res td.why { min-width: 10em; overflow-wrap: anywhere; }
+  .marks-note { margin: 8px 10px 4px; color: #3c4043; font-size: .875rem; line-height: 1.5; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; border: 1px dashed var(--line); border-radius: 12px; }
+  /* ルールの一覧（順番に適用） */
+  .rules { margin: 0; padding: 0; list-style: none; }
+  .rule { margin: 0 0 12px; padding: 12px 12px 4px; border: 1px solid #e1e3e6; border-radius: 14px; background: #fff; }
+  .rule-head { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; }
+  .rule-no { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--mint); color: var(--green-dark); font-weight: 700; font-size: .9rem; }
+  .rule-head .chip { flex: 1 1 auto; min-width: 0; }
+  .rule-head .chip span { font-weight: 600; }
+  .rule-move { flex: none; display: flex; gap: 6px; }
+  button.btn.mini { min-width: 44px; padding: 6px 0; font-size: 1rem; line-height: 1; }
+  .rule-body { padding: 0 0 4px 36px; }
+  .sub { margin: 0 0 10px; padding: 0; border: 0; min-width: 0; }
+  .sub > legend { padding: 0; margin: 0 0 4px; color: #3c4043; font-size: .875rem; font-weight: 600; }
+  .sub .chips { gap: 6px; }
+  .sub .chip span { min-height: 40px; padding: 5px 11px; font-size: .875rem; }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .result-inner { position: static; }
+    .area-result { margin-top: 18px; padding: 18px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    textarea { min-height: 160px; }
+    .summary { min-height: 112px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    .actions.copy-row .btn { flex: 1 1 100%; }
+    table.res th, table.res td { padding: 6px 7px; }
+    .out { max-height: 380px; padding: 8px 10px; }
+    .rule { padding: 10px 10px 2px; }
+    .rule-body { padding-left: 0; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .summary { min-height: 136px; }
+    .status { min-height: 110px; }
+    .chip span { padding: 6px 10px; }
+    .stats li { padding: 8px 8px; }
+    .stats .v { font-size: 1.1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">組版前テキスト整形</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">TYPESETTING PREP</p>
+    <h1>組版前テキスト整形</h1>
+    <p>原稿を貼り付けると、三点リーダー・ダーシ・波ダッシュの字形をそろえ、「！」「？」の後ろに全角スペースを入れ、数字の桁を「1桁は全角・2桁以上は半角」などにそろえます。括弧の閉じ忘れや、決められない所には印を付けて一覧にします。<span class="more">エディタの置換や正規表現のマクロを1つずつ流したり、目で探したりしなくても、選んだルールを選んだ順に1ページでかけられます。</span></p>
+  </header>
+
+  <section class="card" aria-label="組版前テキスト整形">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>原稿のテキストを貼り付けます（すぐに整形されます）。</li>
+        <li>結果の色の付いた所と、印の一覧を確かめます。</li>
+        <li>「整形後のテキストをコピー」を押して、組版ソフトなどに貼り付けます。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-input">
+        <div class="field">
+          <label for="src">原稿のテキスト</label>
+          <textarea id="src" spellcheck="false" placeholder="例：&#10;「ちょっと待って・・・」&#10;彼は振り向いた。ーーその時だった。&#10;「本当に？それなら3時に駅で」"></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+      </div>
+
+      <div class="area-result" id="resultArea">
+        <div class="result-inner">
+        <h2 id="resultTitle" tabindex="-1">結果</h2>
+        <ul class="stats" id="stats" aria-label="まとめ">
+          <li id="stEdits"><span class="k">変えた箇所</span><span class="v">–</span></li>
+          <li id="stMarks"><span class="k">印</span><span class="v">–</span></li>
+          <li id="stLines"><span class="k">行</span><span class="v">–</span></li>
+          <li id="stChars"><span class="k">文字</span><span class="v">–</span></li>
+        </ul>
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <div class="actions copy-row">
+          <button type="button" class="btn primary" id="copyText" disabled>整形後のテキストをコピー</button>
+          <button type="button" class="btn" id="copyMarks" disabled>印の一覧をコピー</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+        <fieldset class="setting view">
+          <legend>表示する結果</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="view" value="text" checked><span>整形後のテキスト</span></label>
+            <label class="chip"><input type="radio" name="view" value="marks"><span id="viewMarksLabel">印の一覧</span></label>
+          </div>
+        </fieldset>
+        <div id="viewText">
+          <ul class="legend" aria-label="色の意味">
+            <li><i class="c-glyph"></i>字形</li>
+            <li><i class="c-space"></i>空白</li>
+            <li><i class="c-digit"></i>数字の桁</li>
+            <li><i class="c-unit"></i>単位字</li>
+            <li><i class="del"></i>消した空白</li>
+            <li><i class="mk"></i>印（直していない）</li>
+          </ul>
+          <div class="out" id="out" tabindex="0" aria-label="整形後のテキスト"></div>
+        </div>
+        <div id="viewMarks" hidden>
+          <div class="table-wrap" id="marksWrap" tabindex="0" aria-label="印の一覧"></div>
+        </div>
+        <h3 class="counts-title">ルールごとの件数（かけた順）</h3>
+        <table class="counts" id="counts" aria-label="ルールごとの件数（適用した順）">
+          <thead><tr><th scope="col">順</th><th scope="col">ルール</th><th scope="col">変えた</th><th scope="col">印</th></tr></thead>
+          <tbody id="countsBody"></tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2 id="settingsTitle" tabindex="-1">整形のルール</h2>
+        <p class="jump-row"><a class="jump" href="#resultTitle">▲ 結果を見る</a></p>
+        <p class="hint" style="margin:0 0 10px">上から順にかけます。↑↓で順番を変えられます。</p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <ol class="rules" id="rules">
+          <li class="rule" data-rule="glyph">
+            <div class="rule-head">
+              <span class="rule-no" aria-hidden="true">1</span>
+              <label class="chip"><input type="checkbox" class="rule-on" data-rule="glyph" checked><span>約物の字形をそろえる</span></label>
+              <span class="rule-move"><button type="button" class="btn mini up" aria-label="約物の字形のルールを上へ">↑</button><button type="button" class="btn mini down" aria-label="約物の字形のルールを下へ">↓</button></span>
+            </div>
+            <div class="rule-body">
+              <div class="sub chips">
+                <label class="chip"><input type="checkbox" id="optLeader" checked><span>三点リーダー（・・・ ... → ……）</span></label>
+                <label class="chip"><input type="checkbox" id="optNaka" checked><span>中黒（･ · → ・）</span></label>
+              </div>
+              <div class="sub chips">
+                <label class="chip"><input type="checkbox" id="optDash" checked><span>ダーシ（ーー −− —— → 2文字のダーシ）</span></label>
+              </div>
+              <fieldset class="sub">
+                <legend>ダーシの文字</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="dashChar" value="2015" checked><span>―― （U+2015）</span></label>
+                  <label class="chip"><input type="radio" name="dashChar" value="2014"><span>—— （U+2014）</span></label>
+                </div>
+              </fieldset>
+              <fieldset class="sub">
+                <legend>ひらがなの後ろの「ーー」</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="hiraDash" value="mark" checked><span>印だけ付ける</span></label>
+                  <label class="chip"><input type="radio" name="hiraDash" value="dash"><span>ダーシにする</span></label>
+                </div>
+              </fieldset>
+              <fieldset class="sub">
+                <legend>波ダッシュ</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="wave" value="wave" checked><span>〜 にそろえる</span></label>
+                  <label class="chip"><input type="radio" name="wave" value="fw"><span>～ にそろえる</span></label>
+                  <label class="chip"><input type="radio" name="wave" value="keep"><span>そのまま</span></label>
+                </div>
+              </fieldset>
+              <fieldset class="sub">
+                <legend>引用符（“ ” " "）</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="quote" value="keep" checked><span>そのまま</span></label>
+                  <label class="chip"><input type="radio" name="quote" value="dq"><span>〝 〟にする</span></label>
+                  <label class="chip"><input type="radio" name="quote" value="kagi"><span>「 」にする</span></label>
+                </div>
+              </fieldset>
+            </div>
+          </li>
+          <li class="rule" data-rule="bracket">
+            <div class="rule-head">
+              <span class="rule-no" aria-hidden="true">2</span>
+              <label class="chip"><input type="checkbox" class="rule-on" data-rule="bracket" checked><span>括弧の対応を調べる</span></label>
+              <span class="rule-move"><button type="button" class="btn mini up" aria-label="括弧の対応のルールを上へ">↑</button><button type="button" class="btn mini down" aria-label="括弧の対応のルールを下へ">↓</button></span>
+            </div>
+            <div class="rule-body">
+              <p class="hint" style="margin:0 0 10px">「」『』（）()［］[]〈〉《》【】〔〕〝〟の閉じ忘れ・閉じすぎ・全角と半角の違いに印を付けます（文章は変えません）。</p>
+            </div>
+          </li>
+          <li class="rule" data-rule="space">
+            <div class="rule-head">
+              <span class="rule-no" aria-hidden="true">3</span>
+              <label class="chip"><input type="checkbox" class="rule-on" data-rule="space" checked><span>！？の後ろの全角スペース</span></label>
+              <span class="rule-move"><button type="button" class="btn mini up" aria-label="！？の後ろの空白のルールを上へ">↑</button><button type="button" class="btn mini down" aria-label="！？の後ろの空白のルールを下へ">↓</button></span>
+            </div>
+            <div class="rule-body">
+              <fieldset class="sub" data-name="！？の後ろの空白">
+                <legend>全角の ！ ？ ‼ ⁉ の後ろに</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="space" value="add" checked><span>全角スペースを入れる</span></label>
+                  <label class="chip"><input type="radio" name="space" value="remove"><span>空白を入れない（消す）</span></label>
+                </div>
+              </fieldset>
+              <p class="hint" style="margin:-4px 0 10px">行末と、閉じ括弧・句読点・…・―の前には入れません。</p>
+            </div>
+          </li>
+          <li class="rule" data-rule="digit">
+            <div class="rule-head">
+              <span class="rule-no" aria-hidden="true">4</span>
+              <label class="chip"><input type="checkbox" class="rule-on" data-rule="digit" checked><span>数字の桁をそろえる</span></label>
+              <span class="rule-move"><button type="button" class="btn mini up" aria-label="数字の桁のルールを上へ">↑</button><button type="button" class="btn mini down" aria-label="数字の桁のルールを下へ">↓</button></span>
+            </div>
+            <div class="rule-body">
+              <fieldset class="sub">
+                <legend>数字の幅</legend>
+                <div class="chips">
+                  <label class="chip"><input type="radio" name="digit" value="one" checked><span>1桁は全角・2桁以上は半角</span></label>
+                  <label class="chip"><input type="radio" name="digit" value="half"><span>すべて半角</span></label>
+                  <label class="chip"><input type="radio" name="digit" value="full"><span>すべて全角</span></label>
+                </div>
+              </fieldset>
+              <div class="sub chips">
+                <label class="chip"><input type="checkbox" id="optKeepLatin" checked><span>英字とつながった数字（A4、No.5、5kg）は変えない</span></label>
+              </div>
+            </div>
+          </li>
+          <li class="rule" data-rule="unit">
+            <div class="rule-head">
+              <span class="rule-no" aria-hidden="true">5</span>
+              <label class="chip"><input type="checkbox" class="rule-on" data-rule="unit"><span>億・万の単位字を入れる</span></label>
+              <span class="rule-move"><button type="button" class="btn mini up" aria-label="億・万の単位字のルールを上へ">↑</button><button type="button" class="btn mini down" aria-label="億・万の単位字のルールを下へ">↓</button></span>
+            </div>
+            <div class="rule-body">
+              <p class="hint" style="margin:0 0 10px">5桁以上の数に 万・億・兆 を入れます（120000000 → 1億2000万）。読み上げ原稿向けです。20261030 のような日付も 2026万1030 になるので、はじめはオフにしています。</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="note">URL（http:// か https:// か www. で始まる部分）の中は変えません。改行は変えないので、行番号は整形の前後で同じです。数字は、数字にはさまれた「,」「.」「:」「/」を含めて1つのまとまりとして扱います（1,000、3.5、10:30、2026/10/30）。文字数は文字コード1つを1文字として数え、改行は数えません。</p>
+    <div class="privacy">貼り付けた原稿は、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>小説の原稿を、入稿前の決まりにそろえる</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>第一章　朝・・・
+　彼は振り向いた。ーーその時だった。
+「本当に？それなら3時に駅で」
+「待って！どこへ行くの」
+（駅までは徒歩10分だ。
+　会場には約1２0人が集まり、売上は120000000円を超えた～
+　型番A4の用紙を5箱、No.5の棚へ･･･</pre></dd>
+        <dt>設定</dt><dd>はじめの設定のまま</dd>
+        <dt>結果</dt><dd><pre>第一章　朝……
+　彼は振り向いた。――その時だった。
+「本当に？　それなら３時に駅で」
+「待って！　どこへ行くの」
+（駅までは徒歩10分だ。
+　会場には約1２0人が集まり、売上は120000000円を超えた〜
+　型番A4の用紙を５箱、No.5の棚へ……</pre>まとめに「8か所を変えました。印が2件あります（直していません）。」と出ます。印は、5行目の閉じのない「（」と、6行目の全角と半角が混ざった「1２0」です。A4 と No.5 は英字とつながっているので変えません。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>読み上げ原稿の大きな数に、億・万を入れる</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>来場者は1250000人、予算は3,500,000,000円、前年は120005000円でした。</pre></dd>
+        <dt>設定</dt><dd>「億・万の単位字を入れる」をオン（ほかははじめの設定のまま）</dd>
+        <dt>結果</dt><dd><pre>来場者は125万人、予算は35億円、前年は１億2000万5000円でした。</pre>まとめに「3か所を変えました。印を付けた所はありません。」と出ます。3桁ごとのカンマは外して数えます。「数字の桁をそろえる」がオンなので、入れた数字も「1桁は全角・2桁以上は半角」になります（1億 の「1」は全角の「１」になります）。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>どんなルールを、どの順にかけますか？</summary>
+      <p>はじめは「約物の字形」→「括弧の対応」→「！？の後ろの全角スペース」→「数字の桁」の順にかけます（「億・万の単位字」は、はじめはオフです）。ルールの横の↑↓で順番を変えられ、後のルールは、前のルールで変えた後の文章にかけます。たとえば「！ーー」は、字形を先にかけると「！――」に、空白を先にかけると「！　――」になります（ダーシの前には全角スペースを入れないため）。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「ーー」がダーシにならず、印が付くのはなぜですか？</summary>
+      <p>長音の「ー」が2つ以上続く所は、すぐ前が片仮名ならのばす音として残し、すぐ前がひらがなの所（すごーーい、言ってーー）は、のばす音かダーシか決められないため、変えずに印を付けます。ダーシにしたいときは、「ひらがなの後ろの「ーー」」を「ダーシにする」に切り替えてください。漢字・句読点の後ろや行の先頭の「ーー」と、「−−」「——」「──」「－－」、日本語にはさまれた半角の「--」は、2文字のダーシ（はじめは ――）にします（英文の a--b や --option は変えません）。</p>
+    </details>
+    <details class="faq-item">
+      <summary>括弧のチェックは、何を調べますか？</summary>
+      <p>「」『』（）()［］[]〈〉《》【】〔〕〝〟について、文章の先頭から起こしと閉じを順に対応させ、閉じのない起こし、起こしのない閉じ、全角と半角が違う組（「（」を「)」で閉じた所）に印を付けます。文章は変えません。会話が段落をまたぐときに段落ごとに「「」を書く書き方では、閉じのない「「」として印が付きます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「1桁は全角・2桁以上は半角」は、どう数えますか？</summary>
+      <p>数字にはさまれた「,」「.」「:」「/」を含めて1つの数として数えます（1,000 は4桁、3.5 は2桁、10:30 や 2026/10/30 も1つ）。ハイフンでつながった番号（03-1234-5678、1-2-3）も、まとめて1つの番号として数えます。数字が1つだけのものを全角に、2つ以上のものを半角にします。英字とつながった数字（A4、No.5、5kg）と、半角スペース1つをはさんで英字と並ぶ数字（5 kg、Page 3）、URLの中の数字は変えません。全角と半角が混ざった数（1２0）と、カンマの位置が3桁ごとでない数（1,2）は、変えずに印を付けます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した原稿は、どこかに送信されますか？</summary>
+      <p>いいえ。整形の処理はすべてお使いのブラウザの中で行い、貼り付けた原稿が外部に送信されることはありません。ブラウザに保存することもありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../kugiri-henkan/"><strong>区切り変換くん</strong><span>カンマや改行で並んだリストを、好きな区切り方にまとめて変換します。</span></a></li>
+      <li><a href="../matomete-chikan/"><strong>まとめて置換</strong><span>置換リストを使って、複数の語句を一度に置き換えます。入れ替えや改行への置換もできます。</span></a></li>
+      <li><a href="../zenkaku-hankaku/"><strong>全角半角そろえ</strong><span>全角と半角が混ざったテキストを、英数字は半角・カタカナは全角のように、文字の種類ごとにそろえます。</span></a></li>
+      <li><a href="../kaigyo-sakujo/"><strong>改行削除</strong><span>PDFなどからコピーした文章の余計な改行を消して、1つの文章につなげます。段落や箇条書きの改行は残せます。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（20件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  function C() { return String.fromCharCode.apply(null, arguments); }
+  var TAB = C(9), LF = C(10), CR = C(13), QUOTE = C(34), BSL = C(92);
+  var ZSP = C(0x3000);                       // 全角スペース
+  var NBSP = C(0x00A0);
+  var CHOON = C(0x30FC);                     // ー（長音）
+  var MINUS = C(0x2212);                     // −
+  var EMDASH = C(0x2014);                    // —
+  var HBAR = C(0x2015);                      // ―
+  var BOXH = C(0x2500);                      // ─
+  var ELLIP = C(0x2026);                     // …
+  var NAKA = C(0x30FB), NAKA_H = C(0xFF65), MIDDOT = C(0x00B7); // ・ ･ ·
+  var WAVE = C(0x301C), FWTILDE = C(0xFF5E); // 〜 ～
+  var LDQ = C(0x201C), RDQ = C(0x201D), FWQ = C(0xFF02); // “ ” ＂
+  var DQ_OPEN = C(0x301D), DQ_CLOSE = C(0x301F);         // 〝 〟
+  var FW_EXCL = C(0xFF01), FW_QUES = C(0xFF1F);          // ！ ？
+  var VS16 = C(0xFE0F), KEYCAP = C(0x20E3);
+  var MAX_CHARS = 300000;
+  var SEP_FULL_ALL = C(0xFF0C, 0xFF0E, 0xFF1A, 0xFF0F); // ， ． ： ／
+
+  var RULES = ['glyph', 'bracket', 'space', 'digit', 'unit'];
+  var RULE_NAMES = { glyph: '約物の字形', bracket: '括弧の対応', space: '！？の後ろの空白', digit: '数字の桁', unit: '億・万の単位字' };
+
+  // URL：http:// か https:// のあとに、半角の英数字・記号（! から ~ まで）が続く部分
+  var URL_RE_SRC = '(?:https?://|www[.])[!-~]+';
+  function urlRanges(text) {
+    var re = new RegExp(URL_RE_SRC, 'g'), out = [], m;
+    while ((m = re.exec(text)) !== null) out.push([m.index, m.index + urlLength(m[0])]);
+    return out;
+  }
+  // URL の終わりの「)」は、URL の中の「(」より多い分だけ URL に含めない（(https://example.com/) の閉じ括弧）
+  function urlLength(u) {
+    var n = u.length;
+    while (n > 0 && u.charAt(n - 1) === ')' && u.slice(0, n).split(')').length > u.slice(0, n).split('(').length) n--;
+    return n;
+  }
+  function inRanges(ranges, s, e) {
+    for (var i = 0; i < ranges.length; i++) {
+      if (ranges[i][0] >= e) break;
+      if (ranges[i][1] > s) return true;
+    }
+    return false;
+  }
+  function code(ch) { return ch ? ch.charCodeAt(0) : -1; }
+  function isKatakana(ch) {
+    var c = code(ch);
+    return (c >= 0x30A1 && c <= 0x30FA) || (c >= 0x30FD && c <= 0x30FF) || (c >= 0xFF66 && c <= 0xFF9D) || (c >= 0x31F0 && c <= 0x31FF);
+  }
+  // 結合用の濁点・半濁点（U+3099・U+309A、半角の ﾞ ﾟ）と異体字セレクタを飛ばして、前の文字を返す
+  function baseBefore(text, i) {
+    var k = i - 1;
+    while (k >= 0) {
+      var c = text.charCodeAt(k);
+      if (c === 0x3099 || c === 0x309A || c === 0xFF9E || c === 0xFF9F || (c >= 0xFE00 && c <= 0xFE0F)) { k--; continue; }
+      if (c >= 0xDC00 && c <= 0xDFFF && k > 0 && text.charCodeAt(k - 1) === 0xDB40) { k -= 2; continue; } // U+E0100〜（異体字セレクタ）
+      break;
+    }
+    return k >= 0 ? text.charAt(k) : '';
+  }
+  // ASCII 以外の文字（日本語など）。空文字・改行・空白は含まない
+  function isWide(ch) { var c = code(ch); return c > 127 && c !== 0x3000 && c !== 0x00A0; }
+  // 隣の文字（数字と , . : / と空白は飛ばす。数字の桁・空白のルールで変わっても判定を変えないため）
+  function sideChar(text, i, dir) {
+    var k = dir < 0 ? i - 1 : i;
+    while (k >= 0 && k < text.length) {
+      var ch = text.charAt(k);
+      if (digitValue(ch) >= 0 || ',.:/ '.indexOf(ch) >= 0 || SEP_FULL_ALL.indexOf(ch) >= 0 || ch === ZSP || ch === NBSP) { k += dir; continue; }
+      return ch;
+    }
+    return '';
+  }
+  // 日本語など（ASCII 以外）で、全角の数字・記号（数字の桁のルールで変わる文字）でないもの
+  function isWideText(ch) { var c = code(ch); return isWide(ch) && !(c >= 0xFF10 && c <= 0xFF19) && SEP_FULL_ALL.indexOf(ch) < 0; }
+  function isHiragana(ch) { var c = code(ch); return (c >= 0x3041 && c <= 0x3096) || (c >= 0x309D && c <= 0x309F); }
+  function isLatin(ch) {
+    var c = code(ch);
+    return (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 0xFF21 && c <= 0xFF3A) || (c >= 0xFF41 && c <= 0xFF5A);
+  }
+  function digitValue(ch) {
+    var c = code(ch);
+    if (c >= 48 && c <= 57) return c - 48;
+    if (c >= 0xFF10 && c <= 0xFF19) return c - 0xFF10;
+    return -1;
+  }
+  function isFullDigit(ch) { var c = code(ch); return c >= 0xFF10 && c <= 0xFF19; }
+  function isHalfDigit(ch) { var c = code(ch); return c >= 48 && c <= 57; }
+  // 空文字は含まない（''.indexOf は 0 を返すため）
+  function inSet(set, ch) { return ch !== '' && set.indexOf(ch) >= 0; }
+  // 文字数：文字コード1つを1文字（サロゲートペアは1文字）。改行（LF・CR）は数えない
+  function countChars(text) { var n = 0; for (var i = 0; i < text.length; i++) { var c = text.charCodeAt(i); if (c === 10 || c === 13 || (c >= 0xDC00 && c <= 0xDFFF)) continue; n++; } return n; }
+  function repeat(s, n) { var o = ''; for (var i = 0; i < n; i++) o += s; return o; }
+
+  // ---------- 1. 約物の字形 ----------
+  var DASH_CHARS = CHOON + MINUS + EMDASH + HBAR + BOXH + C(0xFF0D); // ー − — ― ─ －
+  var GLYPH_RE_SRC = '([' + NAKA + NAKA_H + ']{3,}|[.' + C(0xFF0E) + ']{3,})|(' + ELLIP + '+)|((?:-*[' + DASH_CHARS + '])+-*)|([' + WAVE + FWTILDE + '])|([' + NAKA_H + MIDDOT + '])|(-{2,})|(~)';
+  function glyphRule(text, o, urls) {
+    var edits = [], marks = [];
+    var re = new RegExp(GLYPH_RE_SRC, 'g'), m;
+    while ((m = re.exec(text)) !== null) {
+      var s = m.index, e = s + m[0].length, n = m[0].length;
+      if (inRanges(urls, s, e)) continue;
+      if (m[1] !== undefined) {
+        if (!o.leader) {
+          // 三点リーダーがオフでも、中黒のルールで半角の ･ · は ・ にする
+          if (o.naka) { var nk = m[0].split(NAKA_H).join(NAKA).split(MIDDOT).join(NAKA); if (nk !== m[0]) edits.push({ s: s, e: e, rep: nk, kind: 'naka' }); }
+          continue;
+        }
+        var pairs = Math.max(1, Math.floor(n / 6));
+        edits.push({ s: s, e: e, rep: repeat(ELLIP, pairs * 2), kind: 'leader' });
+      } else if (m[2] !== undefined) {
+        if (o.leader && n % 2 === 1) marks.push({ s: s, e: e, reason: '「…」が' + n + '個続いています。三点リーダーは「……」のように2個ずつ使うのが一般的です。' });
+      } else if (m[3] !== undefined) {
+        if (!o.dash) continue;
+        var run = m[0];
+        if (n === 1) {
+          if (run === EMDASH || run === HBAR) marks.push({ s: s, e: e, reason: 'ダーシが1文字だけです。ダーシは「――」のように2文字で使うのが一般的です。' });
+          continue;
+        }
+        // 長音の「ー」と半角の「-」だけの並び（ーー、ー-）は、長音として同じに扱う
+        var allChoon = run.charAt(0) === CHOON && run.split(CHOON).join('').split('-').join('') === '';
+        if (run.charAt(0) === CHOON && run.split(CHOON).join('').split('-').join('') === '' && isKatakana(baseBefore(text, s))) continue;
+        var prev = baseBefore(text, s);
+        if (allChoon && isKatakana(prev)) continue;
+        if (allChoon && isHiragana(prev) && o.hiraDash !== 'dash') {
+          marks.push({ s: s, e: e, reason: 'ひらがなの後ろの「' + run + '」は、のばす音（長音）かダーシか決められないため、変えていません。' });
+          continue;
+        }
+        edits.push({ s: s, e: e, rep: repeat(o.dashChar, Math.floor(n / 2) * 2), kind: 'dash' });
+      } else if (m[4] !== undefined) {
+        if (o.wave === 'keep') continue;
+        var target = o.wave === 'fw' ? FWTILDE : WAVE;
+        if (m[0] !== target) edits.push({ s: s, e: e, rep: target, kind: 'wave' });
+      } else if (m[5] !== undefined) {
+        if (o.naka) edits.push({ s: s, e: e, rep: NAKA, kind: 'naka' });
+      } else if (m[6] !== undefined) {
+        // 半角のハイフンの並び（--）：前後が日本語など（ASCII 以外）か行の端のときだけダーシにする（英文・コマンドの -- は変えない）
+        if (!o.dash) continue;
+        var b6 = sideChar(text, s, -1), a6 = sideChar(text, e, 1);
+        var edgeB = b6 === '' || b6 === LF || b6 === CR, edgeA = a6 === '' || a6 === LF || a6 === CR;
+        if ((isWide(b6) || edgeB) && (isWide(a6) || edgeA) && !(edgeB && edgeA)) edits.push({ s: s, e: e, rep: repeat(o.dashChar, Math.floor(n / 2) * 2), kind: 'dash' });
+      } else if (m[7] !== undefined) {
+        // 半角の ~：前後が日本語など（ASCII 以外）のときだけ波ダッシュにする
+        if (o.wave === 'keep') continue;
+        var b7 = sideChar(text, s, -1), a7 = sideChar(text, e, 1);
+        var eB = b7 === '' || b7 === LF || b7 === CR, eA = a7 === '' || a7 === LF || a7 === CR;
+        if ((isWide(b7) || eB) && (isWide(a7) || eA) && !(eB && eA)) edits.push({ s: s, e: e, rep: o.wave === 'fw' ? FWTILDE : WAVE, kind: 'wave' });
+      }
+    }
+    if (o.quote !== 'keep') quoteEdits(text, o, urls, edits, marks);
+    edits.sort(function (a, b) { return a.s - b.s; });
+    return { edits: edits, marks: marks };
+  }
+  function quoteEdits(text, o, urls, edits, marks) {
+    var open = o.quote === 'kagi' ? '「' : DQ_OPEN, close = o.quote === 'kagi' ? '」' : DQ_CLOSE;
+    // 引用符の中に日本語など（ASCII 以外の文字）があるときだけ変える（英文の "hi" は変えない）
+    function pairQuote(a, b) {
+      // 組の中か、組のすぐ外の文字に日本語など（数字は除く）があるときだけ変える
+      var inner = text.slice(a + 1, b), wide = isWideText(sideChar(text, a, -1)) || isWideText(sideChar(text, b + 1, 1));
+      for (var q = 0; q < inner.length && !wide; q++) if (isWideText(inner.charAt(q))) wide = true;
+      if (!wide) return;
+      edits.push({ s: a, e: a + 1, rep: open, kind: 'quote' });
+      edits.push({ s: b, e: b + 1, rep: close, kind: 'quote' });
+    }
+    var lineStart = 0;
+    while (lineStart <= text.length) {
+      var lineEnd = text.indexOf(LF, lineStart);
+      if (lineEnd < 0) lineEnd = text.length;
+      var op = -1;
+      for (var i = lineStart; i < lineEnd; i++) {
+        var ch = text.charAt(i);
+        if (ch !== LDQ && ch !== RDQ && ch !== QUOTE && ch !== FWQ) continue;
+        if (inRanges(urls, i, i + 1)) continue;
+        if (ch === LDQ) {
+          if (op >= 0) marks.push({ s: op, e: op + 1, reason: '引用符「' + text.charAt(op) + '」の閉じが同じ行にないため、変えていません。' });
+          op = i;
+        } else if (ch === RDQ) {
+          if (op >= 0) { pairQuote(op, i); op = -1; }
+          else marks.push({ s: i, e: i + 1, reason: '引用符「' + ch + '」の起こしが同じ行にないため、変えていません。' });
+        } else {
+          if (op < 0) op = i;
+          else { pairQuote(op, i); op = -1; }
+        }
+      }
+      if (op >= 0) marks.push({ s: op, e: op + 1, reason: '引用符「' + text.charAt(op) + '」の閉じが同じ行にないため、変えていません。' });
+      lineStart = lineEnd + 1;
+    }
+  }
+
+  // ---------- 2. 括弧の対応（印だけ） ----------
+  var OPENS = '「『（(［[〈《【〔' + DQ_OPEN;
+  var CLOSES = '」』）)］]〉》】〕' + DQ_CLOSE;
+  var DQ_CLOSE2 = C(0x301E); // 〞（横書きでよく使うちょんちょん括弧の閉じ。〟と同じ扱い）
+  // 全角と半角で同じ種類の括弧（（ と (、［ と [）
+  var FAMILY = { '（': 'p', '(': 'p', '）': 'p', ')': 'p', '［': 'b', '[': 'b', '］': 'b', ']': 'b' };
+  function bracketRule(text, o, urls) {
+    var marks = [], stack = [], skipped = [];
+    for (var i = 0; i < text.length; i++) {
+      var ch = text.charAt(i);
+      var oi = OPENS.indexOf(ch), ci = ch === DQ_CLOSE2 ? CLOSES.indexOf(DQ_CLOSE) : CLOSES.indexOf(ch);
+      if (oi < 0 && ci < 0) continue;
+      if (inRanges(urls, i, i + 1)) continue;
+      if (oi >= 0) { stack.push({ pos: i, ch: ch, k: oi }); continue; }
+      var top = stack[stack.length - 1];
+      if (top && top.k === ci) { stack.pop(); continue; }
+      if (top && FAMILY[top.ch] && FAMILY[top.ch] === FAMILY[ch]) {
+        marks.push({ s: i, e: i + 1, reason: '起こしの「' + top.ch + '」を「' + ch + '」で閉じています（全角と半角が違います）。' });
+        stack.pop();
+        continue;
+      }
+      var found = -1;
+      for (var j = stack.length - 1; j >= 0; j--) {
+        if (stack[j].k === ci || (FAMILY[stack[j].ch] && FAMILY[stack[j].ch] === FAMILY[ch])) { found = j; break; }
+      }
+      if (found < 0) {
+        // 外側の括弧が先に閉じたために印を付けた起こし（「『あ」』 の『）の閉じは、同じ誤りなので印を重ねない
+        var sk = -1;
+        for (var q = skipped.length - 1; q >= 0; q--) if (skipped[q].k === ci) { sk = q; break; }
+        if (sk >= 0) { skipped.splice(sk, 1); continue; }
+        marks.push({ s: i, e: i + 1, reason: '閉じの「' + ch + '」に対応する起こしの「' + OPENS.charAt(ci) + '」がありません。' });
+        continue;
+      }
+      for (var k = stack.length - 1; k > found; k--) {
+        skipped.push(stack[k]);
+        marks.push({ s: stack[k].pos, e: stack[k].pos + 1, reason: '起こしの「' + stack[k].ch + '」に対応する閉じの「' + CLOSES.charAt(stack[k].k) + '」がありません（外側の括弧が先に閉じています）。' });
+      }
+      var f = stack[found];
+      if (f.k !== ci) marks.push({ s: i, e: i + 1, reason: '起こしの「' + f.ch + '」を「' + ch + '」で閉じています（全角と半角が違います）。' });
+      stack.length = found;
+    }
+    stack.forEach(function (it) {
+      marks.push({ s: it.pos, e: it.pos + 1, reason: '起こしの「' + it.ch + '」に対応する閉じの「' + CLOSES.charAt(it.k) + '」がありません。' });
+    });
+    marks.sort(function (a, b) { return a.s - b.s; });
+    return { edits: [], marks: marks };
+  }
+
+  // ---------- 3. ！？の後ろの全角スペース ----------
+  var EXCL_SRC = '[' + FW_EXCL + FW_QUES + C(0x203C, 0x2047, 0x2048, 0x2049) + ']+';
+  // すぐ後ろに来たら空白を入れない文字：閉じ括弧・句読点・…‥―—・ と引用符の閉じ
+  var NO_SPACE_AFTER = CLOSES + DQ_CLOSE2 + '、。，．,.' + ELLIP + C(0x2025) + HBAR + EMDASH + NAKA + RDQ + C(0x2019) + '）}｝';
+  function isHalfSpace(ch) { return ch === ' ' || ch === NBSP; }
+  function spaceRule(text, o, urls) {
+    var edits = [];
+    var re = new RegExp(EXCL_SRC, 'g'), m;
+    while ((m = re.exec(text)) !== null) {
+      var j = m.index + m[0].length;
+      if (inRanges(urls, m.index, j)) continue;
+      var k = j;
+      if (o.space === 'add') {
+        var c = text.charAt(j);
+        if (c === '' || c === LF || c === CR || c === ZSP || c === TAB) continue;
+        if (isHalfSpace(c)) {
+          while (isHalfSpace(text.charAt(k))) k++;
+          var d = text.charAt(k);
+          if (d === '' || d === LF || d === CR || d === TAB || inSet(NO_SPACE_AFTER, d)) continue;
+          edits.push({ s: j, e: k, rep: ZSP, kind: 'space' });
+          continue;
+        }
+        if (NO_SPACE_AFTER.indexOf(c) >= 0) continue;
+        edits.push({ s: j, e: j, rep: ZSP, kind: 'space' });
+      } else {
+        while (isHalfSpace(text.charAt(k)) || text.charAt(k) === ZSP) k++;
+        if (k === j) continue;
+        var d2 = text.charAt(k);
+        if (d2 === '' || d2 === LF || d2 === CR) continue;
+        edits.push({ s: j, e: k, rep: '', kind: 'space' });
+      }
+    }
+    // 日本語の後ろの半角の ! ? には印（全角にするかは決められないため）
+    var marks = [];
+    if (o.space === 'add') {
+      var re2 = new RegExp('[!?]+', 'g'), m2;
+      while ((m2 = re2.exec(text)) !== null) {
+        var e2 = m2.index + m2[0].length;
+        if (inRanges(urls, m2.index, e2)) continue;
+        if (!isWide(baseBefore(text, m2.index))) continue;
+        var full = m2[0].split('!').join(FW_EXCL).split('?').join(FW_QUES);
+        marks.push({ s: m2.index, e: e2, reason: '半角の「' + m2[0] + '」です。全角の「' + full + '」にすると、後ろに全角スペースを入れます。' });
+      }
+    }
+    return { edits: edits, marks: marks };
+  }
+
+  // ---------- 4・5. 数字（漢数字変換と同じ取り出し方） ----------
+  var RUN_SRC = '[0-9' + C(0xFF10) + '-' + C(0xFF19) + ']+(?:[,' + C(0xFF0C) + '.' + C(0xFF0E) + ':' + C(0xFF1A) + '/' + C(0xFF0F) + '][0-9' + C(0xFF10) + '-' + C(0xFF19) + ']+)*';
+  // 番号をつなぐ文字：半角・全角のハイフン、ハイフン（U+2010・U+2011）、ダッシュ（U+2013〜U+2015）、マイナス（U+2212）、長音（ー・ｰ）
+  var HYPHENS = '-' + C(0xFF0D, 0x2010, 0x2011, 0x2013, 0x2014, 0x2015, 0x2212, 0x30FC, 0xFF70);
+  var NUMBER_BRACKETS = '()（）';
+  var DOT_CHARS = '.' + C(0xFF0E);
+  var SEP_HALF = ',.:/', SEP_FULL = C(0xFF0C, 0xFF0E, 0xFF1A, 0xFF0F);
+  var BIG_UNIT_CHARS = '万億兆京';
+  var BIG_NAMES = ['', '万', '億', '兆', '京'];
+  function isHyphen(ch) { return ch !== '' && HYPHENS.indexOf(ch) >= 0; }
+  function isJoiner(ch) { return isHyphen(ch) || (ch !== '' && NUMBER_BRACKETS.indexOf(ch) >= 0); }
+  function numberTokens(text, urls) {
+    var re = new RegExp(URL_RE_SRC + '|' + RUN_SRC, 'g'), tokens = [], m;
+    while ((m = re.exec(text)) !== null) {
+      var isUrl = digitValue(m[0].charAt(0)) < 0;
+      if (isUrl) continue;
+      if (inRanges(urls, m.index, m.index + m[0].length)) continue;
+      tokens.push({ text: m[0], s: m.index, e: m.index + m[0].length });
+    }
+    var chains = [];
+    tokens.forEach(function (t, i) {
+      var prev = tokens[i - 1];
+      if (prev && t.s === prev.e + 1 && isJoiner(text.charAt(prev.e))) chains[chains.length - 1].push(t);
+      else chains.push([t]);
+      t.chain = chains[chains.length - 1];
+    });
+    chains.forEach(function (chain) {
+      var first = chain[0], last = chain[chain.length - 1];
+      var before = text.charAt(first.s - 1), before2 = text.charAt(first.s - 2);
+      var after = text.charAt(last.e), after2 = text.charAt(last.e + 1);
+      // 半角スペース1つをはさんで英字と並ぶ数字（5 kg、Page 3 of 10）も英字とつながった数字として扱う
+      chain.latin = isLatin(before) || isLatin(after) || (isHyphen(before) && isLatin(before2)) || (isHyphen(after) && isLatin(after2)) ||
+        (before !== '' && DOT_CHARS.indexOf(before) >= 0 && isLatin(before2)) || (before === ' ' && isLatin(before2)) || (after === ' ' && isLatin(after2));
+      chain.digits = 0;
+      chain.forEach(function (t) { for (var i = 0; i < t.text.length; i++) if (digitValue(t.text.charAt(i)) >= 0) chain.digits++; });
+    });
+    tokens.forEach(function (t) {
+      var next = text.charAt(t.e);
+      t.keycap = next === VS16 || next === KEYCAP;
+      var hasH = false, hasF = false;
+      for (var i = 0; i < t.text.length; i++) { if (isHalfDigit(t.text.charAt(i))) hasH = true; if (isFullDigit(t.text.charAt(i))) hasF = true; }
+      t.mixed = hasH && hasF;
+      t.allFull = hasF && !hasH;
+      t.half = toHalfRun(t.text);
+    });
+    return tokens;
+  }
+  function toHalfRun(s) {
+    var o = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s.charAt(i), v = digitValue(ch), f = SEP_FULL.indexOf(ch);
+      o += v >= 0 ? String(v) : (f >= 0 ? SEP_HALF.charAt(f) : ch);
+    }
+    return o;
+  }
+  function toFullRun(s) {
+    var o = '';
+    for (var i = 0; i < s.length; i++) {
+      var ch = s.charAt(i), c = ch.charCodeAt(0), h = SEP_HALF.indexOf(ch);
+      o += (c >= 48 && c <= 57) ? C(0xFF10 + c - 48) : (h >= 0 ? SEP_FULL.charAt(h) : ch);
+    }
+    return o;
+  }
+  // 3桁ごとのカンマ（1,500,000）として正しいか（小数が続いてもよい）
+  var GROUPED_RE = new RegExp('^[0-9]{1,3}(?:,[0-9]{3})+(?:[.][0-9]+)?$');
+  function hasComma(half) { return half.indexOf(',') >= 0; }
+  function digitRule(text, o, urls) {
+    var edits = [], marks = [];
+    numberTokens(text, urls).forEach(function (t) {
+      if (t.keycap) return;
+      if (t.chain.latin && o.keepLatin) return;
+      if (t.mixed) { marks.push({ s: t.s, e: t.e, reason: '全角と半角の数字が混ざっているため、変えていません。どちらにするか決めて直してください。' }); return; }
+      var rep;
+      if (o.digit === 'one') {
+        if (hasComma(t.half) && !GROUPED_RE.test(t.half)) { marks.push({ s: t.s, e: t.e, reason: 'カンマの位置が3桁ごとではないため、1つの数か、数の並びか決められません。変えていません。' }); return; }
+        rep = t.chain.digits === 1 ? toFullRun(t.text) : toHalfRun(t.text);
+      } else if (o.digit === 'half') rep = toHalfRun(t.text);
+      else rep = toFullRun(t.text);
+      if (rep !== t.text) edits.push({ s: t.s, e: t.e, rep: rep, kind: 'digit' });
+    });
+    return { edits: edits, marks: marks };
+  }
+  function unitRule(text, o, urls) {
+    var edits = [], marks = [];
+    numberTokens(text, urls).forEach(function (t) {
+      if (t.keycap || t.chain.latin || t.chain.length > 1) return;
+      var h = t.half;
+      if (h.indexOf(':') >= 0 || h.indexOf('/') >= 0) return;
+      if (inSet(BIG_UNIT_CHARS, text.charAt(t.e)) || inSet(BIG_UNIT_CHARS, text.charAt(t.s - 1))) return;
+      var dot = h.indexOf('.');
+      var intPart = (dot >= 0 ? h.slice(0, dot) : h).split(',').join('');
+      if (intPart.length < 5) return;
+      if (intPart.charAt(0) === '0') return;
+      if (t.mixed) { marks.push({ s: t.s, e: t.e, reason: '全角と半角の数字が混ざっているため、単位字を入れていません。' }); return; }
+      if (hasComma(h) && !GROUPED_RE.test(h)) { marks.push({ s: t.s, e: t.e, reason: 'カンマの位置が3桁ごとではないため、単位字を入れていません。' }); return; }
+      if ((h.match(/[.]/g) || []).length > 1) return;
+      if (dot >= 0) { marks.push({ s: t.s, e: t.e, reason: '小数点があるため、単位字を入れていません（例：1.5万 のように手で直してください）。' }); return; }
+      if (intPart.length > 20) { marks.push({ s: t.s, e: t.e, reason: '21桁以上の数のため、単位字を入れていません（京の位まで入れられます）。' }); return; }
+      var groups = [];
+      for (var end = intPart.length; end > 0; end -= 4) groups.unshift(intPart.slice(Math.max(0, end - 4), end));
+      var out = '';
+      for (var k = 0; k < groups.length; k++) {
+        var g = groups[k].replace(/^0+/, '');
+        if (g === '') continue;
+        var w;
+        if (o.digitOn) w = o.digit === 'one' ? (g.length === 1 ? 'full' : 'half') : o.digit;
+        else w = t.allFull ? 'full' : 'half';
+        out += (w === 'full' ? toFullRun(g) : g) + BIG_NAMES[groups.length - 1 - k];
+      }
+      if (out !== t.text) edits.push({ s: t.s, e: t.e, rep: out, kind: 'unit' });
+    });
+    return { edits: edits, marks: marks };
+  }
+
+  // ---------- まとめて適用 ----------
+  // st：{ text, attr（文字ごとの変えた箇所の番号、-1 は変えていない）, dels（消した位置）, marks, edits（変えた箇所の一覧） }
+  // 位置の対応：変える前の位置を、変えた後の位置にする（edits は位置の順・重なりなし）。二分探索で速くする
+  function mapper(edits) {
+    var n = edits.length, D = new Array(n + 1);
+    D[0] = 0;
+    for (var i = 0; i < n; i++) D[i + 1] = D[i] + edits[i].rep.length - (edits[i].e - edits[i].s);
+    // 条件 before(x) が成り立つ edits の先頭からの個数
+    function count(before) { var lo = 0, hi = n; while (lo < hi) { var mid = (lo + hi) >> 1; if (before(edits[mid])) lo = mid + 1; else hi = mid; } return lo; }
+    return {
+      // もとの位置 p の文字が来る位置（p より前、または p での挿入は p を後ろへずらす）
+      start: function (p) {
+        var k = count(function (x) { return x.s === x.e ? x.s <= p : x.e <= p; });
+        var x = edits[k];
+        if (x && x.s !== x.e && x.s <= p && p < x.e) return x.s + D[k];
+        return p + D[k];
+      },
+      // 範囲の終わり p（p の手前の文字まで）が来る位置（p での挿入は含めない）
+      end: function (p) {
+        var k = count(function (x) { return x.s === x.e ? x.s < p : x.e <= p; });
+        var x = edits[k];
+        if (x && x.s !== x.e && x.s < p && p <= x.e) return x.s + D[k] + x.rep.length;
+        return p + D[k];
+      }
+    };
+  }
+  function applyEdits(st, edits, rule) {
+    var text = st.text, live = [];
+    edits.forEach(function (x) { if (x.rep !== text.slice(x.s, x.e)) live.push(x); });
+    if (!live.length) return 0;
+    var mp = mapper(live);
+    st.marks.forEach(function (mk) { mk.s = mp.start(mk.s); mk.e = Math.max(mp.end(mk.e), mk.s + 1); });
+    st.dels.forEach(function (dl) { dl.pos = mp.start(dl.pos); });
+    var newLen = text.length;
+    live.forEach(function (x) { newLen += x.rep.length - (x.e - x.s); });
+    var attr = new Int32Array(newLen), parts = [], pos = 0, out = 0;
+    live.forEach(function (x) {
+      parts.push(text.slice(pos, x.s));
+      for (var i = pos; i < x.s; i++) attr[out++] = st.attr[i];
+      var id = st.edits.length;
+      st.edits.push({ rule: rule, kind: x.kind, from: text.slice(x.s, x.e), to: x.rep });
+      if (x.rep === '') st.dels.push({ pos: out, id: id });
+      parts.push(x.rep);
+      for (var k = 0; k < x.rep.length; k++) attr[out++] = id;
+      pos = x.e;
+    });
+    parts.push(text.slice(pos));
+    for (var i2 = pos; i2 < text.length; i2++) attr[out++] = st.attr[i2];
+    st.text = parts.join('');
+    st.attr = attr;
+    return live.length;
+  }
+  var RULE_FN = { glyph: glyphRule, bracket: bracketRule, space: spaceRule, digit: digitRule, unit: unitRule };
+  function format(text, opt) {
+    var R = { input: text, order: opt.order.slice(), on: opt.on, counts: {}, markCounts: {}, kinds: {} };
+    R.inputChars = countChars(text);
+    if (R.inputChars > MAX_CHARS) { R.error = 'toolong'; return R; }
+    var st = { text: text, attr: new Int32Array(text.length).fill(-1), dels: [], marks: [], edits: [] };
+    var o = {};
+    for (var key in opt) o[key] = opt[key];
+    o.digitOn = !!opt.on.digit;
+    opt.order.forEach(function (rule) {
+      R.counts[rule] = 0; R.markCounts[rule] = 0;
+      if (!opt.on[rule]) return;
+      // 同じルールの中で、変えた文字が隣の判定を変えることがある（"~" の " を 〝 にすると ~ の隣が日本語になる）ため、
+      // 変える所がなくなるまでくり返す（整形後の文章にもう一度かけても変わらないように）。印は最後の回のものを使う
+      var n = 0, res;
+      for (var round = 0; round < 8; round++) {
+        res = RULE_FN[rule](st.text, o, urlRanges(st.text));
+        var k = applyEdits(st, res.edits, rule);
+        n += k;
+        if (!k) break;
+      }
+      if (k) res = RULE_FN[rule](st.text, o, urlRanges(st.text)); // くり返しの上限に達したときも、印は今の文章の位置で付ける
+      res.marks.forEach(function (mk) { st.marks.push({ s: mk.s, e: mk.e, reason: mk.reason, rule: rule }); });
+      R.counts[rule] = n;
+      R.markCounts[rule] = res.marks.length;
+    });
+    R.text = st.text; R.attr = st.attr; R.dels = st.dels; R.edits = st.edits;
+    st.marks.sort(function (a, b) { return a.s - b.s || a.e - b.e; });
+    R.marks = st.marks;
+    R.edits.forEach(function (x) { R.kinds[x.kind] = (R.kinds[x.kind] || 0) + 1; });
+    R.totalEdits = R.edits.length;
+    R.totalMarks = R.marks.length;
+    return R;
+  }
+
+
+  // ---------- 画面 ----------
+  var HIGHLIGHT_LIMIT = 400000; // 上限（300,000文字）の原稿まで色付けする（UTF-16 の長さ）
+  var MARK_ROWS_LIMIT = 2000;   // 印の一覧に表示する行の上限（コピーはすべて）
+  function $(id) { return document.getElementById(id); }
+  function fmtNum(v) { return String(v).replace(/[0-9](?=(?:[0-9]{3})+$)/g, '$&,'); }
+  function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  var srcEl = $('src'), summary = $('summary'), status = $('status'), setStatusEl = $('setStatus');
+  var outEl = $('out'), marksWrap = $('marksWrap'), countsBody = $('countsBody'), rulesEl = $('rules');
+  var manualBox = $('manualBox'), manualText = $('manualText');
+  var copyText = $('copyText'), copyMarks = $('copyMarks');
+  var viewInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="view"]'));
+  var last = null, marksDirty = true;
+
+  function radioValue(name) {
+    var v = '';
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="' + name + '"]'), function (el) { if (el.checked) v = el.value; });
+    return v;
+  }
+  function ruleOrder() { return Array.prototype.map.call(rulesEl.querySelectorAll('.rule'), function (li) { return li.getAttribute('data-rule'); }); }
+  function ruleOn(rule) { return rulesEl.querySelector('.rule-on[data-rule="' + rule + '"]').checked; }
+  function options() {
+    var on = {};
+    RULES.forEach(function (r) { on[r] = ruleOn(r); });
+    return {
+      order: ruleOrder(), on: on,
+      leader: $('optLeader').checked, naka: $('optNaka').checked, dash: $('optDash').checked,
+      dashChar: radioValue('dashChar') === '2014' ? EMDASH : HBAR, hiraDash: radioValue('hiraDash'),
+      wave: radioValue('wave'), quote: radioValue('quote'), space: radioValue('space'),
+      digit: radioValue('digit'), keepLatin: $('optKeepLatin').checked
+    };
+  }
+  function lineCount(text) { if (text === '') return 0; var n = 1; for (var i = 0; i < text.length; i++) if (text.charCodeAt(i) === 10) n++; return n; }
+  function charCount(text) { var n = 0; for (var i = 0; i < text.length; i++) { var c = text.charCodeAt(i); if (c === 10 || c === 13 || (c >= 0xDC00 && c <= 0xDFFF)) continue; n++; } return n; }
+  function setStat(id, value, unit, has) {
+    var li = $(id), v = li.querySelector('.v');
+    v.textContent = value;
+    if (unit) { var s = document.createElement('small'); s.textContent = unit; v.appendChild(s); }
+    li.classList.toggle('has', !!has);
+  }
+  function line(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+  function orderWord(opt) {
+    var short = { glyph: '字形', bracket: '括弧', space: '空白', digit: '数字', unit: '単位字' };
+    return opt.order.filter(function (r) { return opt.on[r]; }).map(function (r) { return short[r]; }).join(' → ');
+  }
+  function noneOn(opt) { return !opt.order.some(function (r) { return opt.on[r]; }); }
+  function errorMessage(R) {
+    if (R.error === 'toolong') return '原稿が' + fmtNum(R.inputChars) + '文字あります。一度に整形できるのは' + fmtNum(MAX_CHARS) + '文字までです。何回かに分けて貼り付けてください。';
+    return '';
+  }
+  function resultWord(R, opt) {
+    if (R.error) return errorMessage(R);
+    if (R.input === '') return '';
+    if (noneOn(opt)) return 'ルールがすべてオフのため、何も変えていません。';
+    if (!R.totalEdits && !R.totalMarks) return '変える所も、印を付ける所もありませんでした。';
+    return (R.totalEdits ? fmtNum(R.totalEdits) + 'か所を変えました。' : '変えた所はありません。') + '印は' + fmtNum(R.totalMarks) + '件です。';
+  }
+  function renderCounts(R, opt) {
+    var colors = { glyph: 'c-glyph', bracket: 'c-bracket', space: 'c-space', digit: 'c-digit', unit: 'c-unit' };
+    var html = '';
+    opt.order.forEach(function (r, k) {
+      var on = opt.on[r], has = R.input !== '' && !R.error;
+      var ch = !on ? 'オフ' : (has ? (r === 'bracket' ? '–' : fmtNum(R.counts[r])) : '–');
+      var mk = !on ? '–' : (has ? fmtNum(R.markCounts[r]) : '–');
+      html += '<tr' + (on ? '' : ' class="off"') + '><td class="n">' + (k + 1) + '</td><td class="name"><i class="' + colors[r] + '"></i>' + RULE_NAMES[r] + '</td><td class="n">' + ch + '</td><td class="n' + (on && has && R.markCounts[r] ? ' mk-has' : '') + '">' + mk + '</td></tr>';
+    });
+    countsBody.innerHTML = html;
+  }
+  function renderSummary(R, opt) {
+    summary.textContent = '';
+    var ids = ['stEdits', 'stMarks', 'stLines', 'stChars'];
+    if (R.error) {
+      ids.forEach(function (id) { setStat(id, '–', '', false); });
+      summary.appendChild(line('main err', errorMessage(R)));
+      return;
+    }
+    if (R.input === '') {
+      ids.forEach(function (id) { setStat(id, '–', '', false); });
+      summary.appendChild(line('sub', '原稿を貼り付けると、ここに整形の結果が出ます。'));
+      return;
+    }
+    setStat('stEdits', fmtNum(R.totalEdits), 'か所', false);
+    setStat('stMarks', fmtNum(R.totalMarks), '件', R.totalMarks > 0);
+    setStat('stLines', fmtNum(lineCount(R.text)), '行', false);
+    setStat('stChars', fmtNum(charCount(R.text)), '文字', false);
+    if (noneOn(opt)) {
+      summary.appendChild(line('main warn', 'ルールがすべてオフのため、何も変えていません。「整形のルール」で、かけたいルールをオンにしてください。'));
+      return;
+    }
+    if (!R.totalEdits && !R.totalMarks) {
+      summary.appendChild(line('main', '変える所も、印を付ける所もありませんでした。'));
+    } else {
+      summary.appendChild(line('main' + (R.totalMarks ? ' warn' : ''), (R.totalEdits ? fmtNum(R.totalEdits) + 'か所を変えました。' : '変えた所はありません。') + (R.totalMarks ? '印が' + fmtNum(R.totalMarks) + '件あります（直していません）。「印の一覧」で確かめてください。' : '印を付けた所はありません。')));
+    }
+    summary.appendChild(line('sub', orderWord(opt) + ' の順にかけました。'));
+  }
+  // 整形後のテキスト：変えた箇所はルールの色、印の箇所は橙の地と波線
+  function renderOut(R) {
+    outToken++;
+    outEl.textContent = '';
+    if (R.error || R.input === '') {
+      var p = document.createElement('p'); p.className = 'empty-result';
+      p.textContent = R.error ? '原稿を短くすると、整形後のテキストが出ます。' : '原稿を貼り付けると、整形後のテキストがここに出ます。';
+      outEl.appendChild(p);
+      return;
+    }
+    var text = R.text;
+    if (text.length > HIGHLIGHT_LIMIT) { outEl.textContent = text; return; }
+    var n = text.length, depth = new Int32Array(n + 1), titleAt = {}, delAt = {};
+    R.marks.forEach(function (mk) { depth[mk.s]++; depth[mk.e]--; if (!titleAt[mk.s]) titleAt[mk.s] = mk.reason; });
+    R.dels.forEach(function (d) { delAt[d.pos] = (delAt[d.pos] || []).concat([d.id]); });
+    // 長い原稿でも速く描くため、200行ごとのまとまり（.blk、画面の外は描画を省く）に分ける
+    var BLOCK_LINES = 200;
+    var parts = ['<div class="blk">'], cur = 0, segStart = 0, curAttr = -1, curMk = 0, lines = 0;
+    var flush = function (end) {
+      if (end <= segStart) return;
+      var t = escapeHtml(text.slice(segStart, end));
+      if (curAttr < 0 && !curMk) { parts.push(t); return; }
+      var cls = curAttr >= 0 ? 'c-' + R.edits[curAttr].rule : '';
+      if (curMk) cls += (cls ? ' ' : '') + 'mk';
+      var ttl = curMk && titleAt[segStart] ? ' title="' + escapeHtml(titleAt[segStart]) + '"' : '';
+      parts.push('<span class="' + cls + '"' + (curAttr >= 0 ? ' data-e="' + curAttr + '"' : '') + ttl + '>' + t + '</span>');
+    };
+    for (var i = 0; i <= n; i++) {
+      cur += depth[i];
+      var a = i < n ? R.attr[i] : -2, mkOn = cur > 0 ? 1 : 0;
+      var hasDel = delAt[i] !== undefined, hasTitle = mkOn && titleAt[i] !== undefined;
+      if (i === 0) { curAttr = a; curMk = mkOn; }
+      else if (a !== curAttr || mkOn !== curMk || hasDel || hasTitle) { flush(i); segStart = i; curAttr = a; curMk = mkOn; }
+      if (hasDel) delAt[i].forEach(function (id) { parts.push('<span class="del" data-e="' + id + '" title="空白を消しました"></span>'); });
+      if (i < n && text.charCodeAt(i) === 10 && ++lines % BLOCK_LINES === 0) {
+        // まとまりの終わりの改行はまとまりの区切りにする（表示の改行は同じ）
+        flush(i); parts.push('</div><div class="blk">'); segStart = i + 1; curAttr = i + 1 < n ? R.attr[i + 1] : -2; curMk = mkOn;
+        i++;
+        if (i <= n) { cur += depth[i]; mkOn = cur > 0 ? 1 : 0; curMk = mkOn; curAttr = i < n ? R.attr[i] : -2;
+          if (delAt[i] !== undefined) delAt[i].forEach(function (id) { parts.push('<span class="del" data-e="' + id + '" title="空白を消しました"></span>'); }); }
+      }
+    }
+    flush(n);
+    parts.push('</div>');
+    var html = parts.join('');
+    var token = ++outToken;
+    if (html.length < 400000) { outEl.innerHTML = html; return; }
+    // とても長い原稿は、最初のまとまりだけをすぐに描き、残りは少しずつ足す（画面が固まらないように）
+    var blocks = html.slice('<div class="blk">'.length, html.length - '</div>'.length).split('</div><div class="blk">');
+    var put = function (from, to) {
+      var h = '';
+      for (var q = from; q < to; q++) h += '<div class="blk">' + blocks[q] + '</div>';
+      outEl.insertAdjacentHTML('beforeend', h);
+    };
+    put(0, Math.min(3, blocks.length));
+    var next = 3;
+    var step = function () {
+      if (token !== outToken || next >= blocks.length) return;
+      put(next, Math.min(next + 5, blocks.length));
+      next += 5;
+      setTimeout(step, 0);
+    };
+    setTimeout(step, 0);
+  }
+  var outToken = 0;
+  function isLow(c) { return c >= 0xDC00 && c <= 0xDFFF; }
+  function lineStarts(text) { var a = [0]; for (var i = 0; i < text.length; i++) if (text.charCodeAt(i) === 10) a.push(i + 1); return a; }
+  function lineOf(starts, pos) { var lo = 0, hi = starts.length - 1; while (lo < hi) { var mid = (lo + hi + 1) >> 1; if (starts[mid] <= pos) lo = mid; else hi = mid - 1; } return lo; }
+  function markRows(R) {
+    var starts = lineStarts(R.text);
+    return R.marks.map(function (mk) {
+      var li = lineOf(starts, mk.s);
+      var ls = starts[li], le = li + 1 < starts.length ? starts[li + 1] - 1 : R.text.length;
+      var b0 = Math.max(ls, mk.s - 10), a1 = Math.min(le, mk.e + 10);
+      // 絵文字など（サロゲートペア）の途中で切らない
+      if (b0 > ls && isLow(R.text.charCodeAt(b0))) b0++;
+      if (a1 < le && isLow(R.text.charCodeAt(a1))) a1--;
+      var tab = function (x) { return x.split(TAB).join(' '); };
+      return { line: li + 1, before: tab((b0 > ls ? '…' : '') + R.text.slice(b0, mk.s)), hit: tab(R.text.slice(mk.s, Math.min(mk.e, le))), after: tab(R.text.slice(mk.e, a1) + (a1 < le ? '…' : '')), rule: RULE_NAMES[mk.rule], reason: mk.reason };
+    });
+  }
+  function renderMarks(R) {
+    marksWrap.textContent = '';
+    if (R.error || R.input === '' || !R.marks.length) {
+      var p = document.createElement('p'); p.className = 'empty-result';
+      p.textContent = R.error ? '原稿を短くすると、印の一覧が出ます。' : (R.input === '' ? '原稿を貼り付けると、印の一覧がここに出ます。' : '印を付けた所はありません。');
+      marksWrap.appendChild(p);
+      return;
+    }
+    var rows = markRows(R);
+    var html = '<p class="marks-note">印の所は直していません。理由を見て原稿を直し、貼り付け直すと、印は消えます。</p><table class="res"><thead><tr><th scope="col">行</th><th scope="col">箇所</th><th scope="col">ルール</th><th scope="col">理由</th></tr></thead><tbody>';
+    rows.slice(0, MARK_ROWS_LIMIT).forEach(function (r) {
+      html += '<tr><td class="num">' + fmtNum(r.line) + '</td><td class="ctx">' + escapeHtml(r.before) + '<b>' + escapeHtml(r.hit) + '</b>' + escapeHtml(r.after) + '</td><td class="rule">' + escapeHtml(r.rule) + '</td><td class="why">' + escapeHtml(r.reason) + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    if (rows.length > MARK_ROWS_LIMIT) html += '<p class="note" style="margin:8px 10px">印が' + fmtNum(rows.length) + '件あるため、最初の' + fmtNum(MARK_ROWS_LIMIT) + '件だけを表示しています。「印の一覧をコピー」では、すべてをコピーします。</p>';
+    marksWrap.innerHTML = html;
+  }
+  function updateEnabled() {
+    Array.prototype.forEach.call(rulesEl.querySelectorAll('.rule'), function (li, k, all) {
+      var on = li.querySelector('.rule-on').checked;
+      li.classList.toggle('is-off', !on);
+      li.querySelector('.rule-no').textContent = String(k + 1);
+      Array.prototype.forEach.call(li.querySelectorAll('.rule-body input'), function (el) { el.disabled = !on; });
+      li.querySelector('.up').disabled = k === 0;
+      li.querySelector('.down').disabled = k === all.length - 1;
+    });
+    if (ruleOn('glyph') && !$('optDash').checked) {
+      Array.prototype.forEach.call(document.querySelectorAll('input[name="dashChar"], input[name="hiraDash"]'), function (el) { el.disabled = true; });
+    }
+  }
+  function render() {
+    var opt = options();
+    var R = format(srcEl.value, opt);
+    last = R;
+    updateEnabled();
+    renderCounts(R, opt);
+    renderSummary(R, opt);
+    renderOut(R);
+    if (radioValue('view') === 'marks') { renderMarks(R); marksDirty = false; } else marksDirty = true;
+    $('viewMarksLabel').textContent = !R.error && R.input !== '' ? '印の一覧（' + fmtNum(R.totalMarks) + '件）' : '印の一覧';
+    var ok = !R.error && R.input !== '';
+    copyText.disabled = !ok;
+    copyMarks.disabled = !(ok && R.totalMarks > 0);
+    return R;
+  }
+  function showView() {
+    var v = radioValue('view');
+    $('viewText').hidden = v !== 'text';
+    $('viewMarks').hidden = v !== 'marks';
+    if (v === 'marks' && marksDirty && last) { renderMarks(last); marksDirty = false; }
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio') && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect || !document.body.contains(el)) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    [status, setStatusEl].forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    unpin();
+    [status, setStatusEl].forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    var place = function (bottom) { span.style.top = ''; span.style.bottom = ''; if (bottom) span.style.bottom = '8px'; else span.style.top = '8px'; };
+    // 留めた知らせが、押した部品や、見えている結果（数の欄・まとめ・コピーのボタン）に重なるなら、反対の端に出す
+    var covers = function () {
+      var r = span.getBoundingClientRect();
+      var parts = [pr, $('stats').getBoundingClientRect(), summary.getBoundingClientRect(), copyText.closest('.actions').getBoundingClientRect()];
+      return parts.some(function (q) { return q && q.bottom > r.top && q.top < r.bottom && q.right > r.left && q.left < r.right && q.bottom > 0 && q.top < vh; });
+    };
+    place(toBottom);
+    if (covers()) { place(!toBottom); if (covers()) place(toBottom); }
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  // 設定を変えて上の結果の高さが変わっても、押した部品が画面の同じ位置に残るようにスクロールを合わせる
+  function renderKeep(r0) {
+    if (!r0) r0 = pressedRect();
+    var R = render();
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    return R;
+  }
+  function afterChange(el, prefix, r0) {
+    resetCopyButtons();
+    var R = renderKeep(r0);
+    var opt = options();
+    if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
+    setStatus(el, prefix + (R.input === '' ? '原稿を貼り付けると、この設定で整形します。' : resultWord(R, opt)));
+  }
+
+  // ---------- コピー ----------
+  var copyTimer = null;
+  var manualHome = manualBox.nextSibling;
+  function restoreManual() {
+    manualBox.hidden = true;
+    if (manualBox.parentNode !== manualHome.parentNode || manualBox.nextSibling !== manualHome) manualHome.parentNode.insertBefore(manualBox, manualHome);
+  }
+  function resetLabels() {
+    clearTimeout(copyTimer);
+    [copyText, copyMarks].forEach(function (b) { var l = b.getAttribute('data-label'); if (l) b.textContent = l; b.style.minWidth = ''; });
+  }
+  function resetCopyButtons() { resetLabels(); restoreManual(); }
+  function flashButton(btn, label, ms) {
+    resetLabels();
+    btn.style.minWidth = btn.getBoundingClientRect().width + 'px';
+    btn.textContent = label;
+    copyTimer = setTimeout(resetLabels, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(btn, text) {
+    var before = btn.getBoundingClientRect().top;
+    restoreManual();
+    flashButton(btn, 'コピー失敗', 4000);
+    // ボタンが画面の上半分にあれば欄はボタンの下（もとの場所）に、下半分にあればボタンの上に出す。どちらでもボタンは動かさない
+    var anchor = btn.closest('.actions');
+    var upper = (before + btn.getBoundingClientRect().height / 2) < window.innerHeight / 2;
+    if (!upper && anchor && anchor.parentNode) anchor.parentNode.insertBefore(manualBox, anchor);
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var moved = btn.getBoundingClientRect().top - before;
+    if (Math.abs(moved) > 0.5) window.scrollBy(0, moved);
+    setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message, html) {
+    var done = function () {
+      var before = btn.getBoundingClientRect().top;
+      restoreManual();
+      var moved = btn.getBoundingClientRect().top - before;
+      if (Math.abs(moved) > 0.5) window.scrollBy(0, moved);
+      setStatus(status, message);
+      flashButton(btn, '✓ コピー済み', 2500);
+    };
+    var plain = function () {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(btn, text); });
+          return;
+        }
+      } catch (e) { /* 下の方法で試す */ }
+      if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+    };
+    try {
+      if (html && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+        var item = new window.ClipboardItem({
+          'text/plain': new Blob([text], { type: 'text/plain' }),
+          'text/html': new Blob([html], { type: 'text/html' })
+        });
+        navigator.clipboard.write([item]).then(done, plain);
+        return;
+      }
+    } catch (e) { /* テキストだけでコピーする */ }
+    plain();
+  }
+  // 印の一覧の表：タブ区切りの文字と、すべて「文字列」の書式の HTML の表（1/2 などが日付に変わらないように）
+  function sheetCell(s) {
+    s = s.split(TAB).join(' ').split(CR).join('').split(LF).join(' ');
+    if (s.indexOf(QUOTE) >= 0) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  var TEXT_ATTR = ' style="mso-number-format:' + C(39) + BSL + '@' + C(39) + '" sdnum="1041;0;@"';
+  function marksTable(R) {
+    var head = ['行', '箇所', 'ルール', '理由'];
+    var rows = markRows(R).map(function (r) { return [String(r.line), r.before + r.hit + r.after, r.rule, r.reason]; });
+    var tsv = [head.join(TAB)].concat(rows.map(function (r) { return [r[0], sheetCell(r[1]), sheetCell(r[2]), sheetCell(r[3])].join(TAB); })).join(LF);
+    var td = function (v, t) { return '<td' + (t ? TEXT_ATTR : '') + '>' + escapeHtml(v) + '</td>'; };
+    var html = '<meta charset="utf-8"><table><tr>' + head.map(function (h) { return td(h, true); }).join('') + '</tr>';
+    rows.forEach(function (r) { html += '<tr>' + td(r[0], false) + td(r[1], true) + td(r[2], true) + td(r[3], true) + '</tr>'; });
+    return { tsv: tsv, html: html + '</table>', count: rows.length };
+  }
+  [copyText, copyMarks].forEach(function (b) { b.setAttribute('data-label', b.textContent); });
+  copyText.addEventListener('click', function () {
+    var R = last;
+    if (copyText.disabled || !R) return;
+    doCopy(copyText, R.text, '整形後のテキスト（' + fmtNum(lineCount(R.text)) + '行・' + fmtNum(charCount(R.text)) + '文字）をコピーしました。' + (R.totalMarks ? '印の' + fmtNum(R.totalMarks) + '件は直していないので、「印の一覧」で確かめてください。' : ''));
+  });
+  copyMarks.addEventListener('click', function () {
+    var R = last;
+    if (copyMarks.disabled || !R) return;
+    var t = marksTable(R);
+    doCopy(copyMarks, t.tsv, '印の一覧（' + fmtNum(t.count) + '件、見出しを含めて' + fmtNum(t.count + 1) + '行×4列）をコピーしました。Excel などに貼ると列に分かれます。', t.html);
+  });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE = ['第一章　朝・・・', '　彼は振り向いた。ーーその時だった。', '「本当に？それなら3時に駅で」', '「待って！どこへ行くの」', '（駅までは徒歩10分だ。', '　会場には約1２0人が集まり、売上は120000000円を超えた～', '　型番A4の用紙を5箱、No.5の棚へ･･･'].join(LF);
+  $('sampleBtn').addEventListener('click', function () {
+    var had = srcEl.value.trim() !== '' && srcEl.value !== SAMPLE;
+    srcEl.value = SAMPLE;
+    resetCopyButtons();
+    var R = render();
+    setStatus(status, (had ? '例の原稿に入れ替えました（前の内容は消えました）。' : '例の原稿（小説の一節）を入れました。') + resultWord(R, options()));
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = srcEl.value !== '';
+    srcEl.value = '';
+    resetCopyButtons();
+    render();
+    setStatus(status, had ? '原稿の欄を空にしました（ルールの設定はそのままです）。' : '原稿の欄はもう空です。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  srcEl.addEventListener('input', function (e) {
+    var pasted = e && e.inputType === 'insertFromPaste';
+    clearTimeout(inputTimer);
+    resetCopyButtons();
+    setStatus(status, '');
+    inputTimer = setTimeout(function () {
+      var R = render();
+      if (pasted) setStatus(status, pasteMessage(R), !!R.error);
+    }, 150);
+  });
+  function pasteMessage(R) {
+    if (R.error) return '貼り付けました。' + errorMessage(R);
+    if (R.input === '') return '貼り付けましたが、文字がありません。';
+    return '貼り付けた' + fmtNum(lineCount(R.input)) + '行を整形しました。' + resultWord(R, options());
+  }
+  viewInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      resetCopyButtons();
+      // 表示を切り替えて結果の高さが変わっても、押した部品が画面の同じ位置に残るようにする
+      var r0 = pressedRect();
+      showView();
+      var r1 = pressedRect();
+      if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+      var R = last, v = radioValue('view');
+      if (!R || R.error || R.input === '') { setStatus(status, (v === 'marks' ? '印の一覧に切り替えました。' : '整形後のテキストに切り替えました。') + (R && R.error ? '原稿を短くすると、ここに結果が出ます。' : '原稿を貼り付けると、ここに結果が出ます。')); return; }
+      if (v === 'marks') setStatus(status, R.totalMarks ? '印の一覧（' + fmtNum(R.totalMarks) + '件）を表示しました。行番号は整形の前後で同じです。' : '印の一覧に切り替えました。印を付けた所はありません。');
+      else setStatus(status, '整形後のテキストを表示しました。色の付いた所が変えた箇所、波線が印です。');
+    });
+  });
+  function labelText(input) { var s = input.nextElementSibling; return s ? s.textContent.trim() : ''; }
+  function legendText(input) { var fs = input.closest('fieldset'); if (fs && fs.getAttribute('data-name')) return fs.getAttribute('data-name'); var lg = fs && fs.querySelector('legend'); return lg ? lg.textContent.trim() : ''; }
+  rulesEl.addEventListener('change', function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== 'INPUT') return;
+    var msg;
+    if (el.type === 'checkbox') msg = '「' + labelText(el) + '」を' + (el.checked ? 'オンにしました。' : 'オフにしました。');
+    else msg = legendText(el) + 'を「' + labelText(el) + '」にしました。';
+    afterChange(setStatusEl, msg);
+  });
+  rulesEl.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('button.mini') : null;
+    if (!btn || btn.disabled) return;
+    var li = btn.closest('.rule'), up = btn.classList.contains('up');
+    var r0 = btn.getBoundingClientRect();
+    if (up && li.previousElementSibling) rulesEl.insertBefore(li, li.previousElementSibling);
+    else if (!up && li.nextElementSibling) rulesEl.insertBefore(li.nextElementSibling, li);
+    lastPressed = btn;
+    updateEnabled();
+    if (btn.disabled) { var other = li.querySelector(up ? '.down' : '.up'); other.focus({ preventScroll: true }); lastPressed = btn; }
+    else btn.focus({ preventScroll: true });
+    var k = ruleOrder().indexOf(li.getAttribute('data-rule'));
+    afterChange(setStatusEl, '「' + RULE_NAMES[li.getAttribute('data-rule')] + '」を' + (k + 1) + '番目にしました（' + orderWord(options()) + '）。', r0);
+  });
+
+  // 試験用：整形の関数（画面の操作とは別に、決まりを確かめるため）
+  window.KumihanSeikei = { format: format, defaults: options };
+  render();
+  showView();
+
+})();
+</script>
+</body>
+</html>
