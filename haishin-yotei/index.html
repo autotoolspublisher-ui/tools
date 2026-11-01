@@ -1,0 +1,1576 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCRH8J95WL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VCRH8J95WL');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>配信予定をカレンダーに - 予定表からics・告知文を一括作成｜AIツールひろば</title>
+  <meta name="description" content="配信スケジュールの表を貼り付けるだけで、カレンダーに一括登録できるicsファイル、Googleカレンダーの追加URL、Xの告知文、Markdownの表をまとめて作成できる無料ツールです。登録不要で、入力内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/haishin-yotei/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="配信予定をカレンダーに - 予定表からics・告知文を一括作成｜AIツールひろば">
+  <meta property="og:description" content="配信スケジュールの表を貼り付けるだけで、カレンダーに一括登録できるicsファイル、Googleカレンダーの追加URL、Xの告知文、Markdownの表をまとめて作成できる無料ツールです。登録不要で、入力内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/haishin-yotei/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/haishin-yotei.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "配信予定をカレンダーに",
+    "description": "配信スケジュールの表を貼り付けるだけで、カレンダーに一括登録できるicsファイル、Googleカレンダーの追加URL、Xの告知文、Markdownの表をまとめて作成できる無料ツールです。登録不要で、入力内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/haishin-yotei/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "配信予定をカレンダーに",
+        "item": "https://autotoolspublisher-ui.github.io/tools/haishin-yotei/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "どんな書き方の日付・時刻を読めますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "日付は「2026/10/27」「2026年10月27日」「10/27」「10月27日」（後ろに(月)などの曜日が付いてもよい）、曜日だけの「月」「月曜」「Mon」を読みます。時刻は「21:00」「21時」「21時30分」「午後9時」を読み、「21:00〜23:00」のような範囲も読みます。全角の数字・記号も読みます。「1/2/3」のように順番が決まらない形や、ない日付（2/30）は読まず、読めない行として行番号を知らせます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "年が書いていない日付は、何年になりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "「週の開始日」と同じ年にします。その年の日付が週の開始日より前になるときは、翌年にします。たとえば週の開始日が 2026/12/28 のとき、「12/31」は 2026/12/31、「1/2」は 2027/1/2 になります。週の開始日から7日の外になった日付は、まとめで知らせます。曜日だけの行は、週の開始日から7日の中の同じ曜日にします。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "「25:00」のような深夜の時刻や、お休みの日はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "24時以降の時刻は、翌日の時刻としてカレンダーに登録します（10/31(土) の 25:00 は 11/1(日) の 1:00）。告知文と Markdown の表には、書いたとおり「25:00」で出します。開始の欄が「休み」「お休み」の日は、カレンダーには登録せず、告知文と表にだけ「お休み」として入れます。「未定」「時間未定」の日は、終日の予定として登録します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "作った .ics ファイルは、どうやってカレンダーに入れますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Googleカレンダーは、パソコンのブラウザで「設定 › インポート / エクスポート」からファイルを選びます。iPhone は、保存したファイルを開いて「すべてを追加」を押します。Outlook は、ファイルを開いて取り込みます。1件ずつ入れたいときは、日時の一覧の「Googleカレンダーに追加」を押すと、その予定の入力画面が開きます。時刻はすべて日本時間で登録します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。表の読み取りとファイルの作成は、すべてお使いのブラウザの中で行い、貼り付けた予定や配信者名が外部に送信されることはありません。ブラウザに保存することもありません。ただし「Googleカレンダーに追加」を押したときは、その予定の名前・日時・配信先が URL として Google に渡ります。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --bad: #b3261e; }
+  body { overflow-anchor: none; }
+  main { width: min(980px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に入力と設定、右に結果。狭い幅：入力 → 結果 → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "input result" "settings result"; gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-input { grid-area: input; }
+  .area-result { grid-area: result; padding-left: 30px; border-left: 1px solid #e8eaed; }
+  .area-settings { grid-area: settings; margin-top: 8px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .area-settings h2, .area-result h2 { margin: 0 0 10px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend, .setting > .label { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; max-width: 100%; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; transition: background .16s ease; line-height: 1.3; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  #resultTitle:focus { outline: 0; }
+  #resultTitle:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .field { min-width: 0; margin: 0 0 14px; }
+  .field label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint, .label small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  input[type="text"], input[type="url"] { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  .field input[type="url"] { width: 100%; }
+  input[type="text"]:focus, input[type="url"]:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  input.bad { border-color: var(--bad) !important; box-shadow: 0 0 0 1px var(--bad) !important; }
+  .sub-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 8px 0 0; }
+  .sub-row label { color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .sub-row input.short { width: 6.5em; text-align: right; }
+  .sub-row input.mid { width: 11em; }
+  textarea { display: block; width: 100%; min-height: 240px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font-size: .94rem; line-height: 1.55; font-family: inherit; resize: vertical; tab-size: 8; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  button.btn.copy { min-width: 9.5em; }
+  .jump-row { display: none; margin: -4px 0 6px; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* まとめ（数の枠） */
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; padding: 0; list-style: none; }
+  .stats li { display: flex; flex-direction: column; justify-content: center; min-height: 74px; padding: 8px 10px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; }
+  .stats .v { color: #202124; font-size: 1.25rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
+  .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
+  .stats li.has .v { color: #7a4f01; }
+  /* まとめの文 */
+  .summary { min-height: 110px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary .main { display: block; font-weight: 600; color: var(--ok); }
+  .summary .main.warn { color: var(--warn-ink); }
+  .summary .main.err { color: var(--bad); }
+  .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
+  .status { min-height: 66px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .manual { margin: 0 0 12px; }
+  .manual label { display: block; margin-bottom: 4px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .manual textarea { min-height: 96px; }
+  .view { margin: 4px 0 8px; }
+  /* 清書した本文（コメントごと） */
+  .parts { display: grid; gap: 12px; }
+  .part { border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .part-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; padding: 8px 10px 8px 14px; border-bottom: 1px solid #eceef1; }
+  .part-title { color: #3c4043; font-size: .9rem; font-weight: 600; line-height: 1.4; }
+  .part-title small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .part-title.over small { color: var(--bad); font-weight: 600; }
+  button.btn.part-copy { min-width: 9.5em !important; }
+  .part pre { max-height: 300px; margin: 0; padding: 10px 14px; overflow: auto; font: .9rem/1.6 ui-monospace, Consolas, "Hiragino Kaku Gothic ProN", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .part pre:focus-visible { outline: 3px solid #8ab4f8; outline-offset: -3px; }
+  .list-tools { display: flex; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 8px; }
+  .table-wrap { max-height: 380px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .table-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  table.res { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.45; }
+  table.res th, table.res td { padding: 7px 10px; border-bottom: 1px solid #eceef1; text-align: left; vertical-align: top; }
+  table.res thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); color: #3c4043; font-weight: 600; white-space: nowrap; }
+  table.res td.num { color: var(--muted); text-align: right; white-space: nowrap; width: 1%; }
+  table.res td.chk { width: 1%; padding: 0 4px 0 6px; }
+  table.res td.chk label { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; cursor: pointer; }
+  table.res td.chk input { width: 20px; height: 20px; margin: 0; accent-color: var(--green); cursor: pointer; }
+  table.res td.time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.res td.time .old { color: var(--muted); }
+  table.res td.time .new { font-weight: 600; }
+  table.res td.txt { min-width: 7em; overflow-wrap: anywhere; }
+  table.res td.bad { min-width: 7em; color: #a50e0e; overflow-wrap: anywhere; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; border: 1px dashed var(--line); border-radius: 12px; }
+  .url-note { margin: 8px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.5; overflow-wrap: anywhere; }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .area-result { margin-top: 18px; padding: 18px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    textarea { min-height: 150px; }
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats li { min-height: 62px; }
+    .summary { min-height: 154px; }
+    .status { min-height: 88px; }
+    .actions .btn { flex: 1 1 40%; }
+    button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
+    table.res th, table.res td { padding: 6px 7px; }
+    table.res td.time .old { display: block; }
+    .table-wrap { max-height: 340px; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .summary { min-height: 198px; }
+    .status { min-height: 110px; }
+    .chip span { padding: 6px 10px; }
+    button.btn.copy { padding-left: 6px; padding-right: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+  /* ---- 配信予定をカレンダーに ---- */
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .field input[type="text"] { width: 100%; }
+  input[type="date"], select { min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  input[type="date"]:focus, select:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  select:disabled { color: #5f6368; background: var(--paper); opacity: 1; }
+  .tpl, .cols { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 10px; align-items: center; }
+  .tpl label, .cols label { color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .tpl input, .cols select { width: 100%; min-width: 0; }
+  .ics-row { align-items: center; margin: 4px 0 10px; }
+  .ics-note { color: var(--muted); font-size: .875rem; line-height: 1.5; }
+  pre.out { max-height: 360px; min-height: 120px; margin: 0; padding: 10px 14px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; font: .9rem/1.6 ui-monospace, Consolas, "Hiragino Kaku Gothic ProN", monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+  pre.out:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  pre.out.placeholder { color: var(--muted); font-family: inherit; }
+  .count { min-height: 1.5em; margin: 6px 0 0; color: #3c4043; font-size: .875rem; line-height: 1.5; }
+  .count .over { display: block; color: var(--bad); font-weight: 600; }
+  .url-note.warn { color: var(--warn-ink); }
+  .url-note:empty { display: none; }
+  table.res td.when { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.res td.when span, table.res td.what span { display: block; }
+  table.res td.when .t { font-weight: 600; }
+  table.res td.when .o, table.res td.what .pl { color: var(--muted); font-size: .875rem; }
+  table.res td.what { min-width: 8em; overflow-wrap: anywhere; }
+  table.res td.cal { width: 1%; }
+  a.gcal { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-weight: 600; text-decoration: none; line-height: 1.35; }
+  a.gcal:hover { text-decoration: underline; }
+  a.gcal:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; border-radius: 4px; }
+  table.res td.cal .none { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); font-size: .875rem; }
+  table.res tr.off td { background: var(--surface-soft); }
+  @media (max-width: 650px) {
+    .cols { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .cols select + label { margin-top: 6px; }
+    table.res td.when { white-space: normal; }
+    a.gcal { font-size: .875rem; }
+  }
+  .md-note { margin: 0 0 8px; }
+  @media (max-width: 380px) {
+    #viewMd .actions .btn, #viewList .actions .btn { flex-basis: 100%; }
+    header > p:not(.eyebrow) { display: none; }
+    .tpl, .cols { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .tpl input + label, .cols select + label { margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">配信予定をカレンダーに</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">STREAM SCHEDULE</p>
+    <h1>配信予定をカレンダーに</h1>
+    <p>スプレッドシートの1週間分の配信予定を貼り付けると、カレンダーに取り込める .ics ファイル、Googleカレンダーの登録URL、X の告知文、Markdown の表を一度に作ります。<span class="more">1件ずつフォームに入れるカレンダー作成ツールや、告知文・表を別々に手で書く方法と違い、表をそのまま使えます。年の書かれていない日付は決まった方法で年を補い、年末年始の登録の間違いを防ぎます。</span></p>
+  </header>
+
+  <section class="card" aria-label="配信予定をカレンダーに">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>配信予定の表（日付か曜日・開始時刻・タイトル）を貼り付けます。</li>
+        <li>曜日だけの表なら、「週の開始日」で今週か来週を選びます。</li>
+        <li>「.ics を保存」でカレンダーに取り込むか、告知文をコピーします。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-input">
+        <div class="field">
+          <label for="src">配信予定の表 <small>（Excel・スプレッドシートからコピー）</small></label>
+          <textarea id="src" spellcheck="false" placeholder="例：&#10;月 21:00 雑談配信&#10;水 お休み&#10;土 25:00 深夜の歌枠"></textarea>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+        <div class="field">
+          <label for="name">配信者名 <small>（任意。予定名の【】と、告知文の {配信者名} に使います）</small></label>
+          <input type="text" id="name" autocomplete="off" spellcheck="false" placeholder="例：星野ひかり">
+          <div class="chips" style="margin-top:8px">
+            <label class="chip"><input type="checkbox" id="prefix" checked><span>予定名の先頭に【配信者名】を付ける</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="area-result" id="resultArea">
+        <h2 id="resultTitle" tabindex="-1">結果</h2>
+        <ul class="stats" id="stats" aria-label="まとめ">
+          <li id="stEvents"><span class="k">予定</span><span class="v">–</span></li>
+          <li id="stRange"><span class="k">期間</span><span class="v">–</span></li>
+          <li id="stOff"><span class="k">休み・未定</span><span class="v">–</span></li>
+          <li id="stBad"><span class="k">読めない行</span><span class="v">–</span></li>
+        </ul>
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <div class="actions ics-row">
+          <button type="button" class="btn primary copy" id="saveIcs" disabled>.ics を保存</button>
+          <span class="ics-note" id="icsNote"></span>
+        </div>
+        <fieldset class="setting view">
+          <legend>表示する結果</legend>
+          <div class="chips" id="viewChips">
+            <label class="chip"><input type="radio" name="view" value="list" checked><span>日時の一覧</span></label>
+            <label class="chip"><input type="radio" name="view" value="post"><span>告知文</span></label>
+            <label class="chip"><input type="radio" name="view" value="md"><span>Markdown・表</span></label>
+          </div>
+        </fieldset>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText" id="manualLabel">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+        <div id="viewList">
+          <div class="table-wrap" id="listWrap" tabindex="0" aria-label="日時の一覧"></div>
+          <p class="url-note">「Googleカレンダーに追加」を押すと Googleカレンダーが開き、その予定の名前・日時・配信先が Google に渡ります。押さなければ、どこにも送られません。</p>
+          <div class="actions">
+            <button type="button" class="btn copy" id="copyUrls" disabled>URLの一覧をコピー</button>
+          </div>
+        </div>
+        <div id="viewPost" hidden>
+          <pre class="out" id="postOut" tabindex="0" aria-label="告知文"></pre>
+          <p class="count" id="postCount"></p>
+          <p class="url-note warn" id="postUnknown"></p>
+          <div class="actions">
+            <button type="button" class="btn primary copy" id="copyPost" disabled>告知文をコピー</button>
+          </div>
+        </div>
+        <div id="viewMd" hidden>
+          <p class="url-note md-note">Markdown は、note・GitHub・ブログなどに貼ると表になる書き方です。表をコピー（Excel）は、Excel・スプレッドシートに貼る形です。</p>
+          <pre class="out" id="mdOut" tabindex="0" aria-label="Markdown の表"></pre>
+          <div class="actions">
+            <button type="button" class="btn copy" id="copyMd" disabled>Markdownをコピー</button>
+            <button type="button" class="btn copy" id="copyTsv" disabled>表をコピー（Excel）</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2>読み方と出力の設定</h2>
+        <p class="jump-row"><a class="jump" href="#resultTitle">▲ 結果を見る</a></p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <fieldset class="setting">
+          <legend>週の開始日</legend>
+          <div class="sub-row" style="margin-top:0">
+            <input type="date" id="weekStart" aria-label="週の開始日">
+            <button type="button" class="btn" id="thisWeek">今週</button>
+            <button type="button" class="btn" id="nextWeek">来週</button>
+          </div>
+          <p class="hint">曜日だけの行は、この日から7日の中の同じ曜日にします。年のない日付（10/27）は、この日と同じ年にし、この日より前になるときは翌年にします。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>終了がない予定の長さ</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="dur" value="60"><span>1時間</span></label>
+            <label class="chip"><input type="radio" name="dur" value="90"><span>1時間30分</span></label>
+            <label class="chip"><input type="radio" name="dur" value="120" checked><span>2時間</span></label>
+            <label class="chip"><input type="radio" name="dur" value="180"><span>3時間</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>.ics の通知</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="alarm" value="0" checked><span>なし</span></label>
+            <label class="chip"><input type="radio" name="alarm" value="10"><span>10分前</span></label>
+            <label class="chip"><input type="radio" name="alarm" value="30"><span>30分前</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>告知文のひな形</legend>
+          <div class="tpl">
+            <label for="postHead">1行目</label><input type="text" id="postHead" autocomplete="off" spellcheck="false" value="【今週の配信予定】">
+            <label for="postLine">1件の行</label><input type="text" id="postLine" autocomplete="off" spellcheck="false" value="{月}/{日}({曜日}) {開始} {タイトル}">
+            <label for="postFoot">最後の行</label><input type="text" id="postFoot" autocomplete="off" spellcheck="false" value="#配信予定">
+          </div>
+          <p class="hint">差し込める名前：{月} {日} {曜日} {開始} {終了} {タイトル} {配信先} {配信者名}。お休みの日は {開始} が「お休み」、時間未定は「時間未定」になります。</p>
+          <div class="actions" style="margin:8px 0 0">
+            <button type="button" class="btn" id="resetTpl">はじめの形に戻す</button>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>列の割り当て</legend>
+          <div class="cols">
+            <label for="colDate">日付・曜日</label><select id="colDate"></select>
+            <label for="colStart">開始時刻</label><select id="colStart"></select>
+            <label for="colTitle">タイトル</label><select id="colTitle"></select>
+            <label for="colPlace">配信先</label><select id="colPlace"></select>
+            <label for="colEnd">終了・長さ</label><select id="colEnd"></select>
+          </div>
+          <p class="hint">はじめは見出しの言葉（日付・曜日・開始・タイトル・配信先・終了など）か、中身から自動で選びます。タブのない行は「日付 時刻 タイトル」の順に空白で区切って読み、最後の語が URL なら配信先にします。</p>
+        </fieldset>
+      </div>
+    </div>
+
+    <p class="note">日付は 2026/10/27・10/27・10月27日（曜日つきも可）、曜日だけ（月・月曜・Mon）を読みます。時刻は 21:00・21時・21時30分・午後9時、24時以降（25:00）は翌日の時刻として登録します。開始が「休み」の日は登録せず告知文と表にだけ入れ、「未定」は終日の予定にします。時刻はすべて日本時間です。</p>
+    <div class="privacy">貼り付けた予定と配信者名は、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません（「Googleカレンダーに追加」を押したときだけ、その予定が Google に渡ります）。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>曜日だけの週間予定から、.ics と X の告知文を作る</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>曜日	開始	終了	タイトル	配信先
+月	21:00	23:00	雑談配信	https://example.com/live
+水	お休み			
+木	20:00		新作ゲーム実況	YouTube
+土	25:00	1時間30分	深夜の歌枠	YouTube
+日	未定		コラボ配信	Twitch</pre>（スプレッドシートからコピーしたタブ区切りの表）</dd>
+        <dt>設定</dt><dd>週の開始日：2026/11/2（ほかははじめの設定のまま）</dd>
+        <dt>結果</dt><dd>まとめに「予定 4件（ほかにお休み 1日）を 11/2(月)〜11/8(日) の日時にしました。」と出て、「.ics を保存」で4件の予定が1つのファイルになります。土曜の 25:00 は 11/8(日) 1:00〜2:30、日曜の「未定」は終日の予定「コラボ配信（時間未定）」として登録します。告知文は次のとおりです（108文字・X の数え方の目安 154 / 280）。<pre>【今週の配信予定】
+11/2(月) 21:00 雑談配信
+11/4(水) お休み
+11/5(木) 20:00 新作ゲーム実況
+11/7(土) 25:00 深夜の歌枠
+11/8(日) 時間未定 コラボ配信
+
+#配信予定</pre></dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>年をまたぐ週の予定を、正しい年で登録する</h3>
+      <dl>
+        <dt>入力</dt><dd><pre>12/28(月)	21:00	年末の雑談
+12/31(木)	23:30〜25:00	年越し配信
+1/2(土)	20:00	新年の抱負</pre></dd>
+        <dt>設定</dt><dd>週の開始日：2026/12/28（ほかははじめの設定のまま）</dd>
+        <dt>結果</dt><dd>日時の一覧は「2026/12/28（月）21:00〜23:00」「2026/12/31（木）23:30〜翌1:00」「2027/01/02（土）20:00〜22:00」になります。「1/2」は週の開始日より前の日付になるため、翌年の 2027年として登録します。Markdown の表は次のとおりです。<pre>| 日付 | 時刻 | タイトル | 配信先 |
+| --- | --- | --- | --- |
+| 12/28(月) | 21:00〜23:00 | 年末の雑談 |  |
+| 12/31(木) | 23:30〜25:00 | 年越し配信 |  |
+| 1/2(土) | 20:00〜22:00 | 新年の抱負 |  |</pre></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>どんな書き方の日付・時刻を読めますか？</summary>
+      <p>日付は「2026/10/27」「2026年10月27日」「10/27」「10月27日」（後ろに(月)などの曜日が付いてもよい）、曜日だけの「月」「月曜」「Mon」を読みます。時刻は「21:00」「21時」「21時30分」「午後9時」を読み、「21:00〜23:00」のような範囲も読みます。全角の数字・記号も読みます。「1/2/3」のように順番が決まらない形や、ない日付（2/30）は読まず、読めない行として行番号を知らせます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>年が書いていない日付は、何年になりますか？</summary>
+      <p>「週の開始日」と同じ年にします。その年の日付が週の開始日より前になるときは、翌年にします。たとえば週の開始日が 2026/12/28 のとき、「12/31」は 2026/12/31、「1/2」は 2027/1/2 になります。週の開始日から7日の外になった日付は、まとめで知らせます。曜日だけの行は、週の開始日から7日の中の同じ曜日にします。</p>
+    </details>
+    <details class="faq-item">
+      <summary>「25:00」のような深夜の時刻や、お休みの日はどうなりますか？</summary>
+      <p>24時以降の時刻は、翌日の時刻としてカレンダーに登録します（10/31(土) の 25:00 は 11/1(日) の 1:00）。告知文と Markdown の表には、書いたとおり「25:00」で出します。開始の欄が「休み」「お休み」の日は、カレンダーには登録せず、告知文と表にだけ「お休み」として入れます。「未定」「時間未定」の日は、終日の予定として登録します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>作った .ics ファイルは、どうやってカレンダーに入れますか？</summary>
+      <p>Googleカレンダーは、パソコンのブラウザで「設定 › インポート / エクスポート」からファイルを選びます。iPhone は、保存したファイルを開いて「すべてを追加」を押します。Outlook は、ファイルを開いて取り込みます。1件ずつ入れたいときは、日時の一覧の「Googleカレンダーに追加」を押すと、その予定の入力画面が開きます。時刻はすべて日本時間で登録します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。表の読み取りとファイルの作成は、すべてお使いのブラウザの中で行い、貼り付けた予定や配信者名が外部に送信されることはありません。ブラウザに保存することもありません。ただし「Googleカレンダーに追加」を押したときは、その予定の名前・日時・配信先が URL として Google に渡ります。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../renban-ticket/"><strong>連番チケット印刷</strong><span>整理券・抽選券・引換券を、連番入りでA4に並べて印刷します。半券付きや、切って重ねると番号順になる並びも選べます。</span></a></li>
+      <li><a href="../shikomi-hachu/"><strong>仕込み発注計算</strong><span>レシピ表と販売予定数から、食材ごとの必要量を合計し、在庫を引いて発注単位で切り上げた発注数を出します。</span></a></li>
+      <li><a href="../shashin-satsueibi/"><strong>写真を撮影日で改名</strong><span>写真のファイル名を撮影日時＋連番にまとめて変えて、zipで保存します。時計のずれの補正、HEICからJPGへの変換、縮小も一度にできます。</span></a></li>
+      <li><a href="../nefuda-label/"><strong>値札・ラベル面付け印刷</strong><span>商品の表を貼り付けて、値札をラベル用紙にまとめて印刷します。用紙の寸法とずれの補正、税込・税抜の併記も選べます。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（21件）を見る</a></p>
+  </section>
+
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープを使わない）
+  var TAB = String.fromCharCode(9);
+  var LF = String.fromCharCode(10);
+  var CR = String.fromCharCode(13);
+  var CRLF = CR + LF;
+  var QUOTE = String.fromCharCode(34);
+  var BSL = String.fromCharCode(92);
+  var SPACE_CODES = [32, 9, 160, 12288, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x200B, 0x202F, 0x205F, 0x2060, 0xFEFF];
+  var MAX_ROWS = 1000;
+  var WD = ['日', '月', '火', '水', '木', '金', '土'];
+  var WD_EN = { sun: 0, sunday: 0, mon: 1, monday: 1, tue: 2, tues: 2, tuesday: 2, wed: 3, wednesday: 3, thu: 4, thur: 4, thurs: 4, thursday: 4, fri: 5, friday: 5, sat: 6, saturday: 6 };
+  var OFF_RE = /^(お?休み|休|休日|おやすみ|配信休み|お休み日)$/;
+  var TBD_WORDS = ['未定', '時間未定', 'tbd', 'tba', '調整中'];
+  var UID_HOST = '@autotoolspublisher-ui.github.io';
+  var DAY = 86400000;
+  var encoder = new TextEncoder();
+
+  function isSpace(c) { return SPACE_CODES.indexOf(c) >= 0; }
+  function trimSp(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charCodeAt(a))) a++;
+    while (b > a && isSpace(s.charCodeAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  // 空白の続き（半角・全角・タブなど）を半角スペース1つにする
+  function squeeze(s) {
+    var out = '', sp = false;
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (isSpace(c) || c === 10 || c === 13) { if (!sp) out += ' '; sp = true; }
+      else { out += s.charAt(i); sp = false; }
+    }
+    return trimSp(out);
+  }
+  // 全角の英数字・記号（U+FF01〜U+FF5E）を半角に、空白を半角スペースに、波ダッシュ・ダッシュ類を「~」「-」にする（読み取り用。表示には元の文字を使う）
+  function norm(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c >= 0xFF01 && c <= 0xFF5E) c -= 0xFEE0;
+      else if (isSpace(c)) c = 32;
+      else if (c === 0x301C) c = 126; // 〜
+      else if (c === 0x2010 || c === 0x2011 || c === 0x2012 || c === 0x2013 || c === 0x2014 || c === 0x2015 || c === 0x2212) c = 45;
+      out += String.fromCharCode(c);
+    }
+    return out;
+  }
+  function fmtNum(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function p2(n) { return (n < 10 ? '0' : '') + n; }
+  function clip(s, n) { var a = Array.from(s); return a.length > n ? a.slice(0, n).join('') + '…' : s; }
+  function cpLen(s) { return Array.from(s).length; }
+
+  // ---------- 日付（日の通し番号：1970-01-01 からの日数） ----------
+  function dayNum(y, m, d) { return Math.round(Date.UTC(y, m - 1, d) / DAY); }
+  function validDate(y, m, d) {
+    if (m < 1 || m > 12 || d < 1 || d > 31 || y < 1900 || y > 2200) return false;
+    var t = new Date(Date.UTC(y, m - 1, d));
+    return t.getUTCMonth() === m - 1 && t.getUTCDate() === d;
+  }
+  function ymd(n) { var t = new Date(n * DAY); return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate(), wd: t.getUTCDay() }; }
+  function dateStr(n) { var o = ymd(n); return o.y + '/' + p2(o.m) + '/' + p2(o.d); }
+  function shortDate(n) { var o = ymd(n); return o.m + '/' + o.d + '(' + WD[o.wd] + ')'; }
+  function ymdPlain(n) { var o = ymd(n); return o.y + '/' + o.m + '/' + o.d; }
+  function md(n) { var o = ymd(n); return o.m + '/' + o.d; }
+  function compact(n) { var o = ymd(n); return '' + o.y + p2(o.m) + p2(o.d); }
+  function minStr(m) { return Math.floor(m / 60) + ':' + p2(m % 60); }
+  function todayJst() { var t = new Date(Date.now() + 9 * 3600000); return dayNum(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate()); }
+  function mondayOf(n) { var wd = ymd(n).wd; return n - ((wd + 6) % 7); }
+  function parseIsoDate(s) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+    if (!m) return null;
+    var y = +m[1], mo = +m[2], d = +m[3];
+    return validDate(y, mo, d) ? dayNum(y, mo, d) : null;
+  }
+  function isoOf(n) { var o = ymd(n); return o.y + '-' + p2(o.m) + '-' + p2(o.d); }
+
+  // 曜日の語を先頭から読む。{ wd, len } か null
+  var WD_RE = /^[(]?\s*(月|火|水|木|金|土|日)(曜日|曜)?\s*[)]?/;
+  var WD_EN_RE = /^[(]?\s*([A-Za-z]+)\.?\s*[)]?/;
+  function readWeekday(h) {
+    var m = WD_RE.exec(h);
+    if (m) {
+      var rest = h.slice(m[0].length);
+      // 「月見」「日本」のように、続く文字が語の一部なら曜日として読まない（括弧・空白・数字・記号・終わりならよい）
+      // 後ろは、終わり・空白・括弧・数字だけ（「月見」「月曜,21:00」「(火)/21:00」を曜日として読まない）
+      if (rest === '' || /^[ (0-9]/.test(rest)) return { wd: WD.indexOf(m[1]), len: m[0].length };
+      return null;
+    }
+    m = WD_EN_RE.exec(h);
+    if (m && Object.prototype.hasOwnProperty.call(WD_EN, m[1].toLowerCase())) {
+      var rest2 = h.slice(m[0].length);
+      if (rest2 === '' || /^[ (0-9]/.test(rest2)) return { wd: WD_EN[m[1].toLowerCase()], len: m[0].length };
+    }
+    return null;
+  }
+
+  // 日付の欄を読む。{ kind: 'date'|'wd', y?, m, d, wd?, statedWd?, rest } か null
+  function readDate(cell) {
+    var h = trimSp(norm(cell));
+    var m, y = null, mo, d, len = 0;
+    if ((m = /^(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})(?![0-9\/.-])/.exec(h))) { y = +m[1]; mo = +m[2]; d = +m[3]; len = m[0].length; }
+    else if ((m = /^(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/.exec(h))) { y = +m[1]; mo = +m[2]; d = +m[3]; len = m[0].length; }
+    else if ((m = /^(\d{4})(\d{2})(\d{2})(?![0-9])/.exec(h))) { y = +m[1]; mo = +m[2]; d = +m[3]; len = m[0].length; }
+    else if ((m = /^(\d{1,2})\/(\d{1,2})(?![0-9\/.])/.exec(h))) { mo = +m[1]; d = +m[2]; len = m[0].length; }
+    else if ((m = /^(\d{1,2})月\s*(\d{1,2})日/.exec(h))) { mo = +m[1]; d = +m[2]; len = m[0].length; }
+    if (len) {
+      if (y !== null ? !validDate(y, mo, d) : !validDate(2024, mo, d)) return null;
+      // 日付のすぐ後ろは、終わり・空白・括弧・曜日の字だけ（「10/27,21:00,雑談」のような区切りの違う行を日付として読まない）
+      var nx = h.charAt(len);
+      if (nx !== '' && !/[ (月火水木金土日]/.test(nx)) return null;
+      var rest = trimSp(h.slice(len));
+      var w = readWeekday(rest);
+      var stated = null;
+      if (w) { stated = w.wd; rest = trimSp(rest.slice(w.len)); }
+      return { kind: 'date', y: y, m: mo, d: d, statedWd: stated, rest: rest };
+    }
+    var w2 = readWeekday(h);
+    if (w2) return { kind: 'wd', wd: w2.wd, rest: trimSp(h.slice(w2.len)) };
+    return null;
+  }
+
+  // 時刻を先頭から読む。{ min, len, text } か null。min は 0〜1799（29:59）
+  function readTime(h) {
+    var s = h, pre = null, m, hh, mm = 0, len, next = 0;
+    // 「翌1:00」は次の日の時刻（25:00 と同じ）
+    if (s.charAt(0) === '翌') { next = 1440; s = trimSp(s.slice(1)); }
+    if ((m = /^(午前|午後|am|pm|a\.m\.|p\.m\.)\s*/i.exec(s))) { pre = /^(午後|pm|p)/i.test(m[1]) ? 'pm' : 'am'; s = s.slice(m[0].length); }
+    var off = h.length - s.length;
+    if ((m = /^(\d{1,2}):(\d{2})(?::(\d{2}))?(?![0-9])/.exec(s))) { hh = +m[1]; mm = +m[2]; len = m[0].length; }
+    else if ((m = /^(\d{1,2})時(?:\s*(\d{1,2})分|(半))?/.exec(s))) { hh = +m[1]; mm = m[3] ? 30 : (m[2] ? +m[2] : 0); len = m[0].length; }
+    else return null;
+    var after = s.slice(len);
+    var post = /^\s*(am|pm|a\.m\.|p\.m\.)(?![a-z])/i.exec(after);
+    if (post && !pre) { pre = /^p/i.test(post[1]) ? 'pm' : 'am'; len += post[0].length; }
+    if (mm > 59) return null;
+    if (pre) {
+      if (hh < 0 || hh > 12) return null;
+      if (pre === 'pm' && hh < 12) hh += 12;
+      if (pre === 'am' && hh === 12) hh = 0;
+    }
+    if (hh > 29 || (next && hh > 23)) return null;
+    return { min: hh * 60 + mm + next, len: off + len };
+  }
+  // 長さを読む（全体が長さのときだけ）。分か null
+  function readDuration(h) {
+    var s = trimSp(h).toLowerCase(), m;
+    if ((m = /^(\d+(?:\.\d+)?)\s*(時間|h|hr|hrs|hour|hours)\s*(?:(\d{1,2})\s*(分|m|min|mins|minutes))?$/.exec(s))) {
+      var v = Math.round(parseFloat(m[1]) * 60) + (m[3] ? +m[3] : 0);
+      return v > 0 && v <= 1440 ? v : null;
+    }
+    if ((m = /^(\d+)\s*(分|m|min|mins|minutes)$/.exec(s))) { var v2 = +m[1]; return v2 > 0 && v2 <= 1440 ? v2 : null; }
+    return null;
+  }
+  function isTbd(h) { return TBD_WORDS.indexOf(trimSp(h).toLowerCase()) >= 0; }
+  // 開始の欄を読む。{ type: 'time', start, end?, endDur? } / { type: 'off' } / { type: 'tbd' } / { type: 'empty' } / null
+  function readStart(cell) {
+    var h = trimSp(norm(cell));
+    if (h === '') return { type: 'empty' };
+    if (h.indexOf('休') >= 0) return { type: 'off' };
+    if (isTbd(h)) return { type: 'tbd' };
+    var t = readTime(h);
+    if (!t) return null;
+    var rest = trimSp(h.slice(t.len));
+    var r = { type: 'time', start: t.min };
+    if (rest === '') return r;
+    var m = /^(~|-|から|ー|ｰ)\s*/.exec(rest);
+    if (!m) return null;
+    rest = trimSp(rest.slice(m[0].length));
+    if (rest === '') return r;
+    var e = readTime(rest);
+    if (e && trimSp(rest.slice(e.len)) === '') { r.end = e.min; return r; }
+    var dur = readDuration(rest);
+    if (dur) { r.endDur = dur; return r; }
+    return null;
+  }
+  // 終了・長さの欄を読む。{ dur } / { end } / { empty } / null
+  function readEnd(cell) {
+    var h = trimSp(norm(cell));
+    if (h === '') return { empty: true };
+    var d = readDuration(h);
+    if (d) return { dur: d };
+    var t = readTime(h);
+    if (t && trimSp(h.slice(t.len)) === '') return { end: t.min };
+    return null;
+  }
+  function isUrl(s) { return /^https?:\/\/[^\s]+$/i.test(trimSp(s)); }
+
+  // ---------- 表を読む ----------
+  function splitLines(text) { return text.split(CRLF).join(LF).split(CR).join(LF).split(LF); }
+  // タブ区切り（Excel のセル内改行の " の囲みに対応）
+  function parseTsv(text) {
+    var t = text.split(CRLF).join(LF).split(CR).join(LF);
+    var rows = [], row = [], cell = '', i = 0, n = t.length, atStart = true;
+    while (i < n) {
+      var ch = t.charAt(i);
+      if (atStart && ch === QUOTE) {
+        var j = i + 1, buf = '', closed = false;
+        while (j < n) {
+          var c2 = t.charAt(j);
+          if (c2 === QUOTE) {
+            if (t.charAt(j + 1) === QUOTE) { buf += QUOTE; j += 2; continue; }
+            closed = true; j++; break;
+          }
+          buf += c2; j++;
+        }
+        var nx = t.charAt(j);
+        if (closed && (j >= n || nx === TAB || nx === LF)) { cell = buf; i = j; atStart = false; continue; }
+        // 囲みとして閉じていなければ、ふつうの文字として読む
+      }
+      if (ch === TAB) { row.push(cell); cell = ''; atStart = true; i++; continue; }
+      if (ch === LF) { row.push(cell); rows.push(row); row = []; cell = ''; atStart = true; i++; continue; }
+      cell += ch; atStart = false; i++;
+    }
+    row.push(cell); rows.push(row);
+    return rows;
+  }
+  // 空白区切りの行を、日付・開始・タイトル・配信先の4列にする
+  function splitSpaced(line) {
+    var tokens = squeeze(line).split(' ').filter(function (x) { return x !== ''; });
+    if (!tokens.length) return [''];
+    var i = 0, date = tokens[i++];
+    var dn = readDate(date);
+    if (dn && dn.kind === 'date' && dn.statedWd === null && i < tokens.length) {
+      var w = readWeekday(trimSp(norm(tokens[i])));
+      if (w && w.len === trimSp(norm(tokens[i])).length) date += ' ' + tokens[i++];
+    }
+    var start = '';
+    if (i < tokens.length) {
+      var st = readStart(tokens[i]);
+      // 「休み明け雑談」のようなタイトルを休みと読まないよう、休みは語全体が休みの言葉のときだけ
+      if (st && (st.type === 'time' || st.type === 'tbd' || (st.type === 'off' && OFF_RE.test(trimSp(tokens[i]))))) {
+        start = tokens[i++];
+        // 「21:00 〜 23:00」のように範囲が空白で分かれた形
+        if (i + 1 < tokens.length && /^(~|-|から|ー|ｰ)$/.test(trimSp(norm(tokens[i]))) && readTime(trimSp(norm(tokens[i + 1])))) { start += tokens[i] + tokens[i + 1]; i += 2; }
+      }
+    }
+    var place = '';
+    if (tokens.length - i >= 2 && isUrl(tokens[tokens.length - 1])) place = tokens.pop();
+    return [date, start, tokens.slice(i).join(' '), place];
+  }
+
+  var HEAD_WORDS = {
+    date: ['日付', '日にち', '月日', '曜日', '曜', '日', 'date', 'day'],
+    start: ['開始時刻', '開始', '時刻', '時間', '時', 'start', 'time'],
+    title: ['タイトル', '配信内容', '内容', '企画', '予定', '配信名', '題名', 'title', 'content'],
+    place: ['配信先', '配信場所', '場所', 'プラットフォーム', 'チャンネル', 'url', 'リンク', 'platform', 'place', 'location'],
+    end: ['終了時刻', '終了', '終わり', '長さ', '尺', '配信時間', 'end', 'duration']
+  };
+  // 見出しのセルがどの列らしいか（完全に同じ語を優先、次に含む語）
+  function headRole(cell, role) {
+    var h = trimSp(norm(cell)).toLowerCase();
+    if (!h) return 0;
+    var words = HEAD_WORDS[role];
+    for (var i = 0; i < words.length; i++) if (h === words[i]) return 2;
+    for (var j = 0; j < words.length; j++) if (words[j].length >= 2 && h.indexOf(words[j]) >= 0) return 1;
+    return 0;
+  }
+
+  // ---------- 全体の処理 ----------
+  function analyze(text, opt) {
+    var R = { rows: [], mode: 'tsv', header: null, cols: null, colCount: 0, events: [], items: [], bad: [], notes: [], warnRows: { wd: [], outside: [], late: [], end: [] }, error: null, lineCount: 0, sorted: false };
+    var raw = text || '';
+    var lines = splitLines(raw);
+    var hasTab = raw.indexOf(TAB) >= 0;
+    var table;
+    if (hasTab) table = parseTsv(raw);
+    else { R.mode = 'space'; table = lines.map(splitSpaced); }
+    // 行番号（表の何行目か）を付け、空の行を除く
+    var rows = [];
+    table.forEach(function (cells, i) {
+      if (cells.every(function (c) { return trimSp(c) === ''; })) return;
+      rows.push({ no: i + 1, cells: cells.map(function (c) { return c.split(LF).join(' '); }) });
+    });
+    R.lineCount = rows.length;
+    if (!rows.length) return R;
+    if (rows.length > MAX_ROWS) { R.error = { type: 'tooMany', n: rows.length }; return R; }
+    var colCount = 0;
+    rows.forEach(function (r) { colCount = Math.max(colCount, r.cells.length); });
+    if (R.mode === 'space') colCount = 4;
+    rows.forEach(function (r) { while (r.cells.length < colCount) r.cells.push(''); });
+    R.colCount = colCount;
+
+    // 列を決める
+    var cols = { date: -1, start: -1, title: -1, place: -1, end: -1 };
+    var first = rows[0].cells;
+    var fixed = {};
+    if (opt.cols && R.mode !== 'space') Object.keys(cols).forEach(function (k) { var v = opt.cols[k]; if (v !== undefined && v !== 'auto' && +v < colCount) fixed[k] = +v; });
+    var auto = autoCols(rows, colCount, R.mode, fixed);
+    cols = auto.cols;
+    R.fixed = fixed;
+    R.cols = cols; R.autoCols = auto.cols;
+    R.headCells = auto.header ? first : null;
+    // 見出し：見出しの言葉の行（1行だけでも）、または日付の列が日付・曜日として読めず2行以上ある
+    var startIdx = 0;
+    // （日付の列のセルに数字があれば、読めない予定の行として扱い、見出しにしない）
+    if (auto.header || (cols.date >= 0 && rows.length >= 2 && !readDate(first[cols.date]) && !/[0-9０-９]/.test(first[cols.date]))) { R.header = rows[0]; startIdx = 1; }
+    if (R.header && rows.length === 1) { R.headerOnly = true; return R; }
+    // タイトルの列はなくてもよい（お休みだけの週）。時刻のある行は「タイトルがありません」になる
+    if (cols.date < 0) { R.error = { type: 'noCol', which: 'date' }; return R; }
+
+    var ws = opt.weekStart;
+    var items = [];
+    for (var k = startIdx; k < rows.length; k++) {
+      var row = rows[k];
+      var c = row.cells;
+      var it = { no: row.no, cells: c, order: k };
+      var dcell = c[cols.date] || '';
+      var dn = readDate(dcell);
+      if (!dn) { R.bad.push({ no: row.no, reason: trimSp(dcell) ? 'date' : 'nodate', text: trimSp(dcell) }); continue; }
+      var day;
+      if (dn.kind === 'wd') day = ws + ((dn.wd - ymd(ws).wd + 7) % 7);
+      else {
+        var y = dn.y;
+        if (y === null) { y = ymd(ws).y; if (dayNum(y, dn.m, dn.d) < ws) y++; if (!validDate(y, dn.m, dn.d)) { R.bad.push({ no: row.no, reason: 'date', text: trimSp(dcell) }); continue; } }
+        day = dayNum(y, dn.m, dn.d);
+        if (dn.statedWd !== null && dn.statedWd !== ymd(day).wd) R.warnRows.wd.push({ no: row.no, day: day, stated: dn.statedWd });
+      }
+      if (day < ws || day > ws + 6) R.warnRows.outside.push({ no: row.no, day: day });
+      it.day = day;
+      var title = cols.title >= 0 ? squeeze(c[cols.title] || '') : '';
+      var place = cols.place >= 0 ? squeeze(c[cols.place] || '') : '';
+      it.title = title; it.place = place;
+      var scell = cols.start >= 0 ? (c[cols.start] || '') : '';
+      var st = readStart(scell);
+      // 日付の欄の残り（曜日の後ろ）は、開始時刻・範囲・休み・未定として読めるときだけ使う。読めなければ日付の欄が読めない行にする（区切りの違う行をお休みにしない）
+      if (dn.rest) {
+        var fromDate = readStart(dn.rest);
+        if (!fromDate || fromDate.type === 'empty') { R.bad.push({ no: row.no, reason: 'date', text: trimSp(dcell) }); continue; }
+        if (st && st.type === 'empty') st = fromDate;
+      }
+      if (st && st.type === 'empty') {
+        if (title === '' || OFF_RE.test(title)) st = { type: 'off' };
+        else { R.bad.push({ no: row.no, reason: 'notime', text: '' }); continue; }
+      }
+      if (!st) { R.bad.push({ no: row.no, reason: 'time', text: trimSp(scell) }); continue; }
+      if (title === '' && st.type !== 'off') { R.bad.push({ no: row.no, reason: 'notitle', text: '' }); continue; }
+      it.type = st.type;
+      if (st.type === 'time') {
+        it.startMin = st.start; // 書いたとおり（25:00 なら 1500）
+        var endMin = null, dur = null;
+        var ecell = cols.end >= 0 ? (c[cols.end] || '') : '';
+        var en = readEnd(ecell);
+        if (en === null) { if (st.end === undefined && !st.endDur) R.warnRows.end.push({ no: row.no, text: trimSp(ecell) }); }
+        else if (en.dur) dur = en.dur;
+        else if (en.end !== undefined) endMin = en.end;
+        if (dur === null && endMin === null) {
+          if (st.end !== undefined) endMin = st.end;
+          else if (st.endDur) dur = st.endDur;
+        }
+        var startAbs = day * 1440 + st.start;
+        var endAbs;
+        if (dur !== null) endAbs = startAbs + dur;
+        else if (endMin !== null) { endAbs = day * 1440 + endMin; while (endAbs <= startAbs) endAbs += 1440; }
+        else endAbs = startAbs + opt.duration;
+        it.startAbs = startAbs; it.endAbs = endAbs;
+        if (st.start >= 1440) R.warnRows.late.push({ no: row.no, written: minStr(st.start), real: startAbs });
+      }
+      items.push(it);
+    }
+    // 並べ替え（表に書いた日と時刻の順。25:00 は書いた日の 25:00 として並べる。休み・未定はその日の最初。同じなら表の順）
+    var key = function (it) { return it.type === 'time' ? it.startMin : -1; };
+    var sortedItems = items.slice().sort(function (a, b) { return a.day - b.day || key(a) - key(b) || a.order - b.order; });
+    R.sorted = sortedItems.some(function (it, i) { return it !== items[i]; });
+    R.items = sortedItems;
+    // 予定名・UID・URL
+    var name = squeeze(opt.name || '');
+    var uidSeen = {};
+    sortedItems.forEach(function (it) {
+      if (it.type === 'off') return;
+      var summary = (opt.prefix && name ? '【' + name + '】' : '') + it.title + (it.type === 'tbd' ? '（時間未定）' : '');
+      it.summary = summary;
+      var dt = it.type === 'time' ? String(it.startAbs) : 'D' + it.day;
+      var uid = 'haishin-' + compact(it.type === 'time' ? Math.floor(it.startAbs / 1440) : it.day) + '-' + fnv(dt + '|' + summary + '|' + it.place);
+      if (uidSeen[uid]) { uidSeen[uid]++; uid += '-' + uidSeen[uid]; } else uidSeen[uid] = 1;
+      it.uid = uid + UID_HOST;
+      it.gurl = googleUrl(it);
+      R.events.push(it);
+    });
+    R.offCount = sortedItems.filter(function (it) { return it.type === 'off'; }).length;
+    R.tbdCount = sortedItems.filter(function (it) { return it.type === 'tbd'; }).length;
+    if (sortedItems.length) {
+      R.firstDay = sortedItems.reduce(function (a, it) { return Math.min(a, it.type === 'time' ? Math.floor(it.startAbs / 1440) : it.day); }, Infinity);
+      R.lastDay = sortedItems.reduce(function (a, it) { return Math.max(a, it.type === 'time' ? Math.floor(it.startAbs / 1440) : it.day); }, -Infinity);
+    }
+    return R;
+  }
+
+  // fixed：手で選んだ列（{ 役: 列 }）。その列はほかの役の自動の選択から除く
+  function autoCols(rows, colCount, mode, fixed) {
+    var cols = { date: -1, start: -1, title: -1, place: -1, end: -1 };
+    if (mode === 'space') return { cols: { date: 0, start: 1, title: 2, place: 3, end: -1 }, header: false };
+    var first = rows[0].cells;
+    var used = {};
+    fixed = fixed || {};
+    Object.keys(fixed).forEach(function (k) { cols[k] = fixed[k]; if (fixed[k] >= 0) used[fixed[k]] = true; });
+    var roles = ['date', 'start', 'end', 'place', 'title'];
+    // 見出しの語で選ぶ（完全に同じ語の列を先に）
+    var exact = first.filter(function (c) { return roles.some(function (r) { return headRole(c, r) === 2; }); }).length;
+    var anyWord = first.some(function (c) { return roles.some(function (r) { return headRole(c, r) > 0; }); });
+    var anyDate = first.some(function (c) { return !!readDate(c); });
+    var headerLike = anyWord && (!anyDate || exact >= 2) && (rows.length >= 2 || exact >= 2);
+    if (headerLike) {
+      [2, 1].forEach(function (level) {
+        roles.forEach(function (r) {
+          if (cols[r] >= 0 || (r in fixed)) return;
+          for (var i = 0; i < colCount; i++) if (!used[i] && headRole(first[i], r) === level) { cols[r] = i; used[i] = true; return; }
+        });
+      });
+    }
+    var body = headerLike ? rows.slice(1) : rows;
+    var score = function (i, fn) { var n = 0, t = 0; body.forEach(function (r) { var v = trimSp(r.cells[i] || ''); if (!v) return; t++; if (fn(v)) n++; }); return t ? n / t : 0; };
+    var best = function (fn, min) { var bi = -1, bs = min; for (var i = 0; i < colCount; i++) { if (used[i]) continue; var s = score(i, fn); if (s > bs) { bs = s; bi = i; } } return bi; };
+    // 日付・開始：読める値の割合が 0.3 以上の列のうち、割合がいちばん大きい列（休みを「-」「×」などで書いた行が多くても選べるように）
+    if (cols.date < 0 && !('date' in fixed)) { cols.date = best(function (v) { return !!readDate(v); }, 0.29); if (cols.date >= 0) used[cols.date] = true; }
+    if (cols.start < 0 && !('start' in fixed)) { cols.start = best(function (v) { var s = readStart(v); return !!s && (s.type === 'time' || s.type === 'tbd' || (s.type === 'off' && OFF_RE.test(trimSp(norm(v))))); }, 0.29); if (cols.start >= 0) used[cols.start] = true; }
+    if (cols.end < 0 && !('end' in fixed) && cols.start >= 0) {
+      for (var i = cols.start + 1; i < colCount; i++) { if (used[i]) continue; if (score(i, function (v) { return !!readEnd(v) && !readEnd(v).empty; }) >= 0.5) { cols.end = i; used[i] = true; break; } }
+    }
+    // 配信先：URL か、配信サービスの名前（その名前だけ、または後ろに空白・Live など）。タイトルに使う列が残るときだけ選ぶ
+    var free = 0; for (var f = 0; f < colCount; f++) if (!used[f]) free++;
+    var hasText = function (i) { return body.some(function (r) { return trimSp(r.cells[i] || '') !== ''; }); };
+    if (cols.place < 0 && !('place' in fixed) && (cols.title >= 0 || free >= 2)) { cols.place = best(function (v) { return isUrl(v) || /^(youtube|twitch|ツイキャス|twitcasting|ニコニコ生放送|ニコニコ|niconico|ニコ生|mildom|openrec|tiktok|x|twitter|spoon|reality|ミラティブ|mirrativ|showroom|17live)(\s|live|ライブ|$)/i.test(trimSp(norm(v))); }, 0.5); if (cols.place >= 0) used[cols.place] = true; }
+    // タイトル：残りの列のうち、文字のあるいちばん左の列（表の順「日付・時刻・タイトル・配信先」に合わせる）
+    if (cols.title < 0 && !('title' in fixed)) {
+      for (var j = 0; j < colCount; j++) if (!used[j] && hasText(j)) { cols.title = j; used[j] = true; break; }
+    }
+    // 配信先がまだなく、見出しのない表なら、タイトルの右にある文字のある列
+    if (cols.place < 0 && !('place' in fixed) && !headerLike && cols.title >= 0) {
+      for (var q = cols.title + 1; q < colCount; q++) if (!used[q] && hasText(q)) { cols.place = q; used[q] = true; break; }
+    }
+    return { cols: cols, header: headerLike };
+  }
+
+  function fnv(s) {
+    var bytes = encoder.encode(s), h = 0x811c9dc5;
+    for (var i = 0; i < bytes.length; i++) { h ^= bytes[i]; h = Math.imul(h, 0x01000193) >>> 0; }
+    return ('0000000' + h.toString(16)).slice(-8);
+  }
+
+  // ---------- 出力 ----------
+  function stamp(abs) { var day = Math.floor(abs / 1440), m = abs - day * 1440; return compact(day) + 'T' + p2(Math.floor(m / 60)) + p2(m % 60) + '00'; }
+  function googleUrl(it) {
+    var dates = it.type === 'tbd' ? compact(it.day) + '/' + compact(it.day + 1) : stamp(it.startAbs) + '/' + stamp(it.endAbs);
+    var u = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(it.summary) + '&dates=' + dates + '&ctz=' + encodeURIComponent('Asia/Tokyo');
+    if (it.place) u += '&location=' + encodeURIComponent(it.place);
+    return u;
+  }
+  function icsText(s) {
+    return s.split(BSL).join(BSL + BSL).split(';').join(BSL + ';').split(',').join(BSL + ',').split(CRLF).join(LF).split(CR).join(LF).split(LF).join(BSL + 'n');
+  }
+  // 75バイトを超える行を、文字の途中で切らずに折り返す
+  function fold(line) {
+    if (encoder.encode(line).length <= 75) return line;
+    var out = [], cur = '', curBytes = 0, limit = 75;
+    Array.from(line).forEach(function (ch) {
+      var b = encoder.encode(ch).length;
+      if (curBytes + b > limit) { out.push(cur); cur = ''; curBytes = 0; limit = 74; }
+      cur += ch; curBytes += b;
+    });
+    if (cur) out.push(cur);
+    return out.join(CRLF + ' ');
+  }
+  function utcStamp(date) {
+    return date.getUTCFullYear() + p2(date.getUTCMonth() + 1) + p2(date.getUTCDate()) + 'T' + p2(date.getUTCHours()) + p2(date.getUTCMinutes()) + p2(date.getUTCSeconds()) + 'Z';
+  }
+  function toIcs(R, opt, now) {
+    var L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//AI Tools Hiroba//haishin-yotei//JA', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+      'BEGIN:VTIMEZONE', 'TZID:Asia/Tokyo', 'BEGIN:STANDARD', 'DTSTART:19700101T000000', 'TZOFFSETFROM:+0900', 'TZOFFSETTO:+0900', 'TZNAME:JST', 'END:STANDARD', 'END:VTIMEZONE'];
+    var ds = utcStamp(now || new Date());
+    R.events.forEach(function (it) {
+      L.push('BEGIN:VEVENT');
+      L.push('UID:' + it.uid);
+      L.push('DTSTAMP:' + ds);
+      if (it.type === 'tbd') { L.push('DTSTART;VALUE=DATE:' + compact(it.day)); L.push('DTEND;VALUE=DATE:' + compact(it.day + 1)); }
+      else { L.push('DTSTART;TZID=Asia/Tokyo:' + stamp(it.startAbs)); L.push('DTEND;TZID=Asia/Tokyo:' + stamp(it.endAbs)); }
+      L.push('SUMMARY:' + icsText(it.summary));
+      if (it.place) {
+        L.push('LOCATION:' + icsText(it.place));
+        if (isUrl(it.place)) L.push('URL:' + trimSp(it.place));
+      }
+      if (opt.alarm && it.type === 'time') {
+        L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'TRIGGER:-PT' + opt.alarm + 'M', 'DESCRIPTION:' + icsText(it.summary), 'END:VALARM');
+      }
+      L.push('END:VEVENT');
+    });
+    L.push('END:VCALENDAR');
+    return L.map(fold).join(CRLF) + CRLF;
+  }
+  function vars(it, R, opt) {
+    var day = it.day;
+    var o = ymd(day);
+    var start = it.type === 'off' ? 'お休み' : it.type === 'tbd' ? '時間未定' : minStr(it.startMin);
+    var end = '';
+    // 終了：表に書いた日から数えた時刻（日をまたぐ終了は 25:00 のように24時以降の書き方。開始の書き方とそろえる）
+    if (it.type === 'time') end = minStr(it.endAbs - day * 1440);
+    var title = it.title;
+    if (it.type === 'off' && /^(お?休み|休|休日|おやすみ)$/.test(title)) title = '';
+    return { '月': String(o.m), '日': String(o.d), '曜日': WD[o.wd], '開始': start, '時刻': start, '終了': end, 'タイトル': title, '配信先': it.place, '配信者名': squeeze(opt.name || '') };
+  }
+  function fill(tpl, v, unknown) {
+    return tpl.replace(/\{([^{}]*)\}/g, function (all, k) {
+      if (Object.prototype.hasOwnProperty.call(v, k)) return v[k];
+      if (unknown && unknown.indexOf(all) < 0) unknown.push(all);
+      return all;
+    });
+  }
+  function tidy(s) { return s.replace(/ {2,}/g, ' ').replace(/[ 　]+$/, ''); }
+  function toPost(R, opt) {
+    var unknown = [];
+    var common = { '配信者名': squeeze(opt.name || '') };
+    var out = [];
+    var head = tidy(trimSp(fill(opt.head || '', common, unknown)));
+    if (head) out.push(head);
+    R.items.forEach(function (it) { var l = tidy(trimSp(fill(opt.line || '', vars(it, R, opt), unknown))); if (l) out.push(l); });
+    var foot = tidy(trimSp(fill(opt.foot || '', common, unknown)));
+    if (foot) { out.push(''); out.push(foot); }
+    return { text: out.join(LF), unknown: unknown };
+  }
+  // X の文字数の目安（URL は23、ほとんどの欧文は1、それ以外は2）
+  function xWeight(text) {
+    var w = 0;
+    var parts = text.split(/(https?:\/\/[^\s]+)/i);
+    parts.forEach(function (p, i) {
+      if (i % 2 === 1) { w += 23; return; }
+      Array.from(p).forEach(function (ch) {
+        var c = ch.codePointAt(0);
+        if (c <= 0x10FF || (c >= 0x2000 && c <= 0x200D) || (c >= 0x2010 && c <= 0x201F) || (c >= 0x2032 && c <= 0x2037)) w += 1; else w += 2;
+      });
+    });
+    return w;
+  }
+  function timeRange(it, opt) {
+    if (it.type === 'off') return 'お休み';
+    if (it.type === 'tbd') return '時間未定';
+    var v = vars(it, null, opt);
+    return v['開始'] + '〜' + v['終了'];
+  }
+  function mdCell(s) { return s.split(BSL).join(BSL + BSL).split('|').join(BSL + '|'); }
+  function toMarkdown(R, opt) {
+    var out = ['| 日付 | 時刻 | タイトル | 配信先 |', '| --- | --- | --- | --- |'];
+    R.items.forEach(function (it) {
+      out.push('| ' + shortDate(it.day) + ' | ' + timeRange(it, opt) + ' | ' + mdCell(it.title) + ' | ' + mdCell(it.place) + ' |');
+    });
+    return out.join(LF);
+  }
+  function sheetCell(s) {
+    s = s.split(TAB).join(' ');
+    if (s.indexOf(QUOTE) >= 0) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  function tableRows(R) {
+    return R.items.map(function (it) {
+      if (it.type === 'time') {
+        var sd = Math.floor(it.startAbs / 1440), ed = Math.floor(it.endAbs / 1440);
+        var em = it.endAbs - ed * 1440;
+        return [dateStr(sd), WD[ymd(sd).wd], minStr(it.startAbs - sd * 1440), (ed !== sd ? dateStr(ed) + ' ' : '') + minStr(em), it.title, it.place];
+      }
+      return [dateStr(it.day), WD[ymd(it.day).wd], it.type === 'off' ? 'お休み' : '時間未定', '', it.title, it.place];
+    });
+  }
+  var TABLE_HEAD = ['日付', '曜日', '開始', '終了', 'タイトル', '配信先'];
+  function toTsv(R) {
+    return [TABLE_HEAD.join(TAB)].concat(tableRows(R).map(function (r) { return r.map(sheetCell).join(TAB); })).join(LF);
+  }
+  function escapeHtml(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  var TEXT_ATTR = ' style="mso-number-format:' + String.fromCharCode(39) + BSL + '@' + String.fromCharCode(39) + '" sdnum="1041;0;@"';
+  function toHtml(R) {
+    var td = function (v, text) { return '<td' + (text ? TEXT_ATTR : '') + '>' + escapeHtml(v) + '</td>'; };
+    var html = '<meta charset="utf-8"><table><tr>' + TABLE_HEAD.map(function (h) { return td(h, true); }).join('') + '</tr>';
+    tableRows(R).forEach(function (r) { html += '<tr>' + r.map(function (v, i) { return td(v, i === 1 || i >= 4 || (i === 2 && !/^[0-9]/.test(v))); }).join('') + '</tr>'; });
+    return html + '</table>';
+  }
+  function toUrlList(R) {
+    return R.events.map(function (it) { return shortDate(it.type === 'tbd' ? it.day : Math.floor(it.startAbs / 1440)) + ' ' + it.summary + TAB + it.gurl; }).join(LF);
+  }
+
+  // ---------- 画面 ----------
+  function $(id) { return document.getElementById(id); }
+  var srcEl = $('src'), nameEl = $('name'), prefixEl = $('prefix'), wsEl = $('weekStart');
+  var headEl = $('postHead'), lineEl = $('postLine'), footEl = $('postFoot');
+  var status = $('status'), setStatusEl = $('setStatus'), summaryEl = $('summary');
+  var manualBox = $('manualBox'), manualText = $('manualText');
+  var saveIcs = $('saveIcs'), copyUrls = $('copyUrls'), copyPost = $('copyPost'), copyMd = $('copyMd'), copyTsv = $('copyTsv');
+  var viewInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="view"]'));
+  var durInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="dur"]'));
+  var alarmInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="alarm"]'));
+  var colSelects = { date: $('colDate'), start: $('colStart'), title: $('colTitle'), place: $('colPlace'), end: $('colEnd') };
+  var COL_NAMES = { date: '日付・曜日', start: '開始時刻', title: 'タイトル', place: '配信先', end: '終了・長さ' };
+  var colChoice = { date: 'auto', start: 'auto', title: 'auto', place: 'auto', end: 'auto' };
+  var last = null;
+  function resetCols() { Object.keys(colChoice).forEach(function (k) { colChoice[k] = 'auto'; }); }
+
+  function radio(list) { for (var i = 0; i < list.length; i++) if (list[i].checked) return list[i].value; return list[0].value; }
+  function defaultWeekStart() { return mondayOf(todayJst()); }
+  function options() {
+    var ws = parseIsoDate(wsEl.value);
+    return {
+      weekStart: ws === null ? defaultWeekStart() : ws, wsBad: ws === null && wsEl.value !== '',
+      duration: +radio(durInputs), alarm: +radio(alarmInputs), name: nameEl.value, prefix: prefixEl.checked,
+      head: headEl.value, line: lineEl.value, foot: footEl.value, cols: colChoice
+    };
+  }
+  function colLabel(i, R) {
+    var letter = i < 26 ? String.fromCharCode(65 + i) : 'A' + String.fromCharCode(65 + i - 26);
+    var h = R && R.header ? trimSp(R.header.cells[i] || '') : '';
+    return letter + '列' + (h ? '（' + clip(h, 10) + '）' : '');
+  }
+  function renderCols(R) {
+    var n = R && R.colCount ? R.colCount : 0;
+    var spaced = R && R.mode === 'space';
+    Object.keys(colSelects).forEach(function (k) {
+      var sel = colSelects[k];
+      var html = '';
+      if (!n) html = '<option value="auto">（表を貼ると選べます）</option>';
+      else if (spaced) {
+        html = '<option value="auto">' + (k === 'end' ? 'なし（空白区切りの行）' : '空白区切りの行：' + ({ date: '1つ目の語', start: '日付の次の時刻', title: '残りの語', place: '最後のURL' })[k]) + '</option>';
+      } else {
+        var a = R.autoCols[k];
+        html = '<option value="auto">自動（' + (a >= 0 ? colLabel(a, R) : 'なし') + '）</option>';
+        if (k !== 'date' && k !== 'title') html += '<option value="-1">なし</option>';
+        for (var i = 0; i < n; i++) html += '<option value="' + i + '">' + escapeHtml(colLabel(i, R)) + '</option>';
+      }
+      sel.innerHTML = html;
+      sel.disabled = !n || spaced;
+      var v = colChoice[k];
+      if (spaced || !n) v = 'auto';
+      if (!sel.querySelector('option[value="' + v + '"]')) { v = 'auto'; colChoice[k] = 'auto'; }
+      sel.value = v;
+    });
+  }
+  function setStat(id, v, has) { var li = $(id); li.querySelector('.v').innerHTML = v; li.classList.toggle('has', !!has); }
+
+  var BAD_WORD = { date: '日付が読めません', nodate: '日付・曜日がありません', time: '開始時刻が読めません', notime: '開始時刻がありません', notitle: 'タイトルがありません' };
+  function rowList(list, fn) {
+    var shown = list.slice(0, 4).map(fn).join('、');
+    return shown + (list.length > 4 ? ' ほか' + (list.length - 4) + '行' : '');
+  }
+  function resultWord(R) {
+    if (!R || R.error || !R.lineCount) return '';
+    if (R.headerOnly) return '予定の行がありません。';
+    if (!R.items.length) return '読める予定がありません。';
+    return '予定 ' + R.events.length + '件' + (R.offCount ? '・お休み ' + R.offCount + '日' : '') + 'を読みました。';
+  }
+  function errorMessage(R) {
+    var e = R.error;
+    if (e.type === 'tooMany') return '行が多すぎます（' + fmtNum(e.n) + '行）。1回に ' + fmtNum(MAX_ROWS) + '行まで読めます。分けて貼り付けてください。';
+    if (e.type === 'noCol') return '日付・曜日の列が見つかりません。日付は「10/27」「10月27日」、曜日は「月」のように書いてください。書き方が合っているときは、「列の割り当て」で日付・曜日の列を選んでください。';
+    return '';
+  }
+  function renderSummary(R, opt) {
+    var h = '';
+    var line = function (cls, t) { h += '<span class="' + cls + '">' + escapeHtml(t) + '</span>'; };
+    if (opt.wsBad) line('w', '週の開始日が読めないため、今週の月曜（' + dateStr(defaultWeekStart()) + '）として扱っています。');
+    if (!R.lineCount) { line('sub', '予定の表を貼り付けると、ここに日時の一覧が出ます。'); summaryEl.innerHTML = h; return; }
+    if (R.error) { line('main err', errorMessage(R)); summaryEl.innerHTML = h; return; }
+    var hdr = function () { if (R.header) line('sub', R.header.no + '行目「' + clip(squeeze(R.header.cells.join(' ')), 24) + '」は見出しとして飛ばしました。'); };
+    if (R.headerOnly) { line('main err', '見出しの行だけです。予定の行も貼り付けてください。'); hdr(); summaryEl.innerHTML = h; return; }
+    var wide = R.warnRows.outside.length > 0;
+    var dd = function (n) { return wide ? ymdPlain(n) + '(' + WD[ymd(n).wd] + ')' : shortDate(n); };
+    if (!R.items.length) line('main err', '読める予定がありません。日付（10/27・月 など）と開始時刻（21:00 など）の列があるか確かめてください。');
+    else if (!R.events.length) line('main', 'カレンダーに登録する予定はありません（お休み ' + R.offCount + '日）。告知文と表には、お休みとして入れます。');
+    else line('main', '予定 ' + R.events.length + '件' + (R.offCount ? '（ほかにお休み ' + R.offCount + '日）' : '') + 'を ' + dd(R.firstDay) + '〜' + dd(R.lastDay) + ' の日時にしました。');
+    hdr();
+    if (R.cols && R.cols.start < 0 && R.bad.some(function (b) { return b.reason === 'notime'; }) && !R.items.some(function (it) { return it.type === 'time'; })) line('w', ('start' in R.fixed ? '開始時刻の列が「なし」のため、どの行も開始時刻がありません。' : '開始時刻の列が見つかりませんでした。') + '「列の割り当て」で開始時刻の列を選んでください。');
+    if (R.bad.length) {
+      var timeBad = R.bad.some(function (b) { return b.reason === 'time' || b.reason === 'notime'; });
+      var sepBad = R.bad.some(function (b) { return (/[,、，]/.test(b.text) || /[)）]\//.test(b.text)); });
+      var titleBad = R.bad.some(function (b) { return b.reason === 'notitle'; });
+      line('w', '読めない行が ' + R.bad.length + '行あります（予定に入れていません）：' + rowList(R.bad, function (b) { return b.no + '行目 ' + BAD_WORD[b.reason] + (b.text ? '（' + clip(b.text, 30) + '）' : ''); }) + '。' + (sepBad ? '列はタブ（Excel・スプレッドシートからのコピー）か空白で区切ってください。' : '') + (timeBad ? '開始の欄は「21:00」のような時刻か、「休み」「未定」と書いてください。' : '') + (titleBad ? 'タイトルの欄に配信の内容を書くか、「列の割り当て」でタイトルの列を選んでください。' : ''));
+    }
+    if (R.warnRows.wd.length) line('w', '日付と曜日が合わない行があります（日付のほうを使いました）：' + rowList(R.warnRows.wd, function (x) { return x.no + '行目 ' + dateStr(x.day) + ' は' + WD[ymd(x.day).wd] + '曜日（表では' + WD[x.stated] + '）'; }) + '。年や日付が合っているか確かめてください。');
+    if (R.warnRows.outside.length) line('w', '週の開始日（' + shortDate(opt.weekStart) + '）から7日の外の日付があります：' + rowList(R.warnRows.outside, function (x) { return x.no + '行目 ' + dateStr(x.day); }) + '。年や週の開始日が合っているか確かめてください。');
+    if (R.warnRows.late.length) line('sub', '24時以降の時刻は翌日の時刻として登録します：' + rowList(R.warnRows.late, function (x) { return x.no + '行目 ' + x.written + ' → ' + shortDate(Math.floor(x.real / 1440)) + ' ' + minStr(x.real % 1440); }) + '。');
+    if (R.warnRows.end.length) line('w', '終了・長さが読めない行は、「終了がない予定の長さ」（' + durName(opt.duration) + '）にしました：' + rowList(R.warnRows.end, function (x) { return x.no + '行目（' + clip(x.text, 10) + '）'; }) + '。終了の欄は「23:00」か「2時間」「90分」のように書いてください。');
+    if (R.tbdCount) line('sub', '時間未定の ' + R.tbdCount + '件は、終日の予定として登録します。');
+    if (R.sorted) line('sub', '日付・時刻の順（表に書いた日と時刻の順）に並べ替えました。');
+    summaryEl.innerHTML = h;
+  }
+  function durName(m) { return m % 60 ? (m >= 60 ? Math.floor(m / 60) + '時間' : '') + (m % 60) + '分' : (m / 60) + '時間'; }
+
+  function renderList(R, opt) {
+    var wrap = $('listWrap');
+    if (!R.items.length) { wrap.innerHTML = '<p class="empty-result">' + (R.lineCount && !R.error ? '読める予定がありません。' : '予定の表を貼り付けると、ここに日時の一覧が出ます。') + '</p>'; return; }
+    var h = '<table class="res"><thead><tr><th scope="col">日時</th><th scope="col">タイトル・配信先</th><th scope="col">カレンダー</th></tr></thead><tbody>';
+    R.items.forEach(function (it) {
+      var when;
+      if (it.type === 'time') {
+        var sd = Math.floor(it.startAbs / 1440), ed = Math.floor(it.endAbs / 1440);
+        when = '<span class="d">' + dateStr(sd) + '（' + WD[ymd(sd).wd] + '）</span><span class="t">' + minStr(it.startAbs - sd * 1440) + '〜' + (ed !== sd ? (ed - sd === 1 ? '翌' : shortDate(ed) + ' ') : '') + minStr(it.endAbs - ed * 1440) + '</span>';
+        if (it.startMin >= 1440) when += '<span class="o">表では ' + shortDate(it.day) + ' ' + minStr(it.startMin) + '</span>';
+      } else when = '<span class="d">' + dateStr(it.day) + '（' + WD[ymd(it.day).wd] + '）</span><span class="t">' + (it.type === 'off' ? 'お休み' : '時間未定（終日）') + '</span>';
+      var what = '<span class="ttl">' + escapeHtml(it.type === 'off' ? (it.title || 'お休み') : it.summary) + '</span>' + (it.place ? '<span class="pl">' + escapeHtml(it.place) + '</span>' : '');
+      var cal = it.type === 'off' ? '<span class="none">登録しない</span>' : '<a class="gcal" href="' + escapeHtml(it.gurl) + '" target="_blank" rel="noopener noreferrer">Googleカレンダーに追加<span class="sr">（新しいタブ）</span></a>';
+      h += '<tr' + (it.type === 'off' ? ' class="off"' : '') + '><td class="when">' + when + '</td><td class="what">' + what + '</td><td class="cal">' + cal + '</td></tr>';
+    });
+    wrap.innerHTML = h + '</tbody></table>';
+  }
+  function render() {
+    var opt = options();
+    var R = analyze(srcEl.value, opt);
+    last = R;
+    renderCols(R);
+    var ok = !R.error && R.items.length;
+    var counted = R.lineCount && !R.error && !R.headerOnly;
+    var wide = ok && R.warnRows.outside.length > 0;
+    setStat('stEvents', counted ? fmtNum(R.events.length) + '<small>件</small>' : '–');
+    setStat('stRange', ok ? (wide ? ymdPlain(R.firstDay) + '<small>〜</small>' + ymdPlain(R.lastDay) : md(R.firstDay) + '<small>〜</small>' + md(R.lastDay)) : '–');
+    setStat('stOff', counted ? fmtNum(R.offCount + R.tbdCount) + '<small>件</small>' : '–');
+    setStat('stBad', counted ? fmtNum(R.bad.length) + '<small>行</small>' : '–', R.bad.length > 0);
+    renderSummary(R, opt);
+    renderList(R, opt);
+    var post = ok ? toPost(R, opt) : { text: '', unknown: [] };
+    R.post = post;
+    $('postOut').textContent = post.text || '（予定を読むと、ここに告知文が出ます）';
+    $('postOut').classList.toggle('placeholder', !post.text);
+    var w = post.text ? xWeight(post.text) : 0;
+    var pc = $('postCount');
+    pc.innerHTML = post.text ? escapeHtml(fmtNum(cpLen(post.text)) + '文字・X の数え方の目安 ' + fmtNum(w) + ' / 280') + (w > 280 ? '<span class="over">（280 を超えています。1件の行を短くするか、2回に分けて投稿してください）</span>' : '') : '';
+    pc.className = 'count' + (w > 280 ? ' over-all' : '');
+    $('postUnknown').textContent = post.unknown.length ? '「' + post.unknown.join('」「') + '」は差し込みの名前ではないため、そのまま残しています。使える名前：{月}{日}{曜日}{開始}{終了}{タイトル}{配信先}{配信者名}' : '';
+    $('mdOut').textContent = ok ? toMarkdown(R, opt) : '（予定を読むと、ここに Markdown の表が出ます）';
+    $('mdOut').classList.toggle('placeholder', !ok);
+    var hasEv = !R.error && R.events.length > 0;
+    saveIcs.disabled = !hasEv; copyUrls.disabled = !hasEv;
+    copyPost.disabled = !post.text; copyMd.disabled = !ok; copyTsv.disabled = !ok;
+    $('icsNote').textContent = hasEv ? R.events.length + '件の予定を1つのファイルにします' + (opt.alarm ? '（' + opt.alarm + '分前に通知）' : '') + '。' : (ok ? '登録する予定がないため、.ics は作れません。' : '');
+    return R;
+  }
+  function showView() {
+    var v = radio(viewInputs);
+    $('viewList').hidden = v !== 'list';
+    $('viewPost').hidden = v !== 'post';
+    $('viewMd').hidden = v !== 'md';
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio') && el.nextElementSibling) el = el.nextElementSibling;
+    if (!el || !el.getBoundingClientRect || !document.body.contains(el)) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    [status, setStatusEl].forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    // 知らせの文の長さが変わって押した部品が動いたら、スクロールで元の位置に戻す
+    var r0 = pressedRect();
+    unpin();
+    [status, setStatusEl].forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    var span = null;
+    if (message) {
+      span = document.createElement('span');
+      span.textContent = message;
+      el.appendChild(span);
+    }
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    if (!span) return;
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if ((status.classList.contains('pin') || setStatusEl.classList.contains('pin')) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  // 設定を変えて結果の高さが変わっても、押した部品が画面の同じ位置に残るようにスクロールを合わせる
+  function renderKeep() {
+    var r0 = pressedRect();
+    var R = render();
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    return R;
+  }
+  function afterChange(el, prefix) {
+    resetCopyButtons();
+    var R = renderKeep();
+    if (R.error) { setStatus(el, prefix + errorMessage(R), true); return; }
+    setStatus(el, prefix + resultWord(R));
+  }
+
+  // ---------- コピー・保存 ----------
+  var copyTimer = null;
+  var COPY_BUTTONS = [saveIcs, copyUrls, copyPost, copyMd, copyTsv];
+  var manualHome = manualBox.nextSibling;
+  function restoreManual() {
+    manualBox.hidden = true;
+    if (manualBox.parentNode !== manualHome.parentNode || manualBox.nextSibling !== manualHome) manualHome.parentNode.insertBefore(manualBox, manualHome);
+  }
+  function resetLabels() {
+    clearTimeout(copyTimer);
+    COPY_BUTTONS.forEach(function (b) { var l = b.getAttribute('data-label'); if (l) b.textContent = l; b.style.minWidth = ''; });
+  }
+  function resetCopyButtons() { resetLabels(); restoreManual(); }
+  function flashButton(btn, label, ms) {
+    resetLabels();
+    btn.style.minWidth = btn.getBoundingClientRect().width + 'px';
+    btn.textContent = label;
+    copyTimer = setTimeout(resetLabels, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function showManual(btn, text, label) {
+    var before = btn.getBoundingClientRect().top;
+    restoreManual();
+    // 欄はボタンの上に出し、押したボタンが動かないようにスクロールで戻す（欄はボタンのすぐ上に見える）
+    var anchor = btn.closest('.actions');
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(manualBox, anchor);
+    $('manualLabel').textContent = label;
+    manualText.value = text;
+    manualBox.hidden = false;
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    var moved = btn.getBoundingClientRect().top - before;
+    if (Math.abs(moved) > 0.5) window.scrollBy(0, moved);
+    var rect = manualBox.getBoundingClientRect();
+    if (rect.top < 0) window.scrollBy(0, rect.top - 8);
+  }
+  function copyFailed(btn, text) {
+    flashButton(btn, 'コピー失敗', 4000);
+    showManual(btn, text, 'コピー用のテキスト');
+    setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+  }
+  function doCopy(btn, text, message, html) {
+    var done = function () {
+      var before = btn.getBoundingClientRect().top;
+      restoreManual();
+      var moved = btn.getBoundingClientRect().top - before;
+      if (Math.abs(moved) > 0.5) window.scrollBy(0, moved);
+      setStatus(status, message);
+      flashButton(btn, '✓ コピー済み', 2500);
+    };
+    var plain = function () {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(btn, text); });
+          return;
+        }
+      } catch (e) { /* 下の方法で試す */ }
+      if (fallbackCopy(text)) done(); else copyFailed(btn, text);
+    };
+    try {
+      if (html && navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+        var item = new window.ClipboardItem({ 'text/plain': new Blob([text], { type: 'text/plain' }), 'text/html': new Blob([html], { type: 'text/html' }) });
+        navigator.clipboard.write([item]).then(done, plain);
+        return;
+      }
+    } catch (e) { /* テキストだけでコピーする */ }
+    plain();
+  }
+  COPY_BUTTONS.forEach(function (b) { b.setAttribute('data-label', b.textContent); });
+  function fileName(R) { return 'haishin-yotei-' + compact(R.firstDay) + '.ics'; }
+  saveIcs.addEventListener('click', function () {
+    var R = last;
+    if (saveIcs.disabled || !R || !R.events.length) return;
+    var opt = options();
+    var text = toIcs(R, opt, new Date());
+    var ok = false;
+    try {
+      var blob = new Blob([text], { type: 'text/calendar;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = fileName(R);
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      ok = true;
+    } catch (e) { ok = false; }
+    if (ok) {
+      restoreManual();
+      setStatus(status, '「' + fileName(R) + '」（予定 ' + R.events.length + '件）を保存しました。Googleカレンダーは「設定 › インポート」、iPhone はファイルを開いて「すべてを追加」、Outlook はファイルを開いて取り込みます。保存されないときは、ほかのブラウザで開いてください。');
+      flashButton(saveIcs, '✓ 保存しました', 2500);
+    } else {
+      flashButton(saveIcs, '保存できませんでした', 4000);
+      showManual(saveIcs, text, '.ics の中身（メモ帳などに貼り、拡張子 .ics で保存できます）');
+      setStatus(status, 'このブラウザではファイルを保存できませんでした。ほかのブラウザ（Chrome・Safari など）で開き直すか、「.ics の中身」の欄の文字をコピーして、拡張子 .ics のファイルとして保存してください。', true);
+    }
+  });
+  copyUrls.addEventListener('click', function () {
+    var R = last; if (copyUrls.disabled || !R) return;
+    doCopy(copyUrls, toUrlList(R), 'GoogleカレンダーのURL（' + R.events.length + '件、1行に「日付 予定名」とURL）をコピーしました。');
+  });
+  copyPost.addEventListener('click', function () {
+    var R = last; if (copyPost.disabled || !R || !R.post) return;
+    var w = xWeight(R.post.text);
+    doCopy(copyPost, R.post.text, '告知文（' + fmtNum(cpLen(R.post.text)) + '文字）をコピーしました。' + (w > 280 ? 'X の目安の 280 を超えているので、投稿の前に短くしてください。' : 'X などに貼り付けてください。'));
+  });
+  copyMd.addEventListener('click', function () {
+    var R = last; if (copyMd.disabled || !R) return;
+    doCopy(copyMd, toMarkdown(R, options()), 'Markdown の表（' + R.items.length + '行）をコピーしました。');
+  });
+  copyTsv.addEventListener('click', function () {
+    var R = last; if (copyTsv.disabled || !R) return;
+    doCopy(copyTsv, toTsv(R), '表（' + (R.items.length + 1) + '行×6列）をコピーしました。Excel・スプレッドシートで、左上にしたいセルを選んで貼り付けてください。', toHtml(R));
+  });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE = [['曜日', '開始', '終了', 'タイトル', '配信先'], ['月', '21:00', '23:00', '雑談配信', 'https://example.com/live'], ['水', 'お休み', '', '', ''], ['木', '20:00', '', '新作ゲーム実況', 'YouTube'], ['土', '25:00', '1時間30分', '深夜の歌枠', 'YouTube'], ['日', '未定', '', 'コラボ配信', 'Twitch']].map(function (r) { return r.join(TAB); }).join(LF);
+  $('sampleBtn').addEventListener('click', function () {
+    var had = srcEl.value.trim() !== '';
+    srcEl.value = SAMPLE;
+    resetCols();
+    resetCopyButtons();
+    var R = render();
+    setStatus(status, (had ? '例の予定に入れ替えました（前の内容は消えました）。' : '例の予定（曜日・時刻の表）を入れました。') + resultWord(R) + '曜日だけの行は、週の開始日（' + shortDate(options().weekStart) + '）からの7日に当てはめています。');
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = srcEl.value !== '';
+    srcEl.value = '';
+    resetCols();
+    resetCopyButtons();
+    render();
+    setStatus(status, had ? '予定の表を空にしました（配信者名と設定はそのままです）。' : '予定の表はもう空です。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  srcEl.addEventListener('input', function (e) {
+    var pasted = e && e.inputType === 'insertFromPaste';
+    if (pasted || srcEl.value === '') resetCols();
+    clearTimeout(inputTimer);
+    resetCopyButtons();
+    setStatus(status, '');
+    inputTimer = setTimeout(function () {
+      var R = render();
+      if (pasted) setStatus(status, pasteMessage(R), !!R.error || !R.items.length);
+    }, 150);
+  });
+  function pasteMessage(R) {
+    if (R.error) return '貼り付けました。' + errorMessage(R);
+    if (!R.lineCount) return '貼り付けましたが、文字がありません。';
+    if (R.headerOnly) return '貼り付けましたが、予定の行がありません。';
+    if (!R.items.length) return '貼り付けた' + fmtNum(R.lineCount) + '行に、読める予定がありません。1行に「日付か曜日・開始時刻・タイトル」を書いてください（例：10/27 21:00 雑談配信）。';
+    return '貼り付けた' + fmtNum(R.lineCount) + '行から、' + resultWord(R) + (R.bad.length ? '読めない行が ' + R.bad.length + '行あります。まとめを確かめてください。' : '日時の一覧を確かめて「.ics を保存」を押してください。');
+  }
+  nameEl.addEventListener('input', function () {
+    resetCopyButtons();
+    var R = render();
+    var n = squeeze(nameEl.value);
+    setStatus(status, n ? '配信者名を「' + clip(n, 20) + '」にしました。' + (prefixEl.checked ? '予定名の先頭に【' + clip(n, 20) + '】を付けます。' : '') : '配信者名を空にしました。予定名には何も付けません。');
+    void R;
+  });
+  prefixEl.addEventListener('change', function () {
+    var n = squeeze(nameEl.value);
+    afterChange(status, prefixEl.checked ? (n ? '予定名の先頭に【' + clip(n, 20) + '】を付けるようにしました。' : '予定名の先頭に配信者名を付けるようにしました（配信者名が空なので、今は付きません）。') : '予定名に配信者名を付けないようにしました。');
+  });
+  Object.keys(colSelects).forEach(function (k) {
+    colSelects[k].addEventListener('change', function () {
+      colChoice[k] = colSelects[k].value;
+      var sel = colSelects[k];
+      afterChange(setStatusEl, COL_NAMES[k] + 'の列を「' + sel.options[sel.selectedIndex].text + '」にしました。');
+    });
+  });
+  function setWeek(n, word) {
+    wsEl.value = isoOf(n);
+    afterChange(setStatusEl, '週の開始日を ' + word + shortDate(n) + ' にしました。');
+  }
+  $('thisWeek').addEventListener('click', function () { setWeek(defaultWeekStart(), '今週の月曜 '); });
+  $('nextWeek').addEventListener('click', function () { setWeek(defaultWeekStart() + 7, '来週の月曜 '); });
+  wsEl.addEventListener('change', function () {
+    var v = parseIsoDate(wsEl.value);
+    if (v === null) { afterChange(setStatusEl, wsEl.value ? '週の開始日が読めません。日付を選び直してください。今は今週の月曜として扱っています。' : '週の開始日が空なので、今週の月曜（' + shortDate(defaultWeekStart()) + '）として扱います。'); return; }
+    afterChange(setStatusEl, '週の開始日を ' + shortDate(v) + ' にしました。');
+  });
+  durInputs.forEach(function (el) { el.addEventListener('change', function () { afterChange(setStatusEl, '終了がない予定の長さを' + durName(+radio(durInputs)) + 'にしました。'); }); });
+  alarmInputs.forEach(function (el) { el.addEventListener('change', function () { var a = +radio(alarmInputs); afterChange(setStatusEl, a ? '.ics の予定に、' + a + '分前の通知を付けるようにしました（時間未定の予定には付けません）。' : '.ics の予定に通知を付けないようにしました。'); }); });
+  [headEl, lineEl, footEl].forEach(function (el) {
+    el.addEventListener('input', function () {
+      resetCopyButtons();
+      var R = renderKeep();
+      var label = el === headEl ? '1行目' : el === lineEl ? '1件の行のひな形' : '最後の行';
+      setStatus(setStatusEl, '告知文の' + label + 'を変えました。' + (R.post && R.post.text ? '告知文は ' + fmtNum(cpLen(R.post.text)) + '文字です。' : '') + (R.post && R.post.unknown.length ? '「' + R.post.unknown[0] + '」は差し込みの名前ではありません。' : ''), !!(R.post && R.post.unknown.length));
+    });
+  });
+  $('resetTpl').addEventListener('click', function () {
+    headEl.value = headEl.defaultValue; lineEl.value = lineEl.defaultValue; footEl.value = footEl.defaultValue;
+    afterChange(setStatusEl, '告知文のひな形をはじめの形に戻しました。');
+  });
+  viewInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      resetCopyButtons();
+      showView();
+      var v = radio(viewInputs);
+      var names = { list: '日時の一覧', post: '告知文', md: 'Markdown・表' };
+      var has = last && !last.error && last.items.length;
+      setStatus(status, names[v] + 'を表示しました。' + (has ? '' : '予定の表を貼り付けると、ここに結果が出ます。'));
+    });
+  });
+  document.querySelector('.jump').addEventListener('click', function (e) {
+    e.preventDefault();
+    var h = $('resultTitle');
+    h.scrollIntoView({ block: 'start' });
+    h.focus({ preventScroll: true });
+  });
+
+  window.HaishinYotei = { analyze: analyze, readDate: readDate, readTime: readTime, readStart: readStart, readEnd: readEnd, toIcs: function (R, o, now) { return toIcs(R, o || options(), now); }, toPost: toPost, toMarkdown: toMarkdown, toTsv: toTsv, toHtml: toHtml, toUrlList: toUrlList, xWeight: xWeight, fold: fold, dayNum: dayNum, options: options, last: function () { return last; } };
+  wsEl.value = isoOf(defaultWeekStart());
+  showView();
+  render();
+})();
+</script>
+</body>
+</html>
