@@ -1504,6 +1504,7 @@
     if (!R.lineCount) return '貼り付けましたが、文字がありません。';
     if (R.headerOnly) return '貼り付けましたが、予定の行がありません。';
     if (!R.items.length) return '貼り付けた' + fmtNum(R.lineCount) + '行に、読める予定がありません。1行に「日付か曜日・開始時刻・タイトル」を書いてください（例：10/27 21:00 雑談配信）。';
+    if (!R.events.length) return '貼り付けた' + fmtNum(R.lineCount) + '行から、お休み ' + R.offCount + '日を読みました。' + (R.bad.length ? '読めない行が ' + R.bad.length + '行あります。まとめを確かめてください。' : '登録する予定がないため .ics は作れませんが、告知文と表はコピーできます。');
     return '貼り付けた' + fmtNum(R.lineCount) + '行から、' + resultWord(R) + (R.bad.length ? '読めない行が ' + R.bad.length + '行あります。まとめを確かめてください。' : '日時の一覧を確かめて「.ics を保存」を押してください。');
   }
   nameEl.addEventListener('input', function () {
@@ -1521,7 +1522,11 @@
     colSelects[k].addEventListener('change', function () {
       colChoice[k] = colSelects[k].value;
       var sel = colSelects[k];
-      afterChange(setStatusEl, COL_NAMES[k] + 'の列を「' + sel.options[sel.selectedIndex].text + '」にしました。');
+      resetCopyButtons();
+      var R = renderKeep();
+      // 選び直した後の選択肢の文（「自動（A列（曜日））」など）で知らせる
+      var prefix = COL_NAMES[k] + 'の列を「' + sel.options[sel.selectedIndex].text + '」にしました。';
+      if (R.error) setStatus(setStatusEl, prefix + errorMessage(R), true); else setStatus(setStatusEl, prefix + resultWord(R));
     });
   });
   function setWeek(n, word) {
