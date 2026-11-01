@@ -616,22 +616,18 @@
   function isoOf(n) { var o = ymd(n); return o.y + '-' + p2(o.m) + '-' + p2(o.d); }
 
   // 曜日の語を先頭から読む。{ wd, len } か null
-  var WD_RE = /^[(]?\s*(月|火|水|木|金|土|日)(曜日|曜)?\s*[)]?/;
-  var WD_EN_RE = /^[(]?\s*([A-Za-z]+)\.?\s*[)]?/;
+  // 曜日：括弧つき（「(火)」「(火・祝)」。括弧の中の曜日の後ろの書き添えは読まない）か、括弧なし（「火」「火曜」「火曜日」）
+  var WD_PAREN_RE = /^[(]\s*(月|火|水|木|金|土|日)(曜日|曜)?[^()]*[)]/;
+  var WD_BARE_RE = /^(月|火|水|木|金|土|日)(曜日|曜)?/;
+  var WD_EN_PAREN_RE = /^[(]\s*([A-Za-z]+)\.?\s*[)]/;
+  var WD_EN_BARE_RE = /^([A-Za-z]+)\.?/;
+  // 曜日の語を先頭から読む。{ wd, len } か null。後ろは、終わり・空白・括弧・数字だけ（「月見」「月曜,21:00」「(火)/21:00」を曜日として読まない）
   function readWeekday(h) {
-    var m = WD_RE.exec(h);
-    if (m) {
-      var rest = h.slice(m[0].length);
-      // 「月見」「日本」のように、続く文字が語の一部なら曜日として読まない（括弧・空白・数字・記号・終わりならよい）
-      // 後ろは、終わり・空白・括弧・数字だけ（「月見」「月曜,21:00」「(火)/21:00」を曜日として読まない）
-      if (rest === '' || /^[ (0-9]/.test(rest)) return { wd: WD.indexOf(m[1]), len: m[0].length };
-      return null;
-    }
-    m = WD_EN_RE.exec(h);
-    if (m && Object.prototype.hasOwnProperty.call(WD_EN, m[1].toLowerCase())) {
-      var rest2 = h.slice(m[0].length);
-      if (rest2 === '' || /^[ (0-9]/.test(rest2)) return { wd: WD_EN[m[1].toLowerCase()], len: m[0].length };
-    }
+    var ok = function (len) { var r = h.slice(len); return r === '' || /^[ (0-9※]/.test(r); };
+    var m = WD_PAREN_RE.exec(h) || WD_BARE_RE.exec(h);
+    if (m) return ok(m[0].length) ? { wd: WD.indexOf(m[1]), len: m[0].length } : null;
+    m = WD_EN_PAREN_RE.exec(h) || WD_EN_BARE_RE.exec(h);
+    if (m && Object.prototype.hasOwnProperty.call(WD_EN, m[1].toLowerCase()) && ok(m[0].length)) return { wd: WD_EN[m[1].toLowerCase()], len: m[0].length };
     return null;
   }
 
@@ -648,11 +644,23 @@
       if (y !== null ? !validDate(y, mo, d) : !validDate(2024, mo, d)) return null;
       // 日付のすぐ後ろは、終わり・空白・括弧・曜日の字だけ（「10/27,21:00,雑談」のような区切りの違う行を日付として読まない）
       var nx = h.charAt(len);
-      if (nx !== '' && !/[ (月火水木金土日]/.test(nx)) return null;
+      if (nx !== '' && !/[ (月火水木金土日※]/.test(nx)) return null;
       var rest = trimSp(h.slice(len));
-      var w = readWeekday(rest);
       var stated = null;
+      // 括弧の書き添えを読む：「(火)」「(火・祝)」は曜日、「(祝)」「(振替)」など曜日で始まらないものは読み飛ばす
+      var w = WD_BARE_RE.exec(rest) ? readWeekday(rest) : null;
       if (w) { stated = w.wd; rest = trimSp(rest.slice(w.len)); }
+      for (var g = 0; g < 3; g++) {
+        var pm = /^[(]([^()]*)[)]/.exec(rest);
+        if (!pm) break;
+        var after = rest.slice(pm[0].length);
+        if (after !== '' && !/^[ (0-9※]/.test(after)) break;
+        var pw = readWeekday(pm[0]);
+        if (pw && stated === null) stated = pw.wd;
+        rest = trimSp(after);
+      }
+      // 「※振替」のような注記は読み飛ばす
+      if (rest.charAt(0) === '※') rest = '';
       return { kind: 'date', y: y, m: mo, d: d, statedWd: stated, rest: rest };
     }
     var w2 = readWeekday(h);
@@ -829,6 +837,13 @@
     var auto = autoCols(rows, colCount, R.mode, fixed);
     cols = auto.cols;
     R.fixed = fixed;
+    // 選択欄の「自動（…）」に出す列：その役を自動にしたときに選ばれる列（手で選んだほかの役は除いたまま）
+    R.autoLabel = {};
+    Object.keys(cols).forEach(function (k) {
+      if (!(k in fixed)) { R.autoLabel[k] = cols[k]; return; }
+      var f2 = {}; Object.keys(fixed).forEach(function (j) { if (j !== k) f2[j] = fixed[j]; });
+      R.autoLabel[k] = autoCols(rows, colCount, R.mode, f2).cols[k];
+    });
     R.cols = cols; R.autoCols = auto.cols;
     R.headCells = auto.header ? first : null;
     // 見出し：見出しの言葉の行（1行だけでも）、または日付の列が日付・曜日として読めず2行以上ある
@@ -854,7 +869,9 @@
         var y = dn.y;
         if (y === null) { y = ymd(ws).y; if (dayNum(y, dn.m, dn.d) < ws) y++; if (!validDate(y, dn.m, dn.d)) { R.bad.push({ no: row.no, reason: 'date', text: trimSp(dcell) }); continue; } }
         day = dayNum(y, dn.m, dn.d);
-        if (dn.statedWd !== null && dn.statedWd !== ymd(day).wd) R.warnRows.wd.push({ no: row.no, day: day, stated: dn.statedWd });
+        var statedWd = dn.statedWd;
+        if (statedWd === null && cols.wd >= 0) { var wv = readDate(c[cols.wd] || ''); if (wv && wv.kind === 'wd') statedWd = wv.wd; }
+        if (statedWd !== null && statedWd !== ymd(day).wd) R.warnRows.wd.push({ no: row.no, day: day, stated: statedWd });
       }
       if (day < ws || day > ws + 6) R.warnRows.outside.push({ no: row.no, day: day });
       it.day = day;
@@ -864,10 +881,11 @@
       var scell = cols.start >= 0 ? (c[cols.start] || '') : '';
       var st = readStart(scell);
       // 日付の欄の残り（曜日の後ろ）は、開始時刻・範囲・休み・未定として読めるときだけ使う。読めなければ日付の欄が読めない行にする（区切りの違う行をお休みにしない）
-      if (dn.rest) {
+      // （開始の欄に時刻・休み・未定があるときは、日付の欄の残りは書き添えとして使わない）
+      if (dn.rest && !(st && st.type !== 'empty')) {
         var fromDate = readStart(dn.rest);
         if (!fromDate || fromDate.type === 'empty') { R.bad.push({ no: row.no, reason: 'date', text: trimSp(dcell) }); continue; }
-        if (st && st.type === 'empty') st = fromDate;
+        st = fromDate;
       }
       if (st && st.type === 'empty') {
         if (title === '' || OFF_RE.test(title)) st = { type: 'off' };
@@ -949,11 +967,31 @@
       });
     }
     var body = headerLike ? rows.slice(1) : rows;
+    var hasTextAny = function (i) { return body.some(function (r) { return trimSp(r.cells[i] || '') !== ''; }); };
     var score = function (i, fn) { var n = 0, t = 0; body.forEach(function (r) { var v = trimSp(r.cells[i] || ''); if (!v) return; t++; if (fn(v)) n++; }); return t ? n / t : 0; };
     var best = function (fn, min) { var bi = -1, bs = min; for (var i = 0; i < colCount; i++) { if (used[i]) continue; var s = score(i, fn); if (s > bs) { bs = s; bi = i; } } return bi; };
     // 日付・開始：読める値の割合が 0.3 以上の列のうち、割合がいちばん大きい列（休みを「-」「×」などで書いた行が多くても選べるように）
     if (cols.date < 0 && !('date' in fixed)) { cols.date = best(function (v) { return !!readDate(v); }, 0.29); if (cols.date >= 0) used[cols.date] = true; }
-    if (cols.start < 0 && !('start' in fixed)) { cols.start = best(function (v) { var s = readStart(v); return !!s && (s.type === 'time' || s.type === 'tbd' || (s.type === 'off' && OFF_RE.test(trimSp(norm(v))))); }, 0.29); if (cols.start >= 0) used[cols.start] = true; }
+    var startLike = function (v) { var s = readStart(v); return !!s && (s.type === 'time' || s.type === 'tbd' || (s.type === 'off' && OFF_RE.test(trimSp(norm(v))))); };
+    if (cols.start < 0 && !('start' in fixed)) {
+      cols.start = best(startLike, 0.29);
+      // 時刻が3割未満でも、時刻が1つ以上あり、ほかのセルが「-」「×」「OFF」のような3文字以内の印だけの列は開始の列にする
+      if (cols.start < 0) {
+        for (var si = 0; si < colCount && cols.start < 0; si++) {
+          if (used[si]) continue;
+          var nTime = 0, allMark = true;
+          body.forEach(function (r) { var v = trimSp(r.cells[si] || ''); if (!v) return; if (startLike(v)) nTime++; else if (cpLen(v) > 3 || /[0-9０-９]/.test(v)) allMark = false; });
+          if (nTime > 0 && allMark) cols.start = si;
+        }
+      }
+      if (cols.start >= 0) used[cols.start] = true;
+    }
+    // 日付の列とは別の、曜日だけの列（「火」「水」）は、タイトル・配信先に選ばない（日付と曜日の食い違いの確かめに使う）
+    cols.wd = -1;
+    for (var wi = 0; wi < colCount; wi++) {
+      if (used[wi] || wi === cols.date) continue;
+      if (score(wi, function (v) { var d = readDate(v); return !!d && d.kind === 'wd' && d.rest === ''; }) >= 0.5 && hasTextAny(wi)) { cols.wd = wi; used[wi] = true; break; }
+    }
     if (cols.end < 0 && !('end' in fixed) && cols.start >= 0) {
       for (var i = cols.start + 1; i < colCount; i++) { if (used[i]) continue; if (score(i, function (v) { return !!readEnd(v) && !readEnd(v).empty; }) >= 0.5) { cols.end = i; used[i] = true; break; } }
     }
@@ -1156,7 +1194,7 @@
       else if (spaced) {
         html = '<option value="auto">' + (k === 'end' ? 'なし（空白区切りの行）' : '空白区切りの行：' + ({ date: '1つ目の語', start: '日付の次の時刻', title: '残りの語', place: '最後のURL' })[k]) + '</option>';
       } else {
-        var a = R.autoCols[k];
+        var a = R.autoLabel[k];
         html = '<option value="auto">自動（' + (a >= 0 ? colLabel(a, R) : 'なし') + '）</option>';
         if (k !== 'date' && k !== 'title') html += '<option value="-1">なし</option>';
         for (var i = 0; i < n; i++) html += '<option value="' + i + '">' + escapeHtml(colLabel(i, R)) + '</option>';
