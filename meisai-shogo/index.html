@@ -1,0 +1,1531 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VCRH8J95WL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-VCRH8J95WL');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>明細どうしの照合 - 発注と納品の数量・金額を突き合わせ｜AIツールひろば</title>
+  <meta name="description" content="発注データと納品データなど2つの明細表を貼り付けると、同じ品番の数量と金額を合算して突き合わせ、数量違い・金額違い・片方だけ・単価違いを一覧にする無料ツール。登録不要で、入力した内容は送信されません。">
+  <link rel="canonical" href="https://autotoolspublisher-ui.github.io/tools/meisai-shogo/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIツールひろば">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:title" content="明細どうしの照合 - 発注と納品の数量・金額を突き合わせ｜AIツールひろば">
+  <meta property="og:description" content="発注データと納品データなど2つの明細表を貼り付けると、同じ品番の数量と金額を合算して突き合わせ、数量違い・金額違い・片方だけ・単価違いを一覧にする無料ツール。登録不要で、入力した内容は送信されません。">
+  <meta property="og:url" content="https://autotoolspublisher-ui.github.io/tools/meisai-shogo/">
+  <meta property="og:image" content="https://autotoolspublisher-ui.github.io/tools/ogp/meisai-shogo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "明細どうしの照合",
+    "description": "発注データと納品データなど2つの明細表を貼り付けると、同じ品番の数量と金額を合算して突き合わせ、数量違い・金額違い・片方だけ・単価違いを一覧にする無料ツール。登録不要で、入力した内容は送信されません。",
+    "url": "https://autotoolspublisher-ui.github.io/tools/meisai-shogo/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "ja",
+    "isAccessibleForFree": true,
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "AIツールひろば",
+        "item": "https://autotoolspublisher-ui.github.io/tools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "明細どうしの照合",
+        "item": "https://autotoolspublisher-ui.github.io/tools/meisai-shogo/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "分納で同じ品番が何行かに分かれていても照合できますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "はい。同じキーの行は、数量と金額をそれぞれ合計してから比べます。たとえば表Aの BT-100 が100個で、表Bの BT-100 が60個と40個の2行なら、数量は一致します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "キーの列はどう選びますか？表記が違う品番（A-100 と A100 など）は同じものになりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "見出しの語が「品番」「商品コード」などに完全に合う列が1つだけのときは、自動で選びます。候補が複数あるときや見出しがないときは自動で選ばないので、「列と照合の設定」で選んでください。キー2・キー3を選ぶと、3列までの組み合わせで照合します（表Aと表Bで列の数をそろえます）。表記は、全角と半角、大文字と小文字、前後の空白の違いだけをそろえます。ハイフンや途中の空白の違いは「ハイフン・途中の空白を無視」を選んだときだけで、似た名前を推定して結び付けることはしません。そろえれば同じになるキーがあるときは、まとめで知らせます。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "数量も金額も違うときや、読めない値があるときの区分はどうなりますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "判定は、片方だけ → 要確認 → 数量違い → 金額違い → 一致の順です。数量と金額の両方が違うキーは「数量違い」で、一覧で金額の差も見られます。100円×10個と1,000円×1個のように金額だけ同じなら「数量違い」です（対象を「金額だけ」にすると一致です）。「一式」や「1/2」のような数と読めない値、kg と g のように違う単位の数量があるキーは「要確認」にします。空欄は 0 として合計し、そのことをまとめに出します。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "送料や値引の行は、どう扱われますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "品名の列またはキーの列の値が「除外する行」の語（はじめは 送料、値引、小計、合計）で始まる行は、照合から外します。語で始まる別の品名（「送料込みセット」など）も外れるので、一覧の「除外・キーなしの行」で確かめ、語を直してください。語を空にすると、除外しません。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "入力した内容は、どこかに送信されますか？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "いいえ。照合はすべてお使いのブラウザの中で行い、貼り付けた表が外部に送信されることはありません。ブラウザに保存することもありません。"
+        }
+      }
+    ]
+  }
+]
+  </script>
+<link rel="stylesheet" href="../shared.css">
+<style>
+  :root { --ok: #137333; --warn-ink: #7a4f01; --bad: #b3261e; }
+  body { overflow-anchor: none; }
+  main { width: min(1180px, 100% - 40px); margin: 0 auto; padding: 42px 0 32px; }
+  header { margin-bottom: 27px; }
+  .eyebrow { display: inline-block; margin: 0 0 8px; color: var(--green); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .11em; }
+  h1 { margin: 0; color: #202124; font-size: clamp(1.9rem, 5vw, 2.55rem); font-weight: 500; line-height: 1.22; letter-spacing: -.04em; }
+  header p { max-width: 46em; margin: 9px 0 0; color: var(--muted); }
+  .card { background: var(--surface); border: 1px solid #e1e3e6; border-radius: var(--radius-card); padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow-card); }
+  .howto { margin: 0 0 18px; padding: 14px 18px; background: var(--mint); border-radius: 12px; color: #3c4043; font-size: .92rem; }
+  .howto ol { margin: 4px 0 0; padding-left: 1.4em; }
+  [hidden] { display: none !important; }
+  /* PC幅：左に入力と設定、右に結果。狭い幅：入力 → 結果 → 設定 */
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); grid-template-areas: "input result" "settings result"; gap: 0 30px; align-items: start; }
+  .layout > * { min-width: 0; }
+  .area-input { grid-area: input; }
+  .area-result { grid-area: result; padding-left: 30px; border-left: 1px solid #e8eaed; }
+  .area-settings { grid-area: settings; margin-top: 8px; padding-top: 18px; border-top: 1px solid #e8eaed; }
+  .area-settings h2, .area-result h2 { margin: 0 0 10px; color: #202124; font-size: 1.1rem; font-weight: 600; }
+  #resultTitle:focus, #setTitle:focus { outline: 0; }
+  #resultTitle:focus-visible, #setTitle:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .setting { margin: 0 0 14px; padding: 0; border: 0; min-width: 0; }
+  .setting > legend, .setting > .label { display: block; padding: 0; margin: 0 0 6px; color: #3c4043; font-weight: 600; font-size: .94rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px 8px; }
+  .chip { position: relative; display: inline-flex; max-width: 100%; }
+  .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip span { display: inline-flex; align-items: center; gap: 0 6px; min-height: 44px; padding: 6px 13px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: #3c4043; font-size: .9rem; cursor: pointer; }
+  .chip span::before { content: ""; flex: none; width: 16px; height: 16px; border: 2px solid #5f6368; border-radius: 4px; background: #fff; box-sizing: border-box; }
+  .chip input[type="radio"] + span::before { border-radius: 50%; }
+  .chip input:checked + span { border-color: #aecbfa; background: var(--mint); color: #174ea6; }
+  .chip input[type="checkbox"]:checked + span::before { content: "✓"; display: grid; place-items: center; border-color: var(--green); background: var(--green); color: #fff; font-size: 12px; line-height: 1; }
+  .chip input[type="radio"]:checked + span::before { border-color: var(--green); background: radial-gradient(circle, var(--green) 0 4px, #fff 4.5px); }
+  .chip input:focus-visible + span { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  .chip span:hover { background: #f6fafe; }
+  .chip input:disabled + span { color: #5f6368; border-style: dashed; background: var(--paper); cursor: not-allowed; }
+  .chip input:disabled + span::before { border-color: #bdc1c6; }
+  .field { min-width: 0; margin: 0 0 10px; }
+  .field > label, .field .label { display: block; margin-bottom: 4px; color: #3c4043; font-size: .94rem; font-weight: 600; }
+  .field label small, .hint, .label small { color: var(--muted); font-weight: 400; font-size: .875rem; }
+  .hint { margin: 6px 0 0; line-height: 1.5; }
+  input[type="text"], select { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); font-size: .95rem; font-family: inherit; }
+  select { max-width: 100%; }
+  input[type="text"]:focus, select:focus, textarea:focus { outline: 0; border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  input.bad, select.bad { border-color: var(--bad) !important; box-shadow: 0 0 0 1px var(--bad) !important; }
+  .sub-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0; }
+  .sub-row label { color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .sub-row input.short { width: 7em; text-align: right; }
+  .wide-input { width: 100%; }
+  textarea { display: block; width: 100%; min-height: 150px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); font-size: .94rem; line-height: 1.55; font-family: inherit; resize: vertical; white-space: pre; overflow: auto; box-sizing: border-box; }
+  .table-head { margin: 6px 0 12px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 10px; }
+  button.btn { min-height: 44px; white-space: nowrap; padding: 9px 20px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .15s; }
+  button.btn:hover { background: #f6fafe; }
+  button.btn.primary { border-color: var(--green); background: var(--green); color: #fff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+  button.btn.primary:hover { background: var(--green-dark); }
+  button.btn:disabled { opacity: .5; cursor: not-allowed; }
+  button.btn.copy { min-width: 10.8em; }
+  /* 列の選び方：役割・表A・表B */
+  .colgrid { display: grid; grid-template-columns: 3.6em minmax(0, 1fr) minmax(0, 1fr); gap: 6px 8px; align-items: center; margin: 0; }
+  .colgrid .ch { color: #3c4043; font-size: .875rem; font-weight: 600; }
+  .colgrid .rl { color: #3c4043; font-size: .9rem; font-weight: 600; }
+  .colgrid select { width: 100%; padding-left: 8px; padding-right: 2px; font-size: .875rem; }
+  .jump-row { display: none; margin: 0 0 6px; }
+  .jump-row.force { display: block; }
+  .jump { display: inline-flex; align-items: center; min-height: 44px; color: var(--green-dark); font-size: .9rem; font-weight: 600; text-decoration: none; }
+  .jump:hover { text-decoration: underline; }
+  /* まとめ（数の枠） */
+  .stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 0 0 8px; padding: 0; list-style: none; }
+  .stats li { display: flex; flex-direction: column; justify-content: center; min-height: 66px; padding: 6px 8px; border: 1px solid #e1e3e6; border-radius: 12px; background: #fff; }
+  .stats .k { color: #3c4043; font-size: .875rem; font-weight: 600; line-height: 1.3; white-space: nowrap; }
+  .stats .v { color: #202124; font-size: 1.2rem; font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .stats .v small { font-size: .875rem; font-weight: 400; color: var(--muted); }
+  .stats li.has { border-color: #f9c9a8; background: #fef7e0; }
+  .stats li.has .v { color: #7a4f01; }
+  .stats li.clear .v { color: var(--ok); }
+  /* 知らせ・まとめの文。よく出る長さの分は高さを先に確保する。超えたときは押した部品の位置をスクロールで保つ */
+  .summary { min-height: 96px; margin: 0 0 4px; font-size: .9rem; line-height: 1.5; color: #3c4043; overflow-wrap: anywhere; }
+  .summary .main { display: block; font-weight: 600; color: var(--ok); }
+  .summary .main.warn { color: var(--warn-ink); }
+  .summary .main.err { color: var(--bad); }
+  .summary .w { display: block; margin-top: 2px; color: var(--warn-ink); }
+  .summary .sub { display: block; margin-top: 2px; color: var(--muted); }
+  .status { min-height: 44px; margin: 0; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.5; color: var(--ok); }
+  .status.error { color: var(--warn-ink); }
+  /* 知らせを出した直後だけ（.pin）、本来の場所が画面の外にあるときは、押した部品から遠いほうの画面の端に重ねて見せる。ページをスクロールしたらやめる */
+  .status.pin span { position: fixed; z-index: 3; display: block; box-sizing: border-box; padding: 6px 12px; border-radius: 10px; background: var(--surface); box-shadow: 0 1px 4px rgba(60,64,67,.35); pointer-events: none; }
+  .manual { margin: 0 0 12px; }
+  .manual textarea { min-height: 96px; }
+  .out-row { margin: 4px 0 0; }
+  .out-row select { width: 100%; }
+  .view { margin: 4px 0 8px; }
+  .view select { width: 100%; }
+  .table-wrap { height: 360px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .table-wrap:focus-visible { outline: 3px solid #8ab4f8; outline-offset: 2px; }
+  table.res { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.45; }
+  table.res th, table.res td { padding: 7px 6px; border-bottom: 1px solid #eceef1; text-align: left; vertical-align: top; }
+  table.res thead th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); color: #3c4043; font-weight: 600; white-space: nowrap; }
+  table.res th.r { text-align: right; }
+  table.res td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.res td.key { min-width: 6em; font-weight: 600; overflow-wrap: anywhere; }
+  table.res td.txt { min-width: 5em; overflow-wrap: anywhere; }
+  table.res td.rows { min-width: 4em; color: var(--muted); overflow-wrap: anywhere; }
+  table.res td.cat { white-space: nowrap; font-weight: 600; color: #a50e0e; }
+  table.res td.cat.ok { color: var(--ok); font-weight: 400; }
+  table.res td.cat.chk { color: var(--warn-ink); }
+  table.res td.num.diff { color: #a50e0e; font-weight: 600; }
+  .empty-result { margin: 0; padding: 26px 14px; color: var(--muted); font-size: .9rem; text-align: center; }
+  .more-rows { margin: 0; padding: 8px 12px; color: var(--muted); font-size: .875rem; }
+  .note { margin: 14px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.55; }
+  .privacy { margin-top: 18px; padding: 13px 15px; background: var(--surface-soft); border-radius: 12px; color: #3c4043; font-size: .88rem; }
+  footer { margin-top: 20px; padding: 16px 4px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+  footer ul { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+
+  @media (min-width: 901px) and (min-height: 880px) {
+    .area-result { position: sticky; top: 8px; }
+    .table-wrap { height: 300px; }
+  }
+  @media (max-width: 1140px) {
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
+    .layout { display: block; }
+    .area-result { margin-top: 18px; padding: 18px 0 0; border-left: 0; border-top: 1px solid #e8eaed; }
+    .area-settings { margin-top: 26px; padding: 22px 0 0; }
+    .jump-row { display: block; }
+  }
+  @media (max-width: 650px) {
+    main { width: calc(100% - 28px); padding-top: 32px; }
+    .card { border-radius: 16px; padding: 19px 16px; }
+    header .more { display: none; }
+    .howto { padding: 12px 14px; }
+    textarea { min-height: 120px; }
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .stats li { min-height: 62px; }
+    .summary { min-height: 130px; }
+    .status { min-height: 66px; }
+    .actions .btn { flex: 1 1 40%; }
+    button.btn.copy { min-width: 0; padding-left: 10px; padding-right: 10px; }
+    table.res th, table.res td { padding: 6px 7px; }
+    .table-wrap { height: 340px; }
+  }
+  @media (max-width: 380px) {
+    header p { font-size: .9rem; line-height: 1.55; }
+    .howto { margin-bottom: 14px; padding: 10px 12px; font-size: .875rem; line-height: 1.5; }
+    main { padding-top: 24px; }
+    header { margin-bottom: 20px; }
+    .chip span { padding: 6px 10px; }
+    .colgrid { grid-template-columns: 3.2em minmax(0, 1fr) minmax(0, 1fr); gap: 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+</style>
+</head>
+<body>
+<nav class="topbar" aria-label="パンくずリスト">
+  <div class="topbar-inner breadcrumb"><ol><li><a href="../">AIツールひろば</a></li><li aria-current="page">明細どうしの照合</li></ol></div>
+</nav>
+<main>
+  <header>
+    <p class="eyebrow">STATEMENT MATCHING</p>
+    <h1>明細どうしの照合</h1>
+    <p>発注データと納品データのような2つの明細表を貼り付けると、同じ品番の行の数量と金額を合算してから突き合わせ、数量違い・金額違い・片方だけの品番と、同じ品番で単価が違う行を一覧にします。<span class="more">単価で並べ替えて目で追ったり、SUMIF やマクロを組んだりしなくても、分納で行が分かれた品番をそのまま照合でき、結果は Excel に貼り戻せます。</span></p>
+  </header>
+
+  <section class="card" aria-label="明細どうしの照合">
+    <div class="howto">
+      <strong>使い方</strong>
+      <ol>
+        <li>Excelの表を、見出しの行ごと表Aと表Bに貼り付けます。</li>
+        <li>区分（一致・数量違い・金額違い・片方だけ）の一覧を確かめます。</li>
+        <li>結果をコピーして Excel に貼り戻すか、CSV で保存します。</li>
+      </ol>
+    </div>
+
+    <div class="layout">
+      <div class="area-input">
+        <div class="field">
+          <label for="textA">表A <small>（例：発注データ）</small></label>
+          <textarea id="textA" spellcheck="false" placeholder="Excelの表を見出しごと&#10;そのまま貼り付けます。"></textarea>
+        </div>
+        <div class="table-head"><div class="chips"><label class="chip"><input type="checkbox" id="headA"><span>表Aの1行目は見出し</span></label></div></div>
+        <div class="field">
+          <label for="textB">表B <small>（例：納品データ）</small></label>
+          <textarea id="textB" spellcheck="false" placeholder="もう一方の表を同じように&#10;貼り付けます（列の順番は&#10;違っていてもかまいません）。"></textarea>
+        </div>
+        <div class="table-head"><div class="chips"><label class="chip"><input type="checkbox" id="headB"><span>表Bの1行目は見出し</span></label></div></div>
+        <div class="actions">
+          <button type="button" class="btn" id="sampleBtn">例を入れる</button>
+          <button type="button" class="btn" id="clearBtn">クリア</button>
+        </div>
+        <p class="status" id="inStatus" role="status" aria-live="polite"></p>
+      </div>
+
+      <div class="area-result" id="resultArea">
+        <h2 id="resultTitle" tabindex="-1">結果</h2>
+        <ul class="stats" id="stats" aria-label="まとめ">
+          <li id="stOk"><span class="k">一致</span><span class="v">–</span></li>
+          <li id="stQty"><span class="k">数量違い</span><span class="v">–</span></li>
+          <li id="stAmt"><span class="k">金額違い</span><span class="v">–</span></li>
+          <li id="stA"><span class="k">Aだけ</span><span class="v">–</span></li>
+          <li id="stB"><span class="k">Bだけ</span><span class="v">–</span></li>
+          <li id="stPrice"><span class="k">単価違い</span><span class="v">–</span></li>
+        </ul>
+        <p class="summary" id="summary" aria-live="polite"></p>
+        <p class="jump-row" id="jumpSetRow"><a class="jump" id="jumpSet" href="#setTitle">▼ 列と照合の設定へ</a></p>
+        <div class="field view">
+          <label for="viewSel">表示する一覧</label>
+          <select id="viewSel"></select>
+        </div>
+        <div class="table-wrap" id="tableWrap" tabindex="0" aria-label="一覧"></div>
+        <div class="field out-row">
+          <label for="outSel" style="margin-top:12px;">コピー・保存する内容</label>
+          <select id="outSel">
+            <option value="list">照合の一覧（キーごと）</option>
+            <option value="colA">表Aの区分の列だけ</option>
+            <option value="colB">表Bの区分の列だけ</option>
+            <option value="tableA">表Aに区分の列を付けた表</option>
+            <option value="tableB">表Bに区分の列を付けた表</option>
+            <option value="price">単価違いの一覧</option>
+          </select>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn primary copy" id="copyBtn" disabled>コピー</button>
+          <button type="button" class="btn copy" id="csvBtn" disabled>CSVで保存</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+        <div class="manual" id="manualBox" hidden>
+          <label for="manualText" style="display:block;margin-bottom:4px;color:#3c4043;font-weight:600;font-size:.94rem;">コピー用のテキスト</label>
+          <textarea id="manualText" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="area-settings" id="settingsArea">
+        <h2 id="setTitle" tabindex="-1">列と照合の設定</h2>
+        <p class="jump-row"><a class="jump" id="jumpRes" href="#resultTitle">▲ 結果を見る</a></p>
+        <p class="status" id="setStatus" role="status" aria-live="polite"></p>
+        <fieldset class="setting">
+          <legend>列の選び方</legend>
+          <div class="colgrid" id="colGrid"></div>
+          <p class="hint">キーは同じものを見分ける列です（品番＋納品日のように3列まで）。見出しの語で1つに決まる列だけを自動で選びます。決まらない列は選んでください。</p>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>照合の対象</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="target" value="both" checked><span>数量と金額</span></label>
+            <label class="chip"><input type="radio" name="target" value="qty"><span>数量だけ</span></label>
+            <label class="chip"><input type="radio" name="target" value="amt"><span>金額だけ</span></label>
+          </div>
+        </fieldset>
+        <div class="field setting">
+          <span class="label" id="tolLabel">金額の許容差</span>
+          <div class="sub-row">
+            <input type="text" id="tolInput" class="short" inputmode="decimal" autocomplete="off" spellcheck="false" value="0" aria-labelledby="tolLabel">
+            <label for="tolInput">円までの差は一致とする</label>
+          </div>
+        </div>
+        <fieldset class="setting">
+          <legend>キーのそろえ方</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="nkHalf" checked><span>全角と半角を同じに</span></label>
+            <label class="chip"><input type="checkbox" id="nkCase" checked><span>大文字と小文字を同じに</span></label>
+            <label class="chip"><input type="checkbox" id="nkTrim" checked><span>前後の空白を無視</span></label>
+            <label class="chip"><input type="checkbox" id="nkHyph"><span>ハイフン・途中の空白を無視</span></label>
+          </div>
+        </fieldset>
+        <div class="field setting">
+          <label for="exInput">除外する行 <small>（品名またはキーがこの語で始まる行。「、」で区切る）</small></label>
+          <input type="text" id="exInput" class="wide-input" autocomplete="off" spellcheck="false" value="送料、値引、小計、合計">
+        </div>
+      </div>
+    </div>
+
+    <p class="note">同じキーの行は、数量・金額をそれぞれ合計してから比べます。差は「B−A」です。数量と金額の両方が違うキーは「数量違い」になります。読めない値（一式、1/2 など）や違う単位（kg と g など）があるキーは、一致と決めず「要確認」にします。</p>
+    <p class="note">単価違いは、キー1の値が同じ行を表Aと表Bから集め、読める単価の種類が2つ以上あるキーの行をすべて一覧にします（空欄と読めない単価は種類に数えません）。品番などの値も一緒にコピーする内容では、001 や 1-2 のような値を Excel が数や日付に変えることがあります。そのときは「区分の列だけ」を使い、その表の1行目と同じ行の空いた列に貼り付けてください。</p>
+    <div class="privacy">貼り付けた表は、お使いのブラウザの中だけで処理します。外部に送信したり、保存したりしません。宛名・担当者名・振込先などの書類の部分は入れず、明細の行だけを貼り付けてください。</div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-examples">
+    <h2 id="guide-examples">使い方の例</h2>
+    <div class="guide-example">
+      <h3>発注データと納品データを照合する（分納・送料・全角の品番を含む）</h3>
+      <dl>
+        <dt>入力</dt><dd>「例を入れる」の2つの表（表Aは発注データ6行、表Bは納品データ9行（どちらも見出しの行を除く）。BT-100 は 60個と40個に分納、NT-100 は表Bで全角の「ＮＴ－１００」、表Bに送料の行）</dd>
+        <dt>設定</dt><dd>はじめの設定のまま（見出しからキー・数量・単価・金額・品名の列が選ばれ、「送料」の行は除外します）</dd>
+        <dt>結果</dt><dd>一致 3（BT-100、WS-300、PL-010）、数量違い 1（NT-100：差 −20）、金額違い 1（BT-200：差 +100）、Aだけ 1（KB-500）、Bだけ 1（HN-900）、単価違い 1品番（BT-200 が 20 と 22）。表Bの「送料」の行は除外した行に入ります。</dd>
+      </dl>
+    </div>
+    <div class="guide-example">
+      <h3>金額の小さな差を許して、数量は気にせず金額だけで照合する</h3>
+      <dl>
+        <dt>入力</dt><dd>同じく「例を入れる」の2つの表</dd>
+        <dt>設定</dt><dd>照合の対象：金額だけ／金額の許容差：100</dd>
+        <dt>結果</dt><dd>BT-200 の差 +100 は許容差の内なので一致になり、NT-100 は金額の差 −100 も許容差の内なので一致になります。一致 5、数量違い 0、金額違い 0、Aだけ 1、Bだけ 1 です。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-faq">
+    <h2 id="guide-faq">よくある質問</h2>
+    <details class="faq-item">
+      <summary>分納で同じ品番が何行かに分かれていても照合できますか？</summary>
+      <p>はい。同じキーの行は、数量と金額をそれぞれ合計してから比べます。たとえば表Aの BT-100 が100個で、表Bの BT-100 が60個と40個の2行なら、数量は一致します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>キーの列はどう選びますか？表記が違う品番（A-100 と A100 など）は同じものになりますか？</summary>
+      <p>見出しの語が「品番」「商品コード」などに完全に合う列が1つだけのときは、自動で選びます。候補が複数あるときや見出しがないときは自動で選ばないので、「列と照合の設定」で選んでください。キー2・キー3を選ぶと、3列までの組み合わせで照合します（表Aと表Bで列の数をそろえます）。表記は、全角と半角、大文字と小文字、前後の空白の違いだけをそろえます。ハイフンや途中の空白の違いは「ハイフン・途中の空白を無視」を選んだときだけで、似た名前を推定して結び付けることはしません。そろえれば同じになるキーがあるときは、まとめで知らせます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>数量も金額も違うときや、読めない値があるときの区分はどうなりますか？</summary>
+      <p>判定は、片方だけ → 要確認 → 数量違い → 金額違い → 一致の順です。数量と金額の両方が違うキーは「数量違い」で、一覧で金額の差も見られます。100円×10個と1,000円×1個のように金額だけ同じなら「数量違い」です（対象を「金額だけ」にすると一致です）。「一式」や「1/2」のような数と読めない値、kg と g のように違う単位の数量があるキーは「要確認」にします。空欄は 0 として合計し、そのことをまとめに出します。</p>
+    </details>
+    <details class="faq-item">
+      <summary>送料や値引の行は、どう扱われますか？</summary>
+      <p>品名の列またはキーの列の値が「除外する行」の語（はじめは 送料、値引、小計、合計）で始まる行は、照合から外します。語で始まる別の品名（「送料込みセット」など）も外れるので、一覧の「除外・キーなしの行」で確かめ、語を直してください。語を空にすると、除外しません。</p>
+    </details>
+    <details class="faq-item">
+      <summary>入力した内容は、どこかに送信されますか？</summary>
+      <p>いいえ。照合はすべてお使いのブラウザの中で行い、貼り付けた表が外部に送信されることはありません。ブラウザに保存することもありません。</p>
+    </details>
+  </section>
+
+  <section class="guide" aria-labelledby="guide-related">
+    <h2 id="guide-related">ほかのツール</h2>
+    <ul class="related-tools">
+      <li><a href="../list-hikaku/"><strong>リスト比較</strong><span>2つのリストを比べて、両方にある項目と、片方にしかない項目を抜き出します。</span></a></li>
+      <li><a href="../hyo-markdown/"><strong>表マークダウン変換</strong><span>Excelの表をMarkdownの表に、AIが出したMarkdownの表をExcelに貼れる形に変換します。</span></a></li>
+      <li><a href="../gyo-bunkatsu/"><strong>セルを行に分割</strong><span>セル内改行や「、」で1つのセルに入った値を1行ずつに分け、ほかの列は各行にコピーします。</span></a></li>
+      <li><a href="../bango-check/"><strong>番号の欠番・重複チェック</strong><span>請求書番号・受注番号などの列を貼り付けて、抜けている番号・重複・桁数や接頭辞の違いをまとめて見つけます。</span></a></li>
+    </ul>
+    <p class="related-all"><a href="../#tools">すべてのツール（24件）を見る</a></p>
+  </section>
+
+  <footer>
+    <ul>
+      <li>このツールはAIが作成しました</li>
+      <li>入力したデータは外部に送信されません</li>
+      <li>MITライセンス</li>
+    </ul>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- 決まり ----------
+  // 特別な文字はコードで指定する（コードの中でバックスラッシュのエスケープをなるべく使わない）
+  var TAB = String.fromCharCode(9);
+  var LF = String.fromCharCode(10);
+  var CRLF = String.fromCharCode(13, 10);
+  var QUOTE = String.fromCharCode(34);
+  var SEP = String.fromCharCode(1);
+  var YEN_BS = String.fromCharCode(92);
+  var SPACE_CODES = [32, 9, 10, 13, 160, 12288];
+  var MAX_SHOW = 500;
+  var ZERO = BigInt(0);
+  var SCALE_DIGITS = 6;
+
+  // 役割ごとの見出しの語（完全一致だけ。語を含むだけの見出しは選ばない）
+  var WORDS = {
+    key1: ['品番', '品目コード', '品目番号', '品目cd', '商品コード', '商品番号', '商品cd', '製品コード', '製品番号', '部品コード', '部品番号', '型番', '型式', 'janコード', 'jan', 'sku', 'コード', 'itemcode', 'itemno', 'partno', 'partnumber', 'productcode'],
+    name: ['品名', '商品名', '品目名', '製品名', '部品名', '名称', '品目', '商品', '製品', '摘要', '内容', 'itemname', 'productname', 'description', 'item'],
+    qty: ['数量', '数', '個数', '台数', '本数', '枚数', '発注数', '発注数量', '受注数', '受注数量', '納品数', '納品数量', '納入数', '納入数量', '出荷数', '出荷数量', '入荷数', '入荷数量', '仕入数', '仕入数量', '注文数', '注文数量', '売上数', '売上数量', '在庫数', '在庫数量', 'qty', 'quantity'],
+    price: ['単価', '発注単価', '受注単価', '納品単価', '納入単価', '仕入単価', '販売単価', '売上単価', '売単価', '原単価', '契約単価', 'unitprice', 'price'],
+    amt: ['金額', '発注金額', '受注金額', '納品金額', '納入金額', '出荷金額', '仕入金額', '売上金額', '請求金額', '注文金額', '合計金額', '明細金額', '税抜金額', '税込金額', 'amount']
+  };
+  var AUTO_ROLES = ['key1', 'name', 'qty', 'price', 'amt'];
+  var ROLES = ['key1', 'key2', 'key3', 'qty', 'price', 'amt', 'name'];
+  var ROLE_NAME = { key1: 'キー1', key2: 'キー2', key3: 'キー3', qty: '数量', price: '単価', amt: '金額', name: '品名' };
+  // 数量の後ろに書かれていてよい単位（この一覧にない語は読めない値にする）
+  var UNITS = ['セット', 'ケース', 'ロット', 'パック', 'ダース', 'ペア', 'シート', 'pcs', '個', '本', '枚', '台', '箱', '袋', '缶', '組', '式', '点', '冊', '束', '巻', '足', '丁', '瓶', 'kg', 'ml', 'mm', 'cm', 'pc', 'g', 'm', 't', 'L', 'l'];
+  var CAT = { ok: '一致', qty: '数量違い', amt: '金額違い', aonly: 'Aだけ', bonly: 'Bだけ', chk: '要確認' };
+  var CAT_ORDER = ['ok', 'qty', 'amt', 'aonly', 'bonly', 'chk'];
+
+  function isSpace(c) { return SPACE_CODES.indexOf(c) >= 0; }
+  function trimSp(s) {
+    var a = 0, b = s.length;
+    while (a < b && isSpace(s.charCodeAt(a))) a++;
+    while (b > a && isSpace(s.charCodeAt(b - 1))) b--;
+    return s.slice(a, b);
+  }
+  // 全角の英数字・記号（U+FF01〜U+FF5E）を半角に、全角スペースを半角スペースに、半角カナを全角カナにする
+  function toHalf(s) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c >= 0xFF01 && c <= 0xFF5E) out += String.fromCharCode(c - 0xFEE0);
+      else if (c === 12288) out += ' ';
+      else if (c >= 0xFFE0 && c <= 0xFFE5) out += String.fromCharCode([0xA2, 0xA3, 0xAC, 0xAF, 0xA6, 0xA5][c - 0xFFE0]);
+      else out += s.charAt(i);
+    }
+    return out.replace(/[｡-ﾟ]+/g, function (m) { return m.normalize('NFKC'); });
+  }
+  // 文字の区切りは書記素（結合文字・絵文字のまとまり）で数える
+  var SEG = window.Intl && Intl.Segmenter ? new Intl.Segmenter('ja', { granularity: 'grapheme' }) : null;
+  function clip(s, n) {
+    if (s.length <= n) return s;
+    var a = SEG ? Array.from(SEG.segment(s), function (x) { return x.segment; }) : Array.from(s);
+    return a.length > n ? a.slice(0, n).join('') + '…' : s;
+  }
+  function colLetter(c) { var s = ''; c += 1; while (c > 0) { var m = (c - 1) % 26; s = String.fromCharCode(65 + m) + s; c = (c - m - 1) / 26; } return s; }
+  function fmtInt(v) { return String(v).replace(/[0-9](?=(?:[0-9]{3})+$)/g, '$&,'); }
+
+  // ---------- 表の読み方（Excel のコピーの形。"" で囲んだセルの中の改行・"" を1つのセルとして読む） ----------
+  function quotedEnd(text, i) {
+    var j = i + 1, n = text.length;
+    while (j < n) {
+      if (text.charCodeAt(j) === 34) {
+        if (text.charCodeAt(j + 1) === 34) { j += 2; continue; }
+        var nx = j + 1 < n ? text.charCodeAt(j + 1) : -1;
+        if (nx === -1 || nx === 9 || nx === 10 || nx === 13) return j + 1;
+        return -1;
+      }
+      j++;
+    }
+    return -1;
+  }
+  function parseTable(text) {
+    var rows = [], row = [], cell = '', i = 0, n = text.length, start = true, from = 0;
+    if (!n) return rows;
+    while (i < n) {
+      var c = text.charCodeAt(i);
+      if (start && c === 34) {
+        var e = quotedEnd(text, i);
+        if (e > 0) { cell = text.slice(i + 1, e - 1).split(QUOTE + QUOTE).join(QUOTE); i = e; from = i; start = false; continue; }
+      }
+      if (c === 9) { row.push(cell + text.slice(from, i)); cell = ''; start = true; i++; from = i; continue; }
+      if (c === 10 || c === 13) {
+        row.push(cell + text.slice(from, i)); rows.push(row); row = []; cell = ''; start = true;
+        i += (c === 13 && text.charCodeAt(i + 1) === 10) ? 2 : 1;
+        from = i;
+        continue;
+      }
+      start = false; i++;
+    }
+    row.push(cell + text.slice(from, i)); rows.push(row);
+    var lastRow = rows[rows.length - 1];
+    if (rows.length > 1 && lastRow.length === 1 && lastRow[0] === '') rows.pop();
+    return rows;
+  }
+
+  // ---------- 数の読み方：10^6 倍の BigInt で持ち、小数の誤差を出さない ----------
+  var MINUS_CHARS = '-' + String.fromCharCode(0x2212, 0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015) + '▲△';
+  function isMinus(ch) { return ch !== '' && MINUS_CHARS.indexOf(ch) >= 0; }
+  // kind は 'qty'（単位の一覧を許す）か 'money'（¥・円を許す）
+  function readNum(raw, kind) {
+    var t = trimSp(raw == null ? '' : String(raw));
+    if (!t) return { empty: true };
+    var s = trimSp(toHalf(t).replace(/[㎎㎏㎜㎝㎖㍑]/g, function (m) { return m.normalize('NFKC'); }));
+    var neg = false, unit = '';
+    if (s.charAt(0) === '(' && s.charAt(s.length - 1) === ')') { neg = true; s = trimSp(s.slice(1, -1)); }
+    function takeSign() {
+      if (isMinus(s.charAt(0))) { if (neg) return false; neg = true; s = trimSp(s.slice(1)); }
+      else if (s.charAt(0) === '+' && !neg) s = trimSp(s.slice(1));
+      return true;
+    }
+    if (!takeSign()) return { bad: true };
+    if (kind === 'money') {
+      var c0 = s.charAt(0);
+      if (c0 === '¥' || c0 === YEN_BS) { s = trimSp(s.slice(1)); if (!takeSign()) return { bad: true }; }
+      if (s.charAt(s.length - 1) === '円') s = trimSp(s.slice(0, -1));
+    } else {
+      for (var u = 0; u < UNITS.length; u++) {
+        var w = UNITS[u];
+        if (s.length > w.length && s.slice(-w.length).toLowerCase() === w.toLowerCase()) { s = trimSp(s.slice(0, -w.length)); unit = w.toLowerCase(); break; }
+      }
+    }
+    if (isMinus(s.charAt(s.length - 1))) { if (neg) return { bad: true }; neg = true; s = trimSp(s.slice(0, -1)); }
+    if (!/^(?:[0-9]{1,3}(?:,[0-9]{3})+(?:[.][0-9]*)?|[0-9]+(?:[.][0-9]*)?|[.][0-9]+)$/.test(s)) return { bad: true };
+    s = s.split(',').join('');
+    var p = s.split('.');
+    var frac = (p[1] || '').replace(/0+$/, '');
+    if (frac.length > SCALE_DIGITS) return { bad: true };
+    while (frac.length < SCALE_DIGITS) frac += '0';
+    var v = BigInt((p[0] || '0') + frac);
+    return { v: neg ? -v : v, unit: unit };
+  }
+  function decParts(v) {
+    var neg = v < ZERO, d = String(neg ? -v : v);
+    while (d.length <= SCALE_DIGITS) d = '0' + d;
+    var ip = d.slice(0, -SCALE_DIGITS), fp = d.slice(-SCALE_DIGITS).replace(/0+$/, '');
+    return { neg: neg, ip: ip, fp: fp };
+  }
+  function plainDec(v) { var p = decParts(v); return (p.neg ? '-' : '') + p.ip + (p.fp ? '.' + p.fp : ''); }
+  function fmtDec(v) { var p = decParts(v); return (p.neg ? '−' : '') + fmtInt(p.ip) + (p.fp ? '.' + p.fp : ''); }
+  function fmtDiff(v) { return v > ZERO ? '+' + fmtDec(v) : fmtDec(v); }
+
+  // ---------- キーのそろえ方 ----------
+  var HYPHENS = /[‐-―−－]/g;
+  var ALNUM = /^[0-9A-Za-z０-９Ａ-Ｚａ-ｚ]$/;
+  var KANA = /^[ぁ-ヿｦ-ﾟ一-龯]$/;
+  // 長音（ー）のうち、前が英数字か、後ろが英数字で前がかな・漢字でないものだけをハイフンとして扱う
+  function fixLong(s, to) {
+    var out = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charAt(i);
+      if (c === String.fromCharCode(0x30FC) || c === String.fromCharCode(0xFF70)) {
+        var pv = s.charAt(i - 1), nx = s.charAt(i + 1);
+        if (ALNUM.test(pv) || (ALNUM.test(nx) && !KANA.test(pv))) { out += to; continue; }
+      }
+      out += c;
+    }
+    return out;
+  }
+  function normKey(raw, nk) {
+    var s = raw == null ? '' : String(raw);
+    if (nk.trim) s = trimSp(s);
+    if (nk.half) {
+      s = fixLong(toHalf(s).normalize('NFC').replace(HYPHENS, '-'), '-').split(String.fromCharCode(0x301C)).join('~').split(YEN_BS).join('¥');
+    }
+    if (nk.lower) s = s.replace(/[A-Z]/g, function (m) { return m.toLowerCase(); });
+    if (nk.hyph) {
+      s = fixLong(s.replace(HYPHENS, ''), '').split('-').join('');
+      var out = '';
+      for (var i = 0; i < s.length; i++) if (!isSpace(s.charCodeAt(i))) out += s.charAt(i);
+      s = out;
+    }
+    return s;
+  }
+  // 見出しの語：全角→半角・小文字・空白なし・末尾の括弧の中身なし
+  function normHead(raw) {
+    var s = toHalf(trimSp(raw == null ? '' : String(raw))).replace(/[A-Z]/g, function (m) { return m.toLowerCase(); });
+    var out = '';
+    for (var i = 0; i < s.length; i++) if (!isSpace(s.charCodeAt(i))) out += s.charAt(i);
+    return out.replace(/(?:[(][^()]*[)]|[\[][^\[\]]*[\]]|【[^【】]*】|「[^「」]*」)$/, '');
+  }
+  function roleOfHead(h) {
+    for (var i = 0; i < AUTO_ROLES.length; i++) if (WORDS[AUTO_ROLES[i]].indexOf(h) >= 0) return AUTO_ROLES[i];
+    return '';
+  }
+
+  // ---------- 1つの表を読む。st は手で選んだ値（head、cols）を覚えておく入れ物 ----------
+  function newState() { return { sig: null, head: null, cols: {} }; }
+  function readSide(text, st) {
+    var S = { text: text, rows: parseTable(text), hasText: trimSp(text) !== '' };
+    var blank = S.rows.map(function (r) { return r.every(function (x) { return trimSp(x) === ''; }); });
+    S.blank = blank;
+    var ncols = 0, hi = -1;
+    S.rows.forEach(function (r, i) { if (!blank[i]) { if (r.length > ncols) ncols = r.length; if (hi < 0) hi = i; } });
+    S.ncols = ncols; S.first = hi;
+    var firstRow = hi >= 0 ? S.rows[hi] : [];
+    var sig = ncols + SEP + firstRow.join(SEP);
+    if (st.sig !== sig) { st.sig = sig; st.head = null; st.cols = {}; }
+    // 見出しの判定
+    var heads = firstRow.map(normHead);
+    var matched = 0, numeric = 0;
+    firstRow.forEach(function (c, i) {
+      if (roleOfHead(heads[i])) matched++;
+      if (trimSp(c) !== '') { var n = readNum(c, 'money'); if (!n.bad && !n.empty) numeric++; }
+    });
+    S.autoHead = matched >= 2 || (matched === 1 && numeric === 0);
+    S.head = hi >= 0 && (st.head === null ? S.autoHead : st.head);
+    S.headIndex = S.head ? hi : -1;
+    // 列の決定：手で選んだ値 → 見出しの語がちょうど1列に合うもの → なし
+    var cols = {}, cand = {};
+    var taken = {};
+    ROLES.forEach(function (r) {
+      var m = st.cols[r];
+      if (m !== undefined && m !== null) {
+        if (m >= ncols) m = -1;
+        cols[r] = m;
+        if (m >= 0) taken[m] = r;
+      }
+    });
+    AUTO_ROLES.forEach(function (r) {
+      if (cols[r] !== undefined) return;
+      cols[r] = -1;
+      if (!S.head) return;
+      var list = [];
+      heads.forEach(function (h, i) { if (WORDS[r].indexOf(h) >= 0 && !(i in taken)) list.push(i); });
+      if (list.length === 1) { cols[r] = list[0]; taken[list[0]] = r; }
+      else if (list.length > 1) cand[r] = list;
+    });
+    ROLES.forEach(function (r) { if (cols[r] === undefined) cols[r] = -1; });
+    S.cols = cols; S.cand = cand;
+    S.manualKeyNone = st.cols.key1 === -1;
+    S.manualNoHead = st.head === false;
+    S.dataCount = 0;
+    S.rows.forEach(function (r, i) { if (!blank[i] && i !== S.headIndex) S.dataCount++; });
+    return S;
+  }
+  function colTitle(S, c) {
+    var v = S.first >= 0 ? trimSp(S.rows[S.first][c] || '') : '';
+    return colLetter(c) + '列' + (v ? '「' + clip(v, 12) + '」' : '');
+  }
+
+  // ---------- 除外の語 ----------
+  function exWords(text) {
+    var seen = {}, out = [];
+    toHalf(text || '').split(/[,、，;；\s]+/).forEach(function (w) {
+      w = trimSp(w);
+      if (w && !seen[SEP + w]) { seen[SEP + w] = 1; out.push(w); }
+    });
+    return out;
+  }
+  function exMatch(S, row, words) {
+    if (!words.length) return '';
+    var cs = [S.cols.name, S.cols.key1, S.cols.key2, S.cols.key3];
+    for (var i = 0; i < cs.length; i++) {
+      if (cs[i] < 0) continue;
+      var v = toHalf(trimSp(row[cs[i]] || '')).normalize('NFC').toLowerCase();
+      for (var j = 0; j < words.length; j++) if (v.indexOf(words[j].normalize('NFC').toLowerCase()) === 0) return words[j];
+    }
+    return '';
+  }
+  function keyColsOf(S) { return [S.cols.key1, S.cols.key2, S.cols.key3].filter(function (c) { return c >= 0; }); }
+
+  // ---------- 照合 ----------
+  function compute(textA, textB, o) {
+    var A = readSide(textA, o.st.A), B = readSide(textB, o.st.B);
+    var R = { A: A, B: B, target: o.target, nk: o.nk, error: null, warn: [], infos: [] };
+    if (!A.hasText && !B.hasText) { R.error = 'empty'; return R; }
+    if (!A.hasText || !B.hasText) { R.error = A.hasText ? 'needB' : 'needA'; return R; }
+    var tolN = trimSp(o.tol == null ? '' : o.tol) === '' ? { v: ZERO } : readNum(o.tol, 'money');
+    if (tolN.bad || tolN.empty || tolN.v < ZERO) { R.error = 'tol'; return R; }
+    R.tol = tolN.v;
+    if (!A.dataCount) { R.error = 'noRowsA'; return R; }
+    if (!B.dataCount) { R.error = 'noRowsB'; return R; }
+    if (keyColsOf(A).length === 0) { R.error = 'keyA'; return R; }
+    if (keyColsOf(B).length === 0) { R.error = 'keyB'; return R; }
+    if (keyColsOf(A).length !== keyColsOf(B).length) { R.error = 'keyCount'; return R; }
+    var hasQty = A.cols.qty >= 0 && B.cols.qty >= 0;
+    var hasAmt = A.cols.amt >= 0 && B.cols.amt >= 0;
+    R.cmpQty = hasQty && o.target !== 'amt';
+    R.cmpAmt = hasAmt && o.target !== 'qty';
+    if (!R.cmpQty && !R.cmpAmt) { R.error = 'noCompare'; return R; }
+    if (o.target === 'both' && !R.cmpQty) R.partial = '数量';
+    if (o.target === 'both' && !R.cmpAmt) R.partial = '金額';
+
+    var words = exWords(o.exclude);
+    R.words = words;
+    var groups = new Map(), order = [];
+    var priceMap = new Map(), priceOrder = [];
+    function scan(S, side) {
+      var kc = keyColsOf(S);
+      S.info = [];
+      S.excluded = []; S.nokey = []; S.badCells = []; S.blankCells = []; S.badPrice = [];
+      S.rows.forEach(function (row, i) {
+        if (S.blank[i]) { S.info[i] = { t: 'blank' }; return; }
+        if (i === S.headIndex) { S.info[i] = { t: 'head' }; return; }
+        var ex = exMatch(S, row, words);
+        if (ex) { S.info[i] = { t: 'ex', word: ex }; S.excluded.push({ row: i + 1, word: ex, cells: row }); return; }
+        var parts = kc.map(function (c) { return trimSp(row[c] || ''); });
+        if (parts.every(function (p) { return p === ''; })) { S.info[i] = { t: 'nokey' }; S.nokey.push({ row: i + 1, cells: row }); return; }
+        var norm = kc.map(function (c) { return normKey(row[c] || '', o.nk); });
+        var k = norm.join(SEP);
+        var g = groups.get(k);
+        if (!g) {
+          g = { key: k, parts: { A: null, B: null }, rows: { A: [], B: [] }, qty: { A: ZERO, B: ZERO }, amt: { A: ZERO, B: ZERO }, badQty: { A: 0, B: 0 }, badAmt: { A: 0, B: 0 }, units: {} };
+          groups.set(k, g); order.push(g);
+        }
+        if (!g.parts[side]) g.parts[side] = parts;
+        g.rows[side].push(i + 1);
+        S.info[i] = { t: 'item', group: g };
+        function add(col, kind, label, bucket, badBucket) {
+          if (col < 0) return;
+          var n = readNum(row[col], kind);
+          if (n.bad) { g[badBucket][side]++; S.badCells.push({ row: i + 1, label: label, text: trimSp(row[col]), compared: label === '数量' ? R.cmpQty : R.cmpAmt }); }
+          else if (n.empty) { if (label === '数量' ? R.cmpQty : R.cmpAmt) S.blankCells.push({ row: i + 1, label: label }); }
+          else { g[bucket][side] += n.v; if (n.unit) g.units[n.unit] = 1; }
+        }
+        add(S.cols.qty, 'qty', '数量', 'qty', 'badQty');
+        add(S.cols.amt, 'money', '金額', 'amt', 'badAmt');
+        // 単価違いの材料（キー1ごと）
+        if (S.cols.price >= 0 && S.cols.key1 >= 0) {
+          var kp = normKey(row[S.cols.key1] || '', o.nk);
+          if (trimSp(row[S.cols.key1] || '') !== '') {
+            var pn = readNum(row[S.cols.price], 'money');
+            if (pn.bad) S.badPrice.push({ row: i + 1, text: trimSp(row[S.cols.price]) });
+            var pg = priceMap.get(kp);
+            if (!pg) { pg = { key: kp, values: {}, lines: [] }; priceMap.set(kp, pg); priceOrder.push(pg); }
+            if (!pn.bad && !pn.empty) pg.values[String(pn.v)] = 1;
+            pg.lines.push({ side: side, row: i + 1, keyText: trimSp(row[S.cols.key1]), name: S.cols.name >= 0 ? trimSp(row[S.cols.name] || '') : '', priceText: pn.bad ? trimSp(row[S.cols.price]) : pn.empty ? '' : null, price: pn.v, qtyText: S.cols.qty >= 0 ? trimSp(row[S.cols.qty] || '') : '', amtText: S.cols.amt >= 0 ? trimSp(row[S.cols.amt] || '') : '' });
+          }
+        }
+      });
+    }
+    scan(A, 'A'); scan(B, 'B');
+
+    var counts = { ok: 0, qty: 0, amt: 0, aonly: 0, bonly: 0, chk: 0 };
+    var sideRows = { A: { ok: 0, qty: 0, amt: 0, aonly: 0, bonly: 0, chk: 0 }, B: { ok: 0, qty: 0, amt: 0, aonly: 0, bonly: 0, chk: 0 } };
+    order.forEach(function (g) {
+      var a = g.rows.A.length > 0, b = g.rows.B.length > 0;
+      g.unitMix = Object.keys(g.units).length > 1;
+      g.dq = g.qty.B - g.qty.A;
+      g.da = g.amt.B - g.amt.A;
+      var abs = g.da < ZERO ? -g.da : g.da;
+      if (!b) g.cat = 'aonly';
+      else if (!a) g.cat = 'bonly';
+      else if ((R.cmpQty && (g.badQty.A || g.badQty.B || g.unitMix)) || (R.cmpAmt && (g.badAmt.A || g.badAmt.B))) g.cat = 'chk';
+      else if (R.cmpQty && g.dq !== ZERO) g.cat = 'qty';
+      else if (R.cmpAmt && abs > R.tol) g.cat = 'amt';
+      else g.cat = 'ok';
+      counts[g.cat]++;
+      sideRows.A[g.cat] += g.rows.A.length;
+      sideRows.B[g.cat] += g.rows.B.length;
+      g.label = CAT[g.cat];
+    });
+    R.unitMix = order.filter(function (g) { return g.unitMix && g.cat === 'chk'; });
+    R.groups = order; R.counts = counts; R.sideRows = sideRows;
+    R.diffCount = counts.qty + counts.amt + counts.aonly + counts.bonly + counts.chk;
+    R.priceGroups = priceOrder.filter(function (pg) { return Object.keys(pg.values).length >= 2; });
+    R.hasPrice = A.cols.price >= 0 || B.cols.price >= 0;
+
+    // そろえ方を変えれば同じになるキーの知らせ（名寄せはせず、知らせるだけ）
+    var allNk = { half: true, lower: true, trim: true, hyph: true };
+    if (!(o.nk.half && o.nk.lower && o.nk.trim && o.nk.hyph)) {
+      var loose = new Map(), near = [];
+      order.forEach(function (g) {
+        if (g.cat !== 'aonly' && g.cat !== 'bonly') return;
+        var side = g.cat === 'aonly' ? 'A' : 'B';
+        var lk = g.parts[side].map(function (p) { return normKey(p, allNk); }).join(SEP);
+        var e = loose.get(lk);
+        if (!e) { e = { A: null, B: null }; loose.set(lk, e); }
+        if (!e[side]) e[side] = g;
+      });
+      loose.forEach(function (e) { if (e.A && e.B) near.push(e); });
+      R.near = near;
+    } else R.near = [];
+    return R;
+  }
+
+  // ---------- 文 ----------
+  function rowsList(list) {
+    if (!list.length) return '';
+    var s = list.slice(0, 4).join('・');
+    return list.length > 4 ? s + ' ほか' : s;
+  }
+  function keyDisplay(g) {
+    var a = g.parts.A, b = g.parts.B;
+    var ta = a ? a.join(' / ') : '', tb = b ? b.join(' / ') : '';
+    if (a && b && ta !== tb) return ta + '（B：' + tb + '）';
+    return ta || tb;
+  }
+  function resultWord(R) {
+    var c = R.counts;
+    var s = '一致 ' + fmtInt(c.ok) + '・数量違い ' + fmtInt(c.qty) + '・金額違い ' + fmtInt(c.amt) + '・Aだけ ' + fmtInt(c.aonly) + '・Bだけ ' + fmtInt(c.bonly);
+    if (c.chk) s += '・要確認 ' + fmtInt(c.chk);
+    return s + '。';
+  }
+  function candText(S, role) { return (S.cand[role] || []).map(function (c) { return colTitle(S, c); }).join('、'); }
+  function errorMessage(R) {
+    var keyMsg = function (S, name) {
+      if (S.ncols === 1) return name + 'が列に分かれていません（タブで区切られていないため、1列として読みました）。Excelの表をコピーして貼り付けてください。カンマ区切りの CSV ファイルは Excel で開いてからコピーします。';
+      if (S.manualKeyNone) return name + 'の「キー1」が「なし」になっています。「列と照合の設定」の「キー1」で、品番などの列を選んでください。';
+      if (S.manualNoHead) return name + 'の1行目を見出しとして読まない設定なので、列を自動で選んでいません。「列と照合の設定」の「キー1」で、品番などの列を選んでください。';
+      if (S.cand.key1) return name + 'のキーの列は候補が複数あります（' + candText(S, 'key1') + '）。「列と照合の設定」の「キー1」で選んでください。';
+      if (!S.head) return name + 'に見出しの行が見つからないため、列を自動で選んでいません。「列と照合の設定」の「キー1」で、品番などの列を選んでください。';
+      return name + 'の見出しからキー（品番など）の列を決められませんでした。「列と照合の設定」の「キー1」で選んでください。';
+    };
+    switch (R.error) {
+      case 'empty': return '表Aと表Bを貼り付けると、ここに照合の結果が出ます。';
+      case 'needA': return '表Bは入っています。表Aも貼り付けてください。';
+      case 'needB': return '表Aは入っています。表Bも貼り付けてください。';
+      case 'tol': return '金額の許容差は 0 以上の数で入れてください（例：0、10）。直すまで照合しません。';
+      case 'noRowsA': return '表Aに明細の行がありません（1行目を見出しとして飛ばしました）。1行目も明細なら「表Aの1行目は見出し」を外してください。';
+      case 'noRowsB': return '表Bに明細の行がありません（1行目を見出しとして飛ばしました）。1行目も明細なら「表Bの1行目は見出し」を外してください。';
+      case 'keyA': return keyMsg(R.A, '表A');
+      case 'keyB': return keyMsg(R.B, '表B');
+      case 'keyCount': return 'キーの列の数が、表A（' + keyColsOf(R.A).length + '列）と表B（' + keyColsOf(R.B).length + '列）で違います。同じ数にそろえてください。';
+      case 'noCompare': return compareMessage(R);
+    }
+    return '';
+  }
+  function compareMessage(R) {
+    var word = R.target === 'qty' ? '数量' : R.target === 'amt' ? '金額' : '数量か金額';
+    var miss = [];
+    [['表A', R.A], ['表B', R.B]].forEach(function (p) {
+      var S = p[1];
+      var need = R.target === 'qty' ? ['qty'] : R.target === 'amt' ? ['amt'] : ['qty', 'amt'];
+      need.forEach(function (r) {
+        if (S.cols[r] >= 0) return;
+        var c = S.cand[r] ? '（候補：' + candText(S, r) + '）' : '';
+        miss.push(p[0] + 'の' + ROLE_NAME[r] + c);
+      });
+    });
+    return word + 'を比べる列が両方の表にそろっていません（未選択：' + miss.join('、') + '）。「列と照合の設定」で選んでください。';
+  }
+  function cellsText(list) {
+    var s = list.slice(0, 2).map(function (x) { return fmtInt(x.row) + '行目の' + x.label + '「' + clip(x.text, 12) + '」'; }).join('、');
+    return s;
+  }
+  function mapText(S) {
+    var parts = [];
+    ROLES.forEach(function (r) {
+      var c = S.cols[r];
+      if (c < 0) return;
+      var v = S.head ? trimSp(S.rows[S.first][c] || '') : '';
+      parts.push(ROLE_NAME[r] + '＝' + (v ? clip(v, 10) : colLetter(c) + '列'));
+    });
+    return parts.join('、');
+  }
+  function sideLine(R, S, side, name) {
+    var c = R.sideRows[side], out = [];
+    CAT_ORDER.forEach(function (k) { if (c[k]) out.push(CAT[k] + ' ' + fmtInt(c[k])); });
+    if (S.excluded.length) out.push('除外 ' + fmtInt(S.excluded.length));
+    if (S.nokey.length) out.push('キーなし ' + fmtInt(S.nokey.length));
+    return name + ' ' + fmtInt(S.dataCount) + '行＝' + out.join('・');
+  }
+  function summaryLines(R) {
+    var lines = [];
+    var c = R.counts;
+    var total = R.groups.length;
+    if (!total) lines.push(['warn', '照合できるキーがありません。除外の語やキーの列を確かめてください。']);
+    else if (R.diffCount) lines.push(['warn', '全 ' + fmtInt(total) + ' キーのうち、違いのあるキーが ' + fmtInt(R.diffCount) + ' 件あります。']);
+    else lines.push(['ok', '全 ' + fmtInt(total) + ' キーがすべて一致しました。']);
+    if (R.partial) {
+      var miss = R.partial === '数量' ? 'qty' : 'amt', who = [];
+      if (R.A.cols[miss] < 0) who.push('表A');
+      if (R.B.cols[miss] < 0) who.push('表B');
+      var other = R.partial === '数量' ? '金額' : '数量';
+      lines.push(['w', R.partial + 'の列が' + who.join('と') + 'で選ばれていないため、' + other + 'だけを比べました。比べるなら「列と照合の設定」で選んでください。']);
+    }
+    [['表A', R.A], ['表B', R.B]].forEach(function (p) {
+      var S = p[1], name = p[0];
+      var bad = S.badCells.filter(function (x) { return x.compared; });
+      if (bad.length) lines.push(['w', name + 'の' + cellsText(bad) + (bad.length > 2 ? 'など ' + fmtInt(bad.length) + ' か所' : '') + 'は数として読めません。そのキーは「要確認」にしました。数を入れ直してください。']);
+      if (S.blankCells.length) lines.push(['w', name + 'の数量・金額の空欄 ' + fmtInt(S.blankCells.length) + ' か所（' + fmtInt(S.blankCells[0].row) + '行目など）は 0 として合計しました。']);
+      if (S.nokey.length) lines.push(['w', name + 'のキーが空の ' + fmtInt(S.nokey.length) + ' 行（' + fmtInt(S.nokey[0].row) + '行目など）は照合していません。一覧の「除外・キーなしの行」で確かめられます。']);
+    });
+    if (R.unitMix.length) {
+      var um = R.unitMix[0];
+      lines.push(['w', '数量の単位が違うキーが ' + fmtInt(R.unitMix.length) + ' 件あります（例：' + clip(keyDisplay(um), 16) + ' は ' + Object.keys(um.units).join(' と ') + '）。合計しても比べられないので「要確認」にしました。']);
+    }
+    if (R.near.length) {
+      var e = R.near[0];
+      lines.push(['w', 'そろえ方を変えると同じになるキーが ' + fmtInt(R.near.length) + ' 組あります（例：' + clip(e.A.parts.A.join(' / '), 16) + ' と ' + clip(e.B.parts.B.join(' / '), 16) + '）。同じものなら「キーのそろえ方」を変えてください。']);
+    }
+    if (R.hasPrice && (R.A.cols.price < 0 || R.B.cols.price < 0)) {
+      var pw = R.A.cols.price < 0 ? '表A' : '表B', pf = R.A.cols.price < 0 ? '表B' : '表A';
+      lines.push(['w', '単価の列が' + pw + 'で選ばれていないため、単価違いは' + pf + 'の中だけで調べました。両方で調べるなら「列と照合の設定」で選んでください' + (R[pw === '表A' ? 'A' : 'B'].cand.price ? '（候補：' + candText(R[pw === '表A' ? 'A' : 'B'], 'price') + '）' : '') + '。']);
+    }
+    if (R.A.badPrice.length || R.B.badPrice.length) {
+      lines.push(['w', '単価が数として読めない行が ' + fmtInt(R.A.badPrice.length + R.B.badPrice.length) + ' 行あり、単価違いの判定に入れていません。']);
+    }
+    var exA = R.A.excluded.length, exB = R.B.excluded.length;
+    if (exA || exB) lines.push(['sub', '除外した行：表A ' + fmtInt(exA) + ' 行・表B ' + fmtInt(exB) + ' 行（一覧の「除外・キーなしの行」で確かめられます）。']);
+    if (R.tol > ZERO && R.cmpAmt) lines.push(['sub', '金額の差が ' + fmtDec(R.tol) + ' 円までのキーは一致としました。']);
+    lines.push(['sub', sideLine(R, R.A, 'A', '表A')]);
+    lines.push(['sub', sideLine(R, R.B, 'B', '表B')]);
+    lines.push(['sub', '表Aの列：' + mapText(R.A)]);
+    lines.push(['sub', '表Bの列：' + mapText(R.B)]);
+    return lines;
+  }
+
+  // ---------- 出力 ----------
+  function tsvCell(s) {
+    s = s == null ? '' : String(s);
+    if (s.indexOf(TAB) >= 0 || s.indexOf(LF) >= 0 || s.indexOf(String.fromCharCode(13)) >= 0 || s.indexOf(QUOTE) >= 0) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  function csvCell(s) {
+    s = s == null ? '' : String(s);
+    if (/[",\r\n]/.test(s)) return QUOTE + s.split(QUOTE).join(QUOTE + QUOTE) + QUOTE;
+    return s;
+  }
+  function toTsv(table) { return table.map(function (r) { return r.map(tsvCell).join(TAB); }).join(LF); }
+  function toCsv(table) { return String.fromCharCode(0xFEFF) + table.map(function (r) { return r.map(csvCell).join(','); }).join(CRLF) + CRLF; }
+  function rowLabel(S, i) {
+    var inf = S.info[i];
+    if (inf.t === 'blank') return '';
+    if (inf.t === 'head') return '区分';
+    if (inf.t === 'ex') return '除外';
+    if (inf.t === 'nokey') return 'キーなし';
+    return inf.group.label;
+  }
+  function listTable(R) {
+    var nk = keyColsOf(R.A).length, head = [];
+    for (var i = 0; i < nk; i++) head.push(nk === 1 ? 'キー' : 'キー' + (i + 1));
+    if (R.cmpQty || R.A.cols.qty >= 0 || R.B.cols.qty >= 0) head = head.concat(['Aの数量', 'Bの数量', '数量の差']);
+    if (R.cmpAmt || R.A.cols.amt >= 0 || R.B.cols.amt >= 0) head = head.concat(['Aの金額', 'Bの金額', '金額の差']);
+    head = head.concat(['区分', 'Aの行', 'Bの行']);
+    var hasQ = head.indexOf('Aの数量') >= 0, hasM = head.indexOf('Aの金額') >= 0;
+    var out = [head];
+    R.groups.forEach(function (g) {
+      var p = g.parts.A || g.parts.B, r = p.slice();
+      var a = g.rows.A.length > 0, b = g.rows.B.length > 0;
+      var cell = function (v, bad) { return plainDec(v) + (bad ? '+?' : ''); };
+      if (hasQ) r = r.concat([a ? cell(g.qty.A, g.badQty.A) : '', b ? cell(g.qty.B, g.badQty.B) : '', a && b ? (g.badQty.A || g.badQty.B || g.unitMix ? '?' : plainDec(g.dq)) : '']);
+      if (hasM) r = r.concat([a ? cell(g.amt.A, g.badAmt.A) : '', b ? cell(g.amt.B, g.badAmt.B) : '', a && b ? (g.badAmt.A || g.badAmt.B ? '?' : plainDec(g.da)) : '']);
+      r = r.concat([g.label, g.rows.A.join(' '), g.rows.B.join(' ')]);
+      out.push(r);
+    });
+    return out;
+  }
+  function columnTable(S) { return S.rows.map(function (r, i) { return [rowLabel(S, i)]; }); }
+  function fullTable(S) {
+    return S.rows.map(function (r, i) {
+      var row = r.slice();
+      while (row.length < S.ncols) row.push('');
+      row.push(rowLabel(S, i));
+      return row;
+    });
+  }
+  function priceTable(R) {
+    var out = [['キー1', '表', '行', '品名', '単価', '数量', '金額']];
+    R.priceGroups.forEach(function (pg) {
+      pg.lines.forEach(function (l) { out.push([l.keyText, l.side, String(l.row), l.name, l.priceText === null ? plainDec(l.price) : l.priceText, l.qtyText, l.amtText]); });
+    });
+    return out;
+  }
+  function outTable(R, kind) {
+    if (kind === 'list') return listTable(R);
+    if (kind === 'colA') return columnTable(R.A);
+    if (kind === 'colB') return columnTable(R.B);
+    if (kind === 'tableA') return fullTable(R.A);
+    if (kind === 'tableB') return fullTable(R.B);
+    return priceTable(R);
+  }
+
+  // ---------- 画面 ----------
+  function $(id) { return document.getElementById(id); }
+  var textA = $('textA'), textB = $('textB'), headA = $('headA'), headB = $('headB');
+  var summary = $('summary'), status = $('status'), setStatusEl = $('setStatus'), inStatus = $('inStatus');
+  var viewSel = $('viewSel'), outSel = $('outSel'), tableWrap = $('tableWrap');
+  var copyBtn = $('copyBtn'), csvBtn = $('csvBtn'), manualBox = $('manualBox'), manualText = $('manualText');
+  var tolInput = $('tolInput'), exInput = $('exInput'), colGrid = $('colGrid');
+  var targetInputs = Array.prototype.slice.call(document.querySelectorAll('input[name="target"]'));
+  var nkHalf = $('nkHalf'), nkCase = $('nkCase'), nkTrim = $('nkTrim'), nkHyph = $('nkHyph');
+  var st = { A: newState(), B: newState() };
+  var last = null;
+  var view = 'diff';
+  var selects = { A: {}, B: {} };
+
+  function options() {
+    var t = 'both';
+    targetInputs.forEach(function (el) { if (el.checked) t = el.value; });
+    return { st: st, target: t, tol: tolInput.value, exclude: exInput.value, nk: { half: nkHalf.checked, lower: nkCase.checked, trim: nkTrim.checked, hyph: nkHyph.checked } };
+  }
+  // 列の選択欄を作る
+  (function buildGrid() {
+    var add = function (cls, text) { var d = document.createElement('div'); d.className = cls; d.textContent = text; colGrid.appendChild(d); };
+    add('ch', ''); add('ch', '表A'); add('ch', '表B');
+    ROLES.forEach(function (r) {
+      add('rl', ROLE_NAME[r]);
+      ['A', 'B'].forEach(function (side) {
+        var s = document.createElement('select');
+        s.id = 'col_' + side + '_' + r;
+        s.setAttribute('aria-label', '表' + side + 'の' + ROLE_NAME[r] + 'の列');
+        s.addEventListener('change', function () { onColChange(side, r, s); });
+        selects[side][r] = s;
+        colGrid.appendChild(s);
+      });
+    });
+  })();
+  function fillSelects(side, S) {
+    var sig = S.ncols + SEP + (S.first >= 0 ? S.rows[S.first].join(SEP) : '');
+    ROLES.forEach(function (r) {
+      var sel = selects[side][r];
+      if (sel.getAttribute('data-sig') !== sig) {
+        sel.innerHTML = '';
+        var none = document.createElement('option');
+        none.value = '-1';
+        none.textContent = 'なし';
+        sel.appendChild(none);
+        for (var c = 0; c < S.ncols; c++) {
+          var o = document.createElement('option');
+          o.value = String(c);
+          var v = S.first >= 0 ? trimSp(S.rows[S.first][c] || '') : '';
+          o.textContent = colLetter(c) + (v ? ' ' + clip(v, 6) : '');
+          sel.appendChild(o);
+        }
+        sel.setAttribute('data-sig', sig);
+      }
+      sel.value = String(S.cols[r]);
+      sel.classList.toggle('bad', (r === 'key1' && S.hasText && S.cols.key1 < 0));
+    });
+  }
+  function setStat(id, value, unit, cls) {
+    var li = $(id), v = li.querySelector('.v');
+    li.className = cls || '';
+    v.textContent = value;
+    if (unit) { var sm = document.createElement('small'); sm.textContent = unit; v.appendChild(sm); }
+  }
+  function line(cls, text) { var s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+  function renderSummary(R) {
+    summary.textContent = '';
+    if (R.error) {
+      ['stOk', 'stQty', 'stAmt', 'stA', 'stB', 'stPrice'].forEach(function (id) { setStat(id, '–'); });
+      summary.appendChild(line(R.error === 'empty' || R.error === 'needA' || R.error === 'needB' ? 'sub' : 'main err', errorMessage(R)));
+      return;
+    }
+    var c = R.counts;
+    setStat('stOk', fmtInt(c.ok), '件', c.ok ? 'clear' : '');
+    setStat('stQty', fmtInt(c.qty), '件', c.qty ? 'has' : '');
+    setStat('stAmt', fmtInt(c.amt), '件', c.amt ? 'has' : '');
+    setStat('stA', fmtInt(c.aonly), '件', c.aonly ? 'has' : '');
+    setStat('stB', fmtInt(c.bonly), '件', c.bonly ? 'has' : '');
+    if (R.hasPrice) setStat('stPrice', fmtInt(R.priceGroups.length), '品番', R.priceGroups.length ? 'has' : '');
+    else setStat('stPrice', '–');
+    summaryLines(R).forEach(function (l) {
+      var cls = l[0] === 'warn' ? 'main warn' : l[0] === 'ok' ? 'main' : l[0];
+      summary.appendChild(line(cls, l[1]));
+    });
+  }
+  function viewOptions(R) {
+    var ok = R && !R.error;
+    var c = ok ? R.counts : null;
+    var n = function (x) { return ok ? '（' + fmtInt(x) + '件）' : ''; };
+    var ex = ok ? R.A.excluded.length + R.B.excluded.length + R.A.nokey.length + R.B.nokey.length : 0;
+    var list = [
+      ['diff', '違いのあるキー' + n(ok ? R.diffCount : 0)],
+      ['all', 'すべてのキー' + n(ok ? R.groups.length : 0)],
+      ['ok', '一致' + n(ok ? c.ok : 0)],
+      ['qty', '数量違い' + n(ok ? c.qty : 0)],
+      ['amt', '金額違い' + n(ok ? c.amt : 0)],
+      ['aonly', 'Aだけ' + n(ok ? c.aonly : 0)],
+      ['bonly', 'Bだけ' + n(ok ? c.bonly : 0)],
+      ['chk', '要確認' + n(ok ? c.chk : 0)],
+      ['price', '単価違いの行' + (ok && R.hasPrice ? '（' + fmtInt(R.priceGroups.length) + '品番）' : '')],
+      ['ex', '除外・キーなしの行' + (ok ? '（' + fmtInt(ex) + '行）' : '')]
+    ];
+    if (viewSel.options.length !== list.length) {
+      viewSel.innerHTML = '';
+      list.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; viewSel.appendChild(o); });
+    }
+    list.forEach(function (x, i) { viewSel.options[i].textContent = x[1]; });
+    viewSel.value = view;
+  }
+  function makeTable(heads, rightFrom) {
+    var t = document.createElement('table');
+    t.className = 'res';
+    var thead = document.createElement('thead'), tr = document.createElement('tr');
+    heads.forEach(function (h) {
+      var th = document.createElement('th');
+      th.textContent = h[0];
+      if (h[1]) th.className = 'r';
+      tr.appendChild(th);
+    });
+    thead.appendChild(tr); t.appendChild(thead);
+    var body = document.createElement('tbody'); t.appendChild(body);
+    return { table: t, body: body };
+  }
+  function td(cls, text) { var d = document.createElement('td'); d.className = cls; d.textContent = text; return d; }
+  function emptyMsg(text) { var p = document.createElement('p'); p.className = 'empty-result'; p.textContent = text; return p; }
+  function moreMsg(shown, total, unit) { var p = document.createElement('p'); p.className = 'more-rows'; p.textContent = '先頭の ' + fmtInt(shown) + unit + 'を表示しています（全 ' + fmtInt(total) + unit + '）。すべての内容はコピー・CSV に入ります。'; return p; }
+  function renderList(R) {
+    tableWrap.textContent = '';
+    tableWrap.scrollTop = 0; tableWrap.scrollLeft = 0;
+    if (R.error) { tableWrap.appendChild(emptyMsg(R.error === 'empty' || R.error === 'needA' || R.error === 'needB' ? 'ここに一覧が出ます。' : '上の案内のとおりに直すと、一覧が出ます。')); return; }
+    if (view === 'price') {
+      if (!R.hasPrice) { tableWrap.appendChild(emptyMsg('単価の列が選ばれていません。「列と照合の設定」で単価の列を選ぶと調べます。')); return; }
+      if (!R.priceGroups.length) { tableWrap.appendChild(emptyMsg(R.A.cols.price >= 0 && R.B.cols.price >= 0 ? '同じキー1で単価が違う行はありません。' : '選ばれている表の中には、同じキー1で単価が違う行はありません。もう一方の表の単価の列は調べていません。')); return; }
+      var lines = [];
+      R.priceGroups.forEach(function (pg) { pg.lines.forEach(function (l) { lines.push(l); }); });
+      var tp = makeTable([['キー1'], ['表'], ['行', 1], ['品名'], ['単価', 1], ['数量', 1], ['金額', 1]]);
+      lines.slice(0, MAX_SHOW).forEach(function (l) {
+        var tr = document.createElement('tr');
+        tr.appendChild(td('key', l.keyText));
+        tr.appendChild(td('txt', l.side));
+        tr.appendChild(td('num', fmtInt(l.row)));
+        tr.appendChild(td('txt', l.name));
+        tr.appendChild(td(l.priceText === null ? 'num diff' : 'num', l.priceText === null ? fmtDec(l.price) : l.priceText));
+        tr.appendChild(td('num', l.qtyText));
+        tr.appendChild(td('num', l.amtText));
+        tp.body.appendChild(tr);
+      });
+      tableWrap.appendChild(tp.table);
+      if (lines.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, lines.length, '行'));
+      return;
+    }
+    if (view === 'ex') {
+      var rows = [];
+      [['A', R.A], ['B', R.B]].forEach(function (p) {
+        p[1].excluded.forEach(function (x) { rows.push([p[0], x.row, '除外（「' + x.word + '」で始まる）', x.cells]); });
+        p[1].nokey.forEach(function (x) { rows.push([p[0], x.row, 'キーなし', x.cells]); });
+      });
+      rows.sort(function (x, y) { return x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : x[1] - y[1]; });
+      if (!rows.length) { tableWrap.appendChild(emptyMsg('除外した行とキーが空の行はありません。')); return; }
+      var te = makeTable([['表'], ['行', 1], ['理由'], ['行の内容']]);
+      rows.slice(0, MAX_SHOW).forEach(function (x) {
+        var tr = document.createElement('tr');
+        tr.appendChild(td('txt', x[0]));
+        tr.appendChild(td('num', fmtInt(x[1])));
+        tr.appendChild(td('txt', x[2]));
+        tr.appendChild(td('txt', clip(x[3].map(trimSp).filter(function (c) { return c; }).join(' ／ '), 80)));
+        te.body.appendChild(tr);
+      });
+      tableWrap.appendChild(te.table);
+      if (rows.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, rows.length, '行'));
+      return;
+    }
+    var list = R.groups.filter(function (g) {
+      if (view === 'all') return true;
+      if (view === 'diff') return g.cat !== 'ok';
+      return g.cat === view;
+    });
+    if (!list.length) {
+      var word = { diff: '違いのあるキー', all: 'キー', ok: '一致のキー', qty: '数量違いのキー', amt: '金額違いのキー', aonly: 'Aだけのキー', bonly: 'Bだけのキー', chk: '要確認のキー' }[view];
+      tableWrap.appendChild(emptyMsg(word + 'はありません。'));
+      return;
+    }
+    var showQ = R.A.cols.qty >= 0 || R.B.cols.qty >= 0, showM = R.A.cols.amt >= 0 || R.B.cols.amt >= 0;
+    var head = [['キー']];
+    if (showQ) head = head.concat([['Aの数量', 1], ['Bの数量', 1], ['差', 1]]);
+    if (showM) head = head.concat([['Aの金額', 1], ['Bの金額', 1], ['差', 1]]);
+    head = head.concat([['区分'], ['A・Bの行']]);
+    var t = makeTable(head);
+    list.slice(0, MAX_SHOW).forEach(function (g) {
+      var tr = document.createElement('tr');
+      var a = g.rows.A.length > 0, b = g.rows.B.length > 0;
+      tr.appendChild(td('key', keyDisplay(g)));
+      if (showQ) {
+        tr.appendChild(td('num', a ? fmtDec(g.qty.A) + (g.badQty.A ? '+?' : '') : ''));
+        tr.appendChild(td('num', b ? fmtDec(g.qty.B) + (g.badQty.B ? '+?' : '') : ''));
+        tr.appendChild(td('num' + (a && b && g.dq !== ZERO && R.cmpQty && !g.badQty.A && !g.badQty.B && !g.unitMix ? ' diff' : ''), a && b ? (g.badQty.A || g.badQty.B || g.unitMix ? '?' : fmtDiff(g.dq)) : ''));
+      }
+      if (showM) {
+        tr.appendChild(td('num', a ? fmtDec(g.amt.A) + (g.badAmt.A ? '+?' : '') : ''));
+        tr.appendChild(td('num', b ? fmtDec(g.amt.B) + (g.badAmt.B ? '+?' : '') : ''));
+        tr.appendChild(td('num' + (a && b && g.da !== ZERO && R.cmpAmt && !g.badAmt.A && !g.badAmt.B ? ' diff' : ''), a && b ? (g.badAmt.A || g.badAmt.B ? '?' : fmtDiff(g.da)) : ''));
+      }
+      tr.appendChild(td('cat' + (g.cat === 'ok' ? ' ok' : g.cat === 'chk' ? ' chk' : ''), g.label));
+      tr.appendChild(td('rows', (a ? 'A:' + rowsList(g.rows.A) : '') + (a && b ? ' ' : '') + (b ? 'B:' + rowsList(g.rows.B) : '')));
+      t.body.appendChild(tr);
+    });
+    tableWrap.appendChild(t.table);
+    if (list.length > MAX_SHOW) tableWrap.appendChild(moreMsg(MAX_SHOW, list.length, '件'));
+  }
+  function render() {
+    var R = compute(textA.value, textB.value, options());
+    last = R;
+    fillSelects('A', R.A); fillSelects('B', R.B);
+    headA.checked = R.A.head; headA.disabled = R.A.first < 0;
+    headB.checked = R.B.head; headB.disabled = R.B.first < 0;
+    tolInput.classList.toggle('bad', R.error === 'tol');
+    renderSummary(R);
+    viewOptions(R);
+    renderList(R);
+    var ok = !R.error && R.groups.length > 0;
+    copyBtn.disabled = !ok; csvBtn.disabled = !ok;
+    $('jumpSetRow').classList.toggle('force', !!R.error && R.error !== 'empty' && R.error !== 'needA' && R.error !== 'needB');
+    return R;
+  }
+
+  // ---------- 知らせ（押した直後は画面の端に留めて見えるようにする。スクロールしたらやめる） ----------
+  var pinnedScrollY = 0;
+  var lastPressed = null;
+  var ALL_STATUS = [status, setStatusEl, inStatus];
+  document.addEventListener('pointerdown', function (e) { lastPressed = e.target; }, true);
+  document.addEventListener('focusin', function (e) { lastPressed = e.target; }, true);
+  function pressedRect() {
+    var el = lastPressed;
+    if (el && el.tagName === 'INPUT' && el.type !== 'text' && el.nextElementSibling) el = el.nextElementSibling;
+    if (el && el.tagName === 'SPAN' && el.parentNode && el.parentNode.classList && el.parentNode.classList.contains('chip')) el = el.parentNode;
+    if (!el || !el.getBoundingClientRect) return null;
+    var r = el.getBoundingClientRect();
+    return (r.width || r.height) ? r : null;
+  }
+  function unpin() {
+    ALL_STATUS.forEach(function (el) {
+      if (!el.classList.contains('pin')) return;
+      el.classList.remove('pin');
+      var span = el.firstChild;
+      if (span && span.style) { span.style.left = ''; span.style.width = ''; span.style.top = ''; span.style.bottom = ''; }
+    });
+  }
+  function setStatus(el, message, isError) {
+    unpin();
+    ALL_STATUS.forEach(function (x) { if (x !== el) { x.textContent = ''; x.classList.remove('error'); } });
+    el.textContent = '';
+    el.classList.toggle('error', !!isError);
+    if (!message) return;
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+    var vh = window.innerHeight;
+    var sr = span.getBoundingClientRect();
+    if (sr.top >= 0 && sr.bottom <= vh) return;
+    var box = el.getBoundingClientRect();
+    var pr = pressedRect();
+    var toBottom = pr ? (pr.top + pr.bottom) / 2 < vh / 2 : sr.top < 0;
+    el.classList.add('pin');
+    span.style.left = box.left + 'px';
+    span.style.width = box.width + 'px';
+    if (toBottom) span.style.bottom = '8px'; else span.style.top = '8px';
+    pinnedScrollY = window.scrollY;
+  }
+  window.addEventListener('scroll', function () {
+    if (ALL_STATUS.some(function (el) { return el.classList.contains('pin'); }) && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin();
+  }, { passive: true });
+  window.addEventListener('resize', unpin);
+  // 上の結果の高さが変わっても、押した部品が画面の同じ位置に残るようにスクロールを合わせる
+  function keepPlace(fn) {
+    var r0 = pressedRect();
+    var out = fn();
+    var r1 = pressedRect();
+    if (r0 && r1 && Math.abs(r1.top - r0.top) > 0.5) window.scrollBy(0, r1.top - r0.top);
+    return out;
+  }
+  function afterChange(el, prefix) {
+    var msg = '', isErr = false;
+    keepPlace(function () {
+      resetButtons();
+      var R = render();
+      isErr = !!R.error;
+      msg = prefix + (R.error ? errorMessage(R) : resultWord(R));
+      setStatus(el, msg, isErr);
+    });
+    // スクロールを合わせた後の位置で、画面の端に留めるかを決め直す（留めても押した部品が動かないように）
+    keepPlace(function () { setStatus(el, msg, isErr); });
+    pinnedScrollY = window.scrollY;
+  }
+
+  // ---------- コピー・保存 ----------
+  var LABELS = { copy: 'コピー', csv: 'CSVで保存' };
+  var flashTimer = null;
+  function resetLabels() { copyBtn.textContent = LABELS.copy; csvBtn.textContent = LABELS.csv; }
+  function resetButtons() { clearTimeout(flashTimer); resetLabels(); hideManual(); }
+  function hideManual() { manualBox.hidden = true; $('resultArea').style.position = ''; }
+  function flashButton(btn, label, ms) {
+    clearTimeout(flashTimer);
+    resetLabels();
+    btn.textContent = label;
+    flashTimer = setTimeout(resetLabels, ms);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyFailed(text) {
+    flashButton(copyBtn, 'コピー失敗', 4000);
+    manualText.value = text;
+    manualBox.hidden = false;
+    $('resultArea').style.position = 'static';
+    manualText.focus({ preventScroll: true });
+    manualText.select();
+    setStatus(status, 'コピーできませんでした。「コピー用のテキスト」の欄の文字を選んだので、Ctrl+C（スマートフォンは長押し）でコピーしてください。', true);
+    var rect = manualBox.getBoundingClientRect();
+    var over = rect.bottom - window.innerHeight + 8;
+    if (over > 0) window.scrollBy(0, Math.min(over, Math.max(0, copyBtn.getBoundingClientRect().top - 8)));
+  }
+  function outWord(kind, table) {
+    var n = fmtInt(table.length);
+    switch (kind) {
+      case 'list': return '照合の一覧を ' + fmtInt(table.length - 1) + ' キー分（見出しつき）';
+      case 'colA': return '表Aの区分の列を ' + n + ' 行';
+      case 'colB': return '表Bの区分の列を ' + n + ' 行';
+      case 'tableA': return '区分の列を付けた表Aを ' + n + ' 行';
+      case 'tableB': return '区分の列を付けた表Bを ' + n + ' 行';
+    }
+    return '単価違いの一覧を ' + fmtInt(table.length - 1) + ' 行（見出しつき）';
+  }
+  function pasteHint(kind) {
+    if (kind === 'colA' || kind === 'colB') return 'Excelで、その表の1行目と同じ行の、空いた列に貼り付けてください。';
+    return 'Excelの空いたセルに貼り付けてください。';
+  }
+  function noOutput(R, kind) {
+    if (kind !== 'price' || R.priceGroups.length) return false;
+    setStatus(status, R.hasPrice ? '同じキー1で単価が違う行がないため、コピー・保存するものはありません。' : '単価の列が選ばれていないため、コピー・保存するものはありません。「列と照合の設定」で単価の列を選んでください。', true);
+    return true;
+  }
+  copyBtn.addEventListener('click', function () {
+    var R = render();
+    if (copyBtn.disabled) return;
+    var kind = outSel.value, table = outTable(R, kind), text = toTsv(table);
+    if (noOutput(R, kind)) return;
+    var done = function () {
+      hideManual();
+      setStatus(status, outWord(kind, table) + 'コピーしました。' + pasteHint(kind));
+      flashButton(copyBtn, '✓ コピー済み', 2500);
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { if (fallbackCopy(text)) done(); else copyFailed(text); });
+        return;
+      }
+    } catch (e) { /* 下の方法で試す */ }
+    if (fallbackCopy(text)) done(); else copyFailed(text);
+  });
+  var FILE = { list: 'shogo_ichiran.csv', colA: 'shogo_A_kubun.csv', colB: 'shogo_B_kubun.csv', tableA: 'shogo_A.csv', tableB: 'shogo_B.csv', price: 'shogo_tanka.csv' };
+  csvBtn.addEventListener('click', function () {
+    var R = render();
+    if (csvBtn.disabled) return;
+    var kind = outSel.value, table = outTable(R, kind);
+    if (noOutput(R, kind)) return;
+    try {
+      var blob = new Blob([toCsv(table)], { type: 'text/csv;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = FILE[kind];
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      setStatus(status, outWord(kind, table) + '、' + FILE[kind] + ' として保存しました。文字コードは UTF-8（BOM つき）で、Excel で開けます。');
+      flashButton(csvBtn, '✓ 保存しました', 2500);
+    } catch (e) {
+      setStatus(status, '保存できませんでした。「コピー」を押して、Excel に貼り付けてください。', true);
+      flashButton(csvBtn, '保存失敗', 4000);
+    }
+  });
+  outSel.addEventListener('change', function () { keepPlace(function () { resetButtons(); setStatus(status, ''); }); });
+
+  // ---------- 例・クリア ----------
+  var SAMPLE_A = ['品番' + TAB + '品名' + TAB + '数量' + TAB + '単価' + TAB + '金額',
+    'BT-100' + TAB + '六角ボルト M8' + TAB + '100' + TAB + '12' + TAB + '1,200',
+    'BT-200' + TAB + '六角ボルト M10' + TAB + '50' + TAB + '20' + TAB + '1,000',
+    'NT-100' + TAB + '六角ナット M8' + TAB + '200' + TAB + '5' + TAB + '1,000',
+    'WS-300' + TAB + '平ワッシャー' + TAB + '300' + TAB + '2' + TAB + '600',
+    'PL-010' + TAB + '取付プレート' + TAB + '10' + TAB + '850' + TAB + '8,500',
+    'KB-500' + TAB + '配線ケーブル' + TAB + '5' + TAB + '1,200' + TAB + '6,000'].join(LF);
+  var SAMPLE_B = ['品番' + TAB + '品名' + TAB + '数量' + TAB + '単価' + TAB + '金額',
+    'BT-100' + TAB + '六角ボルト M8' + TAB + '60' + TAB + '12' + TAB + '720',
+    'BT-100' + TAB + '六角ボルト M8' + TAB + '40' + TAB + '12' + TAB + '480',
+    'BT-200' + TAB + '六角ボルト M10' + TAB + '50' + TAB + '22' + TAB + '1,100',
+    'ＮＴ－１００' + TAB + '六角ナット M8' + TAB + '180' + TAB + '5' + TAB + '900',
+    'WS-300' + TAB + '平ワッシャー' + TAB + '300' + TAB + '2' + TAB + '600',
+    'PL-010' + TAB + '取付プレート' + TAB + '4' + TAB + '850' + TAB + '3,400',
+    'PL-010' + TAB + '取付プレート' + TAB + '6' + TAB + '850' + TAB + '5,100',
+    'HN-900' + TAB + '取っ手' + TAB + '2' + TAB + '1,500' + TAB + '3,000',
+    '送料' + TAB + '' + TAB + '1' + TAB + '800' + TAB + '800'].join(LF);
+  function freshInput() { st.A = newState(); st.B = newState(); resetButtons(); }
+  $('sampleBtn').addEventListener('click', function () {
+    var had = textA.value.trim() !== '' || textB.value.trim() !== '';
+    textA.value = SAMPLE_A;
+    textB.value = SAMPLE_B;
+    freshInput();
+    view = 'diff';
+    var R = render();
+    setStatus(inStatus, (had ? '例の表に入れ替えました（前の内容は消えました）。' : '例の表（発注データと納品データ）を入れました。') + (R.error ? errorMessage(R) : resultWord(R)));
+  });
+  $('clearBtn').addEventListener('click', function () {
+    var had = textA.value !== '' || textB.value !== '';
+    textA.value = ''; textB.value = '';
+    freshInput();
+    view = 'diff';
+    render();
+    setStatus(inStatus, had ? '表Aと表Bを空にしました（設定はそのままです）。' : '表Aと表Bはもう空です。');
+  });
+
+  // ---------- 入力と設定の変更 ----------
+  var inputTimer = null;
+  function onTextInput(e) {
+    var pasted = e && e.inputType === 'insertFromPaste';
+    clearTimeout(inputTimer);
+    resetButtons();
+    setStatus(inStatus, '');
+    inputTimer = setTimeout(function () {
+      inputTimer = null;
+      var name = e.target === textA ? '表A' : '表B';
+      var R = render();
+      if (!pasted) {
+        if (R.error) setStatus(inStatus, name + 'を読み直しました。' + errorMessage(R), !(R.error === 'needA' || R.error === 'needB' || R.error === 'empty'));
+        else setStatus(inStatus, name + 'を読み直して照合しました。' + resultWord(R));
+        return;
+      }
+      if (R.error) setStatus(inStatus, name + 'に貼り付けました。' + errorMessage(R), !(R.error === 'needA' || R.error === 'needB'));
+      else setStatus(inStatus, name + 'に貼り付けて照合しました。' + resultWord(R));
+    }, 150);
+  }
+  textA.addEventListener('input', onTextInput);
+  textB.addEventListener('input', onTextInput);
+  function onHead(side, el) {
+    st[side].head = el.checked;
+    afterChange(inStatus, el.checked ? '表' + side + 'の1行目を見出しとして飛ばすようにしました。' : '表' + side + 'の1行目も明細として読むようにしました。');
+  }
+  headA.addEventListener('change', function () { onHead('A', headA); });
+  headB.addEventListener('change', function () { onHead('B', headB); });
+  function onColChange(side, role, sel) {
+    var c = +sel.value;
+    var S = side === 'A' ? last.A : last.B;
+    var moved = '';
+    // 手で選ぶと、自動で選んだ値も固定する（手で選んだ順番に関わらず、同じ列を2つの役にしない）
+    ROLES.forEach(function (r) {
+      if (r !== role && c >= 0 && S.cols[r] === c) { st[side].cols[r] = -1; moved = r; }
+    });
+    st[side].cols[role] = c;
+    var msg = '表' + side + 'の「' + ROLE_NAME[role] + '」を' + (c < 0 ? 'なしにしました。' : colLetter(c) + '列にしました。');
+    if (moved) msg += '同じ列は「' + ROLE_NAME[moved] + '」から外しました。';
+    afterChange(setStatusEl, msg);
+  }
+  targetInputs.forEach(function (el) {
+    el.addEventListener('change', function () {
+      var word = el.value === 'both' ? '数量と金額' : el.value === 'qty' ? '数量だけ' : '金額だけ';
+      afterChange(setStatusEl, '照合の対象を「' + word + '」にしました。');
+    });
+  });
+  tolInput.addEventListener('input', function () {
+    var v = trimSp(tolInput.value);
+    afterChange(setStatusEl, v === '' ? '金額の許容差を空にしたので、0 円として照合しました。' : '金額の許容差を変えました。');
+  });
+  exInput.addEventListener('input', function () {
+    var w = exWords(exInput.value);
+    afterChange(setStatusEl, w.length ? '除外の語を「' + clip(w.join('、'), 24) + '」にしました。' : '除外の語を空にしたので、除外する行はありません。');
+  });
+  [[nkHalf, '全角と半角を同じものとして'], [nkCase, '大文字と小文字を同じものとして'], [nkTrim, '前後の空白を無視して'], [nkHyph, 'ハイフンと途中の空白を無視して']].forEach(function (p) {
+    p[0].addEventListener('change', function () {
+      afterChange(setStatusEl, p[0].checked ? p[1] + '照合しました。' : '「' + p[0].nextElementSibling.textContent + '」をやめて照合しました。');
+    });
+  });
+  viewSel.addEventListener('change', function () { keepPlace(function () { view = viewSel.value; if (last) renderList(last); }); });
+  function jump(linkId, targetId) {
+    $(linkId).addEventListener('click', function (e) {
+      e.preventDefault();
+      var h = $(targetId);
+      h.scrollIntoView({ block: 'start' });
+      h.focus({ preventScroll: true });
+    });
+  }
+  jump('jumpRes', 'resultTitle');
+  jump('jumpSet', 'setTitle');
+
+  window.MeisaiShogo = { compute: compute, newState: newState, parseTable: parseTable, readNum: readNum, normKey: normKey, normHead: normHead, outTable: outTable, toTsv: toTsv, toCsv: toCsv, plainDec: plainDec };
+  render();
+})();
+</script>
+</body>
+</html>
