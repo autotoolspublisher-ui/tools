@@ -321,7 +321,7 @@
           <label class="chip"><input type="radio" name="exifMode" id="exifKeep" value="keep" checked data-name="EXIF：そのまま残す"><span>そのまま残す</span></label>
           <label class="chip"><input type="radio" name="exifMode" id="exifDrop" value="drop" data-name="EXIF：付けない"><span>付けない</span></label>
         </div>
-        <p class="hint">「そのまま残す」は、撮影日時・機種・向きのほか、位置情報が入っていれば、それも残します。XMPなどほかの情報も残ります。内容の変更や一部だけの削除はしません（中の画素数だけ、縮小後の値に直します）。</p>
+        <p class="hint">「そのまま残す」は、撮影日時・機種・向きのほか、位置情報が入っていれば、それも残します。XMP・IPTCの情報も残ります。内容の変更や一部だけの削除はしません（中の画素数だけ、縮小後の値に直します）。</p>
       </fieldset>
 
       <fieldset>
@@ -909,12 +909,16 @@ https://github.com/nodeca/pako/blob/main/LICENSE
   }
   window.addEventListener('scroll', function () { if (status.classList.contains('pin') && Math.abs(window.scrollY - pinnedScrollY) > 4) unpin(); }, { passive: true });
   window.addEventListener('resize', unpin);
-  // 一覧の枠の中を動かすときは、留まった文が行を隠さないようにする
-  tableWrap.addEventListener('scroll', unpin, { passive: true });
-  tableWrap.addEventListener('pointerdown', unpin);
+  // 利用者が次の操作に移るときは、留まった文が部品や一覧の行を隠さないようにする
+  // （行の高さが変わると枠は自動でスクロールするので、scroll では解かない）
+  document.addEventListener('pointerdown', unpin, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Tab') unpin(); }, true);
+  ['wheel', 'touchmove'].forEach(function (t) { tableWrap.addEventListener(t, unpin, { passive: true }); });
+  tableWrap.addEventListener('keydown', unpin);
 
   function setBusy(b) {
     busy = b;
+    if (!b) holdUntil = 0;
     document.querySelectorAll('.settings fieldset').forEach(function (f) { f.disabled = b; });
     fileInput.disabled = b; pickLabel.classList.toggle('busy', b);
     syncCustomFields();
@@ -1166,8 +1170,8 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       if (over) { msg += '容量の上限を超えた写真が' + fmtInt(over) + '枚あります（zipには入ります）。' + (st.floor > 30 ? '画質の下限か大きさの上限' : '大きさの上限') + 'を下げて、もう一度押してください。'; err = true; }
       if (failed) { msg += '作れなかった写真' + fmtInt(failed) + '枚はzipに入れません。とても大きい写真は、大きさの上限を下げると作れることがあります。'; err = true; }
       if (!over && usableList.length) msg += '一覧を確かめて「zipで保存」を押してください。';
-      setStatus(msg, err);
       if (hadFocus && !saveZip.disabled) saveZip.focus({ preventScroll: true });
+      setStatus(msg, err);
     });
   });
   stopButton.addEventListener('click', function () {
